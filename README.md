@@ -47,7 +47,7 @@ To keep your visitors up to date on your progress building your product, your ma
 1. Clone the lab contents locally.
 
    ```console
-   git clone git@github.com:jpignata/workshop.git
+   git clone git@github.com:awslabs/aws-serverless-website-workshop.git
    ```
 
    This repository contains files required for all four labs and a work directory for you to copy files into as you progress through the workshop.

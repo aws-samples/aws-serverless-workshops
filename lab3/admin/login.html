@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <link href="/styles/vendor/normalize.css" rel="stylesheet">
+    <link href="/styles/vendor/skeleton.css" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <script src="/scripts/vendor/aws-sdk.min.js"></script>
+    <script src="/scripts/vendor/jsbn.js"></script>
+    <script src="/scripts/vendor/jsbn2.js"></script>
+    <script src="/scripts/vendor/sjcl.js"></script>
+    <script src="/scripts/vendor/aws-cognito-sdk.min.js"></script>
+    <script src="/scripts/vendor/amazon-cognito-identity.min.js"></script>
+
+    <script src="/scripts/config.js" defer></script>
+    <script src="/scripts/utils.js" defer></script>
+    <script src="/scripts/admin-login.js" defer></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row" id="login">
+        <h2>Wild Rydes Admin</h2>
+        <hr>
+
+        <h5>Log In</h5>
+        <form>
+          <div class="row">
+            <div class="three columns">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="email address">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="three columns">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="password">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="three columns">
+              <button class="button-primary" type="submit">Log In</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -52,16 +52,7 @@ To keep your visitors up to date on your progress building your product, your ma
 
    This repository contains files required for all four labs and a work directory for you to copy files into as you progress through the workshop.
    
-1. Ensure your AWS CLI installation is configured properly. See [the documentation][cli-documentation] for instructions. To test that that it's configured properly, run `aws sts get-caller-identity` and ensure it returns your Account ID:
-
-   ```json
-   $ aws sts get-caller-identity
-   {
-     "Account": "123456789012",
-     "UserId": "AIDAIVSQVXBALAY4H2511",
-     "Arn": "arn:aws:iam::123456789012:user/smith"
-   }
-   ```
+1. Ensure your AWS CLI installation is configured properly. See [the documentation][cli-documentation] for instructions.
 
 ### Tips
 

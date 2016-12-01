@@ -49,7 +49,7 @@ All of the resources created in the below labs must be created within a single R
 1. Clone the lab contents locally.
 
    ```console
-   git clone git@github.com:awslabs/aws-serverless-website-workshop.git
+   git clone https://github.com/awslabs/aws-serverless-website-workshop.git
    ```
 
    This repository contains files required for all four labs and a work directory for you to copy files into as you progress through the workshop.

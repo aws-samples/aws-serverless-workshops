@@ -119,7 +119,7 @@ In this module, you'll setup an Amazon S3 bucket to host your assets and configu
   On Windows:
 
   ```console
-  copy /Y lab1 work
+  xcopy /E lab1 work
   ```
 
 1. Copy the Wild Rydes static website files into your bucket. Replace the **INSERT_BUCKET_NAME_HERE** placeholder with the bucket you created earlier.
@@ -248,7 +248,7 @@ Visitors to your website who are interested in participating in your beta progra
   On Windows:
 
   ```console
-  copy /Y lab2 work
+  xcopy /E lab2 work
   ```
 
 1. In your work directory, open **scripts/config.js** in your text editor.
@@ -524,7 +524,7 @@ Your marketing team needs an administrative interface to manage aspects of the s
   On Windows:
 
   ```console
-  copy /Y lab3 work
+  xcopy /E lab3 work
   ```
 
 1. In your work directory, open **scripts/config.js** in your text editor.
@@ -754,7 +754,7 @@ To keep your visitors up to date on your progress building your product, your ma
   On Windows:
 
   ```console
-  copy /Y lab4 work
+  xcopy /E lab4 work
   ```
 
 1. Update the contents of the Amazon S3 bucket created in Lab 1 with the new files:

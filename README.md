@@ -52,7 +52,7 @@ To keep your visitors up to date on your progress building your product, your ma
 
    This repository contains files required for all four labs and a work directory for you to copy files into as you progress through the workshop.
    
-1. Ensure your AWS CLI installation is configured properly. See [the documentation][cli-documentation] for instructions.
+1. Ensure your [installation][cli-installation] of the AWS CLI is properly [configured][cli-configuration] with credentials that have administrator access to your account.
 
 ### Tips
 
@@ -782,7 +782,8 @@ In this lab you've:
 [us-east-1]: https://console.aws.amazon.com/console/home?region=us-east-1
 [us-west-2]: https://console.aws.amazon.com/console/home?region=us-west-2
 [eu-west-1]: https://console.aws.amazon.com/console/home?region=eu-west-1
-[cli-documentation]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+[cli-installation]: http://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-bundle-other-os
+[cli-configuration]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration
 [cli]: https://aws.amazon.com/cli/
 [chrome]: https://www.google.com/chrome/
 [git]: https://git-scm.com/

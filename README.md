@@ -213,7 +213,7 @@ Visitors to your website who are interested in participating in your beta progra
 1. Click the **Create Pool** button.
 1. This page will allow you to define authenticated and unauthenticated roles associated with your identity pool and the appropriate permissions for each. Expand the **View Details** section. Next, expand the **View Policy Document** section for the **Cognito_wildrydesUnauth_Role** role.
 1. Click **Edit** next to the policy document. You'll be asked to ensure you've read the documentation prior to editing. Click **Ok**.
-1. Replace the policy document to allow visitors to write to the Amazon DynamoDB table created in **Step 23**. Replace the **INSERT_DYNAMODB_ARN_HERE** placeholder below with the ARN you noted in **Step 24**.
+1. Replace the **INSERT_DYNAMODB_ARN_HERE** placeholder below with the value you noted in **Step 24** and copy and paste the result into the policy document text area. When finished, the text area should only contain the below policy.
 
    ```json
 	{

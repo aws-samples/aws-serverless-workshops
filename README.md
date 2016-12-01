@@ -60,6 +60,8 @@ To keep your visitors up to date on your progress building your product, your ma
 
 - Look for error messages in the [Google Chrome Developer Console][developer-console] if you encounter an issue with any of the functionality loading on the site. You can access the console by pressing **Control + Shift + J** on Linux and Windows or **Command + Option + J** on macOS.
 
+- There are several components of the setup which are case sensitive (e.g. DynamoDB tables and keys). To avoid errors, prefer copying and pasting to re-typing.
+
 ## Lab 1: Static Website Hosting
 
 In this module, you'll setup an Amazon S3 bucket to host your assets and configure it to serve a static website. Because Wild Rydes is a startup preparing for global scale you'll also configure an Amazon CloudFront distribution to accelerate delivery of your assets to your potential users across the world.

@@ -43,6 +43,8 @@ To keep your visitors up to date on your progress building your product, your ma
 ### Setup
 
 1. Pick a single Region into which you'll deploy services. You'll need to ensure all required services (Amazon S3, AWS Lambda, Amazon API Gateway, Amazon Cognito, Amazon SES, Amazon DynamoDB, Amazon CloudFront, IAM) are available in the Region you choose. See the [Region Table][region-table] for details about what services are available in which Regions. [US East (N. Virginia)][us-east-1], [US West (Oregon)][us-west-2], and [EU (Ireland)][eu-west-1] offer all of the services required for this workshop. 
+
+All of the resources created in the below labs must be created within a single Region.
    
 1. Clone the lab contents locally.
 

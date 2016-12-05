@@ -307,7 +307,7 @@ Visitors to your website who are interested in participating in your beta progra
 1. Click the **Create trigger** button and select **New function**.
 1. Select **Wildrydes_Emails** from **DynamoDB table**. 
 1. Enter *1* for **Batch Size**.
-1. Select **Trim Horizon** from **Starting position**. This will instruct AWS Lambda to start processing records at the beginning of the stream.
+1. Select **Latest** from **Starting position**. This will instruct AWS Lambda to start processing records from the end of the stream.
 1. Check the **Enable trigger** checkbox.
 
   ![Configure trigger](images/lab2_configure-triggers.png)

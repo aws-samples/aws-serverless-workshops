@@ -22,11 +22,12 @@ emailForm.addEventListener('submit', function (event) {
   };
 
   dynamoDB.putItem(params, function (err, data) {
-    if (err) {
-      console.log(err);
-    } else {
+    if (!err) {
       formDiv.style.display = 'none';
       confirmationDiv.style.display = 'block';
+    } else {
+      alert(err);
+      console.log(err);
     }
   });
 });

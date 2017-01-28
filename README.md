@@ -303,6 +303,26 @@ Visitors to your website who are interested in participating in your beta progra
 
   ![Confirmation](images/lab1_confirmation.png)
 
+  If something went wrong you will receive an error as a JavaScript alert. Open your developer console (see **Tips** section for insturctions) for more information.
+
+ Common errors are:
+
+  - __ResourceNotFoundException: Missing credentials in config__
+
+		Your _config.js_ does not map to a valid Cognito identity pool. Ensure that you've entered the **identityPoolId** correctly by checking your work in steps 37 through 40.
+
+  - __ResourceNotFoundException: Requested resource not found__
+
+		The DynamoDB could not be found. Check your DynamoDB table name and confirm it is named **Wildrydes_Emails** as directed in step 20. If not, recreate the table.
+
+  - __ValidationException: One or more parameter values were invalid: Missing the key [column] in the item__
+
+		The DynamoDB table was found but the primary key wasn't correctly entered. Check your DynamoDB table settings and confirm the primary key is named **Email** as directed in step 21. If not, recreate the table.
+
+  - __AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/Cognito_wildrydesUnauth_Role/CognitoIdentityCredentials is not authorized to perform: dynamodb:PutItem on resource: arn:aws:dynamodb:us-west-2:123456789012:table/Wildrydes_Emails__
+
+		The policy associated with your unauthenticated Cognito role has not been created correctly. Go to **IAM**, click on **Roles**, find and click on **Cognito_wildrydesUnauth_Role**, and click on **Edit Policy**. Ensure the policy you have matches the policy outlined in step 33 exactly.
+
 1. Click **Services** in the navigation bar of the AWS Management Console and select **DynamoDB**.
 1. Click **Tables** in the left-hand navigation.
 1. Click **Wildrydes_Emails**.

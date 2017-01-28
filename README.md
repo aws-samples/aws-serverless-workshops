@@ -24,27 +24,45 @@ To complete this lab, you'll need:
 
 ### Labs
 
-#### Lab 1: Static Website Hosting
+#### Pre-lab: Static Website Hosting
 
-In this module, you'll setup an Amazon S3 bucket to host your assets and configure it to serve a static website. Because Wild Rydes is a startup preparing for global scale you'll also configure an Amazon CloudFront distribution to accelerate delivery of your assets to your potential users across the world.
+In this module, you'll verify your local environment is setup, create an Amazon S3 bucket to host your assets, and configure it to serve a static website. Because Wild Rydes is a startup preparing for global scale you'll also configure an Amazon CloudFront distribution to accelerate delivery of your assets to your potential users across the world.
 
-#### Lab 2: Beta Sign-up Mailing List
+#### Lab 1: Beta Sign-up Mailing List
 
 Visitors to your website who are interested in participating in your beta program can enroll by filling out a form to join your beta users mailing list. You'll create an Amazon DynamoDB table to store these email addresses and an Amazon Cognito identity pool and an AWS Identity and Access Management (IAM) policy to allow unauthenticated users to post it. Using DynamoDB Streams, AWS Lambda, and Amazon SES, beta users will receive a confirmation email thanking them for enrolling and providing further details.
 
-#### Lab 3: Administrative Interface
+#### Lab 2: Administrative Interface
 
 Your marketing team needs an administrative interface to manage aspects of the site. In this module, you'll create an Amazon Cognito user pool for your administrator users and start building endpoints in Amazon API Gateway. You'll configure an authorizer to validate the identity of your administrators and wire up a page to view users who have signed up for the beta program.
 
-#### Lab 4: Product Update Blog
+#### Lab 3: Product Update Blog
 
 To keep your visitors up to date on your progress building your product, your marketing team would like to publish a blog of product updates. Using your new administrative interface, you'll add an interface to publish posts to the product update blog using Amazon API Gateway and AWS Lambda which will appear on your landing page.
 
-### Setup
+### Tips
+
+- Open a blank text editor file for scratch notes. Whenever a step instructs you to note an item, copy and paste that item into your scratch notes for later reference.
+
+- Look for error messages in the [Google Chrome Developer Console][developer-console] if you encounter an issue with any of the functionality loading on the site. You can access the console by pressing **Control + Shift + J** on Linux and Windows or **Command + Option + J** on macOS.
+
+- There are several components of the setup which are case sensitive (e.g. DynamoDB tables and keys). To avoid errors, prefer copying and pasting to re-typing.
+
+## Pre-lab: Static Website Hosting
+
+In this module, you'll setup an Amazon S3 bucket to host your assets and configure it to serve a static website. Because Wild Rydes is a startup preparing for global scale you'll also configure an Amazon CloudFront distribution to accelerate delivery of your assets to your potential users across the world.
+
+1. If you do not have a personal AWS account for testing, [create one][register-aws-account] and login to your account.
 
 1. Pick a single Region into which you'll deploy services. You'll need to ensure all required services (Amazon S3, AWS Lambda, Amazon API Gateway, Amazon Cognito, Amazon SES, Amazon DynamoDB, Amazon CloudFront, IAM) are available in the Region you choose. See the [Region Table][region-table] for details about what services are available in which Regions. [US East (N. Virginia)][us-east-1], [US West (Oregon)][us-west-2], and [EU (Ireland)][eu-west-1] offer all of the services required for this workshop. 
 
-All of the resources created in the below labs must be created within a single Region.
+	All of the resources created in the below labs must be created within a single Region.
+
+1. Ensure you have the following installed:
+
+	- [AWS Command Line Interface][cli]
+	- [Google Chrome][chrome]
+	- [git][git]
    
 1. Clone the lab contents locally.
 
@@ -56,30 +74,18 @@ All of the resources created in the below labs must be created within a single R
    
 1. Ensure your [installation][cli-installation] of the AWS CLI is properly [configured][cli-configuration] with credentials that have administrator access to your account.
 
-### Tips
-
-- Open a blank text editor file for scratch notes. Whenever a step instructs you to note an item, copy and paste that item into your scratch notes for later reference.
-
-- Look for error messages in the [Google Chrome Developer Console][developer-console] if you encounter an issue with any of the functionality loading on the site. You can access the console by pressing **Control + Shift + J** on Linux and Windows or **Command + Option + J** on macOS.
-
-- There are several components of the setup which are case sensitive (e.g. DynamoDB tables and keys). To avoid errors, prefer copying and pasting to re-typing.
-
-## Lab 1: Static Website Hosting
-
-In this module, you'll setup an Amazon S3 bucket to host your assets and configure it to serve a static website. Because Wild Rydes is a startup preparing for global scale you'll also configure an Amazon CloudFront distribution to accelerate delivery of your assets to your potential users across the world.
-
 1. Select **S3** from the AWS Management Console.
 1. Click the **Create Bucket** button.
 1. Enter a name for the bucket in **Bucket Name**. Bucket names must be globally unique within AWS so prefix the name of the bucket with your last name to prevent collisions. For example, in our examples we'll follow the convention of **LAST_NAME-wildrydes** so we'll use **smith-wildrydes**.
 1. Select the Region in which you'll use for this lab in the **Region** drop down. See the note in the requirements section about which Region to choose. US East (N. Virginia) is called US Standard in Amazon S3 for legacy reasons.
 1. Click the **Create** button.
 
-   ![Create Bucket](images/lab1_create-bucket.png)
+   ![Create Bucket](images/prelab_create-bucket.png)
 
 1. Expand the **Permissions** section.
 1. Click the **Add bucket policy** link.
 
-   ![Bucket permissions](images/lab1_bucket-permissions.png)
+   ![Bucket permissions](images/prelab_bucket-permissions.png)
  
 1. Create a bucket policy to allow anonymous read access to your bucket. This will make the bucket content publicly readable and allow Amazon S3 to serve it to web users. Ensure that you change the **INSERT_BUCKET_NAME_HERE** placeholder to the name you chose in **Step 3**.
 
@@ -97,7 +103,7 @@ In this module, you'll setup an Amazon S3 bucket to host your assets and configu
 	}
    ```
    
-  ![Bucket policy](images/lab1_bucket-policy.png)
+  ![Bucket policy](images/prelab_bucket-policy.png)
    
 1. Click the **Save** button.
 1. Expand the **Static Website Hosting** section.
@@ -105,21 +111,21 @@ In this module, you'll setup an Amazon S3 bucket to host your assets and configu
 1. Enter **index.html** as the website's **Index Document**. This will redirect requests to the root of your website to the object **index.html**.
 1. Note the hostname in **Endpoint**.
 
-   ![Website hosting](images/lab1_website-hosting.png)
+   ![Website hosting](images/prelab_website-hosting.png)
 
 1. Click the **Save** button.
-1. Copy the Wild Rydes static website files from `lab1/` to your work directory. The work directory will act as a staging area for  our static site while we build it. We'll be incrementally copying files from each lab-specific directory into it and editing them as we progress through the workshop.
+1. Copy the Wild Rydes static website files from `prelab/` to your work directory. The work directory will act as a staging area for  our static site while we build it. We'll be incrementally copying files from each lab-specific directory into it and editing them as we progress through the workshop.
 
   On Linux and macOS:
 
   ```console
-  cp -R lab1/* work
+  cp -R prelab/* work
   ```
 
   On Windows:
 
   ```console
-  xcopy /E /Y lab1 work
+  xcopy /E /Y prelab work
   ```
 
 1. Copy the Wild Rydes static website files into your bucket. Replace the **INSERT_BUCKET_NAME_HERE** placeholder with the bucket you created earlier.
@@ -130,38 +136,39 @@ In this module, you'll setup an Amazon S3 bucket to host your assets and configu
 
 1. Browse to the hostname that you noted above in **Step 13** and ensure that the website loads. Verify that the links work.
 
-   ![Website](images/lab1_website.png)
+   ![Website](images/prelab_website.png)
 
 1. In the AWS Management Console, click **Services** in the navigation bar and select **CloudFront**.
 1. Click the **Create Distribution** button.
 1. To create a web distribution, click the **Get Started** button under the **Web** header.
 1. Enter the static hosting endpoint from the Amazon S3 bucket that you noted above in **Step 13** and browsed to in **Step 17** in **Origin Domain Name**. Ensure that you enter in the static website hosting endpoint and do not use the autocompleter as that option will configure traffic to use bucket rather than its website endpoint which cannot serve web pages correctly.
 
-   ![Origin domain name](images/lab1_origin-domain-name.png)
+   ![Origin domain name](images/prelab_origin-domain-name.png)
 
 1. Select **Customize** from **Object Caching**.
 1. Enter **5** as the **Default TTL**. This will cache objects for 5 seconds before checking for file updates with the origin. In production, this value would be set much higher but we're lowering it to 5 for demonstration purposes during the workshop.
 
-   ![Customize cache settings](images/lab1_customize-cache-settings.png)
+   ![Customize cache settings](images/prelab_customize-cache-settings.png)
 
 1. Click the **Create Distribution** button.
-1. Wait for the **Status** field to change from **In Progress** to **Deployed**. This may take a few minutes to provision so take a break or skip to the first few steps of Lab 2 while this is in progress.
+1. Wait for the **Status** field to change from **In Progress** to **Deployed**. This may take upwards of 30 minutes.
 
-   ![CloudFront distributions](images/lab1_cloudfront-distributions.png)
+   ![CloudFront distributions](images/prelab_cloudfront-distributions.png)
 
 1. Once deployed, test your CloudFront distribution by putting the **Domain Name** of your distribution into a web browser. Click around and verify that the site works as it did in **Step 17**.
 
-   ![Website via CloudFront](images/lab1_website-via-cloudfront.png)
+   ![Website via CloudFront](images/prelab_website-via-cloudfront.png)
 
-***LAB 1 COMPLETE***
+***PRE-LAB COMPLETE***
 
 In this lab you've:
 
+- Configured your local environment for the rest of the labs
 - Created an Amazon S3 bucket
 - Configured it for static web site hosting
 - Created a Amazon CloudFront distribution to deliver your content around the world
 
-## Lab 2: Beta Sign-up Mailing List
+## Lab 1: Beta Sign-up Mailing List
 
 Visitors to your website who are interested in participating in your beta program can enroll by filling out a form to join your beta users mailing list. You'll create an Amazon DynamoDB table to store these email addresses and an Amazon Cognito identity pool and an AWS Identity and Access Management (IAM) policy to allow unauthenticated users to post it. Using DynamoDB Streams, AWS Lambda, and Amazon SES, beta users will receive a confirmation email thanking them for enrolling and providing further details.
 
@@ -174,7 +181,7 @@ Visitors to your website who are interested in participating in your beta progra
 1. Wait for the verification email from Amazon SES to arrive in the inbox of the email address you provided in **Step 4**.
 1. Open the email and click the verification link.
 
-  ![Email](images/lab2_verify-email.png)
+  ![Email](images/lab1_verify-email.png)
 
   You should see a page with a header **Congratulations!** indicating that you can now send email from this address.
 
@@ -185,13 +192,13 @@ Visitors to your website who are interested in participating in your beta progra
 1. Click the **Next Step** button.
 1. Click the **Select** button next to **AWS Lambda**.
 
-  ![Role type](images/lab2_role-type.png)
+  ![Role type](images/lab1_role-type.png)
 
 1. Attach the **AmazonSESFullAccess** and **AWSLambdaBasicExecutionRole** managed policies to the role by searching for them in the **Filter** text box and clicking the checkbox. These policies contain the permissions that your AWS Lambda function will have within your account and will allow your function to send email via Amazon SES and to send logs to Amazon CloudWatch Logs. Take a moment to look at the [AmazonSESFullAccess][ses-role] and [AWSLambdaBasicExecutionRole][lambda-role] policies to see what permissions you're granting your Lambda function.
 1. Click **Next Step**.
 1. Verify the **Trusted Entities** and **Policies** section against the screenshot and click **Create Role**.
 
-  ![Role review](images/lab2_role-review.png)
+  ![Role review](images/lab1_role-review.png)
 
 1. Click **Services** in the navigation bar and select **DynamoDB**.
 1. Click the **Create table** button.
@@ -199,12 +206,12 @@ Visitors to your website who are interested in participating in your beta progra
 1. Enter **Email** and select **String** in **Primary key**. Ensure you type this exactly as displayed as DynamoDB is case sensitive.
 1. Leave **Use default settings** checked.
 
-  ![Create table](images/lab2_dynamodb-create-table.png)
+  ![Create table](images/lab1_dynamodb-create-table.png)
 
 1. Click the **Create** button.
 1. Scroll down to the bottom of the **Table Details** section and note the **Amazon Resource Name (ARN)**.
 
-  ![Table details](images/lab2_dynamodb-table-details.png)
+  ![Table details](images/lab1_dynamodb-table-details.png)
 
 1. Click **Services** in the navigation bar and select **Cognito**.
 1. Click the **Manage Federated Identities** button.
@@ -212,7 +219,7 @@ Visitors to your website who are interested in participating in your beta progra
 1. Enter **wildrydes** in **Identity pool name**.
 1. Check **Enable access to unauthenticated identities**.
 
-  ![Create pool](images/lab2_cognito-create-pool.png)
+  ![Create pool](images/lab1_cognito-create-pool.png)
 
 1. Click the **Create Pool** button.
 1. This page will allow you to define authenticated and unauthenticated roles associated with your identity pool and the appropriate permissions for each. Expand the **View Details** section. Next, expand the **View Policy Document** section for the **Cognito_wildrydesUnauth_Role** role.
@@ -235,20 +242,20 @@ Visitors to your website who are interested in participating in your beta progra
 1. Click the **Allow** button.
 1. Click **Edit identity pool** in the upper right and note the **Identity pool ID**.
 
-  ![Pool details](images/lab2_cognito-pool-details.png)
+  ![Pool details](images/lab1_cognito-pool-details.png)
 
-1. Copy the Wild Rydes static website files from `lab2/` to your work directory.
+1. Copy the Wild Rydes static website files from `lab1/` to your work directory.
 
   On Linux and macOS:
 
   ```console
-  cp -R lab2/* work
+  cp -R lab1/* work
   ```
 
   On Windows:
 
   ```console
-  xcopy /E /Y lab2 work
+  xcopy /E /Y lab1 work
   ```
 
 1. In your work directory, open **scripts/config.js** in your text editor.
@@ -285,7 +292,7 @@ Visitors to your website who are interested in participating in your beta progra
     ```
 
 1. Save the file.
-1. Update the contents of the Amazon S3 bucket created in Lab 1 with the new files:
+1. Update the contents of the Amazon S3 bucket created the pre-lab with the new files:
 
    ```console
    aws s3 sync work/ s3://INSERT_BUCKET_NAME_HERE
@@ -294,14 +301,14 @@ Visitors to your website who are interested in participating in your beta progra
 1. Navigate to the URL of the Amazon CloudFront distribution created in Lab 1.
 1. Scroll down to the **Sign Up** form and enter the email address you verified in **Step 4** into the form and click **Submit**. The form will be replaced with a confirmation message.
 
-  ![Confirmation](images/lab2_confirmation.png)
+  ![Confirmation](images/lab1_confirmation.png)
 
 1. Click **Services** in the navigation bar of the AWS Management Console and select **DynamoDB**.
 1. Click **Tables** in the left-hand navigation.
 1. Click **Wildrydes_Emails**.
 1. Select the **Items** tab and ensure that the email address you submitted has been written to the table.
 
-  ![Items](images/lab2_table-items.png)
+  ![Items](images/lab1_table-items.png)
 
 1. Select the **Triggers** tab.
 1. Click the **Create trigger** button and select **New function**.
@@ -310,7 +317,7 @@ Visitors to your website who are interested in participating in your beta progra
 1. Select **Latest** from **Starting position**. This will instruct AWS Lambda to start processing records from the end of the stream.
 1. Check the **Enable trigger** checkbox.
 
-  ![Configure trigger](images/lab2_configure-triggers.png)
+  ![Configure trigger](images/lab1_configure-triggers.png)
 
 1. Click the **Next** button.
 1. Enter **ConfirmationEmail** in **Name**.
@@ -352,7 +359,7 @@ Visitors to your website who are interested in participating in your beta progra
 	```
 1. Add an environment variable for the email address from which to send the confirmation email. Enter **EMAIL_ADDRESS** as the **Key** and the email address you defined in Amazon SES in **Step 4** as the **Value**.
 
-  ![Environment variables](images/lab2_env-vars.png)
+  ![Environment variables](images/lab1_env-vars.png)
 
 1. Select **Choose an existing role** from **Role**.
 1. Select **LambdaSESRole** from **Existing role**.
@@ -362,13 +369,13 @@ Visitors to your website who are interested in participating in your beta progra
 1. Submit a [sub-address][sub-addressing] of the email address you verified in **Step 4**. For example, if you're using gmail, you can append a plus sign with a random label to your email to write new records to the table that will be delivered to your address. For example, **example+1@gmail.com** will be delivered to **example@gmail.com**.
 1. Wait for the function to begin processing records which could take a few moments. Check the triggers tab in your Lambda function and wait for **Last result** to change to **OK**. You can also check the function's logs and metrics in the monitoring tab.
 
-  ![Monitor trigger](images/lab2_trigger-tab.png)
+  ![Monitor trigger](images/lab1_trigger-tab.png)
 
 1. Open your email inbox and verify you receive confirmation messages when you fill out and submit the form.
 
-  ![Email](images/lab2_email.png)
+  ![Email](images/lab1_email.png)
 
-***LAB 2 COMPLETE***
+***LAB 1 COMPLETE***
 
 In this lab you've:
 
@@ -377,7 +384,7 @@ In this lab you've:
 - Configured an Amazon Cognito identity pool that allows anonymous users to post to an Amazon DynamoDB table.
 - Added a trigger to the Amazon DynamoDB table to email users who sign up for your beta program.
 
-## Lab 3: Administrative Interface
+## Lab 2: Administrative Interface
 
 Your marketing team needs an administrative interface to manage aspects of the site. In this module, you'll create an Amazon Cognito user pool for your administrator users and start building endpoints in Amazon API Gateway. You'll configure an authorizer to validate the identity of your administrators and wire up a page to view users who have signed up for the beta program.
 
@@ -404,12 +411,12 @@ Your marketing team needs an administrative interface to manage aspects of the s
 1. Click the **Create pool** button.	
 1. Note the **Pool Id** in the **Pool details** section.
 
-  ![Pool details](images/lab3_pool-details.png)
+  ![Pool details](images/lab2_pool-details.png)
 
 1. Click **Apps** on the left hand navigation menu.
 1. Note the **App client id**.
 
-  ![App details](images/lab3_app-details.png)
+  ![App details](images/lab2_app-details.png)
 
 1. Click **Users** on the left-hand navigation.
 1. Click the **Create user** button.
@@ -417,7 +424,7 @@ Your marketing team needs an administrative interface to manage aspects of the s
 1. Enter a password into **Temporary password**. Create and note a password that meets the default password policy requirements of at least eight characters containing at least one upper case letter, number, and symbol.
 1. Deselect **Send an invitation to this new user?**, **Mark phone number as verified?**, **Mark email as verified?**.
 
-  ![Create user](images/lab3_create-user.png)
+  ![Create user](images/lab2_create-user.png)
 
 1. Click the **Create user** button.
 1. Click the AWS logo in the navigation bar and click on **IAM**.
@@ -466,7 +473,7 @@ Your marketing team needs an administrative interface to manage aspects of the s
 1. Select **Choose an existing role** from **Role**.
 1. Select **LambdaDynamoDBRole** from **Existing role**.
 
-  ![Select role](images/lab3_lambda-role.png)
+  ![Select role](images/lab2_lambda-role.png)
 
 1. Click the **Next** button.
 1. Click the **Create Function** button.
@@ -482,7 +489,7 @@ Your marketing team needs an administrative interface to manage aspects of the s
 1. Leave **Wildrydes_Admin** in **Authorizer name**.
 1. Leave **method.request.header.Authorization** in **Identity token source**.
 
-  ![Authorizer](images/lab3_authorizer.png)
+  ![Authorizer](images/lab2_authorizer.png)
 
 1. Click the **Create** button.
 1. Click the **Resources** link in the left-hand navigation.
@@ -498,7 +505,7 @@ Your marketing team needs an administrative interface to manage aspects of the s
 1. Select the Region you're using from **Lambda Region**.
 1. Enter **GetAllEmails** as **Lambda Function**.
 
-  ![Create method](images/lab3_create-method.png)
+  ![Create method](images/lab2_create-method.png)
 
 1. Click the **Save** button. You will be prompted to give permission to API Gateway to invoke your Lambda function. Click the **OK** button.
 1. Click **Method Request**.
@@ -511,20 +518,20 @@ Your marketing team needs an administrative interface to manage aspects of the s
 1. Click on the **Deploy button**.
 1. Note the **Invoke URL** of your new API.
 
-  ![Invoke URL](images/lab3_invoke-url.png)
+  ![Invoke URL](images/lab2_invoke-url.png)
 
-1. Copy the Wild Rydes static website files from `lab3/` into your work directory.
+1. Copy the Wild Rydes static website files from `lab2/` into your work directory.
 
   On Linux and macOS:
 
   ```console
-  cp -R lab3/* work
+  cp -R lab2/* work
   ```
 
   On Windows:
 
   ```console
-  xcopy /E /Y lab3 work
+  xcopy /E /Y lab2 work
   ```
 
 1. In your work directory, open **scripts/config.js** in your text editor.
@@ -576,7 +583,7 @@ Your marketing team needs an administrative interface to manage aspects of the s
     }
     ```
 
-1. Update the contents of the Amazon S3 bucket created in Lab 1 with the new files:
+1. Update the contents of the Amazon S3 bucket created in the pre-lab with the new files:
 
    ```console
    aws s3 sync work/ s3://INSERT_BUCKET_NAME_HERE
@@ -584,13 +591,13 @@ Your marketing team needs an administrative interface to manage aspects of the s
 
 1. Open your web browser and open the admin page of the Wild Rydes marketing site using the CloudFront URL you created in Lab 1 and append **/admin** to it.
 
-    ![Admin](./images/lab3_admin.png)
+    ![Admin](./images/lab2_admin.png)
 
 1. Log into the admin site using the credentials you created in **Step 30**.
 1. Click on the **View Emails** link.
 1. Verify that you see a full list of emails that have been submitted to the site. Submit other email addresses and reload this page to ensure they are also returned.
 
-***LAB 3 COMPLETE***
+***LAB 2 COMPLETE***
 
 In this lab you've:
 
@@ -598,7 +605,7 @@ In this lab you've:
 - Created an Amazon DynamoDB function to return email addresses through a Amazon API Gateway proxy to an AWS Lambda method.
 - Added an API for our site and added an emails resource with a GET method only accessible to authenticated administrator users.
 
-## Lab 4: Product Update Blog
+## Lab 3: Product Update Blog
 
 To keep your visitors up to date on your progress building your product, your marketing team would like to publish a blog of product updates. Using your new administrative interface, you'll add an interface to publish posts to the product update blog using API Gateway and Lambda which will appear on your landing page.
 
@@ -610,7 +617,7 @@ To keep your visitors up to date on your progress building your product, your ma
 1. Enter **Timestamp** and select **Number** in the **Sort key** field that appears under the check box. Ensure that you type this exactly as displayed because Amazon DynamoDB is case sensitive.
 1. Leave **Use default settings** checked.
 
-   ![Create table](images/lab4_create-table.png)
+   ![Create table](images/lab3_create-table.png)
 
 1. Click the **Create** button.
 1. Click **Services** in the navigation bar and select **Lambda**.
@@ -713,7 +720,7 @@ To keep your visitors up to date on your progress building your product, your ma
 1. Enter **posts** as **Resource Name**.
 1. Select **Enable API Gateway CORS**.
 
-   ![Create resource](images/lab4_create-resource.png)
+   ![Create resource](images/lab3_create-resource.png)
 
 1. Click the **Create Resource** button.
 1. Click the **Actions** button.
@@ -723,14 +730,14 @@ To keep your visitors up to date on your progress building your product, your ma
 1. Select the Region you're using from **Lambda Region**.
 1. Enter **CreatePost** as **Lambda Function**.
 
-  ![Create POST method](images/lab4_create-post-method.png)
+  ![Create POST method](images/lab3_create-post-method.png)
 
 1. Click the **Save** button. You will be prompted to give permission to API Gateway to invoke your Lambda function. Click the **OK** button.
 1. Click **Method Request**.
 1. Click the pen icon in **Authorization**.
 1. Select **Wildrydes_Admin** under **Cognito user pool authorizers** and click the check mark.
 
-  ![Authorization](images/lab4_authorization-settings.png)
+  ![Authorization](images/lab3_authorization-settings.png)
 
 1. Click the **Actions** button.
 1. Click the **Create Method** link.
@@ -743,21 +750,21 @@ To keep your visitors up to date on your progress building your product, your ma
 1. Click **Deploy API** link.
 1. Select *prod* from the **Deployment stage** drop-down list.
 1. Click the **Deploy button**.
-1. Copy the Wild Rydes static website files from `lab4/` into your work directory.
+1. Copy the Wild Rydes static website files from `lab3/` into your work directory.
 
   On Linux and macOS:
 
   ```console
-  cp -R lab4/* work
+  cp -R lab3/* work
   ```
 
   On Windows:
 
   ```console
-  xcopy /E /Y lab4 work
+  xcopy /E /Y lab3 work
   ```
 
-1. Update the contents of the Amazon S3 bucket created in Lab 1 with the new files:
+1. Update the contents of the Amazon S3 bucket created in the pre-lab with the new files:
 
    ```console
    aws s3 sync work/ s3://INSERT_BUCKET_NAME_HERE
@@ -766,14 +773,14 @@ To keep your visitors up to date on your progress building your product, your ma
 1. Go to the admin section of the web site, log in if prompted, and click **New Post**.
 1. Add a new post by filling out **Title** and **Body** and click **Post**.
 
-  ![New post](images/lab4_new-post.png)
+  ![New post](images/lab3_new-post.png)
 
 1. Verify that you're redirected to the blog page and that you see the post you just created.
 
-  ![Post](images/lab4_post.png)
+  ![Post](images/lab3_post.png)
 
 
-***LAB 4 COMPLETE***
+***LAB 3 COMPLETE***
 
 In this lab you've:
 
@@ -783,6 +790,7 @@ In this lab you've:
 [wildrydes]: http://www.wildrydes.com
 [free-tier]: https://aws.amazon.com/free/
 [region-table]: https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
+[register-aws-account]: https://portal.aws.amazon.com/gp/aws/developer/registration/index.html
 [us-east-1]: https://console.aws.amazon.com/console/home?region=us-east-1
 [us-west-2]: https://console.aws.amazon.com/console/home?region=us-west-2
 [eu-west-1]: https://console.aws.amazon.com/console/home?region=eu-west-1
@@ -790,7 +798,7 @@ In this lab you've:
 [cli-configuration]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration
 [cli]: https://aws.amazon.com/cli/
 [chrome]: https://www.google.com/chrome/
-[git]: https://git-scm.com/
+[git]: https://git-scm.com/downloads
 [developer-console]: https://developers.google.com/web/tools/chrome-devtools/console/
 [ses-role]: https://console.aws.amazon.com/iam/home?region=us-east-1#/policies/arn:aws:iam::aws:policy/AmazonSESFullAccess
 [lambda-role]: https://console.aws.amazon.com/iam/home?region=us-east-1#/policies/arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole

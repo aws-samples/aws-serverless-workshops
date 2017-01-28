@@ -239,6 +239,10 @@ Visitors to your website who are interested in participating in your beta progra
 	}
    ```
 
+   When the policy has been entered correctly, your screen should resemble the below:
+
+   ![Unauth Policy](images/lab1_cognito-unauth-policy.png)
+
 1. Click the **Allow** button.
 1. Click **Edit identity pool** in the upper right and note the **Identity pool ID**.
 

@@ -6,14 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wild Rydes</title>
 
-  
-
   <link rel="stylesheet" href="styles/main.css">
 
   <script src="scripts/vendor/modernizr.js"></script>
+  <script src="scripts/vendor/aws-sdk.min.js" defer></script>
 
   <script src="https://use.typekit.net/dmq4txp.js"></script>
   <script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+  <script src="scripts/config.js" defer></script>
+  <script src="scripts/index.js" defer></script>
 </head>
 <body class="page-home">
 
@@ -82,16 +84,26 @@
 
   <section class="home-sign-up">
     <div class="row column">
-      <img class="icon-w" src="images/wr-home-W.png">
+      <div class="row column">
+        <img class="icon-w" src="images/wr-home-W.png">
 
-      <form onsubmit="javascript:void(0);">
-        <input type="email" placeholder="Enter your email address">
-        <button type="button">Submit</button>
-      </form>
+        <div class="row column" id="form">
+          <form>
+            <input type="email" placeholder="Enter your email address">
+            <button type="submit">Submit</button>
+          </form>
 
-      <h2 class="section-title">Sign Up</h2>
+          <h2 class="section-title">Sign Up</h2>
 
-      <p class="content">Wild Rydes is coming soon! Enter your email to enter the limited private beta</p>
+          <p class="content">Wild Rydes is coming soon! Enter your email to enter the limited private beta</p>
+        </div>
+
+        <div style="margin-top: 110px; display: none;" id="thank-you" class="row column">
+          <h2 class="section-title">Thank You</h2>
+
+          <p class="content">Wild Rydes is coming soon! Stay tuned for more info about unicorns near you!</p>
+        </div>
+      </div>
 
       <div class="apps">
         <a class="app-icon" href=""><img src="images/wr-home-apple.png"></a>

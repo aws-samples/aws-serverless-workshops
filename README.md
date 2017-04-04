@@ -194,7 +194,7 @@ Visitors to your website who are interested in participating in your beta progra
 
   ![Role type](images/lab1_role-type.png)
 
-1. Attach the **AmazonSESFullAccess** and **AWSLambdaBasicExecutionRole** managed policies to the role by searching for them in the **Filter** text box and clicking the checkbox. These policies contain the permissions that your AWS Lambda function will have within your account and will allow your function to send email via Amazon SES and to send logs to Amazon CloudWatch Logs. Take a moment to look at the [AmazonSESFullAccess][ses-role] and [AWSLambdaBasicExecutionRole][lambda-role] policies to see what permissions you're granting your Lambda function.
+1. Attach the **AmazonSESFullAccess**, **AWSLambdaBasicExecutionRole** and **AWSLambdaDynamoDBExecutionRole** managed policies to the role by searching for them in the **Filter** text box and clicking the checkbox. These policies contain the permissions that your AWS Lambda function will have within your account and will allow your function to send email via Amazon SES and to send logs to Amazon CloudWatch Logs. Take a moment to look at the [AmazonSESFullAccess][ses-role] and [AWSLambdaBasicExecutionRole][lambda-role] policies to see what permissions you're granting your Lambda function.
 1. Click **Next Step**.
 1. Verify the **Trusted Entities** and **Policies** section against the screenshot and click **Create Role**.
 

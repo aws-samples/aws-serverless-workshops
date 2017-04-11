@@ -1,0 +1,22 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+      "ecmaVersion": 5,
+      "sourceType": "script",
+  },
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
+  "rules": {
+    "no-var": "off",
+    "prefer-arrow-callback": "off",
+    "no-use-before-define": ["error", { "functions": false }],
+    "no-alert": "off",
+    "prefer-template": "off",
+    "comma-dangle": ["error", {
+       "functions": "never",
+    }],
+    "import/no-dynamic-require": "off"
+  }
+}

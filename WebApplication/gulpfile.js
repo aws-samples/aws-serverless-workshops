@@ -1,18 +1,84 @@
 const gulp = require('gulp');
-const eslint = require('gulp-eslint');
+const gutil = require('gulp-util');
 const print = require('gulp-print');
+const awspublish = require('gulp-awspublish');
+const parallelize = require('concurrent-transform');
+const through = require('through2');
+const path = require('path');
 
-gulp.task('lint', () => {
-    gulp.src(['**/*.js', '!node_modules/**', '!**/vendor/**', '!**/website/js/vendor.js', '!**/website/js/main.js'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
+const regions = [
+    'ap-northeast-1',
+    'ap-northeast-2',
+    'ap-southeast-2',
+    'eu-central-1',
+    'eu-west-1',
+    'eu-west-2',
+    'us-east-1',
+    'us-east-2',
+    'us-west-2',
+];
+
+gulp.task('renderRegions', () => {
+    gulp.src(['**/*.yaml', '!build/**/*.yaml'], { base: '..' })
+        .pipe(print())
+        .pipe(regionalize(regions))
+        .pipe(gulp.dest('build/templates'));
 });
 
 gulp.task('upload', () => {
-    gulp.src(['1_StaticWebHosting/website/**', '**/*.yaml']).pipe(print());
+    regions.forEach((region) => {
+        const publisher = awspublish.create({
+            region: region,
+            params: {
+                Bucket: `wildrydes-${region}`,
+            },
+        });
+
+        gulp.src(['1_StaticWebHosting/website/**'], { base: '..' })
+            .pipe(parallelize(publisher.publish(), 10))
+            .pipe(awspublish.reporter());
+
+        gulp.src(`build/templates/${region}/**`)
+            .pipe(publisher.publish())
+            .pipe(awspublish.reporter());
+    });
 });
 
 gulp.task('default', () => {
     gulp.src(['**/*.js', '!node_modules/**', '!**/vendor/**', '!**/website/js/vendor.js']).pipe(print());
 });
+
+function regionalize(regions) {
+    return through.obj(function (file, enc, callback) {
+        if (file.isNull()) {
+            callback(null, file);
+            return;
+        }
+
+        if (file.isStream()) {
+            callback(new gutil.PluginError('multiRender', 'Streaming not supported'));
+            return;
+        }
+
+        try {
+            regions.forEach((region) => {
+                const newFile = file.clone({
+                    contents: false,
+                });
+                newFile.path = path.join(file.base, region, file.relative);
+                newFile.contents = regionalizeContents(file.contents, region);
+                this.push(newFile);
+            });
+        } catch (err) {
+            this.emit('error', new gutil.PluginError('multiRender', err, {
+                fileName: file.path,
+            }));
+        }
+
+        callback();
+    });
+}
+
+function regionalizeContents(contents, region) {
+    return new Buffer(contents.toString().replace('us-east-1', region));
+}

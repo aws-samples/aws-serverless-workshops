@@ -4,8 +4,15 @@
   "description": "Workshops showcasing AWS serverless architectures and use cases.",
   "main": "gulpfile.js",
   "devDependencies": {
+    "concurrent-transform": "^1.0.0",
     "gulp": "^3.9.1",
-    "gulp-eslint": "^3.0.1"
+    "gulp-awspublish": "^3.3.0",
+    "gulp-eslint": "^3.0.1",
+    "gulp-print": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-util": "^3.0.8",
+    "js-yaml": "^3.8.3",
+    "through2": "^2.0.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

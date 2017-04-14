@@ -11,7 +11,7 @@ Parameters:
 
   CodeBucket:
     Type: String
-    Default: wildrydes-us-west-2
+    Default: wildrydes-us-east-1
     Description: S3 bucket containing the code deployed by this template
 
   CodeKeyPrefix:

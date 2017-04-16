@@ -40,5 +40,5 @@ This workshop is broken up into multiple modules. You must complete each module 
 
 1. [Static Web hosting](1_StaticWebHosting)
 2. [User Management](2_UserManagement)
-3. [RESTful APIs](3_RESTfulAPIs)
-4. [Persistence](4_Persistence)
+3. [Serverless Backend](3_ServerlessBackend)
+4. [RESTful APIs](4_RESTfulAPIs)

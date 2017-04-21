@@ -70,7 +70,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 </p></details>
 
 ### 3. Create a new resource and method
-Create a new resource called /requestunicorn within your API. Then create a POST method for that resource and configure it to use a Lambda proxy integration backed by the RequestUnicorn function you created in the first step of this module.
+Create a new resource called /ride within your API. Then create a POST method for that resource and configure it to use a Lambda proxy integration backed by the RequestUnicorn function you created in the first step of this module.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>

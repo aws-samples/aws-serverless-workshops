@@ -42,3 +42,5 @@ This workshop is broken up into multiple modules. You must complete each module 
 2. [User Management](2_UserManagement)
 3. [Serverless Backend](3_ServerlessBackend)
 4. [RESTful APIs](4_RESTfulAPIs)
+
+After you have completed the workshop you can delete all of the resources that were created by following the [cleanup guide](9_CleanUp).

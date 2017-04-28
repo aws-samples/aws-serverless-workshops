@@ -207,3 +207,5 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 1. Choose **Request Unicorn**. You should see a notification in the right sidebar that a unicorn is on its way and then see a unicorn icon fly to your pickup location.
 
 Congratulations, you have completed the Wild Rydes Web Application Workshop. Visit this repository soon for new workshops covering additional serverless use cases and partner products.
+
+See this workshop's [cleanup guide](../9_CleanUp) for instructions on how to delete the resources you've created.

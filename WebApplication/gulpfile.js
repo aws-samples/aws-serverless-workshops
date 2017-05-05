@@ -6,7 +6,7 @@ const parallelize = require('concurrent-transform');
 const through = require('through2');
 const path = require('path');
 
-const regions = [
+const REGIONS = [
     'ap-northeast-1',
     'ap-northeast-2',
     'ap-southeast-2',
@@ -21,12 +21,12 @@ const regions = [
 gulp.task('renderRegions', () => {
     gulp.src(['**/*.yaml', '!build/**/*.yaml'], { base: '..' })
         .pipe(print())
-        .pipe(regionalize(regions))
+        .pipe(regionalize(REGIONS))
         .pipe(gulp.dest('build/templates'));
 });
 
 gulp.task('upload', () => {
-    regions.forEach((region) => {
+    REGIONS.forEach((region) => {
         const publisher = awspublish.create({
             region: region,
             params: {
@@ -49,7 +49,7 @@ gulp.task('default', () => {
 });
 
 function regionalize(regions) {
-    return through.obj(function (file, enc, callback) {
+    return through.obj((file, enc, callback) => {
         if (file.isNull()) {
             callback(null, file);
             return;

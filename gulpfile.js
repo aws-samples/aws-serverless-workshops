@@ -1,13 +1,17 @@
 const gulp = require('gulp');
+
 const eslint = require('gulp-eslint');
 
-gulp.task('lint', () => {
-    return gulp.src(['**/*.js', '!node_modules/**'])
+const LINT_GLOBS = [
+    '**/*.js',
+    '!node_modules/**',
+    '!**/*vendor*.js',
+    '!**/vendor/**',
+];
+
+gulp.task('lint', () => gulp.src(LINT_GLOBS)
         .pipe(eslint())
         .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
+        .pipe(eslint.failAfterError()));
 
-gulp.task('default', () => {
-  // place code for your default task here
-});
+gulp.task('default', ['lint']);

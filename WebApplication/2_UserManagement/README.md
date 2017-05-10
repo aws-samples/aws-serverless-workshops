@@ -27,7 +27,7 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 1. Provide the name of your website bucket from module 1 for the  **Website Bucket Name** (e.g. `wildrydes-yourname`) and choose **Next**.
 
     **Note:** You must specify the same bucket name you used in the previous module. If you provide a bucket name that does not exist or that you do not have write access to, the CloudFormation stack will fail during creation.
-    
+
     ![Speficy Details Screenshot](../images/module2-cfn-specify-details.png)
 
 1. On the Options page, leave all the defaults and choose **Next**.
@@ -166,7 +166,7 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
 
 </p>
 
-## Test Your Implementation
+## Implementation Validation
 
 1. Visit `/register.html` under your website domain, or choose the **Giddy Up!** button on the homepage of your site.
 

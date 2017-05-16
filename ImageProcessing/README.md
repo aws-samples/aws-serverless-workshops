@@ -405,8 +405,9 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	This tells AWS Step Functions if the  `CheckFaceDuplicate ` state runs successfully, go on to run the `ParallelProcessing ` state as the next step in the process. 
 
 1. At this point, your `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples): 
-<details>
-<summary><strong>(expand to see)</strong></summary><p>
+	
+	<details>
+	<summary><strong>(expand to see)</strong></summary><p>
 
 	```JSON
 	{

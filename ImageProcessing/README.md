@@ -641,7 +641,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	  }
 	}	
 	```
-</p></details>
+	</p></details>
 
 1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-4` by copy-pasting the updated JSON definition:
 

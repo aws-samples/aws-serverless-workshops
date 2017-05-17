@@ -5,21 +5,21 @@ In this module you'll use AWS Step Functions to build an image processing workfl
 The Wild Rydes team wants to add a new feature to the app by requiring riders to upload a selfie after signing up. This accomplishes a few things: 
 
 1. Allows the unicorns to easily identify the rider during pickup to provide a good customer experience. This also enhances security so bad guys can't spoof to be riders and get on the unicorns. 
-2. Prevents the same user from signing up for multiple accounts to abuse new-user promotions 
+1. Prevents the same user from signing up for multiple accounts to abuse new-user promotions 
 
 ![selfie picture](./images/selfie/selfie-picture.jpeg)
 
 When users upload the photo of themselves, a few steps of verification and processing need to take place:
 
 1. Verify the photo shows a clear face the app/unicorns can use to identify the rider 
-2. Match against the collection of previously indexed faces to make sure the user hasn't already signed up
-3. Resize the photo to thumbnails to display on the app
-4. Index the user's face into the collection so it can be used for matching in the future. 
-5. Store the photo metadata with the user's profile  
+1. Match against the collection of previously indexed faces to make sure the user hasn't already signed up
+1. Resize the photo to thumbnails to display on the app
+1. Index the user's face into the collection so it can be used for matching in the future. 
+1. Store the photo metadata with the user's profile  
 
 In the serverless world, each of steps above can be easily implemented with a AWS Lambda function. But how can we manage the flow of invoking one Lambda function after the previous step has finished and keep track of what happened with each image? What if one of the Lambda function times out and needs to be retried? Some of the Lambda functions can be run in parallel to reduce end-to-end processing latency, how can we coordinate running Lambda functions in parallel and wait for them to finish? AWS Step Functions makes it very easy to solve these problems and provides an audit trail and visualization to track what happened with each flow. 
 ## Architecture Overview
-The architecture for this module is composed of several AWS Lambda functions that leverage the facial detection capabilities of **Amazon Rekognition**, resize the uploaded image stored in **Amazon S3**, and save the image metadata with the user profile using **Amazon DynamoDB**. The orchestration of these Lambda functions is managed by an **AWS Step Functions**  State Machine.
+The architecture for this module is composed of several AWS Lambda functions that leverage the facial detection capabilities of **Amazon Rekognition**, resize the uploaded image stored in **Amazon S3**, and save the image metadata with the user profile using **Amazon DynamoDB**. The orchestration of these Lambda functions is managed by an **AWS Step Functions**  state machine.
 
 <img src="./images/wild-rydes-architecture.png" width="60%">
 
@@ -41,7 +41,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 ### 1. Create a collection in Amazon Rekognition
 A Face Collection is a container in Amazon Rekognition to store indexed face images as searchable vectors.  
 
-Using the AWS CLI commandline tools, create a collection in the Amazon Rekognition called `rider-photos`
+Using the AWS Command Line Interface, create a collection in the Amazon Rekognition called `rider-photos`
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -59,7 +59,7 @@ Using the AWS CLI commandline tools, create a collection in the Amazon Rekogniti
 	
 2. If successful, you should get an acknowledgment from the service that looks like:
 
-	```
+	```JSON
 	{
     	"CollectionArn": "aws:rekognition:us-west-2:012345678912:collection/rider-photos",
     	"StatusCode": 200
@@ -118,7 +118,7 @@ The AWS Lambda function that implements this check by leveraging the **Amazon Re
 
 The AWS Lambda function to be called when the validations fail is deployed by the AWS CloudFormation called `NotificationPlaceholderFunction`. The intent behind this step is to notify the user the photo validation failed and the error reason, so they can try upload a different photo. To keep this workshop module short, the function just prepares the message instead of actually sending the message (feel free to modify the code to send email notifications through SES)
 
-Now you can create an AWS Step Functions State Machine with the initial face detection step: 
+Now you can create an AWS Step Functions state machine with the initial face detection step: 
 
 ![initial state machine diagram](./images/1st-state-machine-graph.png)
 
@@ -127,7 +127,7 @@ Now you can create an AWS Step Functions State Machine with the initial face det
 
 1. AWS Step Functions state machine flows are defined by a JSON document. In your favorite text editor, create a file called `rider-photo-state-machine.json`
 
-1. copy and paste the following into your JSON file:
+1. Copy and paste the following into your JSON file:
 
 	```JSON
 	{
@@ -158,13 +158,14 @@ Now you can create an AWS Step Functions State Machine with the initial face det
 	}
 
 	```
-	> The above JSON defines a state machine using the [Amazon States Language](https://states-language.net/spec.html). Take a moment to understand its structure. 
-	> 
-	> When this state machine is launched, the AWS Step Functions interpreter begins execution by identifying the Start State. It executes that state, and then checks to see if the state is marked as an End State. If it is, the machine terminates and returns a result. If the state is not an End State, the interpreter looks for a “Next” field to determine what state to run next; it repeats this process until it reaches a Terminal State (Succeed, Fail, or an End State) or a runtime error occurs.
-	> 
-	> The `ResultPath` parameter in the `FaceDetection` state causes the output of the state to be the union of the original input passed to the state and an additional `detectedFaceDetails` field that holds the output from the AWS Lambda function.
-	> 
-	> The `Catch` parameter in the `FaceDetection` state can match custom error types thrown by the AWS Lambda function and change the flow of the execution based on the error type caught. 
+	
+The above JSON defines a state machine using the [Amazon States Language](https://states-language.net/spec.html). Take a moment to understand its structure. 
+ 
+When this state machine is launched, the AWS Step Functions interpreter begins execution by identifying the Start State. It executes that state, and then checks to see if the state is marked as an End State. If it is, the machine terminates and returns a result. If the state is not an End State, the interpreter looks for a “Next” field to determine what state to run next; it repeats this process until it reaches a Terminal State (Succeed, Fail, or an End State) or a runtime error occurs.
+ 
+The `ResultPath` parameter in the `FaceDetection` state causes the output of the state to be the union of the original input passed to the state and an additional `detectedFaceDetails` field that holds the output from the AWS Lambda function.
+ 
+The `Catch` parameter in the `FaceDetection` state can match custom error types thrown by the AWS Lambda function and change the flow of the execution based on the error type caught. 
 
 
 1. Replace the `REPLACE_WITH_FaceDetectionFunctionArn` in the JSON with the ARN of the face detection AWS Lambda function 
@@ -176,7 +177,7 @@ Now you can create an AWS Step Functions State Machine with the initial face det
 
 1. From the AWS Management Console, choose **Services** then select **Step Functions** 
 
-1. You might see the Get Started page if you have not used AWS Step Functions before. If that's the case, click **Get Started**, it should lead you to the page to create a new State Machine. Otherwise, click the **Create a State Machine** button. 
+1. You might see the Get Started page if you have not used AWS Step Functions before. If that's the case, click **Get Started**, it should lead you to the page to create a new state machine. Otherwise, click the **Create a State Machine** button. 
 
 1. Type `RiderPhotoProcessing-1` for the state machine name
 
@@ -195,7 +196,7 @@ Now you can create an AWS Step Functions State Machine with the initial face det
 
 1. Click the **New execution** button to start a new execution
 
-1. Here you specify the input data passed into the AWS Step Functions State machine to process. You can specify an unique ID in the "execution id" field on the top, or leave it blank (if left blank, one unique ID will be automatically generated for you). For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` and `userId` field with your own values. 
+1. Here you specify the input data passed into the AWS Step Functions state machine to process. You can specify an unique ID in the "execution id" field on the top, or leave it blank (if left blank, one unique ID will be automatically generated for you). For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` and `userId` field with your own values. 
 
 	For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`. Use that value in the JSON below:
 
@@ -324,7 +325,7 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 
 1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-2` by copy-pasting the updated JSON definition:
 
-	![create state machine with dedup step](./images/create-machine-with-dedup.png)
+	![Create State Machine with dedup step](./images/create-machine-with-dedup.png)
 
 	> **Note**: AWS Step Functions state machines are immutable. Therefore, every time you want to change the state machine definition, you must always create a new state machine. 
 	
@@ -386,6 +387,7 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
           }
         }
       ],
+	   "ResultPath": "$.parallelResult",
       "End": true
     }
 	```
@@ -483,7 +485,7 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 
 1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-3` by copy-pasting the updated JSON definition:
 
-	![create state machine with parallel step](./images/create-machine-with-parallel.png)
+	![Create State Machine with parallel step](./images/create-machine-with-parallel.png)
 
 	> **Note**: AWS Step Functions state machines are immutable. Therefore, every time you want to change the state machine definition, you must always create a new state machine. 
 	
@@ -645,7 +647,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 
 1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-4` by copy-pasting the updated JSON definition:
 
-	![create state machine with persistence step](./images/create-machine-with-persistence.png)
+	![Create state machine with persistence step](./images/create-machine-with-persistence.png)
 	
 1. Test the new state machine with test input:
 
@@ -678,7 +680,7 @@ Now you have built a multi-step image processing workflow using AWS Step Functio
 	<details>
 	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 	
-	In the AWS Step Functions Management Console, go to **Dashboard**, select the State machine to delete, then click **Delete**
+	In the AWS Step Functions Management Console, go to **Dashboard**, select the state machine to delete, then click **Delete**
 	
 	![delete state machines](./images/delete-machines.png) 
 	
@@ -738,7 +740,7 @@ Now you have built a multi-step image processing workflow using AWS Step Functio
 	
 	2. If successful, you should get an acknowledgment from the service that looks like:
 
-		```
+		```JSON
 		{
 	    	"StatusCode": 200
 		}

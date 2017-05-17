@@ -125,7 +125,7 @@ Now you can create an AWS Step Functions state machine with the initial face det
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. AWS Step Functions state machine flows are defined by a JSON document. In your favorite text editor, create a file called `rider-photo-state-machine.json`
+1. AWS Step Functions state machine flows are defined by a JSON document. In your favorite text editor, create a file called `rider-photo-state-machine.json`.
 
 1. Copy and paste the following into your JSON file:
 
@@ -168,20 +168,20 @@ The `ResultPath` parameter in the `FaceDetection` state causes the output of the
 The `Catch` parameter in the `FaceDetection` state can match custom error types thrown by the AWS Lambda function and change the flow of the execution based on the error type caught. 
 
 
-1. Replace the `REPLACE_WITH_FaceDetectionFunctionArn` in the JSON with the ARN of the face detection AWS Lambda function 
+1. Replace the `REPLACE_WITH_FaceDetectionFunctionArn` in the JSON with the ARN of the face detection AWS Lambda function.
 	> To find the ARN of the face detection AWS Lambda function, in the AWS CloudFormation Console, go to the `wildrydes-step-module-resources` stack, look in the **Outputs** section for `FaceDetectionFunctionArn`)
 
 1. Replace the `REPLACE_WITH_NotificationPlaceholderFunctionArn` in the JSON with the ARN of the AWS Lambda function that mocks sending user notifications.
 	> To find the ARN of the mock notification AWS Lambda function, in the AWS CloudFormation Console, go to the `wildrydes-step-module-resources` stack, look in the **Outputs** section for `NotificationPlaceholderFunctionArn`)
  
 
-1. From the AWS Management Console, choose **Services** then select **Step Functions** 
+1. From the AWS Management Console, choose **Services** then select **Step Functions**. 
 
 1. You might see the Get Started page if you have not used AWS Step Functions before. If that's the case, click **Get Started**, it should lead you to the page to create a new state machine. Otherwise, click the **Create a State Machine** button. 
 
-1. Type `RiderPhotoProcessing-1` for the state machine name
+1. Type `RiderPhotoProcessing-1` for the state machine name.
 
-1. Paste in the JSON from your `rider-photo-state-machine.json` file into the **Code** editor portion  
+1. Paste in the JSON from your `rider-photo-state-machine.json` file into the **Code** editor portion. 
 
 1. You can click on the &#x21ba; sign next to **Preview** to visualize the workflow:
  
@@ -190,11 +190,11 @@ The `Catch` parameter in the `FaceDetection` state can match custom error types 
 
 1. Click **Create State Machine** to create the state machine.
 
-1. In the pop-up window, select the IAM role automatically generated for you (the name should look like `StatesExecutionRole-{region-name}`
+1. In the pop-up window, select the IAM role automatically generated for you (the name should look like `StatesExecutionRole-{region-name}`).
 
 	![pick IAM role for state machine](./images/pick-state-role.png)
 
-1. Click the **New execution** button to start a new execution
+1. Click the **New execution** button to start a new execution.
 
 1. Here you specify the input data passed into the AWS Step Functions state machine to process. You can specify an unique ID in the "execution id" field on the top, or leave it blank (if left blank, one unique ID will be automatically generated for you). For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` and `userId` field with your own values. 
 
@@ -358,8 +358,8 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 
    First, add a new state `ParallelProcessing` following the `CheckFaceDuplicate` state. Also make sure:
    
-   *   Replace the `REPLACE_WITH_IndexFaceFunctionArn` with the `IndexFaceFunctionArn` from the AWS CloudFormation output
-   *   Replace the `REPLACE_WITH_ThumbnailFunctionArn` with the `ThumbnailFunctionArn` from the AWS CloudFormation output 
+   *   Replace the `REPLACE_WITH_IndexFaceFunctionArn` with the `IndexFaceFunctionArn` from the AWS CloudFormation output.
+   *   Replace the `REPLACE_WITH_ThumbnailFunctionArn` with the `ThumbnailFunctionArn` from the AWS CloudFormation output. 
 
 	```JSON
     ,
@@ -392,7 +392,7 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
     }
 	```
 	
-1. Find the line in the `CheckFaceDuplicate` state that marks it as the End state of the state machine
+1. Find the line in the `CheckFaceDuplicate` state that marks it as the End state of the state machine.
 
 	```JSON
 	     	 "End": true,
@@ -505,7 +505,7 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	aws rekognition list-faces --collection-id rider-photos --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
 	```
 	
-	> You might find the `delete-faces` command useful when testing
+	> You might find the `delete-faces` command useful when testing:
 
 	```
 	aws rekognition delete-faces --collection-id rider-photos --face-ids REPLACE_WITH_ID_OF_FACE_TO_DELETE --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
@@ -547,7 +547,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 
 	```
 
-1. Find the line in the `ParallelProcessing` state that marks it as the End state of the state machine
+1. Find the line in the `ParallelProcessing` state that marks it as the End state of the state machine.
 
 	```JSON
 	     	 "End": true,
@@ -662,7 +662,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	If you reference an image that's already indexed when you were testing the previous state machine, the execution would fail the `CheckFaceDuplicate` step like this:
 	![already indexed face](./images/already-indexed-face.png)
 
-	You can use the `aws rekognition list-faces` and `aws rekognition delete-faces` to clean up the previous indexed faces during testing. Or you can upload a different picture to the `RiderPhotoS3Bucket` and use the s3 key of the new picture to test. 
+	You can use the `aws rekognition list-faces` and `aws rekognition delete-faces` commands to clean up the previous indexed faces during testing. Or you can upload a different picture to the `RiderPhotoS3Bucket` and use the s3 key of the new picture to test. 
 	
 	
 </p></details>
@@ -675,45 +675,45 @@ Now you have built a multi-step image processing workflow using AWS Step Functio
 
 ## Clean-up 
 
-1. Delete the `RiderPhotoProcessing-*` state machines from the AWS Step Functions console
+1. Delete the `RiderPhotoProcessing-*` state machines from the AWS Step Functions console.
 
 	<details>
 	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 	
-	In the AWS Step Functions Management Console, go to **Dashboard**, select the state machine to delete, then click **Delete**
+	In the AWS Step Functions Management Console, go to **Dashboard**, select the state machine to delete, then click **Delete**.
 	
 	![delete state machines](./images/delete-machines.png) 
 	
 	</p></details>
 
-1. Empty the Amazon S3 buckets used to store rider images and thumbnails
+1. Empty the Amazon S3 buckets used to store rider images and thumbnails.
 
 	<details>
 	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 	
-	1. In the Amazon S3 Management Console, click on the ![](./images/bucket-icon.png) icon next to Amazon S3 bucket used to store rider photos (The S3 bucket should have a name similar to `wildrydes-step-module-resource-riderphotos3bucket-7l698ggkdcf3`)
+	1. In the Amazon S3 Management Console, click on the ![](./images/bucket-icon.png) icon next to Amazon S3 bucket used to store rider photos (The S3 bucket should have a name similar to `wildrydes-step-module-resource-riderphotos3bucket-7l698ggkdcf3`).
 	 
 		![select bucket](./images/s3-console-select-bucket.png) 
-	1. Click on the **Empty Bucket** button
+	1. Click on the **Empty Bucket** button.
 	
 		![empty bucket](./images/s3-console-empty-bucket.png)
 		
-	1. Copy/paste the bucket name into the pop-up box, then click **Confirm**
+	1. Copy/paste the bucket name into the pop-up box, then click **Confirm**.
 	
 		![empty bucket](./images/s3-empty-bucket-dialog.png)
 		
-	1. Repeat the steps to empty the Amazon S3 bucket used to store photo thumbnails (it should have a name similar to `wildrydes-step-module-resources-thumbnails3bucket-1j0t3m28k7mxo`)
+	1. Repeat the steps to empty the Amazon S3 bucket used to store photo thumbnails (it should have a name similar to `wildrydes-step-module-resources-thumbnails3bucket-1j0t3m28k7mxo`).
 
 	</p></details>
 
-1. Delete the `wildrydes-step-module-resources` AWS CloudFormation stack that launched the AWS Lambda functions, Amazon S3 buckets and Amazon DynamoDB table
+1. Delete the `wildrydes-step-module-resources` AWS CloudFormation stack that launched the AWS Lambda functions, Amazon S3 buckets and Amazon DynamoDB table.
 
 	<details>
 	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 	
-	1. In the AWS CloudFormation Management Console, select the `wildrydes-step-module-resources` stack
+	1. In the AWS CloudFormation Management Console, select the `wildrydes-step-module-resources` stack.
 	
- 	1. Select **Delete Stack** under **Actions**
+ 	1. Select **Delete Stack** under **Actions**.
  	
 		![delete cloudformation stack](./images/cloudformation-delete.png)
 	
@@ -721,7 +721,7 @@ Now you have built a multi-step image processing workflow using AWS Step Functio
 	
 	</p></details>
 	
-1. Delete the Amazon Rekognition collection
+1. Delete the Amazon Rekognition collection.
 
 
 	<details>

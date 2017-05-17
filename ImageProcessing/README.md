@@ -239,7 +239,7 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 
 1. Edit your `rider-photo-state-machine.json` file to add a new step to the workflow. 
 
-   First, add a new state `CheckFaceDuplicate` following the `PhotoDoesNotMeetRequirement` state. Replace the `REPLACE_WITH_FaceSearchFunctionArn` with the `FaceSearchFunctionArn` from the AWS CloudFormation output: 
+   First, add a new state `CheckFaceDuplicate` following the `PhotoDoesNotMeetRequirement` state. Then, replace the `REPLACE_WITH_FaceSearchFunctionArn` with the `FaceSearchFunctionArn` from the AWS CloudFormation output: 
 
 
 	```JSON
@@ -511,7 +511,9 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	aws rekognition delete-faces --collection-id rider-photos --face-ids REPLACE_WITH_ID_OF_FACE_TO_DELETE --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
 	```
 
-1. You can also use the Amazon S3 Management Console to check the Amazon S3 bucket you created to store the resized thumbnail images, you should find resized thumbnail images in the bucket.
+1. You can also use the Amazon S3 Console to check the Amazon S3 bucket created by AWS CloudFormation to store the resized thumbnail images. You should find resized thumbnail images in the bucket.
+
+	> The name of the S3 bucket can be found in the in AWS CloudFormation output `ThumbnailS3Bucket`. You can also simply search for it in the S3 Console for `wildrydes-step-module-resources-thumbnails3bucket`
 
 1. What happens if you start a new workflow with a different `userId` but the same s3key and s3bucket parameters?  
 
@@ -520,7 +522,7 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 
 ### 6. Add metadata persistence step
 
-The last step of our image processing workflow is persist the metadata of the profile photo with the user's profile.
+The last step of our image processing workflow is to persist the metadata of the profile photo with the user's profile.
 
 The ARN of the AWS Lambda function that persists the metadata can be found in the in AWS CloudFormation output `PersistMetadataFunctionArn`.
 
@@ -550,18 +552,18 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 1. Find the line in the `ParallelProcessing` state that marks it as the End state of the state machine.
 
 	```JSON
-	     	 "End": true,
+	     	 "End": true
 
 	```
 	and replace it with
 	
 	```JSON
-      		"Next": "PersistMetadata",
+      		"Next": "PersistMetadata"
 
 	```
 	> **Note**: be careful to edit the `"End"` line at the `ParallelProcessing` level, not the individual branch level within the parallel state. 
 	
-	This tells AWS Step Functions if the  `ParallelProcessing` state runs successfully, go on to run the `PersistMetadata` state as the next step in the process. 
+	This tells AWS Step Functions if the `ParallelProcessing` state runs successfully, go on to run the `PersistMetadata` state as the next step in the process. 
 
 1. At this point, your `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples): 
 	<details>

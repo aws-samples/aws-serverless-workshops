@@ -5,17 +5,17 @@ In this module you'll use AWS Step Functions to build an image processing workfl
 The Wild Rydes team wants to add a new feature to the app by requiring riders to upload a selfie after signing up. This accomplishes a few things: 
 
 1. Allows the unicorns to easily identify the rider during pickup to provide a good customer experience. This also enhances security so bad guys can't spoof to be riders and get on the unicorns. 
-1. Prevents the same user from signing up for multiple accounts to abuse new-user promotions 
+1. Prevents the same user from signing up for multiple accounts to abuse new-user promotions.  
 
 ![selfie picture](./images/selfie/selfie-picture.jpeg)
 
 When users upload the photo of themselves, a few steps of verification and processing need to take place:
 
-1. Verify the photo shows a clear face the app/unicorns can use to identify the rider 
-1. Match against the collection of previously indexed faces to make sure the user hasn't already signed up
-1. Resize the photo to thumbnails to display on the app
+1. Verify the photo shows a clear face the app/unicorns can use to identify the rider. 
+1. Match against the collection of previously indexed faces to make sure the user hasn't already signed up.
+1. Resize the photo to thumbnails to display on the app.
 1. Index the user's face into the collection so it can be used for matching in the future. 
-1. Store the photo metadata with the user's profile  
+1. Store the photo metadata with the user's profile.  
 
 In the serverless world, each of steps above can be easily implemented with a AWS Lambda function. But how can we manage the flow of invoking one Lambda function after the previous step has finished and keep track of what happened with each image? What if one of the Lambda function times out and needs to be retried? Some of the Lambda functions can be run in parallel to reduce end-to-end processing latency, how can we coordinate running Lambda functions in parallel and wait for them to finish? AWS Step Functions makes it very easy to solve these problems and provides an audit trail and visualization to track what happened with each flow. 
 ## Architecture Overview

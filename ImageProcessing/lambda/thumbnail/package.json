@@ -1,0 +1,14 @@
+{
+  "name": "thumbnail",
+  "version": "1.0.0",
+  "description": "generate thumbnail of an image stored in S3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "Apache 2.0",
+  "dependencies": {
+    "gm": "^1.23.0",
+    "bluebird": "^3.5.0"
+  }
+}

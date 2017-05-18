@@ -1,0 +1,9 @@
+{
+  "userId": "johndoe",
+  "s3Bucket": "wildrydes-riderphotos-johndoe",
+  "s3Key": "2_sunglass_face.jpg",
+  "errorInfo": {
+    "Error": "PhotoDoesNotMeetRequirementError",
+    "Cause": "{\"errorMessage\":\"Face is wearing sunglasses\",\"errorType\":\"PhotoDoesNotMeetRequirementError\",\"stackTrace\":[\"Object.<anonymous> (/var/task/index.js:54:46)\",\"Module._compile (module.js:409:26)\",\"Object.Module._extensions..js (module.js:416:10)\",\"Module.load (module.js:343:32)\",\"Function.Module._load (module.js:300:12)\",\"Module.require (module.js:353:17)\",\"require (internal/module.js:12:17)\"]}"
+  }
+}

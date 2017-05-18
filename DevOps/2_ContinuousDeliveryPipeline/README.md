@@ -512,4 +512,4 @@ If you are unsure of the syntax to add to ``app-sam.yaml`` please refer to the c
 
 ## Completion
 
-Congratulations!  You have successfully created a Continuous Delivery Pipeline using CodePipeline to automate the deployment of the Unicorn API. In the next [X-Ray Module](../2_XRay), you will integrate AWS X-Ray to demonstrate how to troubleshoot the Unicorn API.
+Congratulations!  You have successfully created a Continuous Delivery Pipeline using CodePipeline to automate the deployment of the Unicorn API. In the next [X-Ray Module](../3_XRay), you will integrate AWS X-Ray to demonstrate how to troubleshoot the Unicorn API.

@@ -700,7 +700,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	} 
 	```
 	
-	Photo wit no faces in it:
+	Photo with no faces in it:
 
 	```JSON
 	{

@@ -1,4 +1,4 @@
-# Optional Module: Coordinate a serverless image processing workflow with AWS Step Functions
+# Module: Coordinate a serverless image processing workflow with AWS Step Functions
 
 In this module you'll use AWS Step Functions to build an image processing workflow by orchestrating multiple AWS Lambda functions. 
 

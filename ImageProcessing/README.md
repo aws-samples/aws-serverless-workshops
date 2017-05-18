@@ -116,9 +116,9 @@ After the riders upload their photo, the first thing we need do in our processin
 
 The AWS Lambda function that implements this check by leveraging the **Amazon Rekognition** deep-learning based image analysis API is already deployed by AWS CloudFormation in the previous step. Look in the **Outputs** section for `FaceDetectionFunctionArn` for the ARN of the Lambda function. 
 
-The AWS Lambda function to be called when the validations fail is deployed by the AWS CloudFormation called `NotificationPlaceholderFunction`. The intent behind this step is to notify the user the photo validation failed and the error reason, so they can try upload a different photo. It's currently a stub implementation that just prepares the message instead of actually sending the message. 
+The AWS Lambda function to be called when the validations fail is the  `NotificationPlaceholderFunction` deployed by AWS CloudFormation. The intent behind this step is to notify the user the photo validation failed and the error reason, so they can try upload a different photo. It's currently a stub implementation that just prepares the message instead of actually sending the message. 
 
-Now you can create an AWS Step Functions state machine with the initial face detection step: 
+Now you can create an AWS Step Functions state machine with the initial face detection step.
 
 ![initial state machine diagram](./images/1st-state-machine-graph.png)
 

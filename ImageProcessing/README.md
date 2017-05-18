@@ -345,7 +345,7 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	  "s3Key": "1_happy_face.jpg"
 	} 
 	```
-	> Because we haven't added the step yet to index the face in the photo into the Rekognition collection, the `CheckFaceDuplicate` step will always succeed at this point. 
+	Because we haven't added the step yet to index the face in the photo into the Rekognition collection, the `CheckFaceDuplicate` step will always succeed at this point. 
 
 
 </p></details>

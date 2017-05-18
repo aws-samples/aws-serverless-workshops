@@ -1,0 +1,93 @@
+{
+  "userId": "johndoe",
+  "s3Bucket": "wildrydes-riderphotos-johndoe",
+  "s3Key": "1_happy_face.jpg",
+  "detectedFaceDetails": {
+    "BoundingBox": {
+      "Width": 0.476666659116745,
+      "Height": 0.7149999737739563,
+      "Left": 0.4977777898311615,
+      "Top": 0.09000000357627869
+    },
+    "AgeRange": {
+      "Low": 20,
+      "High": 38
+    },
+    "Smile": {
+      "Value": true,
+      "Confidence": 99.85792541503906
+    },
+    "Eyeglasses": {
+      "Value": false,
+      "Confidence": 99.99992370605469
+    },
+    "Sunglasses": {
+      "Value": false,
+      "Confidence": 99.98284149169922
+    },
+    "Gender": {
+      "Value": "Female",
+      "Confidence": 100
+    },
+    "Beard": {
+      "Value": false,
+      "Confidence": 97.86708068847656
+    },
+    "Mustache": {
+      "Value": false,
+      "Confidence": 96.76549530029297
+    },
+    "EyesOpen": {
+      "Value": true,
+      "Confidence": 99.5167236328125
+    },
+    "MouthOpen": {
+      "Value": true,
+      "Confidence": 64.03350830078125
+    },
+    "Emotions": [
+      {
+        "Type": "HAPPY",
+        "Confidence": 99.97868347167969
+      },
+      {
+        "Type": "CONFUSED",
+        "Confidence": 1.0751843452453613
+      },
+      {
+        "Type": "CALM",
+        "Confidence": 0.47518014907836914
+      }
+    ],
+    "Pose": {
+      "Roll": -1.2979867458343506,
+      "Yaw": 30.954439163208008,
+      "Pitch": -3.5972256660461426
+    },
+    "Quality": {
+      "Brightness": 60.208045959472656,
+      "Sharpness": 99.9945297241211
+    },
+    "Confidence": 99.92555236816406
+  },
+  "parallelResult": [
+    {
+      "FaceId": "00f884e1-31d4-5b7f-bcb2-bc91a51d3713",
+      "BoundingBox": {
+        "Width": 0.476666659116745,
+        "Height": 0.7149999737739563,
+        "Left": 0.4977777898311615,
+        "Top": 0.09000000357627869
+      },
+      "ImageId": "fbda5555-463d-5964-acef-035061fb819f",
+      "ExternalImageId": "johndoe",
+      "Confidence": 99.92555236816406
+    },
+    {
+      "thumbnail": {
+        "s3key": "resized-1_happy_face.jpg",
+        "s3bucket": "wildrydes-riderphotos-thumbnails-johndoe"
+      }
+    }
+  ]
+}

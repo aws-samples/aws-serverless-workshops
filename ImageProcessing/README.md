@@ -720,11 +720,8 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 
 Now you have built a multi-step image processing workflow using AWS Step Functions! The workflow can be integrated to your app by fronting it with AWS API Gateway or triggered from an Amazon S3 upload event.  
 
-## Extra credit exercise
-The intent of the **PhotoDoesNotMeetRequirement**  step is to send notification to the user that the verification of their profile photo failed so they might try uploading a different picture. It currently uses the AWS Lambda function `NotificationPlaceholderFunction` which simply returns the message instead of actually sending the notification. Can you implement this functionality?
-
-> Hint: Amazon Simple Email Service (SES) can be used to send email notifications.
-
+## Extra credit
+The intent of the **PhotoDoesNotMeetRequirement**  step is to send notification to the user that the verification of their profile photo failed so they might try uploading a different picture. It currently uses the AWS Lambda function `NotificationPlaceholderFunction` which simply returns the message instead of actually sending the notification. Implement sending email notifications in the Lambda function using Amazon Simple Email Service (SES). 
 
 ## Clean-up 
 

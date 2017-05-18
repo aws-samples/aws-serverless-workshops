@@ -46,3 +46,5 @@ This workshop is broken up into multiple modules. You must complete each module 
 1. [Continuous Delivery Pipeline](2_ContinuousDeliveryPipeline)
 1. [AWS X-Ray Integration](3_XRay)
 1. [Multiple Environment CI/CD Pipeline](4_MultipleEnvironments)
+
+After you have completed the workshop you can delete all of the resources that were created by following the [cleanup guide](9_CleanUp).

@@ -116,7 +116,7 @@ After the riders upload their photo, the first thing we need do in our processin
 
 The AWS Lambda function that implements this check by leveraging the **Amazon Rekognition** deep-learning based image analysis API is already deployed by AWS CloudFormation in the previous step. Look in the **Outputs** section for `FaceDetectionFunctionArn` for the ARN of the Lambda function. 
 
-The AWS Lambda function to be called when the validations fail is deployed by the AWS CloudFormation called `NotificationPlaceholderFunction`. The intent behind this step is to notify the user the photo validation failed and the error reason, so they can try upload a different photo. To keep this workshop module short, the function just prepares the message instead of actually sending the message (feel free to modify the code to send email notifications through SES)
+The AWS Lambda function to be called when the validations fail is deployed by the AWS CloudFormation called `NotificationPlaceholderFunction`. The intent behind this step is to notify the user the photo validation failed and the error reason, so they can try upload a different photo. It's currently a stub implementation that just prepares the message instead of actually sending the message. 
 
 Now you can create an AWS Step Functions state machine with the initial face detection step: 
 
@@ -196,13 +196,20 @@ Now you can create an AWS Step Functions state machine with the initial face det
 
 1. Click the **New execution** button to start a new execution.
 
-1. Here you specify the input data passed into the AWS Step Functions state machine to process. You can specify an unique ID in the "execution id" field on the top, or leave it blank (if left blank, one unique ID will be automatically generated for you). For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` and `userId` field with your own values. 
+1. Here you specify the input data passed into the AWS Step Functions state machine to process.
 
-	For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`. Use that value in the JSON below:
+   Each execution of a Step Functions state machine has an unique ID. You can either specify one when starting the execution, or have the service generate one for you. In the text field that says "enter your execution id here",  you can specify an execution ID, or leave it blank. 
+   
+   For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` field with your own values. 
+   
+	For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`. 
+	
+	The `userId` field is needed because in later processing steps, the userId is used to record which user the profile picture is associated with.
 
+	
 	```JSON
 	{
-	  "userId": "REPLACE_WITH_YOUR_TEST_USERNAME",
+	  "userId": "user_a", 
 	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
 	  "s3Key": "1_happy_face.jpg"
 	} 
@@ -219,7 +226,7 @@ Now you can create an AWS Step Functions state machine with the initial face det
 
 	```JSON
 	{
-	  "userId": "REPLACE_WITH_YOUR_TEST_USERNAME",
+	  "userId": "user_b",
 	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
 	  "s3Key": "2_sunglass_face.jpg"
 	} 
@@ -333,7 +340,7 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 
 	```JSON
 	{
-	  "userId": "REPLACE_WITH_YOUR_TEST_USERNAME",
+	  "userId": "user_a",
 	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
 	  "s3Key": "1_happy_face.jpg"
 	} 
@@ -493,7 +500,7 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 
 	```JSON
 	{
-	  "userId": "REPLACE_WITH_YOUR_TEST_USERNAME",
+	  "userId": "user_a",
 	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
 	  "s3Key": "1_happy_face.jpg"
 	} 
@@ -655,7 +662,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 
 	```JSON
 	{
-	  "userId": "REPLACE_WITH_YOUR_TEST_USERNAME",
+	  "userId": "user_a",
 	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
 	  "s3Key": "1_happy_face.jpg"
 	} 
@@ -671,9 +678,53 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 
 ## Implementation Validation
 
-1. Test the final state machine (`RiderPhotoProcessing-4`) by uploading some new pictures to your  `RiderPhotoS3Bucket` Amazon S3 bucket and kick off executions in the AWS Console. 
+1. Test the final state machine (`RiderPhotoProcessing-4`) with different test images provided 
+
+	Photo with sunglasses:
+
+	```JSON
+	{
+	  "userId": "user_b",
+	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
+	  "s3Key": "2_sunglass_face.jpg"
+	} 
+	```
+
+	Photo with multiple faces in it:
+	
+	```JSON
+	{
+	  "userId": "user_c",
+	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
+	  "s3Key": "3_multiple_faces.jpg"
+	} 
+	```
+	
+	Photo wit no faces in it:
+
+	```JSON
+	{
+	  "userId": "user_d",
+	  "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
+	  "s3Key": "4_no_face.jpg"
+	} 
+	```
+	
+1. Upload some pictures you have to S3, test some executions. If you have more than one picture of the same person, upload them both and run the workflow on each picture (make sure to use different `userId` fields in the test input). Verify the **CheckFaceDuplicate** step will prevent the same face from being indexed more than once. 
+
+1. Go to the Amazon DynamoDB console, look for a table with name starting with "wildrydes-step-module-resources-RiderPhotoDDBTable" (you can also find the table name in the CloudFormation stack output). Check out the items of the table. 
+	
+	![](./images/dynamodb_example.png)
+
+1. Go to the Amazon S3 console, verify the thumbnail images of the photos you processed are in the thumbnail S3 Bucket. 
 
 Now you have built a multi-step image processing workflow using AWS Step Functions! The workflow can be integrated to your app by fronting it with AWS API Gateway or triggered from an Amazon S3 upload event.  
+
+## Extra credit exercise
+The intent of the **PhotoDoesNotMeetRequirement**  step is to send notification to the user that the verification of their profile photo failed so they might try uploading a different picture. It currently uses the AWS Lambda function `NotificationPlaceholderFunction` which simply returns the message instead of actually sending the notification. Can you implement this functionality?
+
+> Hint: Amazon Simple Email Service (SES) can be used to send email notifications.
+
 
 ## Clean-up 
 

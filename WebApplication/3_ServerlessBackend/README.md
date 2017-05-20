@@ -50,9 +50,7 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. From the AWS Management Console, click on **Services** and then select **IAM** in the Security, Identity & Compliance section.
 
-1. Select **Roles** in the left navigation bar and then choose **Create New Role**.
-
-1. Enter `WildRydesLambda` for the **Role Name**.
+1. Select **Roles** in the left navigation bar and then choose **Create new role**.
 
 1. Select **AWS Lambda** for the role type.
 
@@ -62,7 +60,9 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Choose **Next Step**.
 
-1. Choose **Create Role**.
+1. Enter `WildRydesLambda` for the **Role name**.
+
+1. Choose **Create role**.
 
 1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
 

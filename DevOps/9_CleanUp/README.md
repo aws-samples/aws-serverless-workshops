@@ -32,7 +32,7 @@ No actions required to cleanup Module 3.
 
 #### IAM Role
 
-Delete the IAM Roles for `WildRydesUnicornApiCloudFormation`, `WildRydesUnicornApiCodeBuild`, and `WildRydesUnicornApiCodePipeline`.
+Delete the IAM Roles for `WildRydesUnicornApiCodeBuild` and `WildRydesUnicornApiCodePipeline`.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>

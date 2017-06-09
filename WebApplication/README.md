@@ -19,7 +19,7 @@
 ### AWS 명령 행 인터페이스
 본 워크샵의 첫 번째 모듈을 완료하려면 로컬 시스템에 AWS CLI (Command Line Interface)가 설치되어 있어야합니다. CLI를 사용하여 개체를 S3 웹 사이트 버킷에 복사합니다.
 
-[AWS CLI 시작하기] (http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) 안내서에 따라 시스템에 CLI를 설치 및 구성하십시오. 
+[AWS CLI 시작하기](http://docs.aws.amazon.com/ko_kr/cli/latest/userguide/installing.html) 안내서에 따라 시스템에 CLI를 설치 및 구성하십시오. 
 
 **AWS CLI**를 설치할 수 없거나 설치하지 않으려는 경우 제공된 AWS CloudFormation 템플릿을 사용하여 버킷을 만들고 필요한 파일을 채우지 않고 첫 번째 모듈을 완성 할 수 있습니다. [Lab 1. 정적 웹 호스팅 설정](1_StaticWebHosting/README-ko.md)의 **CloudFormation 실행 지침**을 참조하십시오.
 

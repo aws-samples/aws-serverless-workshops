@@ -23,6 +23,11 @@ const fleet = [
 ];
 
 exports.handler = (event, context, callback) => {
+    if (!event.requestContext.authorizer) {
+      errorResponse('Authorization not configured', context.awsRequestId, callback);
+      return;
+    }
+
     const rideId = toUrlString(randomBytes(16));
     console.log('Received event (', rideId, '): ', event);
 
@@ -67,19 +72,7 @@ exports.handler = (event, context, callback) => {
         // from the Lambda function successfully. Specify a 500 HTTP status
         // code and provide an error message in the body. This will provide a
         // more meaningful error response to the end client.
-
-        // If an error parameter were provided, API Gateway would just return a
-        // generic HTTP 502 error.
-        callback(null, {
-            statusCode: 500,
-            body: JSON.stringify({
-                Error: 'An unexpected error has occured',
-                Reference: context.awsRequestId,
-            }),
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-        });
+        errorResponse(err.message, context.awsRequestId, callback)
     });
 };
 
@@ -108,4 +101,17 @@ function toUrlString(buffer) {
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/=/g, '');
+}
+
+function errorResponse(errorMessage, awsRequestId, callback) {
+  callback(null, {
+    statusCode: 500,
+    body: JSON.stringify({
+      Error: errorMessage,
+      Reference: awsRequestId,
+    }),
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
 }

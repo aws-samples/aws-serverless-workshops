@@ -97,9 +97,10 @@ Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your
 
 ### 2. Upload Content
 
-Upload the website assets for this module to your S3 bucket. You can use the AWS Management Console, AWS CLI, or the provided CloudFormation template to complete this step.
+Upload the website assets for this module to your S3 bucket. You can use the AWS Management Console, AWS CLI, or the provided CloudFormation template to complete this step. If you already have the AWS CLI installed and configured on your local machine, we recommend using that method. Otherwise, use the console if you have the latest version of Google Chrome installed.
 
-#### Console
+<details>
+<summary><strong>Console step-by-step instructions (expand for details)</strong></summary><p>
 
 In order to upload all files and subdirectories in a local directory via the AWS Management Console, you must use the latest version of the Chrome web browser. If you cannot use Chrome, please follow the instructions for using either the AWS CLI or the provided CloudFormation template.
 
@@ -123,7 +124,9 @@ In order to upload all files and subdirectories in a local directory via the AWS
 
 1. Wait for the upload to complete, and ensure you see the contents of the website directory listed in the S3 console. If you only see a single `website` directory, you should delete it from your bucket and follow these instructions again ensuring that you select only the contents of the directory before dragging and dropping into the S3 console.
 
-#### AWS CLI
+</p></details>
+<details>
+<summary><strong>CLI step-by-step instructions (expand for details)</strong></summary><p>
 
 If you already have the CLI installed and configured, you can use it to copy the necessary web assets from `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website` to your bucket.
 
@@ -132,8 +135,10 @@ Execute the following command making sure to replace `YOUR_BUCKET_NAME` with the
     aws s3 sync s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website s3://YOUR_BUCKET_NAME
 
 If the command was successful, you should see a list of objects that were copied to your bucket.
+</p></details>
 
-#### AWS CloudFormation Template
+<details>
+<summary><strong>CloudFormation step-by-step instructions (expand for details)</strong></summary><p>
 
 If you are unable to use either of the previous methods you can launch the provided CloudFormation template in order to copy the necessary assets into your S3 bucket.
 
@@ -164,6 +169,7 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 
 1. Wait for the `wildrydes-copy-objects` stack to reach a status of `CREATE_COMPLETE`.
 
+</p></details>
 
 ### 3. Add a Bucket Policy to Allow Public Reads
 

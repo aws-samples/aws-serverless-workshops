@@ -32,9 +32,9 @@
 ## 실습 모듈 
 이 워크샵은 네 가지 실습 모듈로 나뉩니다. 다음으로 진행하기 전에 각 모듈을 완료해야하지만, 모듈 1과 2는 AWS CloudFormation 템플릿을 사용할 수 있습니다. 건너 뛰려면 수동으로 직접 생성하지 않고 필요한 리소스를 시작할 수 있습니다.
 
-1. [Lab 1. 정적 웹 호스팅 설정](1_StaticWebHosting)
-2. [Lab 2. 사용자 관리](2_UserManagement)
-3. [Lab 3. 서버리스 백엔드](3_ServerlessBackend)
-4. [Lab 4. RESTful APIs](4_RESTfulAPIs)
+- [Lab 1. 정적 웹 호스팅 설정](1_StaticWebHosting)
+- [Lab 2. 사용자 관리](2_UserManagement)
+- [Lab 3. 서버리스 백엔드](3_ServerlessBackend)
+- [Lab 4. RESTful APIs](4_RESTfulAPIs)
 
 워크샵을 마친 후에는 [자원 삭제 가이드](9_CleanUp)에 따라 생성 된 모든 리소스를 삭제할 수 있습니다.

@@ -16,7 +16,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 1. Create an Amazon DynamoDB Table
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. Use the defaults for all other settings.
+Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
 
 After you've created the table, note the ARN for use in the next step.
 
@@ -27,9 +27,9 @@ After you've created the table, note the ARN for use in the next step.
 
 1. Choose **Create table**.
 
-1. Enter `Rides` for the **Table name**
+1. Enter `Rides` for the **Table name**. This field is case sensitive.
 
-1. Enter `RideId` for the **Partition key** and select **String** for the key type.
+1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
 
 1. Check the **Use default settings** box and choose **Create**.
 

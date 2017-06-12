@@ -170,7 +170,7 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
 
 1. Visit `/register.html` under your website domain, or choose the **Giddy Up!** button on the homepage of your site.
 
-1. Complete the registration form and choose **Let's Ryde**. You should see an alert that confirms that your user has been created.
+1. Complete the registration form and choose **Let's Ryde**. You can use your own email or enter a fake email. Make sure to choose a password that contains at least one upper-case letter, a number, and a special character. Don't forget the password you entered for later. You should see an alert that confirms that your user has been created.
 
 1. Confirm your new user using one of the two following methods.
 

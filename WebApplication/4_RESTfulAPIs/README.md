@@ -184,7 +184,7 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 
 1. In the AWS Management Console, choose **Services** then select **S3** under Storage.
 
-1. Choose on your website bucket and then browse to the `js` key prefix.
+1. Choose your website bucket and then browse to the `js` key prefix.
 
 1. Choose **Upload**.
 

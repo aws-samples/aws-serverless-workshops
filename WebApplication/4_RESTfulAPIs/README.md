@@ -97,7 +97,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 1. Select the Region you are using for **Lambda Region**.
 
-1. Enter the name of the function you created in the previous module, `RequestRide`, for **Lambda Function**.
+1. Enter the name of the function you created in the previous module, `RequestUnicorn`, for **Lambda Function**.
 
 1. Choose **Save**.
 

@@ -28,10 +28,10 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 1. `wildrydes-yourname`와 같은 전 세계적으로 고유한 이름을 **Website Bucket Name** 지정하고, **Next** 를 클릭하십시오.
     ![Speficy Details Screenshot](../images/module1-cfn-specify-details.png)
 
-1. Option 페이지에서 기본값은 그대로 두고, **Next** 을 클릭하십시오.
+1. 옵션 페이지에서 기본값은 그대로 두고, **Next** 을 클릭하십시오.
 
-1. Review 페이지에서 확인란을 선택하여 , acknowledge that CloudFormation will create IAM resources 체크박스를 클릭하고, **Create** 버튼을 클릭합니다.
-    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
+1. 리뷰 페이지에서 확인란을 선택하여 , acknowledge that CloudFormation will create IAM resources 체크박스를 클릭하고, **Create** 버튼을 클릭합니다.
+    ![IAM 승인 스크린샷](../images/cfn-ack-iam.png)
 
     이 템플릿은 맞춤 리소스를 사용하여 정적 웹 사이트 애셋을 중앙 S3 버킷에서 자신의 전용 버킷으로 복사합니다. 사용자 지정 리소스가 계정의 새 버킷에 쓸 수 있게하려면 해당 사용권한을 이용할 수 있는 IAM Role을 만들어야합니다.
 
@@ -56,11 +56,11 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 
 다음 섹션에서는 구현 개요와 자세한 단계별 지침을 제공합니다. 개요는 이미 AWS Management Console에 익숙하거나 둘러보기를 거치지 않고 직접 서비스를 탐색하려는 경우 구현을 완료하는 데 충분한 내용을 제공합니다.
 
-최신 버전의 Chrome, Firefox, 혹은 Safari 웹 브라우저를 사용하는 경우 섹션을 확장해야 단계별 지치이 표시됩니다.
+최신 버전의 Chrome, Firefox, 혹은 Safari 웹 브라우저를 사용하는 경우 섹션을 펼쳐야 단계별 지침이 표시됩니다.
 
 ### 리전 선택
 
-이 워크샵은 다음 서비스를 지원하는 모든 AWS 리전에 배포 할 수 있습니다.
+이 실습은 다음 서비스를 지원하는 모든 AWS 리전에 배포 할 수 있습니다.
 
 - Amazon Cognito
 - AWS Lambda
@@ -70,7 +70,7 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 
 AWS 설명서에서 [리전 표](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) 를 참고하여 지원되는 서비스가 있는 지역을 확인할 수 있습니다. 지원되는 지역중에서는 N. Virginia, Ohio, Oregon, Ireland, Frankfurt, Tokyo, Sydney, Seoul 이 있습니다.
 
-리전을 선택한 후에는 이 워크샵의 모든 리소스를 배포해야합니다. 시작하기전에 AWS Console의 오른쪽 상단에 있는 드롭 다운에서 리전을 선택하십시오.
+리전을 선택한 후에는 이 실습의 모든 리소스를 배포해야합니다. 시작하기전에 AWS Console의 오른쪽 상단에 있는 드롭 다운에서 리전을 선택하십시오.
 
 ![리전 선택 스크린샷](../images/region-selection.png)
 
@@ -87,7 +87,7 @@ AWS 설명서에서 [리전 표](https://aws.amazon.com/about-aws/global-infrast
 
 1. `wildrydes-yourname`와 같은 전 세계적으로 고유한 이름을 설정하십시오.
 
-1. 드롭다운 메뉴에서 이 워크샵에서 사용할 리전을 선택하십시오.
+1. 드롭다운 메뉴에서 이 실습에서 사용할 리전을 선택하십시오.
 
 1. 설정을 복사할 버킷을 선택하지 않고 대화상자의 왼쪽 하단에 있는 **Create** 를 선택하십시오.
 
@@ -151,7 +151,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 
 1. **Use this bucket to host a website** 을 선택하고, index document에 `index.html`를 입력하십시오. 다른 입력칸은 비워둡니다.
 
-1. 먼저 **Endpoint** URL 을 확인하십시오. 그 뒤에 **Save** 버튼을 클릭하십시오. 이 URL을 나머지 워크샵에서 웹 응용 프로그램을 볼 때 사용할 것입니다. 여기에서 이 URL을 귀하의 웹 사이트의 기본 URL이라고 합니다.
+1. 먼저 **Endpoint** URL 을 확인하십시오. 그 뒤에 **Save** 버튼을 클릭하십시오. 이 URL을 나머지 실습에서 웹 응용 프로그램을 볼 때 사용할 것입니다. 여기에서 이 URL을 귀하의 웹 사이트의 기본 URL이라고 합니다.
 
 1. **Save**을 클릭하여 변경 사항을 저장하십시오.
 
@@ -160,7 +160,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 </p></details>
 
 
-## 구현 검증
+## 작성한 내용 검증하기
 
 이 구현 단계를 완료 한 후에는 S3 버킷의 웹 사이트 endpoint URL 을 방문하여 정적 웹 사이트에 액세스 할 수 있어야합니다.
 

@@ -166,6 +166,6 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 
 원하는 브라우저에서 웹 사이트의 기본 URL (섹션 4에서 언급 한 URL)을 방문하십시오. Wild Rydes 홈 페이지가 표시되어야합니다. 기본 URL을 조회해야하는 경우 S3 콘솔로 이동하여 버킷을 선택한 다음 **Properties** 탭에서 **Static Web Hosting** 을 클릭하십시오.
 
-페이지가 올바르게 보여진다면 (아래 예제 스크린샷 참고), 다음 모듈 [사용자 관리](../2_UserManagement)로 이동하면 됩니다.
+페이지가 올바르게 보여진다면 (아래 예제 스크린샷 참고), 다음 모듈 [사용자 관리](../2_UserManagement)로 넘어가시면 됩니다.
 
 ![Wild Rydes 홈페이지 스크린샷](../images/wildrydes-homepage.png)

@@ -79,7 +79,7 @@ AWS 설명서에서 [리전 표](https://aws.amazon.com/about-aws/global-infrast
 콘솔 또는 AWS CLI를 사용하여 Amazon S3 버킷을 생성하십시오. 버킷의 이름은 전 세계적으로 고유해야합니다. `wildrydes-yourname`와 같은 이름을 사용할것을 권장합니다.
 
 <details>
-<summary><strong>단계별 지침 (자세한 내용은 펼치기)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 1. AWS Management Console에서 **Services** 를 선택한 다음 **S3** 를 선택하십시오.
 
@@ -110,7 +110,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 부여할 정책에 대한 설정은 [이 예제](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-2) 를 참고하십시오. 익명 사용자에 대한 읽거 전용 액세스. 이 예제 정책은 인터넷상의 모든 사용자가 귀하의 콘텐츠를 볼 수있게합니다. 버킷 정책을 업데이트하는 가장 쉬운 방법은 콘솔을 사용하는 것입니다. 버킷을 선택하고 권한(Permissions) 탭을 선택한 다음 버킷 정책(Bucket Policy)을 선택하십시오.
 
 <details>
-<summary><strong>단계별 지침 (자세한 내용은 펼치기)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 1.  S3 콘솔에서 섹션 1에서 생성 한 버킷의 이름을 선택하십시오.
 
@@ -143,7 +143,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 콘솔을 사용해서 정적 웹사이트 호스팅을 활성화합니다. 버킷을 선택한 후에 속성탭에서 이 작업을 수행할 수 있습니다. index document로 `index.html` 을 설정하고, error document는 비워두십시오. 자세한 내용은 [정적 웹 사이트 호스팅을 위한 버킷 구성](https://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html) 의 설명서를 참고하십시오.
 
 <details>
-<summary><strong>단계별 지침 (자세한 내용은 펼치기)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 1. S3 콘솔의 버킷 세부 사항 페이지에서, **Properties** 탭을 선택하십시오.
 

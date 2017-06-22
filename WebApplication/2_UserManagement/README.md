@@ -18,7 +18,7 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 
 
 <details>
-<summary><strong>CloudFormation 실행 지침 (자세한 내용은 펼치기)</strong></summary><p>
+<summary><strong>CloudFormation 실행 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 1. 위의 **Launch Stack** 링크를 선택하십시오.
 
@@ -64,7 +64,7 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 Amazon Cognito 콘솔을 사용하여 기본 설정을 이용해서 새 사용자 풀을 만듭니다. 사용자 풀이 생성되면, Pool Id 를 메모장에 기록해놓으십시요. 나중에 이 값을 사용합니다.
 
 <details>
-<summary><strong>단계별 지침 (자세한 내용은 펼치기)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 1. AWS 콘솔에서 **Services** 를 클릭한 다음, 모바일 서비스에서 **Cognito** 를 선택하십시오.
 
@@ -87,7 +87,7 @@ Amazon Cognito 콘솔을 사용하여 기본 설정을 이용해서 새 사용�
 Amazon Cognito 콘솔에서 user pool 을 선택한 다음 **App clients** 섹션을 선택합니다. 새 앱을 추가하고 Generate client secret option 의 선택이 해제되어 있는지 확인하십시오. Client secrets 옵션은 JavaScript SDK에서 지원되지 않습니다. 생성된 암호로 앱을 만드는 경우 암호를 삭제하고 올바른 구성으로 새 암호를 만듭니다.
 
 <details>
-<summary><strong>단계별 지침 (자세한 내용은 펼치기)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 1. 사용자 풀에 대한 세부 정보 페이지의 왼쪽 탐색기 메뉴에서 **App clients** 를 선택합니다.
 
@@ -110,7 +110,7 @@ Amazon Cognito 콘솔에서 user pool 을 선택한 다음 **App clients** 섹�
 [/js/config.js](../1_StaticWebHosting/website/js/config.js) 파일에는 user pool ID, app client ID 및 Region에 대한 설정이 들어있습니다. 이전 단계에서 생성한 사용자 풀 및 앱의 설정으로 이 파일을 업데이트하고 파일을 S3 버킷에 다시 업로드 하십시오.
 
 <details>
-<summary><strong>단계별 지침 (자세한 내용은 펼치기)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 1. 이 저장소의 첫번째 모듈 웹 사이트의 디렉토리에서 [config.js](../1_StaticWebHosting/website/js/config.js) 파일을 로컬 시스템으로 다운로드하십시오.
 

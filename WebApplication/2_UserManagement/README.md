@@ -190,4 +190,4 @@ Amazon Cognito 콘솔에서 user pool 을 선택한 다음 **App clients** 섹�
 
     ![로그인 성공 스크린샷](../images/successful-login.png)
 
-웹 응용프로그램에 성공적으로 로그인 하면, 다음 모듈인 [서버리스 백엔드](../3_ServerlessBackend)로 이동하면 됩니다.
+웹 응용프로그램에 성공적으로 로그인 하면, 다음 모듈인 [서버리스 백엔드](../3_ServerlessBackend)로 넘어가시면 됩니다.

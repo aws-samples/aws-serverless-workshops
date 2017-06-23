@@ -101,7 +101,7 @@ Amazon Cognito 콘솔에서 user pool 을 선택한 다음 **App clients** 섹�
 
    <kbd>![앱 클라이언트 만들기 스크린샷](../images/add-app.png)</kbd>
 
-1. 새로 생성 된 응용 프로그램에 대한 **App client id** 에 유의 하십시오.
+1. 새로 생성 된 응용 프로그램에 대한 **App client id** 를 미리 메모장에 복사해놓으십시오. 나중에 사용됩니다.
 
 </p></details>
 

@@ -107,7 +107,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 
     http://bit.ly/2rZzEVB
     
-    위 경로에서 website.zip 압축파일을 다운로드 한 다음 압축을 풀고, 폴더 안에 있는 파일들을 사용자가 생성한 버킷에 업로드해서 이용하실수도 있습니다.
+위 경로에서 website.zip 압축파일을 다운로드 한 다음 압축을 풀고, 폴더 안에 있는 파일들을 사용자가 생성한 버킷에 업로드해서 이용하실수도 있습니다.
 
 ### 3. 버킷 정책에 Public Reads 권한을 허용
 

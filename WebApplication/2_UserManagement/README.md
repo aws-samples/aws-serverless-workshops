@@ -174,7 +174,7 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
 
 1. Confirm your new user using one of the two following methods.
 
-  1. If you used an email address you control, you can complete the account verification process by visiting `/verify.html` under your website domain and entering the verification code that is emailed to you.
+  1. If you used an email address you control, you can complete the account verification process by visiting `/verify.html` under your website domain and entering the verification code that is emailed to you. Please note, the verification email may end up in your spam folder. For real deployments we recommend [configuring your user pool to use Amazon Simple Email Service](http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-message-customizations.html#cognito-user-pool-settings-ses-authorization-to-send-email) to send emails from a domain you own.
 
   1. If you used a dummy email address, you must confirm the user manually through the Cognito console.
 

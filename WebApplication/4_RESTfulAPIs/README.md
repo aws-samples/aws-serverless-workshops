@@ -99,7 +99,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 1. Enter the name of the function you created in the previous module, `RequestRide`, for **Lambda Function**.
 
-1. Choose **Save**.
+1. Choose **Save**. Please note, if you get an error that you function does not exist, check that the region you selected matches the one you used in the previous module.
 
     ![API method integration screenshot](../images/api-integration-setup.png)
 
@@ -197,6 +197,8 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 </p></details>
 
 ## Implementation Validation
+
+**Note:** It's possible that you will see a delay between updating the config.js file in your S3 bucket and when the updated content is visible in your browser. You should also ensure that you clear your browser cache before executing the following steps.
 
 1. Visit `/ride.html` under your website domain.
 

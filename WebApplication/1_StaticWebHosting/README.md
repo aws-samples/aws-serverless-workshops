@@ -76,7 +76,11 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 
 ### 1. Create an S3 Bucket
 
-Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your bucket's name must be globally unique. We recommend using a name like `wildrydes-yourname`.
+Amazon S3 can be used to host static websites without having to configure or manage any web servers. In this step you'll create a new S3 bucket that will be used to host all of the static assets (e.g. HTML, CSS, JavaScript, and image files) for your web application.
+
+#### High-Level Instructions
+
+Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your bucket's name must be globally unique across all regions and customers. We recommend using a name like `wildrydes-firstname-lastname`. If you get an error that your bucket name already exists, try adding additional numbers or characters until you find an unused name.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -85,7 +89,7 @@ Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your
 
 1. Choose **+Create Bucket**
 
-1. Provide a globally unique name for your bucket such as `wildrydes-yourname`.
+1. Provide a globally unique name for your bucket such as `wildrydes-firstname-lastname`.
 
 1. Select the Region you've chosen to use for this workshop from the dropdown.
 
@@ -97,7 +101,7 @@ Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your
 
 ### 2. Upload Content
 
-Upload the website assets for this module to your S3 bucket. You can use the AWS Management Console, AWS CLI, or the provided CloudFormation template to complete this step. If you already have the AWS CLI installed and configured on your local machine, we recommend using that method. Otherwise, use the console if you have the latest version of Google Chrome installed.
+Upload the website assets for this module to your S3 bucket. You can use the AWS Management Console (requires Google Chrome browser), AWS CLI, or the provided CloudFormation template to complete this step. If you already have the AWS CLI installed and configured on your local machine, we recommend using that method. Otherwise, use the console if you have the latest version of Google Chrome installed.
 
 <details>
 <summary><strong>Console step-by-step instructions (expand for details)</strong></summary><p>
@@ -173,6 +177,10 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 
 ### 3. Add a Bucket Policy to Allow Public Reads
 
+You can define who can access the content in your S3 buckets using a bucket policy. Bucket policies are JSON documents that specify what principals are allowed to execute various actions against the objects in your bucket.
+
+#### High-Level Instructions
+
 You will need to add a bucket policy to your new Amazon S3 bucket to let anonymous users view your site. By default your bucket will only be accessible by authenticated users with access to your AWS account.
 
 See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-2) of a policy that will grant read only access to anonymous users. This example policy allows anyone on the Internet to view your content. The easiest way to update a bucket policy is to use the console. Select the bucket, choose the permission tab and then select Bucket Policy.
@@ -184,7 +192,7 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
 
 1. Choose the **Permissions** tab, then choose **Bucket Policy**.
 
-1. Enter the following policy document into the bucket policy editor replacing `YOUR_BUCKET_NAME` with the name of the bucket you created in section 1:
+1. Enter the following policy document into the bucket policy editor replacing `[YOUR_BUCKET_NAME]` with the name of the bucket you created in section 1:
 
     ```json
     {
@@ -194,7 +202,7 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
                 "Effect": "Allow",
                 "Principal": "*",
                 "Action": "s3:GetObject",
-                "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+                "Resource": "arn:aws:s3:::[YOUR_BUCKET_NAME]/*"
             }
         ]
     }
@@ -207,6 +215,12 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
 </p></details>
 
 ### 4. Enable Website Hosting
+
+By default objects in an S3 bucket are available via URLs with the structure http://<Regional-S3-prefix>.amazonaws.com/<bucket-name>/<object-key>. In order to serve assets from the root URL (e.g. /index.html), you'll need to enable website hosting on the bucket. This will make your objects available at the AWS Region-specific website endpoint of the bucket: <bucket-name>.s3-website-<AWS-region>.amazonaws.com
+
+You can also use a custom domain for your website. For example http://www.wildrydes.com is hosted on S3. Setting up a custom domain is not covered in this workshop, but you can find detailed instructions in our [documentation](http://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html).
+
+#### High-Level Instructions
 
 Using the console, enable static website hosting. You can do this on the Properties tab after you've selected the bucket. Set `index.html` as the index document, and leave the error document blank. See the documentation on [configuring a bucket for static website hosting](https://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html) for more details.
 

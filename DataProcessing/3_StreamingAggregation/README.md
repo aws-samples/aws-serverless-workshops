@@ -25,11 +25,11 @@ Use the Amazon Kinesis Streams console to create a new stream named **wildrydes-
 
 1. From the AWS Console click **Services** then select **Kinesis** under Analytics.
 
-1. Click **Go to Streams**.
+1. Click **Go to Streams console**.
 
-1. Click **Create stream**.
+1. Click **Create Kinesis stream**.
 
-1. Enter `wildrydes-aggregated` into **Stream name** and `1` into **Number of shards**, then click **Create stream**.
+1. Enter `wildrydes-aggregated` into **Kinesis stream name** and `1` into **Number of shards**, then click **Create Kinesis stream**.
 
 1. Within 60 seconds, your stream will be **ACTIVE** and ready to store real-time streaming data.
 
@@ -71,7 +71,7 @@ Set the destination stream of the application to **wildrydes-aggregated**.
 
 1. From the AWS Console click **Services** then select **Kinesis** under Analytics.
 
-1. Click **Go to Analytics**.
+1. Click **Go to the Analytics console**.
 
 1. Click **Create application**.
 
@@ -119,6 +119,8 @@ Set the destination stream of the application to **wildrydes-aggregated**.
 1. Click **Save and run SQL**. Each minute, you will see rows arrive containing the aggregated data:
 
 	<kbd>![Rows screenshot](../images/streaming-aggregation-rows.png)</kbd>
+	
+1. Click the **exit (done)** link.
 
 1. Click the **Destination** tab and click on **Add destination**.
 

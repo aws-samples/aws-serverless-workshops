@@ -64,7 +64,7 @@ After you've created the table, note the Amazon Resource Name (ARN) for use in t
 
 Use the IAM console to create a new role. Give it a name like `WildRydesFileProcessorRole` and select AWS Lambda for the role type. Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role in order to grant permissions for your function to log to Amazon CloudWatch Logs.
 
-You'll need to grant this role permissions to access both the S3 bucket and Amazon DynamoDB table create in the previous sections:
+You'll need to grant this role permissions to access both the S3 bucket and Amazon DynamoDB table created in the previous sections:
 
 - Create an inline policy allowing the role access to the `ddb:PutItem` action for the Amazon DynamoDB table you created in the previous section.
 

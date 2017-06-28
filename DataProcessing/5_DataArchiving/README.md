@@ -199,7 +199,7 @@ Create an Amazon Athena table to query the raw data in place on Amazon S3 using 
 
 1. Click on **Services** then select **Athena** in the Analytics section.
 
-1. Copy and paste the following SQL statement to create the table:
+1. Copy and paste the following SQL statement to create the table. Be sure to replace the bucket name with your bucket name in the LOCATION clause:
 
 	```sql
 	CREATE EXTERNAL TABLE IF NOT EXISTS wildrydes (

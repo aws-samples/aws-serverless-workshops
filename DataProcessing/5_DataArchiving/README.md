@@ -48,9 +48,9 @@ Create an Amazon Kinesis Firehose delivery stream named **wildrydes** that is co
 
 1. From the AWS Console click **Services** then select **Kinesis** under Analytics.
 
-1. Click **Go to Firehose**.
+1. Click **Go to the Firehose console**.
 
-1. Click **Create Deliver Stream**.
+1. Click **Create Delivery Stream**.
 
 1. Select **Amazon S3** from **Destination**, enter `wildrydes` into **Delivery stream name** and select the name of the bucket you created in the previous section from **S3 bucket**. Click **Next**.
 

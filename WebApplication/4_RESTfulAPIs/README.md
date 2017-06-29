@@ -36,6 +36,11 @@ Use the Amazon API Gateway console to create a new API.
 
 
 ### 2. Create a Cognito User Pools Authorizer
+
+#### Background
+Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In this step you'll configure an authorizer for your API to use the user pool you created in [module 2](../2_UserManagement).
+
+#### High-Level Instructions
 In the Amazon API Gateway console, create a new Cognito user pool authorizer for your API. Configure it with the details of the user pool that you created in the previous module. You can test the configuration in the console by copying and pasting the auth token presented to you after you log in via the /signin.html page of your current website.
 
 <details>

@@ -61,6 +61,12 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 1. Create an Amazon Cognito User Pool
 
+#### Background
+
+Amazon Cognito provides two different mechanisms for authenticating users. You can use Cognito User Pools to add sign-up and sign-in functionality to your application or use Cognito Identity Pools to authenticate users through social identity providers such as Facebook, Twitter, or Amazon, with SAML identity solutions, or by using your own identity system. For this module you'll use a user pool as the backend for the provided registration and sign-in pages.
+
+#### High-Level Instructions
+
 Use the Amazon Cognito console to create a new user pool using the default settings. Once your pool is created, note the Pool Id. You'll use this value in a later section.
 
 <details>

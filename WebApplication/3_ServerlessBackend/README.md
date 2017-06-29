@@ -116,7 +116,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Don't add any triggers at this time. Choose **Next** to proceed to defining your function.
 
-1. Enter `RequestRide` in the **Name** field.
+1. Enter `RequestUnicorn` in the **Name** field.
 
 1. Optionally enter a description.
 

@@ -170,7 +170,7 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 
 1. Update the **invokeUrl** setting under the **api** key in the config.js file. Set the value to the **Invoke URL** for the deployment stage your created in the previous section.
 
-    An example of a complete `config.js` file is included below.
+    An example of a complete `config.js` file is included below. Note, the actual values in your file will be different.
 
     ```JavaScript
     window._config = {

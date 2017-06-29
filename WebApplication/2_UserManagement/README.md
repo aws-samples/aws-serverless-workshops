@@ -134,7 +134,7 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
 
     The value for `region` should be the AWS Region code where you created your user pool. E.g. `us-east-1` for the N. Virginia Region, or `us-west-2` for the Oregon Region. If you're not sure which code to use, you can look at the Pool ARN value on the Pool details page. The Region code is the part of the ARN immediately after `arn:aws:cognito-idp:`.
 
-    The updated config.js file should look like this:
+    The updated config.js file should look like this. Note that the actual values for your file will be different:
     ```JavaScript
     window._config = {
         cognito: {

@@ -7,6 +7,7 @@ const through = require('through2');
 const path = require('path');
 
 const REGIONS = [
+    'ap-south-1',
     'ap-northeast-1',
     'ap-northeast-2',
     'ap-southeast-2',

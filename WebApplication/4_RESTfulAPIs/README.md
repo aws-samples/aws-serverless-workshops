@@ -36,6 +36,11 @@ Use the Amazon API Gateway console to create a new API.
 
 
 ### 2. Create a Cognito User Pools Authorizer
+
+#### Background
+Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In this step you'll configure an authorizer for your API to use the user pool you created in [module 2](../2_UserManagement).
+
+#### High-Level Instructions
 In the Amazon API Gateway console, create a new Cognito user pool authorizer for your API. Configure it with the details of the user pool that you created in the previous module. You can test the configuration in the console by copying and pasting the auth token presented to you after you log in via the /signin.html page of your current website.
 
 <details>
@@ -99,7 +104,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 1. Enter the name of the function you created in the previous module, `RequestUnicorn`, for **Lambda Function**.
 
-1. Choose **Save**.
+1. Choose **Save**. Please note, if you get an error that you function does not exist, check that the region you selected matches the one you used in the previous module.
 
     ![API method integration screenshot](../images/api-integration-setup.png)
 
@@ -165,7 +170,7 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 
 1. Update the **invokeUrl** setting under the **api** key in the config.js file. Set the value to the **Invoke URL** for the deployment stage your created in the previous section.
 
-    An example of a complete `config.js` file is included below.
+    An example of a complete `config.js` file is included below. Note, the actual values in your file will be different.
 
     ```JavaScript
     window._config = {
@@ -184,7 +189,7 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 
 1. In the AWS Management Console, choose **Services** then select **S3** under Storage.
 
-1. Choose on your website bucket and then browse to the `js` key prefix.
+1. Choose your website bucket and then browse to the `js` key prefix.
 
 1. Choose **Upload**.
 
@@ -197,6 +202,8 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 </p></details>
 
 ## Implementation Validation
+
+**Note:** It's possible that you will see a delay between updating the config.js file in your S3 bucket and when the updated content is visible in your browser. You should also ensure that you clear your browser cache before executing the following steps.
 
 1. Visit `/ride.html` under your website domain.
 

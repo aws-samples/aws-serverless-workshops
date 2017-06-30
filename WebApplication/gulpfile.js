@@ -7,6 +7,7 @@ const through = require('through2');
 const path = require('path');
 
 const REGIONS = [
+    'ap-south-1',
     'ap-northeast-1',
     'ap-northeast-2',
     'ap-southeast-2',
@@ -49,7 +50,7 @@ gulp.task('default', () => {
 });
 
 function regionalize(regions) {
-    return through.obj((file, enc, callback) => {
+    const regionalizer = function regionalizer(file, enc, callback) {
         if (file.isNull()) {
             callback(null, file);
             return;
@@ -70,13 +71,13 @@ function regionalize(regions) {
                 this.push(newFile);
             });
         } catch (err) {
-            this.emit('error', new gutil.PluginError('multiRender', err, {
-                fileName: file.path,
-            }));
+            console.log("Error in regionalize: " + err);
+            callback(err, file.path);
         }
 
         callback();
-    });
+    };
+    return through.obj(regionalizer);
 }
 
 function regionalizeContents(contents, region) {

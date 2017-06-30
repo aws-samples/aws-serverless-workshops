@@ -16,7 +16,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 1. Create an Amazon DynamoDB Table
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. Use the defaults for all other settings.
+Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
 
 After you've created the table, note the ARN for use in the next step.
 
@@ -27,9 +27,9 @@ After you've created the table, note the ARN for use in the next step.
 
 1. Choose **Create table**.
 
-1. Enter `Rides` for the **Table name**
+1. Enter `Rides` for the **Table name**. This field is case sensitive.
 
-1. Enter `RideId` for the **Partition key** and select **String** for the key type.
+1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
 
 1. Check the **Use default settings** box and choose **Create**.
 
@@ -41,6 +41,13 @@ After you've created the table, note the ARN for use in the next step.
 
 
 ### 2. Create an IAM Role for Your Lambda function
+
+#### Background
+
+Every Lambda function has an IAM role associated with it. This role defines what other AWS services the function is allowed to interact with. For the purposes of this workshop, you'll need to create an IAM role that grants your Lambda function permission to write logs to Amazon CloudWatch Logs and access to write items to your DynamoDB table.
+
+#### High-Level Instructions
+
 Use the IAM console to create a new role. Name it `WildRydesLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
 
 Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to grant the necessary CloudWatch Logs permissions. Also, create a custom inline policy for your role that allows the `ddb:PutItem` action for the table you created in the previous section.
@@ -87,6 +94,13 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 </p></details>
 
 ### 3. Create a Lambda Function for Handling Requests
+
+#### Background
+
+AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a unicorn. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
+
+#### High-Level Instructions
+
 Use the AWS Lambda console to create a new Lambda function called `RequestUnicorn` that will process the API requests. Use the provided [requestUnicorn.js](requestUnicorn.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
 
 Make sure to configure your function to use the `WildRydesLambda` IAM role you created in the previous section.

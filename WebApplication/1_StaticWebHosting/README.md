@@ -15,6 +15,7 @@ EU (London) | [![Launch Module 1 in eu-west-2](http://docs.aws.amazon.com/AWSClo
 Asia Pacific (Tokyo) | [![Launch Module 1 in ap-northeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-1/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
 Asia Pacific (Seoul) | [![Launch Module 1 in ap-northeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-2/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
 Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
+Asia Pacific (Mumbai) | [![Launch Module 1 in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
 
 
 
@@ -68,7 +69,7 @@ This workshop can be deployed in any AWS region that supports the following serv
 - Amazon S3
 - Amazon DynamoDB
 
-You can refer to the [region table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are N. Virginia, Ohio, Oregon, Ireland, Frankfurt, Tokyo, and Sydney.
+You can refer to the [region table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are N. Virginia, Ohio, Oregon, Ireland, London, Frankfurt, Tokyo, Seol, Mumbai, and Sydney.
 
 Once you've chosen a region, you should deploy all of the resources for this workshop there. Make sure you select your region from the dropdown in the upper right corner of the AWS Console before getting started.
 
@@ -76,7 +77,11 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 
 ### 1. Create an S3 Bucket
 
-Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your bucket's name must be globally unique. We recommend using a name like `wildrydes-yourname`.
+Amazon S3 can be used to host static websites without having to configure or manage any web servers. In this step you'll create a new S3 bucket that will be used to host all of the static assets (e.g. HTML, CSS, JavaScript, and image files) for your web application.
+
+#### High-Level Instructions
+
+Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your bucket's name must be globally unique across all regions and customers. We recommend using a name like `wildrydes-firstname-lastname`. If you get an error that your bucket name already exists, try adding additional numbers or characters until you find an unused name.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -85,7 +90,7 @@ Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your
 
 1. Choose **+Create Bucket**
 
-1. Provide a globally unique name for your bucket such as `wildrydes-yourname`.
+1. Provide a globally unique name for your bucket such as `wildrydes-firstname-lastname`.
 
 1. Select the Region you've chosen to use for this workshop from the dropdown.
 
@@ -97,13 +102,86 @@ Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your
 
 ### 2. Upload Content
 
-Using the AWS CLI, upload the website assets available at `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website`. You can use the following command to easily copy all of the assets. Make sure you replace `YOUR_BUCKET_NAME` with the name you used in the previous section.
+Upload the website assets for this module to your S3 bucket. You can use the AWS Management Console (requires Google Chrome browser), AWS CLI, or the provided CloudFormation template to complete this step. If you already have the AWS CLI installed and configured on your local machine, we recommend using that method. Otherwise, use the console if you have the latest version of Google Chrome installed.
 
-    aws s3 sync s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website s3://YOUR_BUCKET_NAME
+<details>
+<summary><strong>Console step-by-step instructions (expand for details)</strong></summary><p>
+
+In order to upload all files and subdirectories in a local directory via the AWS Management Console, you must use the latest version of the Chrome web browser. If you cannot use Chrome, please follow the instructions for using either the AWS CLI or the provided CloudFormation template.
+
+1. Download an archive of this repository using [this link](https://github.com/awslabs/aws-serverless-workshops/archive/master.zip).
+
+1. Unzip the archive you downloaded on your local machine.
+
+1. Open the AWS Management Console in Chrome. Choose **Services** then select **S3** under Storage.
+
+1. Select the bucket you created in the previous step and ensure you are viewing the **Objects** tab.
+
+1. Open either Windows File Explorer or macOS Finder and browse to the expanded contents of the zip file you downloaded in the first step.
+
+1. Browse to the WebApplication/1_StaticWebHosting/website directory on your local machine.
+
+1. Select all of the files and subdirectories under the website directory. Ensure that the website directory itself is not selected.
+
+1. Drag and drop the selected files from your local filesystem to the content under the **Objects** tab in the S3 console.
+
+1. Choose **Upload** in the lower left of the dialog box that appears.
+
+1. Wait for the upload to complete, and ensure you see the contents of the website directory listed in the S3 console. If you only see a single `website` directory, you should delete it from your bucket and follow these instructions again ensuring that you select only the contents of the directory before dragging and dropping into the S3 console.
+
+</p></details>
+<details>
+<summary><strong>CLI step-by-step instructions (expand for details)</strong></summary><p>
+
+If you already have the CLI installed and configured, you can use it to copy the necessary web assets from `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website` to your bucket.
+
+Execute the following command making sure to replace `YOUR_BUCKET_NAME` with the name you used in the previous section and `YOUR_BUKET_REGION` with the region code (e.g. us-east-2) where you created your bucket.
+
+    aws s3 sync s3://wildrydes-us-east-1/WebApplication/1_StaticWebHosting/website s3://YOUR_BUCKET_NAME --region YOUR_BUCKET_REGION
 
 If the command was successful, you should see a list of objects that were copied to your bucket.
+</p></details>
+
+<details>
+<summary><strong>CloudFormation step-by-step instructions (expand for details)</strong></summary><p>
+
+If you are unable to use either of the previous methods you can launch the provided CloudFormation template in order to copy the necessary assets into your S3 bucket.
+
+Region| Launch
+------|-----
+US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+US East (Ohio) | [![Launch Module 1 in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+US West (Oregon) | [![Launch Module 1 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+EU (Frankfurt) | [![Launch Module 1 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-eu-central-1/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+EU (Ireland) | [![Launch Module 1 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-1/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+EU (London) | [![Launch Module 1 in eu-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-2/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+Asia Pacific (Tokyo) | [![Launch Module 1 in ap-northeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-1/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+Asia Pacific (Seoul) | [![Launch Module 1 in ap-northeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-2/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+Asia Pacific (Mumbai) | [![Launch Module 1 in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=wildrydes-copy-objects&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/WebApplication/1_StaticWebHosting/webapp-copy-objects.yaml)
+
+1. Click the **Launch Stack** link above for the region where you created your website bucket.
+
+1. Click **Next** on the Select Template page.
+
+1. Enter the name of your S3 bucket (e.g. `wildrydes-yourname`) for **Website Bucket Name** and click **Next**.
+
+1. On the Options page, leave all the defaults and click **Next**.
+
+1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
+    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
+
+    This template uses a custom resource to copy the static website assets from a central S3 bucket into your own dedicated bucket. In order for the custom resource to write to the new bucket in your account, it must create an IAM role it can assume with those permissions.
+
+1. Wait for the `wildrydes-copy-objects` stack to reach a status of `CREATE_COMPLETE`.
+
+</p></details>
 
 ### 3. Add a Bucket Policy to Allow Public Reads
+
+You can define who can access the content in your S3 buckets using a bucket policy. Bucket policies are JSON documents that specify what principals are allowed to execute various actions against the objects in your bucket.
+
+#### High-Level Instructions
 
 You will need to add a bucket policy to your new Amazon S3 bucket to let anonymous users view your site. By default your bucket will only be accessible by authenticated users with access to your AWS account.
 
@@ -116,7 +194,7 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
 
 1. Choose the **Permissions** tab, then choose **Bucket Policy**.
 
-1. Enter the following policy document into the bucket policy editor replacing `YOUR_BUCKET_NAME` with the name of the bucket you created in section 1:
+1. Enter the following policy document into the bucket policy editor replacing `[YOUR_BUCKET_NAME]` with the name of the bucket you created in section 1:
 
     ```json
     {
@@ -126,7 +204,7 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
                 "Effect": "Allow",
                 "Principal": "*",
                 "Action": "s3:GetObject",
-                "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+                "Resource": "arn:aws:s3:::[YOUR_BUCKET_NAME]/*"
             }
         ]
     }
@@ -139,6 +217,12 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
 </p></details>
 
 ### 4. Enable Website Hosting
+
+By default objects in an S3 bucket are available via URLs with the structure http://<Regional-S3-prefix>.amazonaws.com/<bucket-name>/<object-key>. In order to serve assets from the root URL (e.g. /index.html), you'll need to enable website hosting on the bucket. This will make your objects available at the AWS Region-specific website endpoint of the bucket: <bucket-name>.s3-website-<AWS-region>.amazonaws.com
+
+You can also use a custom domain for your website. For example http://www.wildrydes.com is hosted on S3. Setting up a custom domain is not covered in this workshop, but you can find detailed instructions in our [documentation](http://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html).
+
+#### High-Level Instructions
 
 Using the console, enable static website hosting. You can do this on the Properties tab after you've selected the bucket. Set `index.html` as the index document, and leave the error document blank. See the documentation on [configuring a bucket for static website hosting](https://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html) for more details.
 

@@ -18,17 +18,9 @@ In order to complete this workshop you'll need an AWS Account with access to cre
 
 All of the resources you will launch as part of this workshop are eligible for the AWS free tier if your account is less than 12 months old. See the [AWS Free Tier page](https://aws.amazon.com/free/) for more details.
 
-### AWS Command Line Interface
-
-To complete the first module of this workshop you'll need the AWS Command Line Interface (CLI) installed on your local machine. You'll use the CLI to copy objects into your S3 website bucket.
-
-Follow the [AWS CLI Getting Started](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) guide to install and configure the CLI on your machine.
-
-**If you are unable or do not wish to install the AWS CLI**, you can complete the first module without it by using the provided AWS CloudFormation template to create your bucket and populate the necessary files. See the **CloudFormation Launch Instructions** in the [Static Web Hosting module introduction](1_StaticWebHosting).
-
 ### Browser
 
-We recommend you use the latest version of Chrome or Firefox when testing the web application UI.
+We recommend you use the latest version of Chrome to complete this workshop.
 
 ### Text Editor
 

@@ -14,7 +14,7 @@ See the screenshot below for a depiction of the continuous delivery pipeline tha
 
 ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
 
-If you'd like to jump in and get started please visit the [Serverless Application Model](1_ServerlessApplicationModel) module page to begin the workshop.
+If you'd like to jump in and get started please visit the [CodeStar Project](0_CodeStar) module page to begin the workshop.
 
 ## Prerequisites
 
@@ -42,9 +42,11 @@ You will need a local text editor for making minor updates to configuration file
 
 This workshop is broken up into multiple modules. You must complete each module before proceeding to the next.
 
+1. [CodeStar Project](0_CodeStar)
 1. [Serverless Application Model (SAM)](1_ServerlessApplicationModel)
 1. [Continuous Delivery Pipeline](2_ContinuousDeliveryPipeline)
 1. [AWS X-Ray Integration](3_XRay)
 1. [Multiple Environment CI/CD Pipeline](4_MultipleEnvironments)
+
 
 After you have completed the workshop you can delete all of the resources that were created by following the [cleanup guide](9_CleanUp).

@@ -114,7 +114,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 1. Choose the pencil icon next to **Authorization**.
 
-1. Select the WildRydes Cognito user pool authorizer fromt the drop-down list, and click the checkmark icon.
+1. Select the WildRydes Cognito user pool authorizer from the drop-down list, and click the checkmark icon.
 
     ![API authorizer configuration screenshot](../images/api-authorizer.png)
 

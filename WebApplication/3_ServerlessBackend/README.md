@@ -112,7 +112,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Choose **Create a Lambda function**.
 
-1. Choose the **Blank Function** blueprint card.
+1. Choose **Author from scratch**.
 
 1. Don't add any triggers at this time. Choose **Next** to proceed to defining your function.
 

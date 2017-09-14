@@ -10,6 +10,47 @@ The static website you deployed in the first module already has a page configure
 
 This module will focus on the steps required to build the cloud components of the API, but if you're interested in how the browser code works that calls this API, you can inspect the [ride.js](../1_StaticWebHosting/website/js/ride.js) file of the website. In this case the application uses jQuery's [ajax()](https://api.jquery.com/jQuery.ajax/) method to make the remote request.
 
+If you want to skip ahead to the next module, you can launch one of these AWS CloudFormation templates in the Region of your choice in order to build the necessary resources automatically.
+
+Region| Launch
+------|-----
+US East (N. Virginia) | [![Launch Module 4 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+US East (Ohio) | [![Launch Module 4 in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+US West (Oregon) | [![Launch Module 4 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+EU (Frankfurt) | [![Launch Module 4 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-eu-central-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+EU (Ireland) | [![Launch Module 4 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+EU (London) | [![Launch Module 4 in eu-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+Asia Pacific (Tokyo) | [![Launch Module 4 in ap-northeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+Asia Pacific (Seoul) | [![Launch Module 4 in ap-northeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+Asia Pacific (Sydney) | [![Launch Module 4 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+Asia Pacific (Mumbai) | [![Launch Module 4 in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=wildrydes-webapp-4&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/WebApplication/4_RESTfulAPIs/backend-api.yaml)
+
+details>
+<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
+
+1. Click the **Launch Stack** link above for the region of your choice.
+
+1. Click **Next** on the Select Template page.
+
+1. Provide the name of your website bucket from module 1 for the  **Website Bucket Name** (e.g. `wildrydes-yourname`) and choose **Next**.
+
+    **Note:** You must specify the same bucket name you used in the previous module. If you provide a bucket name that does not exist or that you do not have write access to, the CloudFormation stack will fail during creation.
+
+1. Provide the ARN for the User Pool we created in module 2. You can find the User Pool ARN in the [Amazon Cognito console](https://console.aws.amazon.com/cognito/users/).
+
+1. On the Options page, leave all the defaults and click **Next**.
+
+1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
+    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
+
+    This template uses a custom resource to update the `/js/config.js` file with the new API endpoint URL
+
+1. Wait for the `wildrydes-webapp-4` stack to reach a status of `CREATE_COMPLETE`.
+
+1. Verify the Wild Rydes home page is loading properly and try to request a ride.
+
+</p></details>
+
 ## Implementation Instructions
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.

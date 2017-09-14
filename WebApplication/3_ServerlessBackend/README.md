@@ -8,6 +8,8 @@ You'll implement a Lambda function that will be invoked each time a user request
 
 The function is invoked from the browser using Amazon API Gateway. You'll implement that connection in the next module. For this module you'll just test your function in isolation.
 
+If you want to skip ahead to the next module, you can **launch the stack from [module 4 (RESTful APIs)](../4_RESTfulAPIs)**.
+
 ## Implementation Instructions
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.

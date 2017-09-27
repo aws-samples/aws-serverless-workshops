@@ -1,0 +1,11 @@
+{
+  "name": "uni-api",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.46.0",
+    "cfn-response": "^1.0.1"
+  }
+}

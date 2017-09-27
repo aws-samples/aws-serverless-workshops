@@ -43,12 +43,24 @@
         <div class="backdrop"></div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">No API Configured</h3>
+                <h3 class="panel-title">Successfully Authenticated!</h3>
             </div>
             <div class="panel-body">
-                <p>There is no API invoke URL configured in <a href="/js/config.js">/js/config.js</a>. You'll configure this in Module 3 of the workshop.</p>
+                <p>This page is not functional yet because there is no API invoke URL configured in <a href="/js/config.js">/js/config.js</a>. You'll configure this in Module 3.</p>
                 <p>In the meantime, if you'd like to test the Amazon Cognito user pool authorizer for your API, use the auth token below:</p>
                 <textarea class="authToken"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="noCognitoMessage" class="configMessage" style="display: none;">
+        <div class="backdrop"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">No Cognito User Pool Configured</h3>
+            </div>
+            <div class="panel-body">
+                <p>There is no user pool configured in <a href="/js/config.js">/js/config.js</a>. You'll configure this in Module 2 of the workshop.</p>
             </div>
         </div>
     </div>

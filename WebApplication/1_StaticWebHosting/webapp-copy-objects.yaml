@@ -1,0 +1,162 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Copies the necessary web assets into your Wild Rydes S3 bucket.
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: The name of your S3 bucket, e.g. 'wildrydes-yourname'
+
+  CodeBucket:
+    Type: String
+    Default: wildrydes-us-east-1
+    Description: S3 bucket containing the code deployed by this template
+
+  CodeKeyPrefix:
+    Type: String
+    Default: WebApplication/1_StaticWebHosting
+    Description: Key prefix for resources referenced from the CodeBucket
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "Bucket Configuration"
+        Parameters:
+          - BucketName
+      -
+        Label:
+          default: "Advanced Configuration"
+        Parameters:
+          - CodeBucket
+          - CodeKeyPrefix
+    ParameterLabels:
+      BucketName:
+        default: "Website Bucket Name"
+
+Resources:
+  WebsiteContent:
+    Properties:
+      ServiceToken: !GetAtt CopyS3ObjectsFunction.Arn
+      SourceBucket: !Ref CodeBucket
+      SourcePrefix: !Sub "${CodeKeyPrefix}/website/"
+      Bucket: !Ref BucketName
+    Type: "Custom::S3Objects"
+
+  S3CopyRole:
+    Type: AWS::IAM::Role
+    Properties:
+
+      Path: /wildrydes/
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        -
+          PolicyName: S3Access
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              -
+                Sid: AllowLogging
+                Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+              -
+                Sid: SourceBucketReadAccess
+                Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetObject"
+                Resource:
+                  - !Sub "arn:aws:s3:::${CodeBucket}"
+                  - !Sub "arn:aws:s3:::${CodeBucket}/${CodeKeyPrefix}/*"
+              -
+                Sid: DestBucketWriteAccess
+                Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                  - "s3:PutObjectAcl"
+                  - "s3:PutObjectVersionAcl"
+                  - "s3:DeleteObject"
+                  - "s3:DeleteObjectVersion"
+                  - "s3:CopyObject"
+                Resource:
+                  - !Sub "arn:aws:s3:::${BucketName}"
+                  - !Sub "arn:aws:s3:::${BucketName}/*"
+
+  CopyS3ObjectsFunction:
+    Properties:
+      Description: Copies objects from a source S3 bucket to a destination
+      Handler: index.handler
+      Runtime: python2.7
+      Role: !GetAtt S3CopyRole.Arn
+      Timeout: 120
+      Code:
+        ZipFile: |
+          import os
+          import json
+          import cfnresponse
+
+          import boto3
+          from botocore.exceptions import ClientError
+          client = boto3.client('s3')
+
+          import logging
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
+
+          def handler(event, context):
+            logger.info("Received event: %s" % json.dumps(event))
+            source_bucket = event['ResourceProperties']['SourceBucket']
+            source_prefix = event['ResourceProperties'].get('SourcePrefix') or ''
+            bucket = event['ResourceProperties']['Bucket']
+            prefix = event['ResourceProperties'].get('Prefix') or ''
+
+            result = cfnresponse.SUCCESS
+
+            try:
+              if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
+                result = copy_objects(source_bucket, source_prefix, bucket, prefix)
+              elif event['RequestType'] == 'Delete':
+                result = delete_objects(bucket, prefix)
+            except ClientError as e:
+              logger.error('Error: %s', e)
+              result = cfnresponse.FAILED
+
+            cfnresponse.send(event, context, result, {})
+
+
+          def copy_objects(source_bucket, source_prefix, bucket, prefix):
+            paginator = client.get_paginator('list_objects_v2')
+            page_iterator = paginator.paginate(Bucket=source_bucket, Prefix=source_prefix)
+            for key in {x['Key'] for page in page_iterator for x in page['Contents']}:
+              dest_key = os.path.join(prefix, os.path.relpath(key, source_prefix))
+              print 'copy {} to {}'.format(key, dest_key)
+              if not key.endswith('/'):
+                print 'copy {} to {}'.format(key, dest_key)
+                client.copy_object(CopySource={'Bucket': source_bucket, 'Key': key}, Bucket=bucket, Key = dest_key)
+            return cfnresponse.SUCCESS
+
+          def delete_objects(bucket, prefix):
+            paginator = client.get_paginator('list_objects_v2')
+            page_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
+            objects = [{'Key': x['Key']} for page in page_iterator for x in page['Contents']]
+            client.delete_objects(Bucket=bucket, Delete={'Objects': objects})
+            return cfnresponse.SUCCESS
+
+
+    Type: AWS::Lambda::Function

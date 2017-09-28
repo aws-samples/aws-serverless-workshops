@@ -64,7 +64,7 @@ After you've created the table, note the Amazon Resource Name (ARN) for use in t
 
 Use the IAM console to create a new role. Give it a name like `WildRydesFileProcessorRole` and select AWS Lambda for the role type. Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role in order to grant permissions for your function to log to Amazon CloudWatch Logs.
 
-You'll need to grant this role permissions to access both the S3 bucket and Amazon DynamoDB table create in the previous sections:
+You'll need to grant this role permissions to access both the S3 bucket and Amazon DynamoDB table created in the previous sections:
 
 - Create an inline policy allowing the role access to the `ddb:PutItem` action for the Amazon DynamoDB table you created in the previous section.
 
@@ -123,7 +123,7 @@ You'll need to grant this role permissions to access both the S3 bucket and Amaz
 
 1. Select **Amazon S3** from the **AWS Service** dropdown.
 
-1. Select **Get Object** from the Actions list.
+1. Select **GetObject** from the Actions list.
 
 1. Type the ARN of the S3 table you created in the first section in the **Amazon Resource Name (ARN)** field. The ARN is in the format of:
 
@@ -164,7 +164,7 @@ Make sure you configure your function to use the `WildRydesFileProcessorRole` IA
 
 1. Click the **Blank Function** blueprint card.
 
-1. Click on the dotted outline and select **S3**. Select **wildrydes-data-yourname** from **Bucket**, **Object Created (All)** from **Event type**, and tick the **Enable trigger** checkbox.
+1. Click on the dotted outline and select **S3**. Select **wildrydes-uploads-yourname** from **Bucket**, **Object Created (All)** from **Event type**, and tick the **Enable trigger** checkbox.
 
 	<kbd>![Create Lambda trigger screenshot](../images/file-processing-configure-trigger.png)</kbd>
 

@@ -25,13 +25,13 @@ Use the Amazon Kinesis Streams console to create a new stream named **wildrydes*
 
 1. From the AWS Console click **Services** then select **Kinesis** under Analytics.
 
-1. Click **Go to Streams**.
+1. Click **Go to the Streams console**.
 
-1. Click **Create stream**.
+1. Click **Create Kinesis stream**.
 
-1. Enter `wildrydes` into **Stream name** and `1` into **Number of shards**, then click **Create stream**.
+1. Enter `wildrydes` into **Kinesis stream name** and `1` into **Number of shards**, then click **Create Kinesis stream**.
 
-1. Within 60 seconds, your stream will be **ACTIVE** and ready to store real-time streaming data.
+1. Within 60 seconds, your Kinesis stream will be **ACTIVE** and ready to store real-time streaming data.
 
 	<kbd>![Stream created screenshot](../images/data-streaming-stream-created.png)</kbd>
 

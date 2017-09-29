@@ -98,7 +98,7 @@ AWS Lambda 콘솔을 사용하여 API 요청을 처리할 `RequestUnicorn` 라�
 
 1. **Create a Lambda function** 를 선택하십시오.
 
-1. **Blank Function** 블루프린트를 선택하십시오.
+1. **Author from scratch** 버튼을 선택하십시오.
 
 1. 트리거를 지금 설정하지 마십시오. **Next** 를 선택하여 함수를 정의하는 부분을 진행합니다.
 

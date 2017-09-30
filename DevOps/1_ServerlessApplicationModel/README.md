@@ -18,14 +18,14 @@ AWS SAM defines a set of objects which can be included in a CloudFormation templ
 
 The Unicorn API includes Amazon API Gateway HTTP endpoints that trigger AWS Lambda functions that read and write data to a Amazon DynamoDB database.  The SAM template for the Unicorn API describes a DynamoDB table with a hash key and Lambda functions to list, view and update Unicorns in the Wild Rydes stable.
 
-The Unicorn API components are defined in the [app-sam.yaml](unicorn-api/app-sam.yaml) CloudFormation template.  Next we'll review the Unicorn API components in more detail.
+The Unicorn API components are defined in the [app-sam.yaml](uni-api/app-sam.yaml) CloudFormation template.  Next we'll review the Unicorn API components in more detail.
 
 ### AWS::Serverless::SimpleTable
 
 Below is the code snippet from the SAM template that describes the DynamoDB table resource.
 
 ```yaml
-  DynamodbTable:
+  Table:
     Type: 'AWS::Serverless::SimpleTable'
       Properties:
         PrimaryKey:
@@ -43,29 +43,31 @@ Below is the code snippet from the SAM template that describes the Lambda functi
   ReadFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
+      FunctionName: 'uni-api-read'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: read.lambda_handler
       Description: View Unicorn by name
+      Timeout: 10
       Events:
-        ReadApi:
+        GET:
           Type: Api
           Properties:
             Path: /unicorns/{name}
             Method: get
       Environment:
         Variables:
-          TABLE_NAME: !Ref DynamodbTable
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${DynamodbTable}'
-              Action:
-                - 'dynamodb:GetItem'
+          TABLE_NAME: !Ref Table
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
 ```
 
 There are several [properties](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties) defined for the [AWS::Serverless::Function](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction) resource, which we'll review in turn.
+
+#### FunctionName
+
+The **FunctionName** property defines a custom name for the Lambda function.  If not specified, CloudFormation will generate a name using the CloudFormation Stack name, CloudFormation Resource name, and random ID.
 
 #### Runtime
 
@@ -91,15 +93,9 @@ The [Environment](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html
 
 The Lambda functions communicate with DynamoDB to read and write data.  The DynamoDB table created by the CloudFormation Stack is referenced as the value for the `TABLE_NAME` environment variable, which can be referenced within the Lambda function.
 
-#### Policies
+#### Role
 
-The **Policies** property defines the access permissions to AWS resources in the [Lambda execution policy](http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role).  For each Unicorn API resource, an IAM policy s defined that describes only the actions required for that Lambda function when communicating with the DynamoDB table.  In this way, our application follows the IAM best practice of granting [*least privilege*](http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
-
-For the Unicorn API that views the details of a Unicorn, the Lambda function need only use the [GetItem](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html) method to find the Unicorn by its name, the primary key on the table.
-
-Alternatively, the AWS::Serverless::Function **Role** property can be used to refer to an IAM Role that contains the list of IAM Policies that define the access permissions required by the Lambda execution policy.
-
-Take a minute to review the SAM definitions in the app-sam.yaml file for the other API methods.  Note their simularities and differences.
+The **Role** property defines the IAM Role that specifies the access permissions to AWS resources in the [Lambda execution policy](http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role).  For each project, CodeStar generates a Lambda execution role that has access to a default set of AWS resources.  This role can be modified with additional policies, as you will see in a later module.
 
 Next, we'll look at how CloudFormation is used to deploy the SAM Unicorn API.
 
@@ -121,74 +117,81 @@ This workshop can be deployed in any AWS region that supports the following serv
 - AWS Lambda
 - AWS X-Ray
 
-You can refer to the [region table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are N. Virginia, Ohio, Oregon, Ireland, Frankfurt, and Sydney.
+You can refer to the [region table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are N. Virginia, Ohio, N. California, Oregon, Ireland, Frankfurt, and Sydney.
 
 Once you've chosen a region, you should deploy all of the resources for this workshop there. Make sure you select your region from the dropdown in the upper right corner of the AWS Console before getting started.
 
 ![Region selection screenshot](images/region-selection.png)
 
-### 1. Create an S3 Bucket
+### 1. Update CodeStar IAM Role
 
-Use the console or AWS CLI to create an Amazon S3 bucket with versioning enabled. Keep in mind that your bucket's name must be globally unique. We recommend using a name like `wildrydes-devops-yourname`.
+CodeStar generates IAM Roles and Policies that control access to AWS resources.  In this module, we will add permissions to Roles using IAM Managed Policies to support the customizations we will make to the Lambda function names.
 
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+#### 1a. Add IAM Policies to the `CodeStarWorker-uni-api-CloudFormation` Role
 
-1. In the AWS Management Console choose **Services** then select **S3** under Storage.
+1. In the AWS Management Console choose **Services** then select **IAM** under Security, Identity & Compliance.
 
-1. Choose **+Create Bucket**
+1. Select Role in the left navigation, type `CodeStarWorker-uni-api-CloudFormation` in the filter text box, and click the Role name link in the Role table.
 
-1. Provide a globally unique name for your bucket such as `wildrydes-devops-yourname`.
+    ![Select Role](images/role1-1.png)
+ 
+1. On the Role Summary page, click the **Attach Policy** button in the **Managed Policies** section of the **Permissions** tab.
 
-1. Select the Region you've chosen to use for this workshop from the dropdown.
+    ![Role Details](images/role1-2.png)
+ 
+1. Type `AWSLambdaReadOnlyAccess` in the filter text box, select the checkbox next to the **AWSLambdaReadOnlyAccess** Managed Policy, and click the **Attach Policy** button.
 
-   ![Create bucket](images/create-bucket-1.png)
+    ![Attach Policy](images/role1-3.png)
+ 
+1. The Role Summary will now include the **AWSLambdaReadOnlyAccess** policy in the list of **Managed Policies**.
 
-1. Choose **Next** in the lower right of the dialog.
+    ![Policy Attached](images/role1-4.png)
+    
+### 2. Seed the `uni-api` CodeCommit Git repository
 
-1. Choose the **Versioning** properties box.
+1. Each module has corresponding source code used to seed the CodeCommit Git repository for the CodeStart project.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
-   ![Bucket Versioning](images/create-bucket-2.png)
+    Region| Launch
+    ------|-----
+    US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codecommit-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-1.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-east-1)
+    US West (N. California) | [![Launch Module 1 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codecommit-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-1.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-1)
 
-1. Choose **Enable versioning** and click **Save** in the dialog box.
+1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
 
-   ![Bucket Enable Versioning](images/create-bucket-3.png)
+1. Select the **I acknowledge that AWS CloudFormation might create IAM resources.** checkbox to grant CloudFormation permission to create IAM resources on your behalf
 
-1. Choose **Next** in the lower right of the dialog.
+1. Click the **Create** button in the lower right corner of the browser window to create the CloudFormation stack and seed the CodeCommit repository.
 
-   ![Bucket Enable Versioning](images/create-bucket-4.png)
+    ![Seed Repository CloudFormation Stack Review](images/seed-repository-1.png)
 
-1. Choose **Next** in the lower right of the dialog.
+1. There will be a short delay as the Git repository seeded with the new source code.  Upon successful completion, the CloudFormation will show Status ``CREATE_COMPLETE``.
 
-1. Choose **Create Bucket** in the lower right of the dialog.
+    ![CloudFormation Stack Creation Complete](images/seed-repository-2.png)
 
-</p></details>
+### 3. Fetch CodeCommit Git Repository
 
-### 2. Clone or Download GitHub Repository
+Now that the CodeCommit Git repository has been seeded with new source code, you will need to fetch the changes locally so that you may modify the code.  Typically, this is accomplished using the `git pull` command, however for the workshop we have replaced the repository with a new history and different Git commands will be used.
 
-This workshop requires you to modify text files on your workstation and to package the application project for deployment.  To obtain a local copy, you will need to clone or download this GitHub Repository.
+Using your preferred Git client, run the commands on your local **uni-api** Git repository:
 
-1.  In your web browser, open the following link to the [Wild Rydes Serverless Workshop](https://github.com/awslabs/aws-serverless-workshops).
+* `git fetch --all`
+* `git reset --hard origin/master`
 
-#### 2a. Clone the GitHub Repository
+### 4. Identify CodeStar `uni-api` S3 Bucket
 
-1.  If you choose, follow the GitHub instructions to clone the repository to a directory on your workstation: [Cloning a Repository](https://help.github.com/articles/cloning-a-repository/)
+CodeStar creates an S3 bucket to store the artifacts created by packaging SAM-based projects.  The S3 bucket has the format, where `{AWS::Region}` and `{AWS::AccountId}` are populated with your details.
 
-#### 2b. Download the GitHub Repository
+```
+aws-codestar-{AWS::Region}-{AWS::AccountId}-uni-api-pipe
+```
 
-1.  If you are unfamiliar with git, you can also download the repository as a zip file.  The screenshot below illustrates where to click to download the zip file.
-
-   ![GitHub Download](images/github-download.png)
-
-1. Once downloaded to your workstation, you will need expand the `aws-serverless-workshops-master.zip` file into a directory called `aws-serverless-workshops-master` that you will use to edit and package the application code.
-
-### 2. Package the Unicorn API for Deployment
+### 5. Package the Unicorn API for Deployment
 
 On your workstation:
 
-1. Change directory to `aws-serverless-workshops-master/DevOps/1_ServerlessApplicationModel/unicorn-api`.
+1. Change directory to your local **uni-api** Git repository directory.
 
-1. Use the AWS CLI to execute the [CloudFormation package](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html) command to upload the local code from the `unicorn-api` directory to S3.  Use the following command to do so.  Make sure you replace `YOUR_BUCKET_NAME` with the name you used in the previous section.
+1. Use the AWS CLI to execute the [CloudFormation package](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html) command to upload the local code from the `uni-api` directory to S3.  Use the following command to do so.  Make sure you replace `YOUR_BUCKET_NAME` with the name you identified in the previous step (i.e. `aws-codestar-{AWS::Region}-{AWS::AccountId}-uni-api-pipe`)
 
 ```
 aws cloudformation package --template-file app-sam.yaml --s3-bucket YOUR_BUCKET_NAME --output-template-file app-sam-output.yaml
@@ -202,6 +205,7 @@ Before:
   ReadFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
+      FunctionName: 'uni-api-read'
       Handler: read.lambda_handler
       Runtime: nodejs6.10
       CodeUri: app
@@ -213,40 +217,36 @@ After:
   ReadFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
+      FunctionName: 'uni-api-read'
       Handler: read.lambda_handler
       Runtime: nodejs6.10
       CodeUri: s3://YOUR_BUCKET_NAME/540839c2fc11f0214f88f6c5dfacd389
 ```
 
-### 3. Deploy the Unicorn API
+### 6. Deploy the Unicorn API
 
-1. Change directory to `aws-serverless-workshops-master/DevOps/1_ServerlessApplicationModel/unicorn-api`, if necessary.
+1. Change directory to your local **uni-api** Git repository, if necessary.
 
-2. Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `wildrydes-unicorn-api` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
+
+2. Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `awscodestar-uni-api-lambda` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
 
 ```
-aws cloudformation deploy --stack-name wildrydes-unicorn-api --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM
+aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM --parameter-overrides ProjectId=uni-api
 ```
 
 ## Implementation Validation
 
 After the CloudFormation deploy command completes, you will use the browser to test your API.
 
-1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
-1. In the left nav, click on `wildrydes-unicorn-api`.
+1. Select the `uni-api` project
 
-1. In the left nav, under the `wildrydes-unicorn-api` API click on **Stages**
+1. Copy the URL from the **Application endpoints** tile on the right side of the dashboard.
 
-1. In the list of **Stages**, expand the **Prod** stage section
+1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-west-1.amazonaws.com/Prod/unicorns/`
 
-1. Click on the **GET** link under the `/unicorns` resource
-
-1. Open the **Invoke URL** in another browser window and confirm that the Unicorn API responds successfully with an empty JSON list:
-
-   ```json
-   []
-   ```
+1. Confirm that the browser shows a JSON result with an empty list: `[]`
 
 ## API Enhancement
 
@@ -258,17 +258,23 @@ Using a text editor, open the `app-sam.yaml` file and append a new **AWS::Server
 
 > Note: whitespace is important in YAML files.  Please verify that the configuration below is added with the same space indentation as the CloudFormation Resources in the app-sam.yaml file.
 
-1. **Runtime** is ``nodejs6.10``
+1. **FunctionName** is `uni-api-update`
 
-1. **CodeUri** is ``app``
+1. **Runtime** is `nodejs6.10`
 
-1. **Handler** is ``update.lambda_handler``
+1. **CodeUri** is `app`
 
-1. **Event** type is ``Api`` associated to the ``/unicorns/{name}`` **Path** and ``put`` **Method**
+1. **Handler** is `update.lambda_handler`
 
-1. **Environment** variable named `TABLE_NAME` that references the `DynamodbTable` Resources for its value.
+1. **Description** is `Create or Update Unicorn`
 
-1. **Policies** should mirror other Functions, however the **Action** to allow is ``dynamodb:PutItem``
+1. **Timeout** is `10`
+
+1. **Event** type is `Api` associated to the `/unicorns/{name}` **Path** and `put` **Method**
+
+1. **Environment** variable named `TABLE_NAME` that references the `Table` Resource for its value.
+
+1. **Role** is duplicated from another function.
 
 If you are unsure of the syntax to add to ``app-sam.yaml`` please refer to the code snippet below.
 
@@ -279,33 +285,31 @@ If you are unsure of the syntax to add to ``app-sam.yaml`` please refer to the c
   UpdateFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
+      FunctionName: 'uni-api-update'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: update.lambda_handler
       Description: Create or Update Unicorn
+      Timeout: 10
       Events:
-        UpdateApi:
+        PUT:
           Type: Api
           Properties:
             Path: /unicorns/{name}
             Method: put
       Environment:
         Variables:
-          TABLE_NAME: !Ref DynamodbTable
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${DynamodbTable}'
-              Action:
-                - 'dynamodb:PutItem'
+          TABLE_NAME: !Ref Table
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
 ```
 
 </p></details>
 
 ### 2. Package the Unicorn API for Deployment
 
-Use the AWS CLI to execute the [CloudFormation package](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html) command to upload the local code from the `unicorn-api` directory to S3.  You can use the following command to do so.  Make sure you replace `YOUR_BUCKET_NAME` with the name you used for the previous package command.
+Use the AWS CLI to execute the [CloudFormation package](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html) command to upload the local code from the `uni-api` directory to S3.  You can use the following command to do so.  Make sure you replace `YOUR_BUCKET_NAME` with the name you used for the previous package command.
 
 ```
 aws cloudformation package --template-file app-sam.yaml --s3-bucket YOUR_BUCKET_NAME --output-template-file app-sam-output.yaml
@@ -313,25 +317,29 @@ aws cloudformation package --template-file app-sam.yaml --s3-bucket YOUR_BUCKET_
 
 ### 3. Deploy the Unicorn API
 
-Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `wildrydes-unicorn-api` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.ht) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
+Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `awscodestar-uni-api-lambda` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.ht) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
 
 ```
-aws cloudformation deploy --stack-name wildrydes-unicorn-api --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM
+aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM
 ```
 
-CloudFormation will generate a ChangeSet for the `wildrydes-unicorn-api` CloudFormation Stack and only update the resources that have changed since the previous deployment.  In this case, a new Lambda Function and API Gateway resource will be created for the `UpdateFunction` resource that you added to the SAM template.
+CloudFormation will generate a ChangeSet for the `awscodestar-uni-api-lambda` CloudFormation Stack and only update the resources that have changed since the previous deployment.  In this case, `awscodestar-uni-api-lambda` was the CloudFormation stack created by CodeStar for the Lambda functions and API Gateway specification, which you will be updating.
 
 ## Enhancement Validation
 
 After the CloudFormation deploy command completes, you will use the AWS API Gateway to test your API.
 
+### 1. Add a Unicorn
+
 1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
 
-1. In the left nav, click on `wildrydes-unicorn-api`.
+1. In the left nav, click on `awscodestar-uni-api-lambda`.
 
 1. From the list of API resources, click on the `PUT` link under the `/{name}` resource.
 
 1. On the resource details panel, click the `TEST` link in the client box on the left side of the panel.
+
+    ![Validate 1](images/validate-1.png)
 
 1. On the test page, enter `Shadowfox` in the **Path** field.
 
@@ -344,13 +352,31 @@ After the CloudFormation deploy command completes, you will use the AWS API Gate
     }
     ```
 
-1. Click on the **Test** button.
+    ![Validate 2](images/validate-2.png)
+
+1. Scroll down and click the **Test** button.
 
 1. Scroll to the top of the test page, and verify that on the right side of the panel that the **Status** code of the HTTP response is 200.
 
-1. In the left nav, under the `wildrydes-unicorn-api` API click on **Stages**, expand the **Prod** stage, and choose the `GET` method below the `/unicorns` resource.
+    ![Validate 3](images/validate-3.png)
 
-1. At the top of the **Prod Stage Editor** panel, choose the **Invoke URL** to display a list of Unicorns in the browser.  `Shadowfox` should be listed with the breed and description entered above.
+### 2. List Unicorns
+
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
+
+1. Select the `uni-api` project
+
+    ![CodeStar Project List](images/codestar-1.png)
+
+1. Copy the URL from the **Application endpoints** tile on the right side of the dashboard.
+
+    ![CodeStar App Endpoint](images/codestar-app-endpoint.png)
+
+1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
+
+1. Confirm that the browser shows a JSON result that includes `Shadowfox`, with the breed and description entered above.
+
+> Note: You may notice that your CodeStar project shows the Build stage has failed in the project pipeline.  That's to be expected, and will be corrected in the next module.
 
 ## Completion
 

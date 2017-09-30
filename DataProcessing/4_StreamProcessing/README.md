@@ -20,7 +20,7 @@ Before beginning the module ensure that you have the Kinesis command-line client
 
 Use the IAM console to create a new role. Give it a name like `WildRydesStreamProcessorRole` and select AWS Lambda for the role type. Attach the managed policy called `AWSLambdaKinesisExecutionRole` to this role in order to grant permissions for your function to read from Amazon Kinesis streams and to log to Amazon CloudWatch Logs.
 
-You'll need to grant this role permissions to access the Amazon DynamoDB table create in the previous sections. Create an inline policy allowing the role access to the `ddb:PutItem` action for the Amazon DynamoDB table you created in the [File Processing module][file-processing-module].
+You'll need to grant this role permissions to access the Amazon DynamoDB table create in the previous sections. Create an inline policy allowing the role access to the `dynamodb:BatchWriteItem` action for the Amazon DynamoDB table you created in the [File Processing module][file-processing-module].
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>

@@ -217,7 +217,7 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Enter `pipeline-changeset` for **Change set name**
 
-1. Enter `uni-api-BuildArtifact::test-template-export.json` for **Template**
+1. Enter `uni-api-BuildArtifact::test-template-export.yml` for **Template**
 
 1. Select `CAPABILITY_IAM` for **Capabilities**
 
@@ -329,7 +329,7 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Enter `pipeline-changeset` for **Change set name**
 
-1. Enter `uni-api-BuildArtifact::template-export.json` for **Template**
+1. Enter `uni-api-BuildArtifact::template-export.yml` for **Template**
 
 1. Select `CAPABILITY_IAM` for **Capabilities**
 

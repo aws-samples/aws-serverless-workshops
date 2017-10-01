@@ -21,19 +21,19 @@ phases:
   build:
     commands:
       - cd app && npm install
-      - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.json
+      - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.yml
 
 artifacts:
   type: zip
   files:
-    - template-export.json
+    - template-export.yml
 ```
 
 For the Unicorn API, the build command is the same **CloudFormation package** command used from the [Serverless Application Model: Step 2](../1_ServerlessApplicationModel#2-package-the-uni-api-for-deployment), except that the S3 bucket has been externalized to an environment variable that CodeStar has configured on the project.
 
 As a reminder, the **CloudFormation package** command packages the local source code, uploads it to S3, and returns a new CloudFormation template that has been modified to use the S3 references as the CodeUri.
 
-For the Unicorn API, the output artifact is a zip archive that includes only the ``template-export.json`` file.
+For the Unicorn API, the output artifact is a zip archive that includes only the ``template-export.yml`` file.
 
 ## Implementation Instructions
 

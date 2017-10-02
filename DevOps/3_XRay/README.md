@@ -26,7 +26,7 @@ Currently, you can use the X-Ray SDKs for Node.js and Java with Lambda.  To inte
 build:
   commands:
     - cd app && npm install
-    - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.json
+    - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.yml
 ```
 
 With the addition of the [aws-xray-sdk](https://www.npmjs.com/package/aws-xray-sdk) library to the project, the library needs to be integrated into the application code.  Below are the Lambda function initialization code snippets before and after the X-Ray integration.

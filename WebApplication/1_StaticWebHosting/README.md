@@ -15,7 +15,7 @@ EU (London) | [![Launch Module 1 in eu-west-2](http://docs.aws.amazon.com/AWSClo
 Asia Pacific (Tokyo) | [![Launch Module 1 in ap-northeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-1/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
 Asia Pacific (Seoul) | [![Launch Module 1 in ap-northeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-northeast-2/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
 Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
-
+Asia Pacific (Mumbai) | [![Launch Module 1 in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=wildrydes-webapp-1&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/WebApplication/1_StaticWebHosting/webapp-static-hosting.yaml)
 
 
 <details>
@@ -25,7 +25,7 @@ Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.am
 
 1. 템플릿 선택 페이지에서 **Next** 를 클릭하십시오.
 
-1. `wildrydes-yourname`와 같은 전 세계적으로 고유한 이름을 **Website Bucket Name** 지정하고, **Next** 를 클릭하십시오.
+1. `wildrydes-firstname-lastname`와 같은 전 세계적으로 고유한 이름을 **Website Bucket Name** 지정하고, **Next** 를 클릭하십시오.
     ![Speficy Details Screenshot](../images/module1-cfn-specify-details.png)
 
 1. 옵션 페이지에서 기본값은 그대로 두고, **Next** 을 클릭하십시오.
@@ -76,7 +76,7 @@ AWS 설명서에서 [리전 표](https://aws.amazon.com/about-aws/global-infrast
 
 ### 1. S3 버킷 생성
 
-콘솔 또는 AWS CLI를 사용하여 Amazon S3 버킷을 생성하십시오. 버킷의 이름은 전 세계적으로 고유해야합니다. `wildrydes-yourname`와 같은 이름을 사용할것을 권장합니다.
+콘솔 또는 AWS CLI를 사용하여 Amazon S3 버킷을 생성하십시오. 버킷의 이름은 전 세계적으로 고유해야합니다. `wildrydes-firstname-lastname`와 같은 이름을 사용할것을 권장합니다.
 
 <details>
 <summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
@@ -85,7 +85,7 @@ AWS 설명서에서 [리전 표](https://aws.amazon.com/about-aws/global-infrast
 
 1. **+Create Bucket** 을 선택하십시오.
 
-1. `wildrydes-yourname`와 같은 전 세계적으로 고유한 이름을 설정하십시오.
+1. `wildrydes-firstname-lastname`와 같은 전 세계적으로 고유한 이름을 설정하십시오.
 
 1. 드롭다운 메뉴에서 이 실습에서 사용할 리전을 선택하십시오.
 
@@ -105,7 +105,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 
 혹은 AWS CLI 에 익숙하지 않으시다면,
 
-    http://bit.ly/2rZzEVB
+    http://bit.ly/awskrug_serverless_website
     
 위 경로에서 website.zip 압축파일을 다운로드 한 다음 압축을 풀고, 폴더 안에 있는 파일들을 사용자가 생성한 버킷에 업로드해서 이용하실수도 있습니다.
 
@@ -122,7 +122,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
 
 1. **Permissions** 탭을 선택한 다음, **Bucket Policy**를 선택하십시오.
 
-1. 다음 정책 문서를 버킷 정책 편집기에 입력하고 `YOUR_BUCKET_NAME` 을 섹션 1에서 생성한 버킷 이름으로 변경하십시오.
+1. 다음 정책 문서를 버킷 정책 편집기에 입력하고 `[YOUR_BUCKET_NAME]` 을 섹션 1에서 생성한 버킷 이름으로 변경하십시오.
 
     ```json
     {
@@ -132,7 +132,7 @@ AWS CLI를 사용해서, `s3://wildrydes-us-east-1/WebApplication/1_StaticWebHos
                 "Effect": "Allow",
                 "Principal": "*",
                 "Action": "s3:GetObject",
-                "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+                "Resource": "arn:aws:s3:::[YOUR_BUCKET_NAME]/*"
             }
         ]
     }

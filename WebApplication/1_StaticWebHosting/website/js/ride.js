@@ -32,7 +32,8 @@ WildRydes.map = WildRydes.map || {};
             success: completeRequest,
             error: function ajaxError(jqXHR, textStatus, errorThrown) {
                 console.error('Error requesting ride: ', textStatus, ', Details: ', errorThrown);
-                alert('An error occured when requesting your unicorn:\n' + textStatus + ': ' + errorThrown);
+                console.error('Response: ', jqXHR.responseText);
+                alert('An error occured when requesting your unicorn:\n' + jqXHR.responseText);
             }
         });
     }

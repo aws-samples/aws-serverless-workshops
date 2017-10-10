@@ -14,13 +14,13 @@ See the screenshot below for a depiction of the continuous delivery pipeline tha
 
 ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
 
-If you'd like to jump in and get started please visit the [Serverless Application Model](1_ServerlessApplicationModel) module page to begin the workshop.
+If you'd like to jump in and get started please visit the [CodeStar Project](0_CodeStar) module page to begin the workshop.
 
 ## Prerequisites
 
 ### AWS Account
 
-In order to complete this workshop you'll need an AWS Account with access to create AWS IAM, S3, DynamoDB, Lambada, API Gateway, CodePipeline, and CodeBuild resources. The code and instructions in this workshop assume only one student is using a given AWS account at a time. If you try sharing an account with another student, you'll run into naming conflicts for certain resources. You can work around these by appending a unique suffix to the resources that fail to create due to conflicts, but the instructions do not provide details on the changes required to make this work.
+In order to complete this workshop you'll need an AWS Account with access to create AWS IAM, S3, DynamoDB, Lambda, API Gateway, CodePipeline, and CodeBuild resources. The code and instructions in this workshop assume only one student is using a given AWS account at a time. If you try sharing an account with another student, you'll run into naming conflicts for certain resources. You can work around these by appending a unique suffix to the resources that fail to create due to conflicts, but the instructions do not provide details on the changes required to make this work.
 
 All of the resources you will launch as part of this workshop are eligible for the AWS free tier if your account is less than 12 months old. See the [AWS Free Tier page](https://aws.amazon.com/free/) for more details.
 
@@ -42,9 +42,11 @@ You will need a local text editor for making minor updates to configuration file
 
 This workshop is broken up into multiple modules. You must complete each module before proceeding to the next.
 
+1. [CodeStar Project](0_CodeStar)
 1. [Serverless Application Model (SAM)](1_ServerlessApplicationModel)
 1. [Continuous Delivery Pipeline](2_ContinuousDeliveryPipeline)
 1. [AWS X-Ray Integration](3_XRay)
 1. [Multiple Environment CI/CD Pipeline](4_MultipleEnvironments)
+
 
 After you have completed the workshop you can delete all of the resources that were created by following the [cleanup guide](9_CleanUp).

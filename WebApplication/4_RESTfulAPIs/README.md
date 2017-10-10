@@ -53,7 +53,7 @@ Amazon API Gateway 콘솔에서 API에 대한 새로운 Cognito 사용자 풀 �
 
 1. 인증자 이름(Authorizer name)에 `WildRydes` 를 입력하십시오.
 
-1. **Identity token source** 가 `method.request.header.Authorization` 로 설정되었는지 확인하십시오.
+1. **Identity token source** 가 `Authorization` 로 설정되었는지 확인하십시오.
 
 1. **Create** 를 선택하십시오.
 
@@ -63,7 +63,7 @@ Amazon API Gateway 콘솔에서 API에 대한 새로운 Cognito 사용자 풀 �
 
 1. 로그인 페이지로 리다이렉션 된 경우, 마지막 모듈에서 생성한 사용자로 로그인 하십시오. `/ride.html` 페이지로 이동할 것입니다.
 
-1. `/ride.html` 알림의 인증 토큰을 복사해서 API Gateway 콘솔 탭의 **Identity token** 입력칸에 붙여넣습니다.
+1. `/ride.html` 알림의 인증 토큰을 복사한뒤, API Gateway 콘솔 탭 하단의 `test` 버튼을 선택하고, 팝업창이 뜨면 **Identity token** 입력칸에 붙여넣습니다.
 
 1.  **Test** 를 선택하고 귀하의 사용자에 대한 클레임이 표시된것을 확인하십시오.
 

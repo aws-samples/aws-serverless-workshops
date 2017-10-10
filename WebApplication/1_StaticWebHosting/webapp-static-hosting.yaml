@@ -164,10 +164,10 @@ Resources:
             paginator = client.get_paginator('list_objects_v2')
             page_iterator = paginator.paginate(Bucket=source_bucket, Prefix=source_prefix)
             for key in {x['Key'] for page in page_iterator for x in page['Contents']}:
-              source_key = key
               dest_key = os.path.join(prefix, os.path.relpath(key, source_prefix))
-              print 'copy {} to {}'.format(key, dest_key)
-              client.copy_object(CopySource={'Bucket': source_bucket, 'Key': key}, Bucket=bucket, Key = dest_key)
+              if not key.endswith('/'):
+                print 'copy {} to {}'.format(key, dest_key)
+                client.copy_object(CopySource={'Bucket': source_bucket, 'Key': key}, Bucket=bucket, Key = dest_key)
             return cfnresponse.SUCCESS
 
           def delete_objects(bucket, prefix):

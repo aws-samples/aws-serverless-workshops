@@ -23,6 +23,7 @@ AWS 콘솔에서 IAM 선택 `create a new role`을 클릭하여 새로운 역할
 
 `inline policy`에서 `dynamodb:BatchWriteItem`를 추가하여 이전 모듈 [File Processing module][file-processing-module]에서 생성한 Amazon DynamoDB 테이블에 쓸수 있는 권한을 부여 하셔야 합니다.
 
+
 <details>
 <summary><strong>자세한 단계별 가이드(클릭하여 펼쳐주시기 바랍니다.)</strong></summary><p>
 

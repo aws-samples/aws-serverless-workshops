@@ -118,6 +118,12 @@ The producer and consumer are small programs written in the [Go Programming lang
 		AWS Access Key ID [None]: YOUR_ACCESS_KEY_ID_HERE
 		AWS Secret Access Key [None]: YOUR_SECRET_ACCESS_KEY_HERE
 		```
+		
+		If you'd like to use a named profile, you'll need to set an environment variable with the key `AWS_PROFILE` and the value of the profile name to use:
+		
+		```console
+		export AWS_PROFILE=workshop
+		```
 
 	1. Using environment variables
 

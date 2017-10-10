@@ -4,7 +4,7 @@ In this module, you'll use [AWS X-Ray](https://aws.amazon.com/xray/) to analyze 
 
 ## AWS X-Ray Overview
 
-[AWS X-Ray](https://aws.amazon.com/xray/) helps you analyze and debug production, distributed applications. With X-Ray, you can understand how your application and its underlying services are performing to identify and troubleshoot the root cause of performance issues and errors. X-Ray provides an end-to-end view of requests as they travel through your application, and shows a map of your application’s underlying components. You can use X-Ray to analyze both applications in development and in production.
+[AWS X-Ray](https://aws.amazon.com/xray/) helps you analyze and debug production, distributed applications. With X-Ray, you can understand how your application and its underlying services are performing to identify and troubleshoot the root cause of performance issues and errors. X-Ray provides an end-to-end view of requests as they travel through your application, and shows a map of your application's underlying components. You can use X-Ray to analyze both applications in development and in production.
 
 In Module 3, you will use the CodePipeline that you built in Module 2 to deploy an updated version of the Unicorn API that includes a code bug.  X-Ray has been integrated into the Unicorn API, and you will use X-Ray to identify and troubleshoot the code bug.  Once you have corrected the bug, you will deploy your code changes through your pipeline and use X-Ray to validate the fix.  Next, we'll look at how to integrate X-Ray with Lambda.
 
@@ -12,52 +12,21 @@ In Module 3, you will use the CodePipeline that you built in Module 2 to deploy 
 
 You can now use AWS X-Ray to trace requests made to your serverless applications built using AWS Lambda. This enables you to gain insights into the performance of serverless applications, allowing you to pinpoint the root cause of issues so that you can address them.
 
-To integrate X-Ray with Lambda, a few changes are required to the Unicorn API from Module 2.  These changes are already included in the unicorn-api in Module 3, but we will review them so that you are familiar with the modifications.
-
-### Lambda Execution Policy Update
-
-An additional IAM Managed Policy named `AWSXrayWriteOnlyAccess` must be added to the Lambda Execution Policy to allow it to write X-Ray traces.  Fortunately, because a SAM CloudFormation template is used to specify the Lambda functions and related IAM Policies, it's a simple one line update to each Lambda to add the new policy.  For example, note the addition of the `AWSXrayWriteOnlyAccess` to the ListFunction Lambda function specified in `app-sam.yaml`:
-
-```yaml
-  ListFunction:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      Runtime: nodejs6.10
-      CodeUri: app
-      Handler: list.lambda_handler
-      Description: List Unicorns
-      Events:
-        ListApi:
-          Type: Api
-          Properties:
-            Path: /unicorns
-            Method: get
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref DynamodbTable
-      Policies:
-        - AWSXrayWriteOnlyAccess
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${DynamodbTable}'
-              Action:
-                - 'dynamodb:Scan'
-```
+To integrate X-Ray with Lambda, a few changes are required to the Unicorn API from Module 2.  These changes are already included in the uni-api in Module 3, but we will review them so that you are familiar with the modifications.
 
 ### Enable Active Tracing on Lambda Functions
 
-In addition to the new `AWSXrayWriteOnlyAccess` IAM Policy, each Lambda Function must be enabled for active tracing for X-Ray.  This configuration change has been automated through the use of a CloudFormation Custom Resource, which is beyond the scope of this Module.
+Each Lambda Function must be enabled for active tracing for X-Ray by adding a `Tracing` property with a value of `Active` ([see more](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties)).
 
 ### Integrate AWS X-Ray SDK with Lambda Function
 
-Currently, you can use the X-Ray SDKs for Node.js and Java with Lambda.  To integrate the X-Ray SDK into the Node.js Unicorn API, the [aws-xray-sdk](https://www.npmjs.com/package/aws-xray-sdk) node module is added as a project dependency using [npm](https://www.npmjs.com/).  This has already been included in the `package.json` file in the `unicorn-api/app` directory, and will be included in the project during the Build stage with the addition of a new step in the **pre_build** phase of the CodeBuild `unicorn-api/buildspec.yml` file:
+Currently, you can use the X-Ray SDKs for Node.js and Java with Lambda.  To integrate the X-Ray SDK into the Node.js Unicorn API, the [aws-xray-sdk](https://www.npmjs.com/package/aws-xray-sdk) node module is added as a project dependency using [npm](https://www.npmjs.com/).  This has already been included in the `package.json` file in the `uni-api/app` directory, and will be included in the project during the Build stage with the addition of a new step in the **build** phase of the CodeBuild `uni-api/buildspec.yml` file:
 
 ```yaml
-pre_build:
+build:
   commands:
-    - echo "Installing dependencies - `pwd`"
     - cd app && npm install
+    - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.json
 ```
 
 With the addition of the [aws-xray-sdk](https://www.npmjs.com/package/aws-xray-sdk) library to the project, the library needs to be integrated into the application code.  Below are the Lambda function initialization code snippets before and after the X-Ray integration.
@@ -87,57 +56,76 @@ Each of the following sections provide an implementation overview and detailed, 
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
-### 1. Identify Wild Rydes S3 Bucket
+### 1. Add the AWSXrayWriteOnlyAccess Policy to the `CodeStarWorker-uni-api-Lambda` Role
 
-You will reuse the S3 Bucket that you created in [Module 1: Serverless Application Model](../1_ServerlessApplicationModel/README.md#1-create-an-s3-bucket) from the DevOps Workshop.  If you have not completed this Module, please refer to the module instructions to create the S3 Bucket.
+1. In the AWS Management Console choose **Services** then select **IAM** under Security, Identity & Compliance.
 
-If you are unsure of your S3 Bucket's name, please follow the instructions below.
+1. Select Role in the left navigation, type `CodeStarWorker-uni-api-Lambda` in the filter text box, and click the Role name link in the Role table.
 
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+    ![Select Role](images/role-1.png)
+ 
+1. On the Role Summary page, click the **Attach Policy** button in the **Managed Policies** section of the **Permissions** tab.
 
-1. In the AWS Management Console choose **Services** then select **S3** under Storage.
+    ![Role Details](images/role-2.png)
+ 
+1. Type `AWSXRayWriteOnlyAccess` in the filter text box, select the checkbox next to the **AWSXRayWriteOnlyAccess** Managed Policy, and click the **Attach Policy** button.
 
-1. Browse the list of Buckets or use the search box to identify the S3 Bucket.  `wildrydes-devops-yourname` was recommended as the Bucket name, however you may have chosen a different globaly unique name.
+    ![Attach Policy](images/role-3.png)
+ 
+1. The Role Summary will now include the **AWSXRayWriteOnlyAccess** policy in the list of **Managed Policies**.
 
-</p></details>
+    ![Policy Attached](images/role-4.png)
+ 
 
-### 2. Create a Deployment Package
+### 2. Seed the `uni-api` CodeCommit Git repository
 
-The CodePipeline that you will create in the next step will be triggered by updates to a deployment package in S3.
+1. Each module has corresponding source code used to seed the CodeStar CodeCommit Git repository to support the workshop.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
-1. Change directory to `aws-serverless-workshops-master/DevOps/3_XRay/unicorn-api`.
+    Region| Launch
+    ------|-----
+    US East (N. Virginia) | [![Launch Module 3 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codestar-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=us-east-1)
+    US West (N. California) | [![Launch Module 3 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codecommit-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-1)
 
-1. To create a deployment for this project, zip the contents of the `unicorn-api` directory into a file named **`unicorn-api.zip`**, which is your deployment package.  If you are unsure how to zip the files in the `unicorn-api` directory, follow the instructions for Microsoft workstations [here](https://support.microsoft.com/en-us/instantanswers/2df754f6-7039-824c-b5be-6dda11b5075e/zip-and-unzip-files), and macOS workstations [here](https://support.apple.com/kb/PH25411).
+1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
 
-**Important**
-> Zip the directory content, not the directory. The contents of the Zip file are available as the current working directory of the Lambda function. For example: /app-sam.yaml
+1. Select the **I acknowledge that AWS CloudFormation might create IAM resources.** checkbox to grant CloudFormation permission to create IAM resources on your behalf
 
-### 3. Upload the Deployment Package to S3
+1. Click the **Create** button in the lower right corner of the browser window to create the CloudFormation stack and seed the CodeCommit repository.
 
-1. In the AWS Management Console, choose **Services** then select **S3** under Storage.
+    ![Seed Repository CloudFormation Stack Review](images/seed-repository-1.png)
 
-1. Browse the list of Buckets or use the search box to find the S3 bucket that you identified previously.
+1. There will be a short delay as the Git repository seeded with the new source code.  Upon successful completion, the CloudFormation will show Status ``CREATE_COMPLETE``.
 
-1. Choose **Upload**
+    ![CloudFormation Stack Creation Complete](images/seed-repository-2.png)
 
-1. Choose **Add files**, select the local copy of `unicorn-api.zip` and then choose **Upload** in the bottom left corner of the dialog.
+### 3. Fetch CodeCommit Git Repository
+
+Now that the CodeCommit Git repository has been seeded with new source code, you will need to fetch the changes locally so that you may modify the code.  Typically, this is accomplished using the `git pull` command, however for the workshop we have replaced the repository with a new history and different Git commands will be used.
+
+Using your preferred Git client, run the commands on your local **uni-api** Git repository:
+
+* `git fetch --all`
+* `git reset --hard origin/master`
 
 ### 4. Validate CodePipeline Unicorn API Deployment
 
-1. As you observed in Module 2, updating the `unicorn-api.zip` in the S3 bucket will trigger the pipeline.  Monitor the pipeline until you observe the pipeline completion, indicated by a green bar to the left of the **Prod** stage.  See below.
+1. After the repository has been seeded, it will start a pipeline execution.  Monitor the pipeline until you observe the pipeline completion, indicated by the **Deploy** stage turning green.
 
-![Prod Stage complete](images/prod-stage-complete.png)
+![Pipeline Complete](images/codestar-3.png)
 
-### 5. Excercise Unicorn API List Resource
+### 5. Exercise List API Method
 
-1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
-1. In the left nav, click on `wildrydes-unicorn-api`.
+1. Select the `uni-api` project
 
-1. In the left nav, under the `wildrydes-unicorn-api` API click on **Stages**, expand the **Prod** stage, and choose the `GET` method under the `/unicorns` resource.
+    ![CodeStar Project List](images/codestar-1.png)
 
-1. At the top of the **Prod Stage Editor** panel, open the **Invoke URL** to a new browser window to display a list of Unicorns in the browser.
+1. Copy the URL from the **Application endpoints** tile on the right side of the dashboard.
+
+    ![CodeStar App Endpoint](images/codestar-app-endpoint.png)
+
+1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
 
 1. Your browser should return an error, like the following.  Feel free to refresh your broser several times to register multiple visits to the REST API.
 
@@ -152,6 +140,16 @@ Oh no!  A bug has been introduced in this version of Unicorn API.  Follow the st
 ## Validation Using X-Ray
 
 1. In the AWS Management Console, click **Services** then select **X-Ray** under Developer Tools.
+
+   If this is your first visit to X-Ray, proceed to the next step to navigate the Getting Started page.  Otherwise, skip to Step 4.
+
+1. Click **Get started**
+
+    ![X-Ray Getting Started](images/xray-1.png)
+
+1. Click **Cancel**
+
+    ![X-Ray Getting Started](images/xray-2.png)
 
 1. The X-Ray Console will open to a Service map that should look similar to the screenshot below:
 
@@ -194,7 +192,7 @@ Next, let's locate and fix the bug!
 
 ### 1. Fix Code Bug
 
-1.  On your workstation, open the `unicorn-api/app/list.js` file and naviagte to line 17, which should look like the following code snippet:
+1.  On your workstation, open the `app/list.js` file and naviagte to line 17, which should look like the following code snippet:
 
    ```
    docClient.scan(params, function(error, data) {
@@ -204,44 +202,56 @@ Next, let's locate and fix the bug!
 
 1. Comment or delete Line 17 to fix the code bug
 
-1. Save the `unicorn-api/app/list.js` file.
+1. Save the `app/list.js` file.
 
-### 2. Create a Deployment Package
+### 2. Commit the change to local Git repository
 
-The CodePipeline that you will create in the next step will be triggered by updates to a deployment package in S3.
+1. Using your Git client, add the local changes to the Git index, and commit with a message.  For example:
 
-1. Change directory to `aws-serverless-workshops-master/DevOps/3_XRay/unicorn-api`.
+    ```
+    %> git add .
+    %> git commit -m "Fix bug"
+    ```
 
-1. To create a deployment for this project, zip the contents of the `unicorn-api` directory into a file named **`unicorn-api.zip`**, which is your deployment package.  If you are unsure how to zip the files in the `unicorn-api` directory, follow the instructions for Microsoft workstations [here](https://support.microsoft.com/en-us/instantanswers/2df754f6-7039-824c-b5be-6dda11b5075e/zip-and-unzip-files), and macOS workstations [here](https://support.apple.com/kb/PH25411).
+1. Using your Git client, push the Git repository updates to the origin.  For example:
 
-**Important**
-> Zip the directory content, not the directory. The contents of the Zip file are available as the current working directory of the Lambda function. For example: /app-sam.yaml
+    ```
+    %> git push origin
+    ```
 
-### 3. Upload the Deployment Package to S3
+### 3. Validate CodePipeline Unicorn API Deployment
 
-1. In the AWS Management Console, choose **Services** then select **S3** under Storage.
+After pushing your changes to the CodeStar project's CodeCommit git repository, you will confirm that the changes are build and deployed successfully using CodePipeline.
 
-1. Browse the list of Buckets or use the search box to find the S3 bucket that you identified previously.
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
-1. Choose **Upload**
+1. Select the `uni-api` project
 
-1. Choose **Add files**, select the local copy of `unicorn-api.zip` and then choose **Upload** in the bottom left corner of the dialog.
+    ![CodeStar Project List](images/codestar-1.png)
 
-### 4. Validate CodePipeline Unicorn API Deployment
+1. Observe that the continuous deployment pipeline on the right of the browser window now shows the Source stage to be blue, meaning that it is active.
 
-1. As you observed in Module 2, updating the `unicorn-api.zip` in the S3 bucket will trigger the pipeline.  Monitor the pipeline until you observe the pipeline completion, indicated by a green bar to the left of the **Prod** stage.  See below.
+    ![CodeStar Dashboard 1](images/codestar-2.png)
 
-![Prod Stage complete](images/prod-stage-complete.png)
+1. Each stage's color will turn blue during execution and green on completion.  Following the successful execution of all stages, the pipeline should look like the following screenshot.
 
-### 5. Excercise Unicorn API List Resource
+    ![CodeStar Dashboard 2](images/codestar-3.png)
+    
+### 4. Excercise Unicorn API List Resource
 
-1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
-1. In the left nav, click on `wildrydes-unicorn-api`.
+1. Select the `uni-api` project
 
-1. In the left nav, under the `wildrydes-unicorn-api` API click on **Stages**, expand the **Prod** stage, and choose the `GET` method under the `/unicorns` resource.
+    ![CodeStar Project List](images/codestar-1.png)
 
-1. At the top of the **Prod Stage Editor** panel, open the **Invoke URL** to a new browser window to display a list of Unicorns in the browser.
+1. Copy the URL from the **Application endpoints** tile on the right side of the dashboard.
+
+    ![CodeStar App Endpoint](images/codestar-app-endpoint.png)
+
+1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
+
+1. Your browser should return an error, like the following.  Feel free to refresh your broser several times to register multiple visits to the REST API.
 
 1. Your browser should no longer return an error.  Feel free to refresh your browser several times to register multiple REST API requests.
 

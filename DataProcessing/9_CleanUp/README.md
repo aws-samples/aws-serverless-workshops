@@ -1,82 +1,82 @@
-# Workshop Clean-up
+# 워크삽 리소스 정리
 
-This page provides instructions for cleaning up the resources created during the preceding modules.
+본 문서는 빅데이터 분석 워크삽을 진행하면서 생성한 리소스를 정리하는 방법을 정리한 문서 입니다.
 
-## Resource Clean-up Instructions
+## 리소스 정리 가이드 
 
 ### 1. File Processing
 
 #### AWS Lambda
 
-- Delete the function **WildRydesFileProcessor**.
+- **WildRydesFileProcessor** 함수 삭제 
 
 #### AWS IAM
 
-- Delete the role **WildRydesFileProcessorRole**.
+- **WildRydesFileProcessorRole** 역할 삭제
 
 #### Amazon DynamoDB
 
-- Delete the table **UnicornSensorData**.
+- **UnicornSensorData** 테이블 삭제
 
 #### Amazon S3
 
-- Delete the bucket you created in the first section of the [module][file-processing-module]. It should be named similarly to **wildrydes-uploads-yourname**.
+- **wildrydes-uploads-yourname**와 비슷한 형식으로 [file-processing-module][file-processing-module]에서 생성한 버킷 삭제
 
 ### 2. Real-time Data Streaming
 
 #### Amazon Kinesis Streams
 
-- Delete the stream **wildrydes**.
+- **wildrydes** 스트림 삭제
 
 ### 3. Streaming Aggregation
 
 #### Amazon Kinesis Analytics
 
-- Delete the application **wildrydes**.
+- **wildrydes** 어플리케이션 삭제
 
 #### Amazon Kinesis Streams
 
-- Delete the stream **wildrydes-aggregated**.
+- **wildrydes-aggregated** 스트림 삭제
 
 ### 4. Stream Processing
 
 #### AWS Lambda
 
-- Delete the function **WildRydesStreamProcessor**.
+- **WildRydesStreamProcessor** 함수 삭제
 
 #### AWS IAM
 
-- Delete the role **WildRydesFileProcessorRole**.
+- **WildRydesFileProcessorRole** 역할 삭제
 
 ### 5. Data Archiving
 
 #### Amazon Athena
 
-- Delete the table **wildrydes**.
+- **wildrydes** 테이블 삭제
 
-	1. In the Amazon Athena query editor, type:
+	1. Amazon Athena 쿼리 에디터에 다음을 입력:
 
 	```sql
 	DROP TABLE wildrydes;
 	```
 
-	2. Click **Run Query**.
+	2. **Run Query** 클릭
 
 #### AWS Lambda
 
-- Delete the function **WildRydesStreamToFirehose**.
+- **WildRydesStreamToFirehose** 함수 삭제
 
 #### AWS IAM
 
-- Delete the role **WildRydesLambdaKinesisRole**.
+- **WildRydesLambdaKinesisRole** 역할  삭제
 
 #### Amazon Kinesis Firehose
 
-- Delete the delivery stream **wildrydes**.
+- **wildrydes** 스트림 삭제
 
 #### Amazon S3
 
-- Delete the bucket you created in the first section of the [module][data-archiving-module]. It should be named similarly to **wildrydes-data-yourname**.
+- **wildrydes-data-yourname** 와 비슷한 형식으로 [data-archiving-module][data-archiving-module] 에서 생성한 버킷 삭제
 
 [file-processing-module]: ../1_FileProcessing/README.md
 [data-archiving-module]: ../5_DataArchiving/README.md

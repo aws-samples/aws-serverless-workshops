@@ -146,7 +146,7 @@ AWS Lambda, Amazon Kinesis Streams, Amazon Kinesis Firehose, Amazon Kinesis Anal
 1. [스트림 처리 (Stream Processing)](4_StreamProcessing/README.md)
 1. [데이터 보관 (Data Archiving)](5_DataArchiving/README.md)
 
-After you have completed the workshop you can delete all of the resources that were created by following the [clean-up guide].
+!!주의!! 워크샵을 마친 후에 [clean-up guide]에 따라 생성된 모든 리소스를 삭제 할 수 있습니다.
 
 [region-table]: https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
 [go]: https://www.golang.org

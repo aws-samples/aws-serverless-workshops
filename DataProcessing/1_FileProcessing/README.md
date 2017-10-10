@@ -220,9 +220,9 @@ IAM 콘솔을 사용해서 새 역할(role)을 만듭니다. `WildRydesFileProce
 
 테이블에서 JSON 파일의 항목이 표시되면 실시간 데이터 스트리밍 모듈로 이동할 수 있습니다: [실시간 데이터 스트리밍 Real-time Data Streaming][data-streaming-module].
 
-## 추가 과제
+## 추가 도전 과제
 
-- 형식이 잘못된 JSON이 있는 데이타를 정상적으로 처리하도록 구현을 향상시킵니다. 조작된 라인을 포함하도록 파일을 편집하고, 함수가 파일을 처리할 수 있는지 확인하십시오. 운영 환경에서 구현할때 처리할 수 없는 라인을 처리하는 방법을 고려해보십시오.
+- 형식이 잘못된 JSON이 있는 데이타를 정상적으로 처리하도록 구현을 개선해봅니다. 조작된 라인을 포함하도록 JSON 파일을 편집하고, 람다 함수가 JSON 파일을 처리할 수 있는지 확인하십시오. 실제로 운영 환경에서 구현할때 처리할 수 없는 라인을 처리하는 방법을 생각해보십시오.
 - Lambda 함수와 관련된 Amazon CloudWatch Logs 스트림을 검사하고 함수가 실행되는 시간을 확인합니다. DynamoDB 테이블의 프로비저닝 된 쓰기 처리량을 변경하고 파일을 버킷에 새 오브젝트로 다시 복사하십시오. 로그를 한번 더 확인하고 더 낮은 시간을 기록하십시오.
 
 [event-notifications]: http://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html

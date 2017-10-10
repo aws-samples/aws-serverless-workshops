@@ -26,7 +26,7 @@ AWS Lambda, Amazon Kinesis Streams, Amazon Kinesis Firehose, Amazon Kinesis Anal
 
 #### 소비자 (Consumer)
 
-소비자(consumer)는 Amazon Kinesis 스트림에서 형식화 된 JSON 메시지를 읽고 표시해서, 스트림으로 전송되는 내용을 실시간으로 모니터링 할 수 있습니다. 소비자(consumer)를 사용하면 생산자(Producer)가 보내는 데이터와 응용 프로그램에서 해당 데이터를 처리하는 부분을 모니터링 할 수 있습니다.
+소비자(consumer)는 Amazon Kinesis 스트림에서 형식화 된 JSON 메시지를 읽고 표시해서, 스트림으로 전송되는 내용을 실시간으로 모니터링 할 수 있습니다. 소비자(Consumer)를 사용하면 생산자(Producer)가 보내는 데이터와 응용 프로그램에서 해당 데이터를 처리하는 부분을 모니터링 할 수 있습니다.
 
 #### 설정하기
 

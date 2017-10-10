@@ -58,6 +58,7 @@ exports.handler = (event, context, callback) => {
             body: JSON.stringify({
                 RideId: rideId,
                 Unicorn: unicorn,
+                UnicornName: unicorn.Name,
                 Eta: '30 seconds',
                 Rider: username,
             }),
@@ -91,6 +92,7 @@ function recordRide(rideId, username, unicorn) {
             RideId: rideId,
             User: username,
             Unicorn: unicorn,
+            UnicornName: unicorn.Name,
             RequestTime: new Date().toISOString(),
         },
     }).promise();

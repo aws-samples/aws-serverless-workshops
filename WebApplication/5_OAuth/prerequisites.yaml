@@ -2,36 +2,318 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Creates the Lambda functions, DynamoDB table, and API Gateway endpoints for the web application workshop
+  Deploys the Wild Rydes workshop
 
 Parameters:
-  UserPoolArn:
+  BucketName:
     Type: String
-    Description: Wild Rydes Cognito User Pool ARN
-  WebsiteBucket:
+    Description: The name for the bucket hosting your website, e.g. 'wildrydes-yourname'
+
+  CodeBucket:
     Type: String
-    Description: The name for the bucket hosting your website, e.g. 'wildrydes-yourname.'
+    Default: wildrydes-us-east-1
+    Description: S3 bucket containing the code deployed by this template
 
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
       -
         Label:
-          default: "Module 1 Details"
+          default: "Website Configuration"
         Parameters:
-          - WebsiteBucket
+          - BucketName
       -
         Label:
-          default: "Module 2 Details"
+          default: "Advanced Configuration"
         Parameters:
-          - UserPoolArn
+          - CodeBucket
     ParameterLabels:
-      UserPoolArn:
-        default: "Cognito User Pool ARN"
-      WebsiteBucket:
+      BucketName:
         default: "Website Bucket Name"
 
 Resources:
+  WebsiteBucket:
+    Properties:
+      BucketName: !Ref BucketName
+      WebsiteConfiguration:
+        IndexDocument: index.html
+    Type: "AWS::S3::Bucket"
+
+  WebsiteBucketPolicy:
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal: "*"
+            Action: s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${WebsiteBucket}/*"
+    Type: "AWS::S3::BucketPolicy"
+
+  WebsiteContent:
+    Properties:
+      ServiceToken: !GetAtt CopyS3ObjectsFunction.Arn
+      SourceBucket: !Ref CodeBucket
+      SourcePrefix: "WebApplication/1_StaticWebHosting/website/"
+      Bucket: !Ref WebsiteBucket
+    Type: "Custom::S3Objects"
+
+  S3CopyRole:
+    Type: AWS::IAM::Role
+    Properties:
+
+      Path: /wildrydes/
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        -
+          PolicyName: S3Access
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              -
+                Sid: AllowLogging
+                Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+              -
+                Sid: SourceBucketReadAccess
+                Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetObject"
+                Resource:
+                  - !Sub "arn:aws:s3:::${CodeBucket}"
+                  - !Sub "arn:aws:s3:::${CodeBucket}/WebApplication/1_StaticWebHosting/*"
+              -
+                Sid: DestBucketWriteAccess
+                Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                  - "s3:PutObjectAcl"
+                  - "s3:PutObjectVersionAcl"
+                  - "s3:DeleteObject"
+                  - "s3:DeleteObjectVersion"
+                  - "s3:CopyObject"
+                Resource:
+                  - !Sub "arn:aws:s3:::${WebsiteBucket}"
+                  - !Sub "arn:aws:s3:::${WebsiteBucket}/*"
+
+  CopyS3ObjectsFunction:
+    Properties:
+      Description: Copies objects from a source S3 bucket to a destination
+      Handler: index.handler
+      Runtime: python2.7
+      Role: !GetAtt S3CopyRole.Arn
+      Timeout: 120
+      Code:
+        ZipFile: |
+          import os
+          import json
+          import cfnresponse
+
+          import boto3
+          from botocore.exceptions import ClientError
+          client = boto3.client('s3')
+
+          import logging
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
+
+          def handler(event, context):
+            logger.info("Received event: %s" % json.dumps(event))
+            source_bucket = event['ResourceProperties']['SourceBucket']
+            source_prefix = event['ResourceProperties'].get('SourcePrefix') or ''
+            bucket = event['ResourceProperties']['Bucket']
+            prefix = event['ResourceProperties'].get('Prefix') or ''
+
+            result = cfnresponse.SUCCESS
+
+            try:
+              if event['RequestType'] == 'Create' or event['RequestType'] == 'Update':
+                result = copy_objects(source_bucket, source_prefix, bucket, prefix)
+              elif event['RequestType'] == 'Delete':
+                result = delete_objects(bucket, prefix)
+            except ClientError as e:
+              logger.error('Error: %s', e)
+              result = cfnresponse.FAILED
+
+            cfnresponse.send(event, context, result, {})
+
+
+          def copy_objects(source_bucket, source_prefix, bucket, prefix):
+            paginator = client.get_paginator('list_objects_v2')
+            page_iterator = paginator.paginate(Bucket=source_bucket, Prefix=source_prefix)
+            for key in {x['Key'] for page in page_iterator for x in page['Contents']}:
+              dest_key = os.path.join(prefix, os.path.relpath(key, source_prefix))
+              if not key.endswith('/'):
+                print 'copy {} to {}'.format(key, dest_key)
+                client.copy_object(CopySource={'Bucket': source_bucket, 'Key': key}, Bucket=bucket, Key = dest_key)
+            return cfnresponse.SUCCESS
+
+          def delete_objects(bucket, prefix):
+            paginator = client.get_paginator('list_objects_v2')
+            page_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
+            objects = [{'Key': x['Key']} for page in page_iterator for x in page['Contents']]
+            client.delete_objects(Bucket=bucket, Delete={'Objects': objects})
+            return cfnresponse.SUCCESS
+
+
+    Type: AWS::Lambda::Function
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: WildRydes
+      AliasAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: WildRydesWeb
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+
+  UpdateUserPoolConfig:
+    Properties:
+      ServiceToken: !GetAtt UpdateCognitoConfigFunction.Arn
+      UserPool: !Ref UserPool
+      Client: !Ref UserPoolClient
+      Region: !Ref "AWS::Region"
+      Bucket: !Ref WebsiteBucket
+    Type: "Custom::CognitoConfigFile"
+
+  UpdateConfigRole:
+    Type: AWS::IAM::Role
+    Properties:
+
+      Path: /wildrydes/
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        -
+          PolicyName: CognitoConfig
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              -
+                Sid: Logging
+                Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+              -
+                Sid: Cognito
+                Effect: Allow
+                Action:
+                  - "cognito-idp:CreateUserPool"
+                  - "cognito-idp:DeleteUserPool"
+                  - "cognito-idp:CreateUserPoolClient"
+                  - "cognito-idp:DeleteUserPoolClient"
+                Resource: "*"
+              -
+                Sid: ConfigBucketWriteAccess
+                Effect: Allow
+                Action:
+                  - "s3:PutObject"
+                  - "s3:PutObjectAcl"
+                  - "s3:PutObjectVersionAcl"
+                Resource:
+                  - !Sub "arn:aws:s3:::${WebsiteBucket}/*"
+
+  UpdateCognitoConfigFunction:
+    Properties:
+      Description: Copies objects from a source S3 bucket to a destination
+      Handler: index.handler
+      Runtime: python2.7
+      Role: !GetAtt UpdateConfigRole.Arn
+      Timeout: 120
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import cfnresponse
+
+          s3 = boto3.resource('s3')
+
+          def create(properties, physical_id):
+            userPoolId = properties['UserPool']
+            clientId = properties['Client']
+            region = properties['Region']
+            bucket = properties['Bucket']
+
+            object = s3.Object(bucket, 'js/config.js')
+            config_content = """
+          var _config = {
+              cognito: {
+                  userPoolId: '%s', // e.g. us-east-2_uXboG5pAb
+                  userPoolClientId: '%s', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
+                  region: '%s', // e.g. us-east-2
+              },
+              api: {
+                  invokeUrl: 'Base URL of your API including the stage', // e.g. https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod'
+              }
+          };
+              """
+            config_content = config_content % (userPoolId, clientId, region)
+            config = s3.Object(bucket,'js/config.js')
+            config.put(Body=config_content)
+            return cfnresponse.SUCCESS, None
+
+          def update(properties, physical_id):
+            return create(properties, physical_id)
+
+          def delete(properties, physical_id):
+            return cfnresponse.SUCCESS, physical_id
+
+          def handler(event, context):
+            print "Received event: %s" % json.dumps(event)
+
+            status = cfnresponse.FAILED
+            new_physical_id = None
+
+            try:
+              properties = event.get('ResourceProperties')
+              physical_id = event.get('PhysicalResourceId')
+
+              status, new_physical_id = {
+                'Create': create,
+                'Update': update,
+                'Delete': delete
+              }.get(event['RequestType'], lambda x, y: (cfnresponse.FAILED, None))(properties, physical_id)
+            except Exception as e:
+              print "Exception: %s" % e
+              status = cfnresponse.FAILED
+            finally:
+              cfnresponse.send(event, context, status, {}, new_physical_id)
+
+
+    Type: AWS::Lambda::Function
+
   RidesTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -184,6 +466,7 @@ Resources:
                       RideId: rideId,
                       User: username,
                       Unicorn: unicorn,
+                      UnicornName: unicorn.Name,
                       RequestTime: new Date().toISOString(),
                   },
               }).promise();
@@ -270,7 +553,7 @@ Resources:
                   default:
                     statusCode: "200"
                     responseParameters:
-                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
                       method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
                       method.response.header.Access-Control-Allow-Origin: "'*'"
                 requestTemplates:
@@ -285,7 +568,14 @@ Resources:
             x-amazon-apigateway-authtype: cognito_user_pools
             x-amazon-apigateway-authorizer:
               providerARNs:
-                - !Ref UserPoolArn
+                - Fn::Join:
+                  - ""
+                  - - "arn:aws:cognito-idp:"
+                    - !Ref AWS::Region
+                    - ":"
+                    - !Ref AWS::AccountId
+                    - ":userpool/"
+                    - !Ref UserPool
               type: "cognito_user_pools"
 
 
@@ -313,10 +603,10 @@ Resources:
             - !Ref WildRydesApi
             - "/*"
 
-  UpdateConfig:
-    Type: "Custom::ConfigFile"
+  UpdateApiConfig:
+    Type: "Custom::ApiConfigFile"
     Properties:
-      ServiceToken: !GetAtt UpdateConfigFunction.Arn
+      ServiceToken: !GetAtt UpdateApiConfigFunction.Arn
       Bucket: !Ref WebsiteBucket
       InvokeUrl:
         Fn::Join:
@@ -327,38 +617,7 @@ Resources:
             - !Ref AWS::Region
             - ".amazonaws.com/prod"
       
-  UpdateConfigRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: /wildrydes/
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          -
-            Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies:
-        -
-          PolicyName: ApiConfig
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              -
-                Sid: ConfigBucketWriteAccess
-                Effect: Allow
-                Action:
-                  - "s3:PutObject"
-                  - "s3:PutObjectAcl"
-                  - "s3:PutObjectVersionAcl"
-                  - "s3:GetObject"
-                Resource:
-                  - !Sub "arn:aws:s3:::${WebsiteBucket}/*"
-
-  UpdateConfigFunction:
+  UpdateApiConfigFunction:
     Type: AWS::Lambda::Function
     Properties:
       Description: Adds the API endpoint to the config.js file
@@ -409,7 +668,10 @@ Resources:
               status = cfnresponse.FAILED
             finally:
               cfnresponse.send(event, context, status, {}, new_physical_id)
+
 Outputs:
+  WebsiteURL:
+    Value: !GetAtt WebsiteBucket.WebsiteURL
   WildRydesApiInvokeUrl:
     Description: URL for the deployed wild rydes API
     Value:

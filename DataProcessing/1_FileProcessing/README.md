@@ -1,227 +1,229 @@
-# Module 1: File Processing
+# 모듈 1: 파일 처리 (File Processing)
 
-In this module you'll use Amazon Simple Storage Service (S3), AWS Lamdba, and Amazon DynamoDB to process data from JSON files. Objects created in the Amazon S3 bucket will trigger an AWS Lambda function to process the new file. The Lambda function will read the data and populate records into an Amazon DynamoDB table.
+이 모듈에서는 Amazon Simple Storage Service (S3), AWS Lamdba 및 Amazon DynamoDB 를 사용해서 JSON 파일의 데이터를 처리합니다. Amazon S3 버킷에서 생성된 객체는 AWS Lambda 함수를 트리거하여 새 파일을 처리합니다. Lambda 함수는 데이터를 읽고 레코드를 Amazon DynamoDB 테이블에 채웁니다.
 
-## Architecture Overview
+## 아키텍쳐 개요
 
-<kbd>![Architecture](../images/file-processing-architecture.png)</kbd>
+<kbd>![아키텍쳐](../images/file-processing-architecture.png)</kbd>
 
-Our producer is a sensor attached to a unicorn - Shadowfax - currently taking a passenger on a Wild Ryde. This sensor aggregates sensor data every minute including the distance the unicorn traveled and maximum and minimum magic points and hit points readings in the previous minute. These readings are stored in [data files][data/shadowfax-2016-02-12.json] which are uploaded on a daily basis to Amazon S3.
+우리의 생산자(producer)는 유니콘(Shadowfax) 에 연결된 센서로, 현재 Wild Ryde 에서 승객을 태우고 있습니다. 이 센서는 유니콘이 이동한 거리와 이전 분의 최대 및 최소 매직 포인트 및 히트 포인트 값을 포함하여 매분 마다 센서 데이터를 수집합니다. 이러한 센서 수집 값은 매일 Amazon S3 에 업로드 되는 [데이터 파일][data/shadowfax-2016-02-12.json] 에 저장됩니다.
 
-The Amazon S3 bucket has an [event notification][event-notifications] configured to trigger the AWS Lambda function that will retrieve the file, process it, and populate the Amazon DynamoDB table.
+Amazon S3 버킷에는 파일을 검색하고 처리하며 Amazon DynamoDB 테이블을 채울 AWS Lambda 함수를 트리거 하도록 구성된 [이벤트 알림 (event-notifications)][event-notifications] 이 있습니다.
 
-## Implementation Instructions
+## 구현 지침
 
-### 1. Create an Amazon S3 bucket
+### 1. Amazon S3 버킷 생성
 
-Use the console or CLI to create an S3 bucket. Keep in mind, your bucket's name must be globally unique. We recommend using a name like `wildrydes-uploads-yourname`.
+콘솔 또는 AWS CLI를 사용해서 S3 버킷을 생성합니다. 버킷의 이름은 전 세계적으로 고유해야합니다. `wildrydes-uploads-yourname` 와 같은 이름을 사용할 것을 권장합니다.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. From the AWS Console click **Services** then select **S3** under Storage.
+1. AWS Console 에서 **Services** 를 선택한 다음 Storage 아래의 **S3** 를 선택하십시오.
 
-1. Click **+Create Bucket**
+1. **+Create Bucket** 을 선택하십시오.
 
-1. Provide a globally unique name for your bucket such as `wildrydes-uploads-yourname`.
+1. `wildrydes-uploads-yourname` 와 같은 버킷에 대해서 전 세계적으로 고유한 이름을 넣어주십시오..
 
-1. Select a region for your bucket.
+1. 버킷의 지역을 선택하십시오.
 
-   <kbd>![Create bucket screenshot](../images/file-processing-s3-bucket.png)</kbd>
+   <kbd>![버킷 생성 스크린샷](../images/file-processing-s3-bucket.png)</kbd>
 
-1. Use the default values and click **Next** through the rest of the sections and click **Create Bucket** on the review section.
+1. 기본값을 사용하고 나머지 섹션을 통해 **Next** 를 선택한 다음 review section 애서 **Create Bucket** 을 선택하십시오.
 
 </p></details>
 
-### 2. Create an Amazon DynamoDB Table
+### 2. Amazon DynamoDB 테이블 만들기
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `UnicornSensorData` and give it a **Partition key** called `Name` of type **String** and a **Sort key** called `StatusTime` of type **Number**. Use the defaults for all other settings.
+Amazon DynamoDB 콘솔을 사용해서 새로운 DynamoDB 테이블을 생성하십시오. `UnicornSensorData` 라는 테이블을 만들고, **Partition key** 는 이름은 `Name`, type 은 **String** 을 설정하고, **Sort key** 는 이름은 `StatusTime`, type 은  **Number** 로 설정하십시오. 다른 모든 설정에는 기본값을 사용합니다.
 
-After you've created the table, note the Amazon Resource Name (ARN) for use in the next section.
+테이블을 생성한 다음 뒷부분에서 사용하기 위해서 생성한 Amazon DynamoDB 의 Amazon Resource Name (ARN) 을 메모장등에 복사해놓으십시오.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. From the AWS Management Console, choose **Services** then select **DynamoDB** under Databases.
+1. AWS Management Console 에서 **Services** 를 선택한 다음, Databases 에서 **DynamoDB** 를 선택합니다.
 
-1. Choose **Create table**.
+1. **Create table** 을 선택합니다.
 
-1. Enter `UnicornSensorData` for the **Table name**.
+1. **Table name** 에 `UnicornSensorData` 를 입력하십시오.
 
-1. Enter `Name` for the **Partition key** and select **String** for the key type.
+1. **Partition key** 에 `Name` 을 입력하고, 키 유형(key type)으로 **String** 을 선택하십시오.
 
-1. Tick the **Add sort key** checkbox. Enter `StatusTime` for the **Sort key** and select **Number** for the key type.
+1. **Add sort key** 체크박스를 선택하십시오. **Sort key** 에 대해 `StatusTime` 을 입력하고, 키 유형(key type)으로 **Number** 를 선택하십시오.
 
-1. Check the **Use default settings** box and choose **Create**.
+1. **Use default settings** 체크박스를 선택하고. **Create** 버튼을 선택하십시오..
 
-	<kbd>![Create table screenshot](../images/file-processing-dynamodb-create.png)</kbd>
+	<kbd>![테이블 생성 스크린샷](../images/file-processing-dynamodb-create.png)</kbd>
 
-1. Scroll to the bottom of the Overview section of your new table and note the **ARN**. You will use this in the next section.
+1. 새로 생성된 테이블의 개요 섹션(Overview section) 화면의 아래로 스크롤 해서 **ARN** 을 확인하십시오. 다음 섹션에서 사용할 수 있도록 메모장에 복사해두면 편리합니다.
 
 </p></details>
 
-### 3. Create an IAM role for your Lambda function
+### 3. 람다 함수에 대한 IAM 역할(IAM role) 만들기
 
-Use the IAM console to create a new role. Give it a name like `WildRydesFileProcessorRole` and select AWS Lambda for the role type. Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role in order to grant permissions for your function to log to Amazon CloudWatch Logs.
+IAM 콘솔을 사용해서 새 역할(role)을 만듭니다. `WildRydesFileProcessorRole` 같은 이름을 주고 역할 유형으로 AWS Lambda 를 선택하십시오. `AWSLambdaBasicExecutionRole` 관리 정책(policy)을 이 역할에 첨부하여 함수가 Amazon CloudWatch Logs에 로깅할 수 있는 권한을 부여하십시오.
 
-You'll need to grant this role permissions to access both the S3 bucket and Amazon DynamoDB table created in the previous sections:
+이전 섹션에서 작성한 S3 버킷 및 Amazon DynamoDB 테이블에 액세스 하려면 다음과 같은 역할 권한을 부여해야합니다.
 
-- Create an inline policy allowing the role access to the `ddb:PutItem` action for the Amazon DynamoDB table you created in the previous section.
+- 이전 섹션에서 생성한 Amazon DynamoDB 테이블에 대한 `ddb:PutItem` 액션(action)에 대한 역할 액세스를 허용하는 인라인 정책(inline policy)를 만듭니다.
 
-- Create an inline policy allowing the role access to the `s3:GetObject` action for the S3 bucket you created in the first section.
+- 이전 섹션에서 생성한 S3 버킷에 대한 `s3:GetObject` 액션(action)에 대한 역할 액세스를 허용하는 인라인 정책(inline policy)를 만듭니다.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. From the AWS Console, click on **Services** and then select **IAM** in the Security, Identity & Compliance section.
+1. AWS Console 에서, **Services** 를 선택한 다음 Security, Identity & Compliance 섹션에서 **IAM** 을 선택하십시오.
 
-1. Select **Roles** from the left navigation and then click **Create new role**.
+1. 좌측의 탐색 메뉴에서 **Roles** 을 선택한 다음 **Create new role** 를 클릭하십시오.
 
-1. Select **AWS Lambda** for the role type from **AWS Service Role**.
+1. **AWS Service Role** 에서 역할 유형으로 **AWS Lambda** 를 선택하십시오.
 
-    **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
+    **참고:** 역할 유형을 선택하면 AWS 서비스가 사용자를 대신하여 이 역할을 맡을 수 있도록 역할에 대한 신뢰 정책이 자동으로 생성됩니다. CLI, AWS CloudFormation 또는 다른 방식으로 역할을 작성하는 경우 직접 트러스트 정책을 지정해야합니다.
 
-1. Begin typing `AWSLambdaBasicExecutionRole` in the **Filter** text box and check the box next to that role.
+1. **Filter** 입력칸에서 `AWSLambdaBasicExecutionRole` 를 입력하고 해당 역할 옆의 체크 박스를 선택하십시오.
 
-1. Click **Next Step**.
+1. **Next Step** 을 클릭하십시오.
 
-1. Enter `WildRydesFileProcessorRole` for the **Role Name**.
+1. **Role Name** 에 `WildRydesFileProcessorRole` 을 입력하십시오.
 
-1. Click **Create role**.
+1. **Create role** 을 클릭하십시오.
 
-1. Type `WildRydesFileProcessorRole` into the filter box on the Roles page and click the role you just created.
+1. 역할 페이지의 필터 입력칸에 `WildRydesFileProcessorRole` 을 입력하고, 방금 전 작성한 역할을 클릭하십시오.
 
-1. On the Permissions tab, expand the **Inline Policies** section and click the link to create a new inline policy.
+1. 사용 권한(Permissions) 탭에서, **Inline Policies** 섹션을 펼친다음 링크를 클릭하여 새 인라인 정책(inline policy)을 만듭니다.
 
-	<kbd>![Inline policies screenshot](../images/file-processing-policies.png)</kbd>
+	<kbd>![인라인 정책 스크린샷](../images/file-processing-policies.png)</kbd>
 
-1. Ensure **Policy Generator** is selected and click **Select**.
+1. **Policy Generator** 가 선택되있는지 확인하고 **Select** 을 클릭합니다.
 
-1. Select **Amazon DynamoDB** from the **AWS Service** dropdown.
+1. **AWS Service**  드롭 다운에서 **Amazon DynamoDB** 를 선택하십시오.
 
-1. Select **BatchWriteItem** from the Actions list.
+1. Actions 목록에서 **BatchWriteItem** 을 선택하십시오.
 
-1. Type the ARN of the DynamoDB table you created in the previous section in the **Amazon Resource Name (ARN)** field. The ARN is in the format of:
+1. 이전 섹션에서 생성한 DynamoDB 테이블의 ARN을 **Amazon Resource Name (ARN)** 입력칸에 넣어줍니다. ARN 형식은 다음과 같습니다.
 
 	```
 	arn:aws:dynamodb:REGION:ACCOUNT_ID:table/UnicornSensorData
 	```
 
-	For example, if you've deployed to US East (N. Virginia) and your account ID is 123456789012, your table ARN would be:
+	예를 들어, US East (N. Virginia) 에서 AWS 계정 ID가 123456789012 인 경우, 테이블 ARN 은 다음과 같습니다:
 
 	```
 	arn:aws:dynamodb:us-east-1:123456789012:table/UnicornSensorData
 	```
 
-	To find your AWS account ID number in the AWS Management Console, click on **Support** in the navigation bar in the upper-right, and then click **Support Center**. Your currently signed in account ID appears in the upper-right corner below the Support menu.
+	AWS Management Console 에서 AWS 계정 ID 번호를 찾으려면 우측 상단의 탐색 메뉴에서, **Support** 를 클릭한 다음, **Support Center** 를 클릭하십시오. 현재 로그인한 계정 ID가 지원 메뉴 아래의 오른쪽 상단에 나타납니다.
 
-	<kbd>![Policy generator screenshot](../images/file-processing-policy-generator.png)</kbd>
+	<kbd>![정책 생성기 스크린샷](../images/file-processing-policy-generator.png)</kbd>
 
-1. Click **Add Statement**.
+1. **Add Statement** 를 클릭하십시오.
 
-	<kbd>![Policy screenshot](../images/file-processing-policy-result.png)</kbd>
+	<kbd>![정책 스크린샷](../images/file-processing-policy-result.png)</kbd>
 
-1. Select **Amazon S3** from the **AWS Service** dropdown.
+1. **AWS Service** 드롭 다운에서 **Amazon S3** 를 선택하십시오.
 
-1. Select **GetObject** from the Actions list.
+1. Actions 목록에서 **GetObject** 를 선택하십시오.
 
-1. Type the ARN of the S3 table you created in the first section in the **Amazon Resource Name (ARN)** field. The ARN is in the format of:
+1. 이전 섹션에서 생성한 S3 버킷의 ARN을 **Amazon Resource Name (ARN)** 입력칸에 넣어줍니다. ARN 형식은 다음과 같습니다:
 
 	```
 	arn:aws:s3:::YOUR_BUCKET_NAME_HERE/*
 	```
 
-	For example, if you've named your bucket `wildrydes-uploads-johndoe`, your bucket ARN would be:
+	예를 들어, 버킷 이름을 `wildrydes-uploads-johndoe` 로 지정한 경우 버킷 ARN은 다음과 같습니다:
 
 	```
 	arn:aws:s3:::wildrydes-uploads-johndoe/*
 	```
 
-	<kbd>![Policy generator screenshot](../images/file-processing-policy-generator-s3.png)</kbd>
+	<kbd>![정책 생성기 스크린샷](../images/file-processing-policy-generator-s3.png)</kbd>
 
-1. Click **Add Statement**.
+1. **Add Statement** 를 클릭하십시오.
 
-	<kbd>![Policy screenshot](../images/file-processing-policy-result-full.png)</kbd>
+	<kbd>![정책 스크린샷](../images/file-processing-policy-result-full.png)</kbd>
 
-1. Click **Next Step** then **Apply Policy**.
+1. **Next Step** 를 클릭한 다음 **Apply Policy** 를 클릭하십시오.
 
 </p></details>
 
-### 4. Create a Lambda function for processing
+### 4. 데이타 처리를 위한 람다 함수 만들기
 
-Use the console to create a new Lambda function called `WildRydesFileProcessor` that will be triggered whenever a new object is created in the bucket created in the first section.
+콘솔을 사용해서 `WildRydesFileProcessor` 라는 새로운 람다 함수를 생성합니다. 이 함수는 첫번째 섹션에서 생성된 버킷에 새로운 객체가 생성될 때마다 트리거됩니다.
 
-Use the provided [index.js](lambda/WildRydesFileProcessor/index.js) example implementation for your function code by copying and pasting the contents of that file into the Lambda console's editor. Ensure you create an environment variable with the key `TABLE_NAME` and the value `UnicornSensorData`.
+함수 코드에 제공된 [index.js](lambda/WildRydesFileProcessor/index.js) 샘플 소스 코드를 사용해서 해당 파일의 내용을 람다 함수의 편집기에 붙여 넣습니다. 키(key)를 `TABLE_NAME` 을, 값(value)으로 `UnicornSensorData` 를 넣어서 환경 변수(Environment variable)를 생성하십시오.
 
-Make sure you configure your function to use the `WildRydesFileProcessorRole` IAM role you created in the previous section.
+이전 섹션에서 작성한 `WildRydesFileProcessorRole` IAM 역할 (IAM role) 을 사용하도록 함수를 구성했는지 확인하십시오.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. Click on **Services** then select **Lambda** in the Compute section.
+1. AWS 콘솔에서 **Services** 를 클릭한 다음 Compute 섹션에서 **Lambda** 를 선택하십시오.
 
-1. Click **Create a Lambda function**.
+1. **Create function** 를 클릭하십시오.
 
-1. Click the **Blank Function** blueprint card.
+1. **Author from scratch** 를 클릭하십시오.
 
-1. Click on the dotted outline and select **S3**. Select **wildrydes-uploads-yourname** from **Bucket**, **Object Created (All)** from **Event type**, and tick the **Enable trigger** checkbox.
+1. Basic information 화면에서 **Name** 입력칸에 `WildRydesFileProcessor` 를 넣어주십시오.
 
-	<kbd>![Create Lambda trigger screenshot](../images/file-processing-configure-trigger.png)</kbd>
+1. **Role** 드롭 다운 메뉴에서 `Choose an existing role` 을 선택하십시오.
 
-1. Click **Next**.
+1. **Existing Role** 드롭 다운 메뉴에서 `WildRydesFileProcessorRole` 을 선택하십시오. 
 
-1. Enter `WildRydesFileProcessor` in the **Name** field.
+	<kbd>![이름과 역할 설정 스크린샷](../images/file-processing-lambda-role-2.png)</kbd>
+	
+1. **Create function** 버튼을 클릭하십시오.
 
-1. Optionally enter a description.
+1. **Triggers** 탭을 선택 후, **+Add trigger** 버튼을 누른뒤, 점선으로 된 윤곽선을 클릭하고 **S3** 를 선택하십시오. **Bucket** 에서 **wildrydes-uploads-yourname** 를 선택하고, **Event type** 에서 **Object Created (All)** 항목을 체크하고 , **Enable trigger** 체크 박스를 선택하십시오.
 
-1. Select **Node.js 6.10** for the **Runtime**.
+	<kbd>![Create Lambda trigger screenshot](../images/file-processing-configure-trigger-2.png)</kbd>
 
-1. Copy and paste the code from [index.js](lambda/WildRydesFileProcessor/index.js) into the code entry area.
+1. **Submit** 버튼을 클릭하십시오.
 
-	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-create.png)</kbd>
+1. **Configuration** 탭을 선택 후, **Runtime** 드랍박스 메뉴에서 **Node.js 6.10** 를 선택하십시오.
 
-1. In **Environment variables**, enter an environment variable with key `TABLE_NAME` and value `UnicornSensorData`.
+1. [index.js](lambda/WildRydesFileProcessor/index.js) 의 코드를 복사해서 코드 입력 영역에 붙여넣습니다.
 
-	<kbd>![Lambda environment variable screenshot](../images/file-processing-lambda-env-var.png)</kbd>
+	<!-- <kbd>![Create Lambda function screenshot](../images/file-processing-lambda-create.png)</kbd> -->
 
-1. Leave the default of `index.handler` for the **Handler** field.
+1. **Environment variables** 에서 키 값(key)을 `TABLE_NAME` 으로 값(value)을 `UnicornSensorData` 으로 환경 변수를 입력하십시오.
 
-1. Select `WildRydesFileProcessorRole` from the **Existing Role** dropdown.
+	<kbd>![람다 환경 변수 스크린샷](../images/file-processing-lambda-env-var-2.png)</kbd>
 
-	<kbd>![Define handler and role screenshot](../images/file-processing-lambda-role.png)</kbd>
+1. **Handler** 입력칸에 대해서는 `index.handler` 기본값을 그대로 둡니다.
 
-1. Expand **Advanced settings** and set **Timeout** to **5** minutes to accommodate large files.
+1. 큰 파일을 처리하기 위해서는 **Advanced settings** 에서 **Timeout** 설정값을 **5** minutes 으로 설정하십시오.
 
-1. Click **Next** and then click **Create function** on the Review page.
+1. 상단의 **Save** 버튼을 클릭해서 람다 함수 설정을 저장하십시오.
 
-	<kbd>![Lambda trigger status screenshot](../images/file-processing-trigger-status.png)</kbd>
+	<!-- <kbd>![Lambda trigger status screenshot](../images/file-processing-trigger-status.png)</kbd> -->
 
 </p></details>
 
-## Implementation Validation
+## 구현한 내용 확인하기
 
-1. Using either the AWS Management Console or AWS Command Line Interface, copy the provided [data/shadowfax-2016-02-12.json][data/shadowfax-2016-02-12.json] data file to the Amazon S3 bucket created in the first section.
+1. AWS Management Console 또는 AWS 커맨드 라인 인터페이스를 사용해서 제공된 [data/shadowfax-2016-02-12.json][data/shadowfax-2016-02-12.json] 데이타 파일을 첫번째 섹션에서 생성한 Amazon S3 버킷에 복사하십시오.
 
-	You can either download this file via your web browser and upload it using the AWS Management Console, or you use the AWS CLI to copy it directly:
+	이 파일을 웹 브라우저를 통해서 다운로드 한뒤 AWS Management Console 을 사용해서 업로드 하거나, 또는 AWS CLI를 사용해서 직접 복사할수도 있습니다:
 
 	```console
 	aws s3 cp s3://wildrydes-data-processing/data/shadowfax-2016-02-12.json s3://YOUR_BUCKET_NAME_HERE
 	```
 
-1. Click on **Services** then select **DynamoDB** in the Database section.
+1. AWS 콘솔에서 **Services** 를 클릭한 다음 Database 섹션에서 **DynamoDB** 를 선택하십시오.
 
-1. Click on **UnicornSensorData**.
+1. 좌측 메뉴에서 **Tables** 를 선택한 다음, **UnicornSensorData** 를 선택하십시오.
 
-1. Click on the **Items** tab and verify that the table has been populated with the items from the data file.
+1. **Items** 탭을 클릭하고 테이블에 데이터 파일의 항목이 채워졌는지 확인하십시오.
 
-	<kbd>![DynamoDB items screenshot](../images/file-processing-dynamodb-items.png)</kbd>
+	<kbd>![DynamoDB items 스크린샷](../images/file-processing-dynamodb-items.png)</kbd>
 
-When you see items from the JSON file in the table, you can move onto the next module: [Real-time Data Streaming][data-streaming-module].
+테이블에서 JSON 파일의 항목이 표시되면 실시간 데이터 스트리밍 모듈로 이동할 수 있습니다: [실시간 데이터 스트리밍 Real-time Data Streaming][data-streaming-module].
 
-## Extra Credit
+## 추가 도전 과제
 
-- Enhance the implementation to gracefully handle lines with malformed JSON. Edit the file to include a malformed line and verify the function is able to process the file. Consider how you would handle unprocessable lines in a production implementation.
-- Inspect the Amazon CloudWatch Logs stream associated with the Lambda function and note the duration the function executes. Change the provisioned write throughput of the DynamoDB table and copy the file to the bucket once again as a new object. Check the logs once more and note the lower duration.
+- 형식이 잘못된 JSON이 있는 데이타를 정상적으로 처리하도록 구현을 개선해봅니다. 조작된 라인을 포함하도록 JSON 파일을 편집하고, 람다 함수가 JSON 파일을 처리할 수 있는지 확인하십시오. 실제로 운영 환경에서 구현할때 처리할 수 없는 라인을 처리하는 방법을 생각해보십시오.
+- Lambda 함수와 관련된 Amazon CloudWatch Logs 스트림을 검사하고 함수가 실행되는 시간을 확인합니다. DynamoDB 테이블의 프로비저닝 된 쓰기 처리량을 변경하고 파일을 버킷에 새 오브젝트로 다시 복사하십시오. 로그를 한번 더 확인하고 더 낮은 시간을 기록하십시오.
 
 [event-notifications]: http://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
 [data/shadowfax-2016-02-12.json]: https://s3.amazonaws.com/wildrydes-data-processing/data/shadowfax-2016-02-12.json

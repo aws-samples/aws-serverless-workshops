@@ -1,0 +1,54 @@
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+
+
+.btn-facebook {
+  color: #fff;
+  background-color: #3b5998;
+  border-color: rgba(0,0,0,0.2);
+  color: white !important;
+}
+
+.btn-social {
+  position: relative;
+  padding-left: 44px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-social:hover {
+  color: #eee;
+}
+
+.btn-social :first-child {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  padding: 7px;
+  font-size: 1.6em;
+  text-align: center;
+  border-right: 1px solid rgba(0,0,0,0.2);
+}
+
+.Absolute-Center {
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.Absolute-Center.is-Responsive {
+  width: 50%;
+  height: 50%;
+  min-width: 200px;
+  max-width: 400px;
+  padding: 40px;
+}

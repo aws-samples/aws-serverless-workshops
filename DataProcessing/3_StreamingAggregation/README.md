@@ -144,7 +144,7 @@ Amazon Kinesis Streams 콘솔을 사용하여 이름은 **wildrydes-aggregated**
 	{
 	    "Name": "Shadowfax",
 	    "StatusTime": "2017-05-06 17:47:00.000",
-	    "Distance": 9413,ㅇ
+	    "Distance": 9413,
 	    "MinMagicPoints": 153,
 	    "MaxMagicPoints": 159,
 	    "MinHealthPoints": 150,

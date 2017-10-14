@@ -107,7 +107,7 @@ AWS Lambda, Amazon Kinesis Streams, Amazon Kinesis Firehose, Amazon Kinesis Anal
 
 	기본값에 유의하십시오. arguments 인자 값 없이 명령을 실행하면 **US East (N. Virginia)** 리전에서 **wildrydes** 스트림에서 데이터를 읽어옵니다. 
 
-1. 커맨드 라인 클라이언트에는 Amazon Kinesis Streams에서 레코드를 가져오거나(get) 쓸 수 있는 권한(pus) 있는 자격 증명(credentials)이 필요합니다. 이러한 자격 증명은 다음 중 하나를 통해 클라이언트에 제공 될 수 있습니다.
+1. 커맨드 라인 클라이언트에는 Amazon Kinesis Streams에서 레코드를 가져오거나(get) 쓸 수 있는 권한(put) 있는 자격 증명(credentials)이 필요합니다. 이러한 자격 증명은 다음 중 하나를 통해 클라이언트에 제공 될 수 있습니다.
 
 	1. 	공유 자격 증명 파일 사용 (Using shared credentials file)
 

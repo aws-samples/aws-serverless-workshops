@@ -192,7 +192,7 @@ IAM 콘솔을 사용해서 새 역할(role)을 만듭니다. `WildRydesFileProce
 
 1. **Handler** 입력칸에 대해서는 `index.handler` 기본값을 그대로 둡니다.
 
-1. 큰 파일을 처리하기 위해서는 **Advanced settings** 에서 **Timeout** 설정값을 **5** minutes 으로 설정하십시오.
+1. 큰 파일을 처리하기 위해서는 **Basic settings** 에서 **Timeout** 설정값을 **5** minutes 으로 설정하십시오.
 
 1. 상단의 **Save** 버튼을 클릭해서 람다 함수 설정을 저장하십시오.
 

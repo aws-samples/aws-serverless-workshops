@@ -81,7 +81,7 @@ Amazon Kinesis Streams 콘솔을 사용하여 이름은 **wildrydes-aggregated**
 
 	<kbd>![소스 선택 스크린샷](../images/streaming-aggregation-source-streams.png)</kbd>
 
-1. 화면 아래로 스크롤해서 스키마가 제대로 자동으로 발견(Schema discovery)됐는지 확인하십시오:
+1. 화면 아래로 스크롤해서 **Discovery Schema** 버튼을 선택해주십시오. **Schema discovery successful** 메시지가 표시된 뒤, 스키마가 제대로 자동으로 발견(Schema discovery)됐는지 확인하십시오:
 
 	<kbd>![스키마 발견 스크린샷](../images/streaming-aggregation-schema-discovery.png)</kbd>
 
@@ -116,17 +116,17 @@ Amazon Kinesis Streams 콘솔을 사용하여 이름은 **wildrydes-aggregated**
 	    GROUP BY FLOOR("SOURCE_SQL_STREAM_001"."ROWTIME" TO MINUTE), "Name";
 	```
 
-1. **Save and run SQL** 을 실행하십시오. 매분마다 집계된 데이터가 포함된 행(rows)이 표시됩니다.
+1. **Save and run SQL** 을 실행하십시오. 매분마다 집계된 데이터가 포함된 행(rows)이 표시됩니다. 처음 SQL 어플리케이션 작성시 30~90초 정도 기다리는 시간이 필요합니다.
 
 	<kbd>![Rows 스크린샷](../images/streaming-aggregation-rows.png)</kbd>
 	
 1. **exit (done)** 링크를 클릭하십시오.
 
-1. **Destination** 탭을 클릭하고, **Add destination** 를 클릭하십시오.
+1. **Destination** 메뉴에서 **Connect to a destination** 버튼을 선택하십시오.
 
 	<kbd>![Destination streams 스크린샷](../images/streaming-aggregation-destination-streams.png)</kbd>
 
-1. **wildrydes-aggregated** 를 클릭해서 대상 스트림을 설정하고 **Save and continue** 을 클릭하십시오.
+1. **wildrydes-aggregated** 라디오버튼을 선택해서 대상 스트림으로 설정하고 **Save and continue** 을 클릭하십시오.
 
 </p></details>
 
@@ -144,7 +144,7 @@ Amazon Kinesis Streams 콘솔을 사용하여 이름은 **wildrydes-aggregated**
 	{
 	    "Name": "Shadowfax",
 	    "StatusTime": "2017-05-06 17:47:00.000",
-	    "Distance": 9413,
+	    "Distance": 9413,ㅇ
 	    "MinMagicPoints": 153,
 	    "MaxMagicPoints": 159,
 	    "MinHealthPoints": 150,

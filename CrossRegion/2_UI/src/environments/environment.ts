@@ -10,13 +10,13 @@ export const environment = {
 
   // TODO 1: These Ids can be retrieved by selecting the cognito cloud formation stack
   // after launch and looking at outputs section.
-  cognitoIdentityPoolId: 'POOL_ID_FROM_CFN',
+  cognitoIdentityPoolId: '',
 
   // TODO 2: Facebook app id can be retrieved from the application you created in your facebook
   // developer account.
-  facebookAppId: 'FACEBOOK_APP_ID',
+  facebookAppId: '',
 
   // TODO 3: These Ids can be retrieved by selecting the api cloud formation stack
   // after launch and looking at outputs section. NOTE: don't forget trailing "/"
-  ticketAPI: 'API_URL'
+  ticketAPI: ''
 };

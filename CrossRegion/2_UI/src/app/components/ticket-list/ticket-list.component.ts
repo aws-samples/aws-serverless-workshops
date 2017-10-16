@@ -3,6 +3,7 @@ import {ITicket} from '../../model/ticket';
 import {FormGroup} from '@angular/forms';
 import {TicketService} from '../../services/ticket.service';
 import {CognitoService} from '../../services/cognito.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-ticket-list',
@@ -28,14 +29,21 @@ export class TicketListComponent implements OnInit {
   errorMessage: String;
 
 
-  constructor(public cognitoService: CognitoService,
+  constructor(public router: Router,
+              public cognitoService: CognitoService,
               public ticketService: TicketService) {
+
     this.ticketService.getTickets()
-      .subscribe(tickets => {
-        console.log('DATA:' + tickets);
-        this.rows = tickets.Items;
-        console.log('ROWS:' + this.rows);
-      });
+      .subscribe(
+        tickets => {
+          this.rows = tickets.Items;
+          console.log('ROWS:' + this.rows);
+        },
+        error => {
+          console.log("ERROR: " + error);
+          this.router.navigate(['/troubleshooting']);
+        }
+      );
   }
 
   ngOnInit() {

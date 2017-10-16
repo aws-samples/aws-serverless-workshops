@@ -12,6 +12,7 @@ import {FormsModule} from '@angular/forms';
 import { LoginComponent } from './views/login/login.component';
 import {AppRoutingModule} from './app-routing.module';
 import {AuthGuard} from './shared/guard/auth.guard';
+import {ConfigGuard} from './shared/guard/config.guard';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {AuthGuard} from './shared/guard/auth.guard';
     CognitoService,
     CognitoLoginService,
     TicketService,
-    AuthGuard
+    AuthGuard,
+    ConfigGuard
   ],
   bootstrap: [AppComponent]
 })

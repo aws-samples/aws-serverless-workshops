@@ -4,20 +4,19 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
-  region: 'eu-west-1',
+  production: true,
+  region: 'us-east-1',
 
 
   // TODO 1: These Ids can be retrieved by selecting the cognito cloud formation stack
   // after launch and looking at outputs section.
-  cognitoIdentityPoolId: 'eu-west-1:0d771d95-2757-4bbb-a7c7-aaf529c33269',
+  cognitoIdentityPoolId: 'us-east-1:6a3c830a-2f80-43e3-b257-bf6c3d406d23',
 
   // TODO 2: Facebook app id can be retrieved from the application you created in your facebook
   // developer account.
-  // facebookAppId: '130815800866938', // prod bucket
-  facebookAppId: '150165995589484', // localhost
+  facebookAppId: '263106057531801',
 
   // TODO 3: These Ids can be retrieved by selecting the api cloud formation stack
-  // after launch and looking at outputs section.
-  ticketAPI: 'https://b3j27g0dg0.execute-api.eu-west-1.amazonaws.com/prod/'
+  // after launch and looking at outputs section. NOTE: don't forget trailing "/"
+  ticketAPI: 'https://mzjh2gevc0.execute-api.us-east-1.amazonaws.com/prod/'
 };

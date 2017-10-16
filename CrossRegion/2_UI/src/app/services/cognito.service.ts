@@ -1,6 +1,7 @@
 import {Injectable, Inject} from '@angular/core';
 import {FacebookService, InitParams, LoginOptions, LoginResponse} from 'ngx-facebook';
 import {environment} from '../../environments/environment';
+import {Router} from '@angular/router';
 
 declare var AWSCognito: any;
 declare var AWS: any;
@@ -50,7 +51,8 @@ export class CognitoLoginService {
 
     public static _FACEBOOK_APP_ID = environment.facebookAppId;
 
-    constructor(public cognitoService: CognitoService,
+    constructor(public router: Router,
+                public cognitoService: CognitoService,
                 private fb: FacebookService) {
 
         const initParams: InitParams = {

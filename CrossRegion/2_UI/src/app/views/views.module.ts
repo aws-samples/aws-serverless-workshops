@@ -7,12 +7,15 @@ import { HomeComponent } from './home/home.component';
 import {TicketListComponent} from '../components/ticket-list/ticket-list.component';
 import {FormsModule} from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { TroubleshootingComponent } from './troubleshooting/troubleshooting.component';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
   imports: [
     ViewsRoutingModule,
     FormsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    CommonModule
   ],
   declarations: [
     ViewsComponent,
@@ -20,7 +23,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     HomeComponent,
     CognitoToolsComponent,
     HomeComponent,
-    TicketListComponent
+    TicketListComponent,
+    TroubleshootingComponent
   ]
 })
 export class ViewsModule { }

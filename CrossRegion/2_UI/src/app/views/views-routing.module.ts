@@ -5,6 +5,8 @@ import {TicketComponent} from './ticket/ticket.component';
 import {CognitoToolsComponent} from './cognito-tools/cognito-tools.component';
 import {HomeComponent} from './home/home.component';
 import {AuthGuard} from '../shared/guard/auth.guard';
+import {TroubleshootingComponent} from './troubleshooting/troubleshooting.component';
+import {ConfigGuard} from '../shared/guard/config.guard';
 
 const viewsRoutes: Routes = [
   {
@@ -14,10 +16,13 @@ const viewsRoutes: Routes = [
         path: 'home', component: HomeComponent
       },
       {
-        path: 'ticket', component: TicketComponent, canActivate: [AuthGuard]
+        path: 'ticket', component: TicketComponent, canActivate: [ConfigGuard, AuthGuard]
       },
       {
         path: 'cognito', component: CognitoToolsComponent
+      },
+      {
+        path: 'troubleshooting', component: TroubleshootingComponent
       }
     ]
   }

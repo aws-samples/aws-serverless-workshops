@@ -99,12 +99,12 @@ export class CognitoLoginService {
                         console.log(e);
                     });
 
-                localStorage.setItem('isLoggedin', 'true');
-
                 AWS.config.credentials.get(function (err) {
                     if (!err) {
-                        callback.fbCallback(null, response);
+                      callback.fbCallback(null, response);
+                      localStorage.setItem('isLoggedin', 'true');
                     } else {
+                        //If cognito id pool incorrect we get error here
                         callback.fbCallback(err.message, null);
                     }
                 });

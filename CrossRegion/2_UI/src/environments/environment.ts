@@ -18,5 +18,5 @@ export const environment = {
 
   // TODO 3: These Ids can be retrieved by selecting the api cloud formation stack
   // after launch and looking at outputs section. NOTE: don't forget trailing "/"
-  ticketAPI: 'https://mzjh2gevc0.execute-api.us-east-1.amazonaws.com/prod/'
+  ticketAPI: ''
 };

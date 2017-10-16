@@ -13,6 +13,8 @@ import { LoginComponent } from './views/login/login.component';
 import {AppRoutingModule} from './app-routing.module';
 import {AuthGuard} from './shared/guard/auth.guard';
 import {ConfigGuard} from './shared/guard/config.guard';
+import {ToastModule} from 'ng2-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import {ConfigGuard} from './shared/guard/config.guard';
     FormsModule,
     HttpModule,
     FacebookModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    ToastModule.forRoot()
   ],
   providers: [
     AWSService,

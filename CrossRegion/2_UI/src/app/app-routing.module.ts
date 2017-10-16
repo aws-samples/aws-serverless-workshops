@@ -17,7 +17,8 @@ const mainRoutes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(
-      mainRoutes
+      mainRoutes,
+      { useHash: true }
       // ,{enableTracing: true}
     )
   ],

@@ -3,7 +3,7 @@
 <form (ngSubmit)="onSubmit(ticketForm)" #ticketForm="ngForm">
 
   <div class="form-group">
-    <label for="description">Description:</label>
+    <label for="description">* Description (min 10 characters):</label>
     <input
       type="text"
       class="form-control"
@@ -11,49 +11,55 @@
       id="description"
       [(ngModel)]="model.description"
       name="description"
-      #description="ngModel">
+      #description="ngModel"
+      minlength="10"
+      required>
   </div>
   <div class="form-group">
-    <label for="assigned">Assigned:</label>
+    <label for="assigned">* Assigned:</label>
     <select
       class="form-control"
       id="assigned"
       [(ngModel)]="model.assigned"
       name="assigned"
-      #assigned="ngModel">
+      #assigned="ngModel"
+      required>
       <option value="juan">Juan</option>
       <option value="derek">Derek</option>
       <option value="steven">Steven</option>
     </select>
   </div>
   <div class="form-group">
-    <label for="priority">Priority:</label>
+    <label for="priority">* Priority:</label>
     <select
       class="form-control"
       id="priority"
       [(ngModel)]="model.priority"
       name="priority"
-      #priority="ngModel">
+      #priority="ngModel"
+      required>
       <option value="low">Low</option>
       <option value="medium">Medium</option>
       <option value="high">High</option>
     </select>
   </div>
   <div class="form-group">
-    <label for="status">Status:</label>
+    <label for="status">* Status:</label>
     <select
       class="form-control"
       id="status"
       [(ngModel)]="model.status"
       name="status"
-      #status="ngModel">
+      #status="ngModel"
+      required>
       <option value="open">Open</option>
       <option value="assigned">Assigned</option>
       <option value="closed">Closed</option>
     </select>
   </div>
   <div class="form-group">
-    <button type="submit" class="btn btn-primary">Create</button>
+    <div>* = required field</div>
+    <button type="submit" class="btn btn-primary" [disabled]="!ticketForm.valid">Create</button>
   </div>
 
 </form>

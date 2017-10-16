@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {CognitoLoginService, CognitoService, FacebookCallback} from '../../services/cognito.service';
 import {Router} from '@angular/router';
+import {ToastsManager} from 'ng2-toastr';
 
 declare var AWS: any;
 
@@ -11,9 +12,14 @@ declare var AWS: any;
 })
 export class LoginComponent implements OnInit, FacebookCallback {
 
-  constructor(public router: Router,
+  constructor(private toastr: ToastsManager, vRef: ViewContainerRef,
+              public router: Router,
               public cognitoLoginService: CognitoLoginService,
-              public cognitoService: CognitoService) { }
+              public cognitoService: CognitoService) {
+
+    this.toastr.setRootViewContainerRef(vRef);
+
+  }
 
   ngOnInit() {
   }
@@ -27,35 +33,10 @@ export class LoginComponent implements OnInit, FacebookCallback {
     console.log('LoginComponent: fbCallback --> result ' + JSON.stringify(result));
 
     if (message === null) {
-      // this.toastr.success(message, 'Success!');
-      console.log('sucess');
       this.router.navigate(['/ticket']);
+
     } else {
-      // this.toastr.error(message, 'Error!');
-      console.log('error');
+      this.toastr.error(message, 'Error!');
     }
-  }
-
-  /**
-   * Function just for testing api access
-   */
-  listInstances() {
-
-    const ec2 = new AWS.EC2();
-    ec2.describeInstances({}, function(err, data) {
-      if (err) {
-        console.log(err, err.stack);
-
-      } else {
-
-        const jsonPretty = JSON.stringify(data.Reservations, null, '\t');
-        console.log(jsonPretty);
-      }
-    });
-
-    const creds = AWS.config.credentials;
-
-    console.log(creds);
-
   }
 }

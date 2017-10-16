@@ -19,7 +19,8 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles/app.scss"
+        "styles/app.scss",
+        "../node_modules/ng2-toastr/ng2-toastr.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

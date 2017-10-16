@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {CognitoLoginService, CognitoService, LoggedInCallback} from './services/cognito.service';
 import {AWSService} from './services/aws.service';
 import {environment} from '../environments/environment';
 import {Router} from '@angular/router';
+import {ToastsManager} from 'ng2-toastr';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,11 @@ import {Router} from '@angular/router';
 export class AppComponent implements OnInit, LoggedInCallback {
 
   constructor(public router: Router,
+              public toastr: ToastsManager, vcr: ViewContainerRef,
               public awsService: AWSService,
               public cognitoService: CognitoService) {
+
+    this.toastr.setRootViewContainerRef(vcr);
 
   }
 

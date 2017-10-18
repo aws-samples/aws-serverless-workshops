@@ -134,9 +134,13 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 For this module you will test the function that you built using the AWS Lambda console. In the next module you will add a REST API with API Gateway so you can invoke your function from the browser-based application that you deployed in the first module.
 
-1. From the main edit screen for your function, select **Actions** then **Configure test event**.
+1. From the main edit screen for your function, select **Configure test event** from "Select a test event..." dropdown list.
 
-    ![Configure test event](../images/configure-test-event.png)
+1. Select "Create new test event"
+
+1. Leave "Hello World" there
+
+1. Put "Test Request Event" into Event name
 
 1. Copy and paste the following test event into the editor:
 
@@ -162,9 +166,9 @@ For this module you will test the function that you built using the AWS Lambda c
     }
     ```
 
-1. Choose **Save and test**.
+1. Click **Create**.
 
-    ![Input test event screenshot](../images/input-test-event.png)
+1. Click **Test**.   
 
 1. Verify that the execution succeeded and that the function result looks like the following:
 ```JSON

@@ -192,8 +192,6 @@ Make sure you configure your function to use the `WildRydesFileProcessorRole` IA
 
 1. Optionally enter a description under Timeout.
 
-1. Click **Next** and then click **Create function** on the Review page.
-
 1. Scroll to top and click **"Save"** (**Not** "Save and test" since we haven't configured any test event)
 
 </p></details>

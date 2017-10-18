@@ -94,7 +94,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 1. With the newly created `/ride` resource selected, from the **Action** dropdown select **Create Method**.
 
-1. Select `POST` from the new dropdown that appears, then click the checkmark.
+1. Select `POST` from the new dropdown that appears, then **click the checkmark**.
 
     ![Create method screenshot](../images/create-method.png)
 

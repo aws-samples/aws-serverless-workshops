@@ -136,8 +136,6 @@ For this module you will test the function that you built using the AWS Lambda c
 
 1. From the main edit screen for your function, select **Configure test event** from "Select a test event..." dropdown list.
 
-1. Select "Create new test event"
-
 1. Leave "Hello World" there
 
 1. Put "Test Request Event" into Event name

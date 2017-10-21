@@ -15,6 +15,9 @@
     "lib": [
       "es2017",
       "dom"
+    ],
+    "files": [
+      "index.d.ts"
     ]
   }
 }

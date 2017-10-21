@@ -2,6 +2,7 @@ import {Injectable, Inject} from '@angular/core';
 import {FacebookService, InitParams, LoginOptions, LoginResponse} from 'ngx-facebook';
 import {environment} from '../../environments/environment';
 import {Router} from '@angular/router';
+import {AmazonAuthResponse} from '../components/amazon-login/amazon-login.component';
 
 declare var AWSCognito: any;
 declare var AWS: any;
@@ -12,6 +13,10 @@ export interface CognitoCallback {
 
 export interface FacebookCallback {
     fbCallback(message: string, result: any): void;
+}
+
+export interface AmazonLoginCallback {
+    amazonLoginCallback(message: string, result: any): void;
 }
 
 export interface LoggedInCallback {
@@ -115,6 +120,28 @@ export class CognitoLoginService {
                 console.error(error);
                 callback.fbCallback(error, null);
             });
+    }
+
+    authenticateWithAmazon(response: AmazonAuthResponse, amznLoginCallback: AmazonLoginCallback){
+
+      // Add the Facebook access token to the Cognito credentials login map.
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: CognitoService._IDENTITY_POOL_ID,
+        Logins: {
+          'www.amazon.com': response.authRequest.access_token
+        }
+      });
+
+      AWS.config.credentials.get(function (err) {
+        if (!err) {
+          amznLoginCallback.amazonLoginCallback(null, response);
+          localStorage.setItem('isLoggedin', 'true');
+        } else {
+          //If cognito id pool incorrect we get error here
+          amznLoginCallback.amazonLoginCallback(err.message, null);
+        }
+      });
+
     }
 
     logout() {

@@ -14,6 +14,294 @@ Each of the following sections provide an implementation overview and detailed, 
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
+
+### Serverless Framework Tutorial
+The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. 
+
+You may notice that some reference materials are from the official Cloudformation documentation and others from Serverless. That is because for various things, there is a 1:1 overlap in syntax (i.e. specifying <b>resources:</b>).
+
+If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
+
+Lets get started!  
+
+Prerequisites: 
+1. Install latest Node (https://nodejs.org/en/) if you have not done so yet. 
+2. Run "npm install npm@latest -g" in CLI - updates to the latest NPM version 
+3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
+4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/3_ServerlessBackend project folder 
+
+
+<br>
+<h4>Setup</h4>
+
+1. Create a yaml file called <b>serverless.yml</b> in root project (3_ServerlessBackend) level
+
+2. Copy and paste the lines below into the yml file.
+
+```YAML
+service: rockservice
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: ap-southeast-2 
+```
+
+The above is just the bare bones to get you equipped for everything that is to come. 
+Two stanzas worth noting above are <b>region</b>, <b>runtime</b>. 
+
+<b>region</b>: The region in which you want to provision the cloud formation stack. In our example we choose ap-southeast-2 as that is in Sydney which is closer to us. Else, change it to another region that pleases you.  
+
+<b>runtime</b>: As we using javascript as our main language here, we should pick nodejs6.10. If we were using java, then we would have specified this value as "java8" instead. Same applies for other supported languages.
+
+<br>
+<h4>Lambda</h4>
+
+Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function. 
+
+Copy and paste the yml snippet below in the serverless.yml file. This is what you need to specify for each new lambda function you intend on creating. The <b>RocksHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just leave it at that.  
+
+You find comprehensive documentation on serverless <a href="https://serverless.com/framework/docs/providers/aws/guide/functions/">functions</a> if you want to know its full capabilities.
+
+```YAML
+functions:
+    RocksHandler:
+        handler: ?
+```  
+
+What we need to do here is figure out that should be substituted in place of the question mark. To start off, there should be a requestRock.js file in your project. Open it, navigate to line 25 and take note the name of the function.  
+
+Replace the "?" with something that resembles {file_path}.{function_name}, excluding the curly brackets.  
+
+If you figured it out correctly, we should end up with something looking like below.
+
+<details>
+<summary><strong>See answer (click to expand)</strong></summary>
+
+```YAML
+functions:
+    RocksHandler:
+        handler: requestRock.handler
+```
+
+</details>
+<br>
+
+Question:  
+If we created a new folder called "src" and put requestRock.js in there. What do you think we will have to update the <b>handler:</b> stanza to? 
+
+<ol type="a">
+    <li>src/requestRock.handler</li>
+    <li>../src/requestRock.handler</li> 
+    <li>src.requestRock.handler</li>
+</ol>
+
+<details>
+<summary><strong>See answer (click to expand)</strong></summary> 
+<b>a</b> is the correct answer.  
+</details>
+<br>
+
+
+<h4>DynamoDB</h4>
+
+Next, we proceed to specify the stanzas to provision a DynamoDB table. Copy and paste the yaml snippet below into the serverless.yml file.
+
+```YAML
+resources:
+  Resources:
+    RocksTable:
+      Type: {RESOURCE_TYPE}
+      Properties:
+        TableName: {TABLE_NAME}
+        AttributeDefinitions:
+          -
+            AttributeName: {HASH_FIELD_NAME}
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: {HASH_FIELD_NAME}
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+```  
+
+Looking at the above snippet we need to figure out what to replace the variables in curly braces with.  
+
+Starting from the top, we need to decide on what AWS resource type we want to provision. This is determined where we specify the <b>RESOURCE_TYPE</b>. What do you think variable should be? 
+Your best resource for that information is the <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/resources/#aws-cloudformation-resource-reference">list of AWS template resource types</a>. Replace it with the appropriate value.
+
+<details><summary><strong>See answer (click to expand)</strong></summary>
+    AWS::DynamoDB::Table
+</details>
+<br>
+
+Next, lets return to the code in requestRock.js and search for the function called <b>recordRock</b>. We need to find out the table name and as expected for your standard dynamodb table, we need to define at minimum one main partition/hash key. Read the few lines of code and substitute <b>TABLE_NAME</b> and <b>HASH_FIELD_NAME</b> with the appropriate values. 
+
+<details>
+<summary><strong>See answer (click to expand)</strong></summary>
+    <b>TABLE_NAME:</b> Rocks
+    <br>
+    <b>HASH_FIELD_NAME:</b> RockId
+</details>
+<br>
+
+
+<h4>Lambda IAM Role</h4>
+
+We now require an IAM Role that lambda can assume when performing its tasks in order to interact with other AWS services. 
+
+For simplicity sake, we will just specify a default role that will be assumed by all Lambda functions created for our service that has only the bare minimum permissions assigned.
+
+We should start by appending the below snippet under the <b>provider</b> section of the serverless.yml file. Since we only need to interact with DynamoDB in our application, theres only one specification that is required. 
+
+```YAML
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "{SERVICE_NAMESPACE}:{API_METHOD}"
+      Resource: 
+        "Fn::{FUNCTION_NAME}": [{TABLE_RESOURCE_NAME}, Arn]
+```  
+
+Once again, there are curly braces where we need to figure out what needs to be substituted. Starting from the top left, we have <b>SERVICE_NAMESPACE</b>. This value should be what we use to uniquely identify a particular AWS service.  
+
+Replace it with the appropriate value and if you are unsure, check out the <a target="_blank" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">AWS documentation</a>. 
+
+<details><summary><strong>See answer (click to expand)</strong></summary>
+dynamodb
+</details>
+<br>
+
+Besides the service namespace, we should specify the <b>API_METHOD</b> which is simply the API access permissions. As always, if you are unsure look to the <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">AWS documentation</a>. Scroll down to the Service / Namespace table.
+
+<details><summary><strong>See answer (click to expand)</strong></summary>
+PutItem
+</details>
+<br>
+
+Lastly, we need to find out which resource we want this policy to apply to. Here, we will need to specify the Arn of the DynamoDB table resource. To achieve this, we should tell Serverless (Cloudformation) to retrieve the Arn of the particular table. 
+
+To achieve that, you need to know the mechanism for retrieving resource attributes. Take a look in <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a> if unsure and that should give you <b>FUNCTION_NAME</b>.  
+
+Can you figure out the appropriate value for <b>TABLE_RESOURCE_NAME</b>? A hint would be looking at the <b>Resources:</b> in your existing serverless.yml file.  
+
+
+<details><summary><strong>See answer (click to expand)</strong></summary>
+"Fn::GetAtt": [RocksTable, Arn]
+</details>
+<br> 
+
+<details><summary><strong>In summary, the serverless yml should look similiar to following snippet (click to expand)</strong></summary>
+
+```YAML
+service: mechrockservice
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: ap-southeast-2 
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:PutItem"
+      Resource: 
+        "Fn::GetAtt": [RocksTable, Arn]
+       
+functions:
+  RequestRock:
+    handler: requestRock.handler
+
+resources:
+  Resources:
+    RocksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Rocks
+        AttributeDefinitions:
+          -
+            AttributeName: RockId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: RockId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+```
+</details>
+<br>  
+
+<h4>Deployment</h4>
+
+Well, that should be all the infrastructure we need for now. We are ready to begin provisioning resources on AWS. So, bring up the command line and ensure you are navigated to root project level. 
+
+<br>
+**Two important points before deploying:**
+
+Firstly, dynamodb table names have to be unique per region. If you are using shared accounts, then whomever deploys first should have no issues (unless there is already a table called "Rocks"). Others will ultimately run into a duplicate table name problem.  
+
+Lastly, if someone else has already deployed, then any further attempts on your end will result in updating the same stack instead of creating it as the names are conflicting.  
+
+The best steps to avoid these conflicts are:
+- Change <b>service:</b> in serverless.yml to something not in use
+- Change dynamodb table name references in requestRock.js and serverless.yml to something not in use 
+
+OR  
+
+- Specify a different region not used by others
+
+<br>
+
+Execute the command "serverless deploy" and watch the logs.  
+
+If the deployment ran successfully, login to AWS and navigate to Cloudformation service and confirm that there is a new stack called "mechrockservice-dev". This name is formed as a combination of the <b>service name</b> and <b>stage</b>.
+
+Now, we should quickly verify that our Lambda will run as expected. Go into Lambda AWS console and configure and run a new test event with the following body: 
+
+```JSON
+{
+    "path": "/rock",
+    "httpMethod": "POST",
+    "headers": {
+        "Accept": "*/*",
+        "Authorization": "eyJraWQiOiJLTzRVMWZs",
+        "content-type": "application/json; charset=UTF-8"
+    },
+    "queryStringParameters": null,
+    "pathParameters": null,
+    "requestContext": {
+        "authorizer": {
+            "claims": {
+                "cognito:username": "the_username"
+            }
+        }
+    },
+    "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
+}
+```  
+
+Verify that the execution succeeded and that the function result looks similar the following:
+
+```JSON
+{
+    "statusCode": 201,
+    "body": "{\"RockId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Rock\":{\"Name\":\"Obsidian\",\"Color\":\"Black\",\"Type\":\"Igneous\"},\"Eta\":\"30 seconds\"}",
+    "headers": {
+        "Access-Control-Allow-Origin": "*"
+    }
+} 
+```
+
+
+<details>
+<summary><strong>See manual steps (click to expand)</strong></summary>
+
 ### 1. Create an Amazon DynamoDB Table
 
 Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
@@ -184,3 +472,5 @@ For this module you will test the function that you built using the AWS Lambda c
 ```
 
 After you have successfully tested your new function using the Lambda console, you can move on to the next module, [RESTful APIs](../4_RESTfulAPIs).
+
+</details>

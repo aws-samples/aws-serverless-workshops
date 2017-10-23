@@ -16,7 +16,9 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 
 ### Serverless Framework Tutorial
-The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. All the magic will be occurring in a yaml file that provides serverless framework with the recipes. So remember to watch carefully for indentation and nesting.
+The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. 
+
+You may notice that some reference materials are from the official Cloudformation documentation and others from Serverless. That is because for various things, there is an overlap in syntax (i.e. specying resources).
 
 If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
 
@@ -58,7 +60,9 @@ Two stanzas worth noting above are <b>region</b>, <b>runtime</b>.
 
 Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function. 
 
-Copy and paste the yml snippet below in the serverless.yml file. This is what you need to specify for each new lambda function you intend on creating. The <b>RocksHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just leave it at that.
+Copy and paste the yml snippet below in the serverless.yml file. This is what you need to specify for each new lambda function you intend on creating. The <b>RocksHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just leave it at that.  
+
+You find comprehensive documentation on serverless <a href="https://serverless.com/framework/docs/providers/aws/guide/functions/">functions</a> if you want to know its full capabilities.
 
 ```YAML
 functions:
@@ -94,7 +98,7 @@ If we created a new folder called "src" and put requestRock.js in there. What do
 </ol>
 
 <details>
-<summary><strong>See answer (click to expand)</strong></summary>
+<summary><strong>See answer (click to expand)</strong></summary> 
 <b>a</b> is the correct answer.  
 </details>
 <br>
@@ -127,10 +131,10 @@ resources:
 Looking at the above snippet we need to figure out what to replace the variables in curly braces with.  
 
 Starting from the top, we need to decide on what AWS resource type we want to provision. This is determined where we specify the <b>RESOURCE_TYPE</b>. What do you think variable should be? 
-If unsure, your best resource would be the <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html">list of AWS template resource types</a>. Replace it with the appropriate value.
+Your best resource for that information is the <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/resources/#aws-cloudformation-resource-reference">list of AWS template resource types</a>. Replace it with the appropriate value.
 
 <details><summary><strong>See answer (click to expand)</strong></summary>
-AWS::DynamoDB::Table
+    AWS::DynamoDB::Table
 </details>
 <br>
 
@@ -245,12 +249,12 @@ Firstly, dynamodb table names have to be unique per region. If you are using sha
 Lastly, if someone else has already deployed, then any further attempts on your end will result in updating the same stack instead of creating it as the names are conflicting.  
 
 The best steps to avoid these conflicts are:
-1. Change <b>service:</b> in serverless.yml to something not in use
-2. Change dynamodb table name references in requestRock.js and serverless.yml to something not in use 
+- Change <b>service:</b> in serverless.yml to something not in use
+- Change dynamodb table name references in requestRock.js and serverless.yml to something not in use 
 
 OR  
 
-1. Specify a different region not used by others
+- Specify a different region not used by others
 
 <br>
 

@@ -29,8 +29,7 @@ Prerequisites:
 4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/3_ServerlessBackend project folder 
 
 
-Steps:
-
+<br>
 <h4>Setup</h4>
 
 1. Create a yaml file called <b>serverless.yml</b> in root project (3_ServerlessBackend) level
@@ -50,12 +49,11 @@ provider:
 The above is just the bare bones to get you equipped for everything that is to come. 
 Two stanzas worth noting above are <b>region</b>, <b>runtime</b>. 
 
-<b>region</b>: The region in which you want to provision the cloud formation stack. In our example we choose ap-southeast-2 as that is in Sydney which is closer to us. 
+<b>region</b>: The region in which you want to provision the cloud formation stack. In our example we choose ap-southeast-2 as that is in Sydney which is closer to us. Else, change it to another region that pleases you.  
 
 <b>runtime</b>: As we using javascript as our main language here, we should pick nodejs6.10. If we were using java, then we would have specified this value as "java8" instead. Same applies for other supported languages.
-<br> 
 
-
+<br>
 <h4>Lambda</h4>
 
 Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function. 
@@ -184,7 +182,7 @@ PutItem
 
 Lastly, we need to find out which resource we want this policy to apply to. Here, we will need to specify the Arn of the DynamoDB table resource. To achieve this, we should tell Serverless (Cloudformation) to retrieve the Arn of the particular table. 
 
-To achieve that, you need to know the mechanism for retrieving resource attributes. Take a look in <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a> in unsure and that should give you <b>FUNCTION_NAME</b>.  
+To achieve that, you need to know the mechanism for retrieving resource attributes. Take a look in <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a> if unsure and that should give you <b>FUNCTION_NAME</b>.  
 
 Can you figure out the appropriate value for <b>TABLE_RESOURCE_NAME</b>? A hint would be looking at the <b>Resources:</b> in your existing serverless.yml file.  
 
@@ -241,7 +239,7 @@ resources:
 
 Well, that should be all the infrastructure we need for now. We are ready to begin provisioning resources on AWS. So, bring up the command line and ensure you are navigated to root project level. 
 
-Two important points though:  
+<span style="color:red">Two important points though:</span> 
 
 Firstly, dynamodb table names have to be unique per region. If you are using shared accounts, then whomever deploys first should have no issues (unless there is already a table called "Rocks").  
 

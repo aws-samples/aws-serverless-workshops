@@ -240,9 +240,9 @@ Well, that should be all the infrastructure we need for now. We are ready to beg
 <br>
 **Two important points before deploying:**
 
-Firstly, dynamodb table names have to be unique per region. If you are using shared accounts, then whomever deploys first should have no issues (unless there is already a table called "Rocks").  
+Firstly, dynamodb table names have to be unique per region. If you are using shared accounts, then whomever deploys first should have no issues (unless there is already a table called "Rocks"). Others will ultimately run into a duplicate table name problem.  
 
-Lastly, if someone else has already deployed, then any further attempts on your end will result in updating the same stack rather than creating it as expected.  
+Lastly, if someone else has already deployed, then any further attempts on your end will result in updating the same stack instead of creating it as the names are conflicting.  
 
 The best steps to avoid these conflicts are:
 1. Change <b>service:</b> in serverless.yml to something not in use

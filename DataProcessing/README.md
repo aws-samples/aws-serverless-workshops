@@ -1,39 +1,39 @@
-# Serverless Data Processing Workshop
+# 서버리스 데이터 처리 워크샵
 
-In this workshop you'll explore approaches for processing data using serverless architectures. You'll build processing infrastructure to enable operations personnel in [Wild Rydes](http://www.wildrydes.com/) headquarters to monitor the health of the unicorn fleet. Each unicorn is equipped with a sensor that reports its location and vitals and you'll explore approaches for processing this data in batches and real-time.
+이 워크샵에서는 서버리스 아키텍쳐를 사용해서 데이터를 처리하는 방법을 살펴봅니다. 여러분은 유니콘 함대(Unicorn fleet)의 건강 상태를 모니터링 하기 위해 [Wild Rydes](http://www.wildrydes.com/) 본사의 운영 요원을 지원할 수 있도록 처리 인프라를 구축하게 됩니다. 각 유니콘에는 위치와 건강 상태를 알려주는 센서가 장착되어 있으며, 이 데이터를 일괄 처리 및 실시간으로  처리하는 방법을 알아봅니다.
 
-To build this infrastructure, you will use [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon S3](https://aws.amazon.com/s3/), [Amazon Kinesis](https://aws.amazon.com/kinesis/), [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), and [Amazon Athena](https://aws.amazon.com/athena/). You'll create functions in Lambda to process files and streams, use DynamoDB to persist unicorn vitals, create a serverless application to aggregate these data points using Kinesis Analytics, archive the raw data using Kinesis Firehose and Amazon S3, and you'll use Amazon Athena to run ad-hoc queries against the raw data.
+이 인프라를 구축하려면 다음과 같은 AWS의 서비스를 이용합니다. [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon S3](https://aws.amazon.com/s3/), [Amazon Kinesis](https://aws.amazon.com/kinesis/), [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), 그리고 [Amazon Athena](https://aws.amazon.com/athena/). 여러분은 파일과 스트림을 처리하기 위해 Lambda를 이용해서 함수를 만들고, DynamoDB를 이용해서 유니콘의 건강 상태를 유지하고, Kinesis Analytics를 사용해서 이러한 데이터 포인트를 집계하는 서버리스 응용 프로그램을 만들고, Kinesis Firehose 및 Amazon S3를 사용해서 원시 데이터(raw data)를 보관하며 Amazon Athena는 원시 데이터(raw data)에 대해 임의 쿼리(ad-hoc query)를 실행합니다. 
 
-## Prerequisites
+## 사전 준비 사항
 
-### AWS Account
+### AWS 계정
 
-In order to complete this workshop you'll need an AWS Account with access to create AWS Identity and Access Management (IAM), Amazon Simple Storage Service (S3), Amazon DynamoDB, AWS Lambda, Amazon Kinesis Streams, Amazon Kinesis Analytics, Amazon Kinesis Firehose, and Amazon Athena resources.
+이 워크샵을 완료하려면 AWS Identity and Access Management (IAM), Amazon Simple Storage Service (S3), Amazon DynamoDB, AWS Lambda, Amazon Kinesis Streams, Amazon Kinesis Analytics, Amazon Kinesis Firehose 를 만들 수 있는 액세스 권한이 있는 AWS 계정이 필요합니다. 그리고 Amazon Athena 리소스에 액세스 할 수 있어야 합니다.
 
-The code and instructions in this workshop assume only one student is using a given AWS account at a time. If you try sharing an account with another student, you'll run into naming conflicts for certain resources. You can work around this by either using a suffix in your resource names or using distinct Regions, but the instructions do not provide details on the changes required to make this work.
+이 워크샵의 코드와 지침은 한번에 한명의 학생에게만 주어진 AWS 계정을 사용한다고 가정합니다. 다른 학생과 계정을 공유하려고 하면, 특정 리소스 이름에 대해서 충돌이 발생합니다. 리소스 이름에 접미어를 사용하거나 고유한 이름을 부여해서 문제를 해결할 순 있지만, 이 지침에는 관련 작업을 수행하는데 필요한 변경 사항에 대한 세부 정보는 나오지 않습니다.
 
-### Region
+### 리전
 
-Choose an AWS Region to execute the workshops which support the complete set of services covered in the material including AWS Lambda, Amazon Kinesis Streams, Amazon Kinesis Firehose, Amazon Kinesis Analytics, and Amazon Athena. Use the [Region Table][region-table] to determine which services are available in a Region. Regions that support these services include **US East (N. Virginia)** and **US West (Oregon)**.
+AWS Lambda, Amazon Kinesis Streams, Amazon Kinesis Firehose, Amazon Kinesis Analytics, 그리고 Amazon Athena 를 포함해서 워크샵에서 다루는 전체 서비스를 지원하는 AWS 리전을 선택하십시오. [리전 표][region-table] 를 사용해서 지역에서 사용할 수 있는 서비스를 확인할 수 있습니다. 앞에서 말한 서비스를 지원하는 지역은 **US East (N. Virginia)** 와 **US West (Oregon)** 이 포함됩니다.
 
-### Kinesis Command-Line Clients
+### Kinesis 커맨드 라인 클라이언트
 
-The modules which involve streaming data and Amazon Kinesis utilize two command-line clients to simulate and display sensor data from the unicorns in the fleet.
+스트리밍 데이터 및 Amazon Kinesis 와 관련된 모듈은 두개의 커맨드 라인 클라이언트를 사용해서 유니콘 함대(Unicorn fleet)중에서 센서 데이터를 시뮬레이션 하고 표시합니다.
 
-#### Producer
+#### 생산자 (Producer)
 
-The producer generates sensor data from a unicorn taking a passenger on a Wild Ryde. Each second, it emits the location of the unicorn as a latitude and longitude point, the distance traveled in meters in the previous second, and the unicorn's current level of magic and health points.
+생산자(producer)는 유니콘이 승객을 야생 라이딩으로 태워주면서 센서 데이터를 생성합니다. 매 초마다 유니콘의 위치는 위도와 경도로 표시되고 거리는 1초전 데이타의 미터로 표시되며, 유니콘의 현재 마력과 건강 상태를 나타냅니다.
 
-#### Consumer
+#### 소비자 (Consumer)
 
-The consumer reads and displays formatted JSON messages from an Amazon Kinesis stream which allow us to monitor in real-time what's being sent to the stream. Using the consumer, you can monitor the data the producer is sending and how your applications are processing that data.
+소비자(consumer)는 Amazon Kinesis 스트림에서 형식화 된 JSON 메시지를 읽고 표시해서, 스트림으로 전송되는 내용을 실시간으로 모니터링 할 수 있습니다. 소비자(Consumer)를 사용하면 생산자(Producer)가 보내는 데이터와 응용 프로그램에서 해당 데이터를 처리하는 부분을 모니터링 할 수 있습니다.
 
-#### Setup
+#### 설정하기
 
-The producer and consumer are small programs written in the [Go Programming language][go]. The below instructions walk through downloading binaries for macOS, Windows, or Linux and preparing them for use. If you prefer to inspect and build them yourself, the [source code][client-src] is included in this repository and can be compiled using [Go][go].
+생산자(producer) 와 소비자(consumer) 는 [Go 프로그래밍 언어][go] 로 작성된 작은 프로그램입니다. 아래 지침은 macOS, Windows, 또는 Linux 용 바이너리를 다운로드해서 사용할 수 있도록하는 준비 과정입니다. 만약 직접 소스코드를 확인하고 빌드를 하고 싶다면, [소스 코드][client-src] 는 이 저장소에 포함되어 있으며 [Go][go] 를 사용해서 컴파일 할 수 있습니다.
 
 
-1. Using the AWS Command Line Interface or the provided links, copy the command-line clients built for your platform from an S3 bucket to your local system:
+1. AWS 커맨드 라인 인터페이스 또는 제공된 링크를 사용해서, 플랫폼 용으로 빌드된 커맨드 라인 클라이언트를 S3 버킷에서 로컬 시스템으로 복사하십시오.
 
 	**macOS** ([producer][mac-producer], [consumer][mac-consumer])
 
@@ -55,7 +55,7 @@ The producer and consumer are small programs written in the [Go Programming lang
 	chmod a+x producer consumer
 	```
 
-1. Run the producer with `-h` to view its command-line arguments:
+1. 생산자 (producer) 에서 `-h` 명령어를 사용해서 커맨드 라인 arguments 를 살펴봅니다.
 
 	**macOS** / **Linux**
 
@@ -81,9 +81,9 @@ The producer and consumer are small programs written in the [Go Programming lang
       Stream Name (default "wildrydes")
 	```
 
-	Note the defaults. Running this command without any arguments will produce data about a unicorn named **Shadowfax** to a stream named **wildrydes** in **US East (N. Virginia)**.
+	기본값에 유의하십시오. arguments 인자 값 없이 명령을 실행하면 **US East (N. Virginia)** 리전의 **wildrydes** 스트림 이름의 **Shadowfax** 라는 유니콘에 대한 데이터가 생성됩니다.
 
-1. Run the consumer with `-h` to view its command-line arguments:
+1. 소비자(consumer) 에서 `-h` 명령어를 사용해서 커맨드 라인 arguments 를 살펴봅니다.
 
 	**macOS** / **Linux**
 
@@ -105,29 +105,23 @@ The producer and consumer are small programs written in the [Go Programming lang
       Stream Name (default "wildrydes")
 	```
 
-	Note the defaults. Running this command without any arguments will read from the stream named **wildrydes** in **US East (N. Virginia)**.
+	기본값에 유의하십시오. arguments 인자 값 없이 명령을 실행하면 **US East (N. Virginia)** 리전에서 **wildrydes** 스트림에서 데이터를 읽어옵니다. 
 
-1. The command-line clients require authentication credentials with the permission to put and get records from Amazon Kinesis Streams. These credentials can be provided to the clients by either:
+1. 커맨드 라인 클라이언트에는 Amazon Kinesis Streams에서 레코드를 가져오거나(get) 쓸 수 있는 권한(put) 있는 자격 증명(credentials)이 필요합니다. 이러한 자격 증명은 다음 중 하나를 통해 클라이언트에 제공 될 수 있습니다.
 
-	1. 	Using a shared credentials file
+	1. 	공유 자격 증명 파일 사용 (Using shared credentials file)
 
-		This credentials file is the same one used by other SDKs and the AWS Command Line Interface. If you're already using a shared credentials file, you can use it for this purpose, too. If you've not yet configured credentials, run `aws configure` to interactively configure the CLI:
+		이 자격 증명 파일(credential) 은 다른 SDK 및 AWS 커맨드 라인 인터페이스에서 사용되는것과 동일한 것입니다. 이미 공유 자격 증명 파일을 사용하고 있다면, 이 용도로도 사용 할 수 있습니다. 아직 자격 증명을 설정하지 않았다면  `aws configure` 명령어를 실행해서 CLI를 설정하십시오. (먼저 AWS CLI가 설치되있어야 합니다)
 		
 		```console
 		$ aws configure
 		AWS Access Key ID [None]: YOUR_ACCESS_KEY_ID_HERE
 		AWS Secret Access Key [None]: YOUR_SECRET_ACCESS_KEY_HERE
 		```
-		
-		If you'd like to use a named profile, you'll need to set an environment variable with the key `AWS_PROFILE` and the value of the profile name to use:
-		
-		```console
-		export AWS_PROFILE=workshop
-		```
 
-	1. Using environment variables
+	1. 환경 변수 사용 (Using environment variables)
 
-		The clients can also use credentials set in your environment to sign requests to AWS. Set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables locally with your credentials.
+		클라이언트는 사용자 환경에 설정된 자격 증명을 사용하여 요청을 AWS에 서명 할 수도 있습니다. `AWS_ACCESS_KEY_ID` 와 `AWS_SECRET_ACCESS_KEY` 환경 변수를 여러분의 인증서와 함께 로컬에 설정하십시오.
 		
 		**macOS** / **Linux**
 		
@@ -142,17 +136,17 @@ The producer and consumer are small programs written in the [Go Programming lang
 		set AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY_HERE
 		```
 
-	See the [AWS SDK for Go configuration documentation][sdk-config] for more details.
+	자세한 내용은 [AWS SDK for Go 설정 가이드][sdk-config] 를 참조하십시오.
 
-## Modules
+## 모듈
 
-1. [File Processing](1_FileProcessing/README.md)
-1. [Real-time Data Streaming](2_DataStreaming/README.md)
-1. [Streaming Aggregation](3_StreamingAggregation/README.md)
-1. [Stream Processing](4_StreamProcessing/README.md)
-1. [Data Archiving](5_DataArchiving/README.md)
+1. [파일 처리 (File Processing)](1_FileProcessing/README.md)
+1. [실시간 데이타 스트리밍 (Real-time Data Streaming)](2_DataStreaming/README.md)
+1. [스트리밍 집계 (Streaming Aggregation)](3_StreamingAggregation/README.md)
+1. [스트림 처리 (Stream Processing)](4_StreamProcessing/README.md)
+1. [데이터 보관 (Data Archiving)](5_DataArchiving/README.md)
 
-After you have completed the workshop you can delete all of the resources that were created by following the [clean-up guide].
+!!주의!! 워크샵을 마친 후에 [clean-up guide]에 따라 생성된 모든 리소스를 삭제 할 수 있습니다.
 
 [region-table]: https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
 [go]: https://www.golang.org

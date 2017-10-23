@@ -1,18 +1,18 @@
-# Module 2: Continuous Delivery Pipeline
+# 모듈 2: 지속적 통합 및 전달 파이프라인
 
-In this module, you'll use [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), and [Amazon S3](https://aws.amazon.com/s3/) to build a Continuous Delivery pipeline to automate a code deployment workflow for the Unicorn API.
+이번 모듈에서는 [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), [Amazon S3](https://aws.amazon.com/s3/)를 이용하여 Unicon API를 자동적으로 배포를 하기 위한 지속적 통합 및 전달 파이프라인를 생성하도록 하겠습니다.
 
-## CodePipeline Overview
+## CodePipeline 개요
 
-CodePipeline orchestrates the steps to build, test, and deploy your code changes.  Below is a screenshot of the CodePipeline you will build when have completed this module.
+CodePipeline는 코드 변경 사항에 대한 빌드, 테스트, 배포 단계를 관리 및 조율 합니다. 아래 사진은 이 모듈을 통해 생성할 CodePipeline의 최종 모습입니다.
 
 ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
 
-## CodeBuild Overview
+## CodeBuild 개요
 
-CodeBuild compiles source code, runs tests, and produces software packages that are ready to deploy to environments.
+CodeBuild는 소스 코드를 컴파일 하여 테스트를 수행하고 배포 가능한 소프트웨어 패키지를 생성합니다.
 
-The Unicorn API [buildspec.yml](buildspec.yml) defines the commands used to build the project and the output artifacts.
+Unicorn API [buildspec.yml](buildspec.yml) 파일에는 프로젝트 빌드에 필요한 명령어 및 결과물 생성에 필요한 명령어를 포함하고 있습니다.
 
 ```yaml
 version: 0.1
@@ -29,21 +29,21 @@ artifacts:
     - template-export.yml
 ```
 
-For the Unicorn API, the build command is the same **CloudFormation package** command used from the [Serverless Application Model: Step 2](../1_ServerlessApplicationModel#2-package-the-uni-api-for-deployment), except that the S3 bucket has been externalized to an environment variable that CodeStar has configured on the project.
+Unicorn API의 경우에는 빌드 명령어는 이전 모듈 [Serverless Application Model: Step 2](../1_ServerlessApplicationModel#2-package-the-uni-api-for-deployment)의 **CloudFormation package** 에서 사용하는 명령어와 동일 합니다. 단지, S3 버킷의 경우에만 CodeStar 프로젝트에서 설정한 외부 환경변수로 변경되었습니다.
 
-As a reminder, the **CloudFormation package** command packages the local source code, uploads it to S3, and returns a new CloudFormation template that has been modified to use the S3 references as the CodeUri.
+이전 모듈에 사용한 **CloudFormation package** 명령어를 다시 한번 살펴 보면 로컬 소스 코드의 내용을 패키징, S3 업로한 후 S3 참조 주소가 CodeUri로 변경된 새로운 CloudFormation 템플레이트를 반환합니다.
 
-For the Unicorn API, the output artifact is a zip archive that includes only the ``template-export.yml`` file.
+Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``template-export.yml`` 파일만을 포함하고 있습니다.
 
-## Implementation Instructions
+## 구현 지침
 
-Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+본 모듈은 여러 섹션으로 구성되어 있으며 매 섹션 시작에는 개괄적인 개요가 준비되어 있습니다. 섹션 마다 구현을 위한 자세한 내용은 단계별 지침안에서 확인 하실 수 있으십니다. 이미 AWS Management Console에 익숙하시거나 둘러보기를 거치지 않고 직접 서비스를 탐색하시려는 분들을 위해 구현을 완료하는 데 필요한 충분한 내용을 각 섹션의 개요에서 제공하고 있습니다.
 
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+최신 버젼의 크롬, 파이어폭스, 사파리 웹 브라우저를 사용하신다면 단계별 지침을 클릭하셔서 자세한 내용을 확인하시기 바랍니다.
 
-### 1. Seed the `uni-api` CodeCommit Git repository
+### 1. `uni-api` CodeCommit 깃 저장소 시작 하기
 
-1. Each module has corresponding source code used to seed the CodeStar CodeCommit Git repository to support the workshop.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
+1. 각각의 모듈은 해당 워크숍 진행에 필요한 소스 코드와 CodeStar 및 CodeCommit 깃 저장소와 연동이 되어 있습니다. 깃 저장소를 시작하기 위해서는 여러분이 선택하신 리전의 **Launch Stack** 버튼을 클릭 하여 주시기 바랍니다.
 
     Region| Launch
     ------|-----
@@ -54,55 +54,55 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
     EU (Frankfurt) | [![Launch Module 2 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-central-1)
     Asia Pacific (Sydney) | [![Launch Module 2 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=ap-southeast-2)
 
-1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
+1. CloudFormation 템플레이트는 이번 모듈을 진행하는데 있어서 필요한 항목들이 사전에 정의 되어 있습니다.
 
-1. Select the **I acknowledge that AWS CloudFormation might create IAM resources.** checkbox to grant CloudFormation permission to create IAM resources on your behalf
+1. **I acknowledge that AWS CloudFormation might create IAM resources.** 체크 박스를 체크 하여 주시기 바랍니다. CloudFormation에 여러분을 대신하여 스택 생성에 필요한 IAM 자원을 생성 할 수 있도록 권한 부여를 허락함을 의미 합니다.
 
-1. Click the **Create** button in the lower right corner of the browser window to create the CloudFormation stack and seed the CodeCommit repository.
+1. 브라우저창의 우측 하단의 **Create** 버튼을 클릭하여 주시기 바랍니다. 이번 모듈에 필요한 CloudFormation 스택을 생성 및 CodeCommit 저장소를 생성합니다.
 
     ![Seed Repository CloudFormation Stack Review](images/seed-repository-1.png)
 
-1. There will be a short delay as the Git repository seeded with the new source code.  Upon successful completion, the CloudFormation will show Status ``CREATE_COMPLETE``.
+1. 깃 저장소에 새로운 코드로 준비되기 까지는 약간의 지연이 발생 할 수 있습니다. 만약 모든 것이 성공적으로 생성이 되었다면 CloudFormation의 상태는 ``CREATE_COMPLETE`` 이어야 합니다.
 
     ![CloudFormation Stack Creation Complete](images/seed-repository-2.png)
 
-### 2. Fetch CodeCommit Git Repository
+### 2. CodeCommit 깃 저장소로 부터 Fetch 하기
 
-Now that the CodeCommit Git repository has been seeded with new source code, you will need to fetch the changes locally so that you may modify the code.  Typically, this is accomplished using the `git pull` command, however for the workshop we have replaced the repository with a new history and different Git commands will be used.
+새로운 코드가 추가된 CodeCommit 깃 저장소가 생성되었습니다. 코드를 수정 할 수 있도록 이 저장소의 변경사항을 여러분의 로컬 깃 저장소로 복사할 것 입니다. 일반적으로 리모트 깃 저장소의 업데이트된 내용은 `git pull` 명령어로 수행할 수 있습니다. 하지만 이번 워크숍에서는 저장소의 history가 새롭게 생성 되었기 때문에 `git pull`이 아닌 다른명령어를 사용 하셔야 합니다.
 
-Using your preferred Git client, run the commands on your local **uni-api** Git repository:
+여러분이 사용하시 편한 깃 클라이언트를 이용해서 아래 명령어 들을 여러분의 로컬 **uni-api** 깃 저장소에서 실행해 주시기 바랍니다.
 
 * `git fetch --all`
 * `git reset --hard origin/master`
 
-### 3. Add Delete Function to app-sam.yaml
+### 3. app-sam.yaml에 Delete 함수 추가 하기
 
-Using a text editor, open the `app-sam.yaml` file and append a new **AWS::Serverless::Function** Resource labeled `DeleteFunction` that has the following definition.
+텍스트 편집기를 이용하셔서 `app-sam.yaml` 파일을 열어 주시기 바랍니다. `DeleteFunction`의 이름으로 **AWS::Serverless::Function** 리소스를 추가 하시기 바랍니다. 아래는 해당 리소스의 정의를 추가 하시기
 
-> Note: whitespace is important in YAML files.  Please verify that the configuration below is added with the same space indentation as the CloudFormation Resources in the app-sam.yaml file.
+> 주의: YAML 파일에서는 공백이 매우 중요합니다. app-sam.yaml 파일의 CloudFormation Resources 규칙과 동일한 공백 규칙을 사용하시기 바랍니다.
 
-1. **FunctionName** is `uni-api-delete`
+1. **FunctionName**은 `uni-api-delete` 입니다.
 
-1. **Runtime** is `nodejs6.10`
+1. **Runtime**은 `nodejs6.10` 입니다.
 
-1. **CodeUri** is `app`
+1. **CodeUri**는 `app` 입니다.
 
-1. **Handler** is `delete.lambda_handler`
+1. **Handler**는 `delete.lambda_handler` 입니다.
 
-1. **Description** is `Delete a Unicorn`
+1. **Description**는 `Delete a Unicorn` 입니다.
 
-1. **Timeout** is `10`
+1. **Timeout**는 `10` 입니다.
 
-1. **Event** type is `Api` associated to the `/unicorns/{name}` **Path** and `delete` **Method**
+1. **Event** 타입은 `Api` 이며 `/unicorns/{name}` **Path** 와 연동 `delete` **Method**
 
-1. **Environment** variable named `TABLE_NAME` that references the `Table` Resource for its value.
+1. **Environment** 변수 이름은 `TABLE_NAME` 값으로는 `Table` Resource 참조값
 
-1. **Role** is duplicated from another function.
+1. **Role**은 다른 함수와 같이 사용합니다.
 
-If you are unsure of the syntax to add to ``app-sam.yaml`` please refer to the code snippet below.
+``app-sam.yaml`` 추가할 코드의 문법을 아래 코드를 참조하셔서 공백 규칙 및 문법을 확인 하시기 바랍니다.
 
 <details>
-<summary><strong>app-sam.yaml additions to support Delete function (expand for details)</strong></summary><p>
+<summary><strong>app-sam.yaml에 Delete 함수 추가 하기 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
 ```yaml
   DeleteFunction:
@@ -130,75 +130,75 @@ If you are unsure of the syntax to add to ``app-sam.yaml`` please refer to the c
 
 </p></details>
 
-### 4. Commit the change to local Git repository
+### 4. 변경 사항을 로컬 깃 레포지토리에 커밋 하기
 
-1. Using your Git client, add the local changes to the Git index, and commit with a message.  For example:
+1. 깃 클라이언트를 이용하여 로컬 변경 사항을 깃에 저장 하시고 커밋을 하시기 바랍니다. 예를 들면:
 
     ```
     %> git add .
     %> git commit -m "Add delete function"
     ```
 
-1. Using your Git client, push the Git repository updates to the origin.  For example:
+1. 깃 클라이언트를 이용해서 업데이트 사항을 origin에 푸쉬 하시기 바랍니다. 예를 들면:
 
     ```
     %> git push origin
     ```
 
-### 5. Confirm CodePipeline Completion
+### 5. CodePipeline 유니콘 API 배포 검증
 
-After pushing your changes to the CodeStar project's CodeCommit git repository, you will confirm that the changes are build and deployed successfully using CodePipeline.
+코드 변경사항을 CodeStar 프로젝의 CodeCommit 깃 저장소에 푸쉬를 하신뒤 여러분은 수정한 코드가 정상적으로 빌드가 되고 배포가 되는지 CodePiepline을 통해 확인 하도록 하겠습니다.
 
-1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
+1. AWS Management 콘솔에서 **Services**를 선택한 다음 Developer Tools 섹션에서 **CodeStar** 를 선택하십시오.
 
-1. Select the `uni-api` project
+1. `uni-api` 프로젝트를 선택 하십시오.
 
     ![CodeStar Project List](images/codestar-1.png)
 
-1. Observe that the continuous deployment pipeline on the right of the browser window now shows the Source stage to be blue, meaning that it is active.
+1. 웹 브라우저의 오른쪽 지속적 배포 파이프라인을 보시면 현재 Source 단계 창이 파란색(진행중)임을 확인 할 수 있습니다.
 
     ![CodeStar Dashboard 1](images/codestar-2.png)
 
-1. Each stage's color will turn blue during execution and green on completion.  Following the successful execution of all stages, the pipeline should look like the following screenshot.
+1. 각 단계의 창의 색갈은 실행중일때 파란색으로 바뀌고 완료가 되면 녹색으로 바뀝니다. 모든 단계를 성공적으로 마쳤다면 파이프 라인은 아래 화면과 같은 결과를 나타내야 합니다.
 
     ![CodeStar Dashboard 2](images/codestar-3.png)
+    
+### 6. Delete API Method 테스트
 
-### 6. Test Delete API Method
+1. AWS Management 콘솔에서 **Services**를 선택한 다음 Application Services 섹션에서 **API Gateway**를 선택하십시오.
 
-1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
+1. 좌측 네비게이션에서 `awscodestar-uni-api-lambda`를 클릭하시기 바랍니다.
 
-1. In the left nav, click on `awscodestar-uni-api-lambda`.
+1. API resources 리스트에서 `/{name}` resource 아래 `DELETE` 를 클릭하시기 바랍니다.
 
-1. From the list of API resources, click on the `DELETE` link under the `/{name}` resource.
-
-1. On the resource details panel, click the `TEST` link in the client box on the left side of the panel.
+1. Resource 상세 항목 패널에서 클라이언트 박스 좌측의 `TEST`를 클릭하시기 바랍니다.
 
     ![Validate 1](images/validate-1.png)
 
-1. On the test page, enter `Shadowfox` in the **Path** field.
+1. 테스트 페이지에서 **Path** 항목에 `Shadowfox`를 입력하시기 바랍니다.
 
     ![Validate 2](images/validate-2.png)
 
-1. Scroll down and click the **Test** button.
+1. 화면을 아래로 스크롤 하신 다음 **Test** 버튼을 클릭하시기 바랍니다.
 
-1. Scroll to the top of the test page, and verify that on the right side of the panel that the **Status** code of the HTTP response is 200.
+1. 화면을 테스트 페이지의 맨 위로 올리신 다음, 패널의 오른쪽의 **Status** 코드에서 HTTP 응답이 200임을 확인 하시기 바랍니다.
 
     ![Validate 3](images/validate-3.png)
 
-1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
+1. AWS Management 콘솔에서 **Services**를 선택한 다음 Developer Tools 섹션에서 **CodeStar** 를 선택하십시오.
 
-1. Select the `uni-api` project
+1. `uni-api` 프로젝트를 선택 하십시오.
 
     ![CodeStar Project List](images/codestar-1.png)
 
-1. Copy the URL from the **Application endpoints** tile on the right side of the dashboard.
+1. 상황판 오른쪽에 있는 **Application endpoints** 창에서 URL 주소를 복사하십시오.
 
     ![CodeStar App Endpoint](images/codestar-app-endpoint.png)
 
-1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
+1. 웹 브라우저에서 방금 복사한 URL을 붙여넣기 한뒤 주소에 `/unicorns` 를 추가해 주시기 바랍니다. 아래 주소와 같은 형식이 되어야 합니다. `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
 
-1. Confirm that the browser shows a JSON result that no longer includes `Shadowfox` in the list of Unicorns.
+1. 웹 브라우저에서는 유니콘 리스트에 `Shadowfox`가 삭제된 JSON 결과를 보여 주어야 합니다.
 
-## Completion
+## 완료
 
-Congratulations!  You have successfully created a Continuous Delivery Pipeline using CodePipeline to automate the deployment of the Unicorn API. In the next [X-Ray Module](../3_XRay), you will integrate AWS X-Ray to demonstrate how to troubleshoot the Unicorn API.
+축하합니다! 여러분은 유니콘 API의 자동 배포를 위한 지속적 통합 및 전달 파이프라인을 AWS의 CodePipeline을 이용하셔 생성하셨습니다. 다음 모듈에서는 [X-Ray Module](../3_XRay) AWS X-Ray를 통합하여 어떻게 유니콘 API의 버그를 해결하는지 실습을 해보도록 하겠습니다.

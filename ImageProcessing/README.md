@@ -1,63 +1,63 @@
-# Module: Coordinate a serverless image processing workflow with AWS Step Functions
+# Module: AWS Step Functions를 사용하여 서버리스 이미지 처리 워크 플로우 조정
 
-In this module you'll use AWS Step Functions to build an image processing workflow by orchestrating multiple AWS Lambda functions. 
+이 모듈에서는 AWS Step Functions를 사용하여 여러 AWS Lambda 함수를 조정하여 이미지 처리 워크 플로를 작성합니다.
 
-The Wild Rydes team wants to add a new feature to the app by requiring riders to upload a selfie after signing up. This accomplishes a few things: 
+Wild Rydes팀은 가입 후, 사용자 셀카를 업로드하는 새로운 기능을 추가하려고합니다. 이것은 몇 가지 작업을 수행합니다.
 
-1. Allows the unicorns to easily identify the rider during pickup to provide a good customer experience. This also enhances security so bad guys can't spoof to be riders and get on the unicorns. 
-1. Prevents the same user from signing up for multiple accounts to abuse new-user promotions.  
+1. 좋은 고객 경험을 제공하기 위해 유니콘이 픽업 중 라이더를 쉽게 식별 할 수 있습니다. 이것은 또한 보안을 강화하여, 범죄자를 식별하여 유니콘을 타기 전에 제어가능합니다.
+1. 동일한 사용자가 새 사용자 프로모션을 악용하기 위해 여러 계정에 등록하는 것을 방지합니다.
 
 ![selfie picture](./images/selfie/selfie-picture.jpeg)
 
-When users upload the photo of themselves, a few steps of verification and processing need to take place:
+사용자가 자신의 사진을 업로드하면 몇 가지 확인 및 처리 단계가 수행되어야합니다.
 
-1. Verify the photo shows a clear face the app/unicorns can use to identify the rider. 
-1. Match against the collection of previously indexed faces to make sure the user hasn't already signed up.
-1. Resize the photo to thumbnails to display on the app.
-1. Index the user's face into the collection so it can be used for matching in the future. 
-1. Store the photo metadata with the user's profile.  
+1. 사진이 라이더를 식별하기 위해 app/unicorns가 사용할 수있는 깨끗한 얼굴을 보여 주는지 확인하십시오.
+1. 사용자가 아직 등록하지 않았는지 확인하기 위해 이전에 색인된 얼굴 모음과 대조하십시오.
+1. 응용 프로그램에 표시 할 축소판 그림으로 사진의 크기를 조정하십시오.
+1. 사용자 얼굴을 콜렉션에 색인화하여 나중에 일치시킬 수 있도록하십시오.
+1. 사진의 메타 데이터를 사용자 프로필과 함께 저장하십시오. 
 
-In the serverless world, each of steps above can be easily implemented with a AWS Lambda function. But how can we manage the flow of invoking one Lambda function after the previous step has finished and keep track of what happened with each image? What if one of the Lambda function times out and needs to be retried? Some of the Lambda functions can be run in parallel to reduce end-to-end processing latency, how can we coordinate running Lambda functions in parallel and wait for them to finish? AWS Step Functions makes it very easy to solve these problems and provides an audit trail and visualization to track what happened with each flow. 
-## Architecture Overview
-The architecture for this module is composed of several AWS Lambda functions that leverage the facial detection capabilities of **Amazon Rekognition**, resize the uploaded image stored in **Amazon S3**, and save the image metadata with the user profile using **Amazon DynamoDB**. The orchestration of these Lambda functions is managed by an **AWS Step Functions**  state machine.
+서버리스 환경에서 위의 각 단계는 AWS Lambda 기능을 사용하여 쉽게 구현할 수 있습니다. 그러나 이전 단계가 완료된 후에 하나의 람다 함수를 호출하는 흐름을 어떻게 관리하고 각 이미지에서 일어난 일을 추적 할 수 있습니까? 람다 기능 중 하나가 시간 초과되어 재 시도해야 할 경우? 람다 함수 중 일부는 병렬 처리로 처리 지연을 줄이기 위해, 실행중인 람다 함수를 어떻게 병렬로 조정할 수 있고 끝내기를 기다릴 수 있습니까? AWS Step Functions를 사용하면 이러한 문제를 쉽게 해결할 수 있으며 감사 추적 및 시각화를 통해 각 플로우에서 발생한 문제를 추적 할 수 있습니다.
+
+## 아키텍처 개요
+이 모듈의 아키텍처는 **Amazon Rekognition**의 얼굴 탐지 기능을 활용하고, **Amazon S3**에 저장된 업로드 된 이미지의 크기를 조정하고, 사용자 프로필로 이미지 메타 데이터를 **Amazon DynamoDB**에 저장하는 여러 개의 **AWS Lambda** 함수로 구성됩니다. 람다 함수의 오케스트레이션은 **AWS Step Functions** 상태 머신에 의해 관리됩니다.
 
 <img src="./images/wild-rydes-architecture.png" width="60%">
 
-Below is the flow diagram of the workflow we will build as visualized by  **AWS Step Functions**:
+아래는 **AWS Step Functions**로 시각화 한 워크 플로우의 흐름도입니다.
 
 <img src="./images/4th-state-machine-graph.png" width="60%">
 
-In this module, we will manually kick-off processing workflows from the AWS Step Functions management console. In a real world application, you can configure an Amazon API Gateway that your application invokes to trigger the Step Functions state machine, or have it triggered by an Amazon S3 upload event through Amazon CloudWatch Events or S3 event notifications. 
-## Implementation Instructions
+이 모듈에서는 AWS Step Functions 관리 콘솔에서 수동으로 워크 플로우를 시작합니다. 실제 응용 프로그램에서는 응용 프로그램이 호출하는 단계 함수 상태 시스템을 호출하는 Amazon API Gateway를 구성하거나 Amazon CloudWatch 이벤트 또는 S3 이벤트 알림을 통해 Amazon S3 업로드 이벤트에 의해 트리거되도록 설정할 수 있습니다.
 
-Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+## 구현 방법
 
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+다음 섹션에서는 구현 개요와 자세한 단계별 지침을 제공합니다. 개요는 이미 AWS Management Console에 익숙하거나 둘러보기를 거치지 않고 직접 서비스를 탐색하려는 경우 구현을 완료 할 수있는 충분한 컨텍스트를 제공해야합니다.
 
- 
+최신 버전의 Chrome, Firefox 또는 Safari 웹 브라우저를 사용하는 경우 섹션을 확장해야 단계별 지침이 표시됩니다.
 
 </p></details>
  
-### 1. Create a collection in Amazon Rekognition
-A Face Collection is a container in Amazon Rekognition to store indexed face images as searchable vectors.  
+### 1. Amazon Rekognition 컬렉션 생성하기
+Face Collection은 인덱싱 된 얼굴 이미지를 검색 가능한 벡터로 저장하는 Amazon Rekognition의 컨테이너입니다.
 
-Using the AWS Command Line Interface, create a collection in the Amazon Rekognition called `rider-photos`
+AWS 커맨드 라인 인터페이스를 사용하여 아마존 Rekognition에서 `rider-photos` 컬렉션을 생성하십시오.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세히 보기)</strong></summary><p>
 
-1. In a terminal window, run the following command and replace the `REPLACE_WITH_YOUR_CHOSEN_AWS_REGION` portion with the region string of your chosen region. (see [Rekognition regions](http://docs.aws.amazon.com/general/latest/gr/rande.html#rekognition_region))
+1. 터미널 창에서 다음 명령을 실행하고 `REPLACE_WITH_YOUR_CHOSEN_AWS_REGION` 부분을 선택한 리전의 문자열로 대체하십시오. ([Rekognition 리전](http://docs.aws.amazon.com/general/latest/gr/rande.html#rekognition_region) 참조)
 
 		aws rekognition create-collection --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION --collection-id rider-photos
 	
-	For example:
+	예를 들어:
 	
 		aws rekognition create-collection --region us-east-1 --collection-id rider-photos
 		aws rekognition create-collection --region us-west-2 --collection-id rider-photos
 		aws rekognition create-collection --region eu-west-1 --collection-id rider-photos
 	
 	
-2. If successful, you should get an acknowledgment from the service that looks like:
+2. 성공하면 다음과 같은 서비스에서 확인을 받아야합니다:
 
 	```JSON
 	{
@@ -67,26 +67,27 @@ Using the AWS Command Line Interface, create a collection in the Amazon Rekognit
 	```
 </p></details>
 
-### 2. Deploy Amazon S3, AWS Lambda and Amazon DynamoDB resources using AWS CloudFormation
+### 2. AWS CloudFormation을 사용하여 Amazon S3, AWS Lambda 및 Amazon DynamoDB 리소스 배포
 
-The following AWS CloudFormation template will create these resources:
-* Two Amazon S3 buckets: 	* **RiderPhotoS3Bucket** stores the photos uploaded by the riders
-	* A few test images will be copied into the **RiderPhotoS3Bucket**  bucket
-	* **ThumbnailS3Bucket** stores the resized thumbnails of the rider photos
-* One Amazon DynamoDB table **RiderPhotoDDBTable** that stores the metadata of the rider's photo with rider's profile
-* AWS Lambda functions that performs the processing steps
+다음 AWS CloudFormation 템플릿은 이러한 리소스를 생성합니다.
 
+* Amazon S3 버킷 2개:
+	* **RiderPhotoS3Bucket** 라이더가 업로드 한 사진을 저장합니다.
+	* 몇 개의 테스트 이미지가 **RiderPhotoS3Bucket** 버킷에 복사됩니다.
+	* **ThumbnailS3Bucket** 라이더 사진의 크기가 조정 된 썸네일을 저장합니다.
+* **RiderPhotoDDBTable** 라이더의 사진과 함께 라이더의 프로필 메타 데이터를 저장하는 하나의 Amazon DynamoDB 테이블
+* 각 처리 단계를 수행하는 AWS Lambda 함수들
 
-Click on the link for the region you have chosen:  
+원하는 리전을 선택하세요.  
 
-Region| Launch
+리전 | 실행하기
 ------|-----
 US East (N. Virginia) | [![Launch Module in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3.amazonaws.com/wild-rydes-step-module-us-east-1/0-cfn/wild-rydes-step-module-us-east-1.output.yaml)
 US West (Oregon) | [![Launch Module in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-us-west-2.amazonaws.com/wild-rydes-step-module-us-west-2/0-cfn/wild-rydes-step-module-us-west-2.output.yaml)
 EU (Ireland) | [![Launch Module 1 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-eu-west-1.amazonaws.com/wild-rydes-step-module-eu-west-1/0-cfn/wild-rydes-step-module-eu-west-1.output.yaml)
 
 <details>
-<summary><strong>AWS CloudFormation Launch Instructions (expand for details)</strong></summary><p>
+<summary><strong>AWS CloudFormation 실행 (자세히 보기)</strong></summary><p>
 
 1. Click the **Launch Stack** link above for the region of your choice.
 

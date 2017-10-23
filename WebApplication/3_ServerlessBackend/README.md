@@ -1,150 +1,136 @@
-# Module 3: Serverless Service Backend
+# 모듈 3: 서버리스 백엔드 서비스
 
-In this module you'll use AWS Lambda and Amazon DynamoDB to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a unicorn be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
+이 모듈에서는 AWS Lambda 와 Amazon DynamoDB 를 사용하여 웹 애플리케이션의 요청을 처리하는 백엔드 프로세스를 빌드합니다. 첫번째 모듈에 배포한 브라우저 응용 프로그램을 사용하면 원하는 위치로 유니콘을 보내도록 요청할 수 있습니다. 이러한 요청을 충족시키려면 브라우저에서 실행되는 JavaScript가 클라우드에서 실행되는 서비스를 호출해야 합니다.
 
-You'll implement a Lambda function that will be invoked each time a user requests a unicorn. The function will select a unicorn from the fleet, record the request in a DynamoDB table and then respond to the front-end application with details about the unicorn being dispatched.
+사용자가 유니콘을 요청할때마다 호출되는 람다 함수를 구현합니다. 이 함수는 함대에서 유니콘을 선택하고 DynamoDB 테이블에 요청을 기록한 다음 발송되는 유니콘에 대한 세부 정보를 프론트엔드 응용프로그램에 응답합니다.
 
-![Serverless backend architecture](../images/serverless-backend-architecture.png)
+![서버리스 백엔드 아키텍쳐](../images/serverless-backend-architecture.png)
 
-The function is invoked from the browser using Amazon API Gateway. You'll implement that connection in the next module. For this module you'll just test your function in isolation.
+이 함수는 Amazon API Gateway를 사용하여 브라우저에서 호출됩니다. 다음 모듈에서 해당 연결을 구현합니다. 이 모듈에서는 함수를 단독으로 테스트합니다.
 
-## Implementation Instructions
+## 구현 지침
 
-Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+다음 섹션에서는 구현 개요와 자세한 단계별 지침을 제공합니다. 개요는 이미 AWS Management Console에 익숙하거나 둘러보기를 거치지 않고 직접 서비스를 탐색하려는 경우 구현을 완료하는 데 충분한 내용을 제공합니다.
 
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+최신 버전의 Chrome, Firefox, 혹은 Safari 웹 브라우저를 사용하는 경우 섹션을 펼쳐야 단계별 지침이 표시됩니다.
 
-### 1. Create an Amazon DynamoDB Table
+### 1. Amazon DynamoDB 테이블 만들기
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
+Amazon DynamoDB 콘솔을 사용해서 새로운 DynamoDB 테이블을 만드십시오. `Rides` 라는 테이블을 만들고 String 타입의 `RideId` 라는 파티션 키(Partition Key)를 부여하십시오. 다른 모든 설정에는 기본값을 사용하십시오.
 
-After you've created the table, note the ARN for use in the next step.
+테이블을 만든 뒤에는, 다음 단계에서 사용할 ARN 을 메모장에 복사해놓으십시오.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. From the AWS Management Console, choose **Services** then select **DynamoDB** under Databases.
+1. AWS Management 콘솔에서, **Services** 를 선택한 다음 데이터베이스에서 **DynamoDB** 를 선택하십시오.
 
-1. Choose **Create table**.
+1. **Create table** 을 선택하십시오.
 
-1. Enter `Rides` for the **Table name**. This field is case sensitive.
+1. **Table name** 에 `Rides` 를 입력하십시오.
 
-1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
+1. **Partition key** 에 대해 `RideId` 키 유형(key type) 으로 **String** 을 선택하십시오.
 
-1. Check the **Use default settings** box and choose **Create**.
+1. **Use default settings** 체크박스를 선택하고 **Create** 을 선택하십시오.
 
-    ![Create table screenshot](../images/ddb-create-table.png)
+    ![테이블 만들기 스크린샷](../images/ddb-create-table.png)
 
-1. Scroll to the bottom of the Overview section of your new table and note the **ARN**. You will use this in the next section.
+1. 새 테이블의 개요 섹션 아래로 스크롤해서 **ARN** 을 확인하십시오. 다음 섹션에서 이것을 사용할 것입니다. 미리 메모장에 복사해놓는게 좋습니다.
 
 </p></details>
 
 
-### 2. Create an IAM Role for Your Lambda function
+### 2. 람다 함수에 대한 IAM 역할 만들기
+IAM 콘솔을 사용하여 새 역할을 만듭니다. 이름을 `WildRydesLambda` 로 지정하고 역할 유형으로 AWS Lambda를 선택하십시오. 함수 권한을 부여하는 정책을 첨부하여 Amazon CloudWatch 로그에 기록하고 항목을 DynamoDB 테이블에 저장해야합니다.
 
-#### Background
-
-Every Lambda function has an IAM role associated with it. This role defines what other AWS services the function is allowed to interact with. For the purposes of this workshop, you'll need to create an IAM role that grants your Lambda function permission to write logs to Amazon CloudWatch Logs and access to write items to your DynamoDB table.
-
-#### High-Level Instructions
-
-Use the IAM console to create a new role. Name it `WildRydesLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
-
-Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to grant the necessary CloudWatch Logs permissions. Also, create a custom inline policy for your role that allows the `ddb:PutItem` action for the table you created in the previous section.
+`AWSLambdaBasicExecutionRole` 라는 관리 정책을 이 역할(role)에 추가해서 필요한 CloudWatch Logs 권한을 부여하십시오. 또한 이전 섹션에서 생성한 테이블에 대한 `ddb:PutItem` 액션을 허용하는 역할을 위한 커스텀 인라인 정책을 생성하십시오.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. From the AWS Management Console, click on **Services** and then select **IAM** in the Security, Identity & Compliance section.
+1. AWS Management Console 에서 **Services** 를 선택한 다음, Security, Identity & Compliance 섹션에서 **IAM** 을 선택하십시오.
 
-1. Select **Roles** in the left navigation bar and then choose **Create new role**.
+1. 왼쪽 네비게이션바에서 **Roles** 을 선택하고 **Create new role** 를 선택하십시오.
 
-1. Select **AWS Lambda** for the role type.
+1. 역할 유형(role type)으로 **AWS Lambda** 를 선택하십시오.
 
-    **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
+    **참고:** 역할 유형(role type)을 선택하면 AWS가 사용자를 대신해서 이 역할을 맡을 수 있도록 역할에 대한 신뢰 정책(trust policy)이 자동으로 생성됩니다. CLI, AWS CloudFormation 또는 다른 메커니즘을 사용해서 이 역할을 작성하는 경우 직접 신뢰 정책(trust policy)을 지정합니다.
 
-1. Begin typing `AWSLambdaBasicExecutionRole` in the **Filter** text box and check the box next to that role.
+1. **Filter** 압력란에 `AWSLambdaBasicExecutionRole` 를 입력하고 해당 역할 옆의 확인란을 선택하십시오.
 
-1. Choose **Next Step**.
+1. **Next Step** 을 선택하십시오.
 
-1. Enter `WildRydesLambda` for the **Role name**.
+1. **Role name** 에 `WildRydesLambda` 를 입력하십시오.
 
-1. Choose **Create role**.
+1. **Create role** 을 선택하십시오.
 
-1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
+1. 역할 페이지의 필터 입력칸에 `WildRydesLambda` 를 입력하고 방금 작성한 역할을 선택하십시오.
 
-1. On the Permissions tab, expand the **Inline Policies** section and choose the **click here** link to create a new inline policy.
+1. Permissions 탭에서 **Inline Policies** 섹션을 확장하고 **click here** 링크를 선택해서 새 인라인 정책을 만드십시오.
 
-   ![Inline policies screenshot](../images/inline-policies.png)
+   ![인라인 정책 스크린샷](../images/inline-policies.png)
 
-1. Ensure **Policy Generator** is selected and choose **Select**.
+1. **Policy Generator** 가 선택되어 있는지 확인하고 **Select** 을 선택하십시오.
 
-1. Select **Amazon DynamoDB** from the **AWS Service** dropdown.
+1. **AWS Service** 드롭다운 메뉴에서 **Amazon DynamoDB** 를 선택하십시오.
 
-1. Select **PutItem** from the Actions list.
+1. Actions 목록에서 **PutItem** 를 선택하십시오.
 
-1. Paste the ARN of the table you created in the previous section in the **Amazon Resource Name (ARN)** field.
+1. 이전 섹션에서 작성한 테이블의 ARN을 **Amazon Resource Name (ARN)** 입력칸에 붙여 넣으십시오.
 
-    ![Policy generator screenshot](../images/policy-generator.png)
+    ![정책 생성기 스크린샷](../images/policy-generator.png)
 
-1. Choose **Add Statement**.
+1. **Add Statement** 를 선택하십시오.
 
-1. Choose **Next Step** then **Apply Policy**.
+1. **Next Step** 울 선택한 다음 **Apply Policy** 를 선택하십시오.
 
 </p></details>
 
-### 3. Create a Lambda Function for Handling Requests
+### 3. 요청 처리를 위한 람다 함수 만들기
+AWS Lambda 콘솔을 사용하여 API 요청을 처리할 `RequestUnicorn` 라는 새로운 람다 함수를 만듭니다. 함수 코드에 제공된 [requestUnicorn.js](requestUnicorn.js) 예제 구현을 사용하십시오. 해당 파일을 복사하여 AWS Lambda 콘솔 편집기에 붙여넣기만 하면 됩니다.
 
-#### Background
-
-AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a unicorn. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
-
-#### High-Level Instructions
-
-Use the AWS Lambda console to create a new Lambda function called `RequestUnicorn` that will process the API requests. Use the provided [requestUnicorn.js](requestUnicorn.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
-
-Make sure to configure your function to use the `WildRydesLambda` IAM role you created in the previous section.
+이전 섹션에서 작성한 `WildRydesLambda` IAM 역할을 사용하도록 함수를 설정해야합니다.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. Choose on **Services** then select **Lambda** in the Compute section.
+1. **Services** 를 선택한 다음 Compute 섹션에서 **Lambda** 를 선택하십시오.
 
-1. Choose **Create a Lambda function**.
+1. **Create a Lambda function** 를 선택하십시오.
 
-1. Choose the **Blank Function** blueprint card.
+1. **Author from scratch** 버튼을 선택하십시오.
 
-1. Don't add any triggers at this time. Choose **Next** to proceed to defining your function.
+1. 트리거를 지금 설정하지 마십시오. **Next** 를 선택하여 함수를 정의하는 부분을 진행합니다.
 
-1. Enter `RequestUnicorn` in the **Name** field.
+1. **Name** 입력칸에 `RequestRide` 를 입력하십시오.
 
-1. Optionally enter a description.
+1. description 입력칸은 옵션입니다.
 
-1. Select **Node.js 6.10** for the **Runtime**.
+1. **Runtime** 에 대해 **Node.js 6.10** 을 선택하십시오.
 
-1. Copy and paste the code from [requestUnicorn.js](requestUnicorn.js) into the code entry area.
+1. [requestUnicorn.js](requestUnicorn.js) 의 코드를 복사하여 코드 입력 영역에 붙여 넣으십시오.
 
-    ![Create Lambda function screenshot](../images/create-lambda-function.png)
+    ![람다 함수 만들기 스크린샷](../images/create-lambda-function.png)
 
-1. Leave the default of `index.handler` for the **Handler** field.
+1. **Handler** 입력칸에 대해 `index.handler` 의 기본값을 그대로 둡니다.
 
-1. Select `WildRydesLambda` from the **Existing Role** dropdown.
+1. **Existing Role** 드롭다운에서 `WildRydesLambda` 를 선택합니다.
 
-1. Choose **Next** and then choose **Create function** on the Review page.
+1. **Next** 을 선택한 다음 리뷰 페이지에서 **Create function** 를 선택하십시오.
 
-    ![Define handler and role screenshot](../images/lambda-handler-and-role.png)
+    ![핸들러와 역할 정의 스크린샷](../images/lambda-handler-and-role.png)
 
 </p></details>
 
-## Implementation Validation
+## 작성한 내용 검증하기
 
-For this module you will test the function that you built using the AWS Lambda console. In the next module you will add a REST API with API Gateway so you can invoke your function from the browser-based application that you deployed in the first module.
+이 모듈에서는 AWS Lambda 콘솔을 사용하여 작성한 함수를 테스트합니다. 다음 모듈에서는 API Gateway 가 있는 REST API를 추가하므로 첫번째 모듈에서 배포한 브라우저 기반 응용 프로그램에서 함수를 호출할 수 있습니다.
 
-1. From the main edit screen for your function, select **Actions** then **Configure test event**.
+1. 작성한 함수의 기본 편집 화면에서, 먼저 **Actions** 를 선택한 다음 **Configure test event** 를 선택하십시오.
 
-    ![Configure test event](../images/configure-test-event.png)
+    ![테스트 이벤트 설정](../images/configure-test-event.png)
 
-1. Copy and paste the following test event into the editor:
+1. 다음 테스트 이벤트를 복사해서 편집기에 붙여넣습니다:
 
     ```JSON
     {
@@ -168,11 +154,11 @@ For this module you will test the function that you built using the AWS Lambda c
     }
     ```
 
-1. Choose **Save and test**.
+1. **Save and test** 를 선택하십시오.
 
-    ![Input test event screenshot](../images/input-test-event.png)
+    ![테스트 이벤트 입력한 스크린샷](../images/input-test-event.png)
 
-1. Verify that the execution succeeded and that the function result looks like the following:
+1. 실행이 성공했고 함수 결과가 다음과 같은지 확인하십시오:
 ```JSON
 {
     "statusCode": 201,
@@ -183,4 +169,4 @@ For this module you will test the function that you built using the AWS Lambda c
 }
 ```
 
-After you have successfully tested your new function using the Lambda console, you can move on to the next module, [RESTful APIs](../4_RESTfulAPIs).
+람다 콘솔을 사용해서 새 함수를 성공적으로 테스트 한 뒤, 다음 모듈인 [RESTful APIs](../4_RESTfulAPIs) 로 넘어가시면 됩니다.

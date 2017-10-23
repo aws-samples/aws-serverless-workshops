@@ -1,52 +1,52 @@
-# 서버리스 데브옵스(DevOps) 워크샵
+# Serverless DevOps Workshop
 
-이 워크샵에서는 RESTful API를 배포하여 사용자로 하여금 Wild Rydes 유니콘 마굿간(Stable)을 관리할 수 있게 합니다. 여러분은 서버리스 어플리케이션 모델([Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model))를 이용하여 API 인터페이스, 비지니스 로직 그리고 데이터베이스를 여러분의 계정에 배포할 것입니다. RESful API는 사용자로 하여금 Wild Rydes 마굿간에 유니콘들을 list, create, view, update 그리고 delete 할 수 있게 합니다.
+In this workshop you'll deploy a RESTful API that enables users to manage the Wild Rydes Unicorn Stable.  You will use the [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model) to deploy the API interfaces, business logic, and database into your AWS account.  The RESTful API will allow a user to list, create, view, update, and delete the unicorns in the Wild Rydes stable.
 
-이 인프라를 구축하기위해 [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon API Gateway](https://aws.amazon.com/api-gateway/), [Amazon DynamoDB] (https://aws.amazon.com/dynamodb/)과 같은 AWS의 서비스를 이용합니다. API는 Lambda and API Gateway를 이용하여 만들고 유니콘 데이터 저장소로는 DynamoDB를 사용합니다.
+The application architecture uses [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon API Gateway](https://aws.amazon.com/api-gateway/), and [Amazon DynamoDB](https://aws.amazon.com/dynamodb/).  The API is built using Lambda and API Gateway, using DynamoDB as a persistent data store for unicorn data.
 
-아래 그림은 API 아키텍쳐입니다.
+See the diagram below for a depiction of the API architecture.
 
 ![Wild Rydes DevOps RESTful API Application Architecture](images/wildrydes-devops-api-architecture.png)
 
-지속적 통합 및 전달(CI/CD) 데브옵스 파이프라인을 구축하기 위해서는 [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), 그리고 [Amazon S3](https://aws.amazon.com/s3/)를 사용합니다. CodePipeline은 코드가 업데이트 됨에 따라 각 스텝별 빌드, 테스트, 그리고 배포를 관리 및 조율합니다. CodeBuild는 소스코드를 컴파일 하고 테스트를 수행하여 배포할 수 있는 패키징된 결과물을 생성합니다.
+The DevOps Continuous Delivery Pipeline uses [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), and [Amazon S3](https://aws.amazon.com/s3/).  CodePipeline orchestrates the steps to build, test, and deploy your code changes.  CodeBuild compiles source code, runs tests, and produces software packages that are ready to deploy to environments.
 
-아래 그림은 모듈4에서 생성할 지속적 통합 및 전달 파이프라인의 개요입니다.
+See the screenshot below for a depiction of the continuous delivery pipeline that you will build at the completion of Module 4.
 
 ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
 
-아래 사전 준비 사항이 이미 갖추어 지셨다면 [CodeStar Project](0_CodeStar)를 클릭하셔서 바로 워크샵을 진행 하실 수 있으십니다.
+If you'd like to jump in and get started please visit the [CodeStar Project](0_CodeStar) module page to begin the workshop.
 
-## 사전 준비 사항
+## Prerequisites
 
-### AWS 계정
+### AWS Account
 
-이 워크샵을 완료하려면 AWS IAM, S3, DynamoDB, Lambda, API Gateway, CodePipeline, CodeBuild resources를 만들 수 있는 액세스 권한이 있는 AWS 계정 및 리전에서 실행하셔야 합니다. 이 워크샵의 코드와 지침은 한번에 한명의 학생에게만 주어진 AWS 계정을 사용한다고 가정합니다. 다른 학생과 계정을 공유하려고 하면, 특정 리소스 이름에 대해서 충돌이 발생합니다. 리소스 이름에 접미어를 사용하거나 고유한 이름을 부여해서 문제를 해결할 순 있지만, 이 지침에는 관련 작업을 수행하는데 필요한 변경 사항에 대한 세부 정보는 나오지 않습니다.
+In order to complete this workshop you'll need an AWS Account with access to create AWS IAM, S3, DynamoDB, Lambda, API Gateway, CodePipeline, and CodeBuild resources. The code and instructions in this workshop assume only one student is using a given AWS account at a time. If you try sharing an account with another student, you'll run into naming conflicts for certain resources. You can work around these by appending a unique suffix to the resources that fail to create due to conflicts, but the instructions do not provide details on the changes required to make this work.
 
-본 모듈을 모두 수행하는데 있어서 계정 생성 후 12개월 미만에 주어지는 AWS 프리 티어의 무료 범위안에서 수행 가능하십니다. [AWS 프리 티어](https://aws.amazon.com/free/) 자세한 내용은 위 링크를 참조 하시기 바랍니다.
+All of the resources you will launch as part of this workshop are eligible for the AWS free tier if your account is less than 12 months old. See the [AWS Free Tier page](https://aws.amazon.com/free/) for more details.
 
-### AWS 커맨드 라인 인터페이스 (Command Line Interface(CLI))
+### AWS Command Line Interface
 
-워크샵의 첫 번째 모듈에서 웹사이트를 S3 버킷으로 복사하는 과정에서 AWS 커맨드 라인 인터페이스 (AWS Command Line Interface (CLI)를 사용합니다. 사용하시는 컴퓨터에 AWS 커맨드 라인 인터페이스가 설치 되어 있지 않으시다면 아래 링크를 클릭하셔서 설치하시기 바랍니다.
+To complete the first module of this workshop you'll need the AWS Command Line Interface (CLI) installed on your local machine. You'll use the CLI to copy objects into your S3 website bucket.
 
-[AWS CLI 시작하기](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) AWS 커맨드 라인 인터페이스 (Command Line Interface(CLI)) 설치 가이드
+Follow the [AWS CLI Getting Started](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html) guide to install and configure the CLI on your machine.
 
-### 웹브라우저
+### Browser
 
-최신 버젼의 Chrome 및 Firefox 사용을 권장 드립니다.
+We recommend you use the latest version of Chrome or Firefox when testing the web application UI.
 
-### 문서 편집기
+### Text Editor
 
-설정 파일을 수정하기 위해서 문서 편집기를 필요합니다.
+You will need a local text editor for making minor updates to configuration files.
 
-## 모듈
+## Modules
 
-본 워크샵은 여러개의 모듈로 구성되어 있습니다. 다름 모듈을 진행하시기 위해서는 이전단계의 모듈이 성공적으로 완료 되어야 합니다.
+This workshop is broken up into multiple modules. You must complete each module before proceeding to the next.
 
-1. [CodeStar 프로젝트(CodeStar Project)](0_CodeStar)
-1. [서버리스 어플리케이션 모델(Serverless Application Model(SAM))](1_ServerlessApplicationModel)
-1. [지속적 통합 및 전달 데브옵스 파이프라인(Continuous Delivery Pipeline)](2_ContinuousDeliveryPipeline)
-1. [AWS X-Ray 연동(AWS X-Ray Integration)](3_XRay)
-1. [다중 환경의 CI/CD 파이프라인(Multiple Environment CI/CD Pipeline)](4_MultipleEnvironments)
+1. [CodeStar Project](0_CodeStar)
+1. [Serverless Application Model (SAM)](1_ServerlessApplicationModel)
+1. [Continuous Delivery Pipeline](2_ContinuousDeliveryPipeline)
+1. [AWS X-Ray Integration](3_XRay)
+1. [Multiple Environment CI/CD Pipeline](4_MultipleEnvironments)
 
 
-!!주의!! 워크샵을 마친 후에 [삭제 가이드](9_CleanUp) 에 따라 생성된 모든 리소스를 삭제 할 수 있습니다.
+After you have completed the workshop you can delete all of the resources that were created by following the [cleanup guide](9_CleanUp).

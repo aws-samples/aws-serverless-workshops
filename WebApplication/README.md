@@ -239,7 +239,8 @@ resources:
 
 Well, that should be all the infrastructure we need for now. We are ready to begin provisioning resources on AWS. So, bring up the command line and ensure you are navigated to root project level. 
 
-<span style="color:red">Two important points though:</span> 
+<br>
+**Two important points before deploying:**
 
 Firstly, dynamodb table names have to be unique per region. If you are using shared accounts, then whomever deploys first should have no issues (unless there is already a table called "Rocks").  
 

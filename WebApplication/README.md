@@ -16,17 +16,17 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 
 ### Serverless Framework Tutorial
-The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. 
+The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. All the magic will be occurring in a yaml file that provides serverless framework with the recipes. So remember to watch carefully for indentation and nesting.
 
 If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
 
 Lets get started!  
 
-Prerequisites (Run the following commands in CLI): 
-1. Install Node (https://nodejs.org/en/) if you have not done so yet. 
-2. "npm install npm@latest -g" - updates to the latest NPM version 
-3. "npm install -g serverless" - installs the serverless utility on your machine so it can be run in anywhere  
-4. Choose a code editor (i.e. Atom, Visual Code etc) and open 3_ServerlessBackend project folder 
+Prerequisites: 
+1. Install latest Node (https://nodejs.org/en/) if you have not done so yet. 
+2. Run "npm install npm@latest -g" in CLI - updates to the latest NPM version 
+3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
+4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/3_ServerlessBackend project folder 
 
 
 Steps:
@@ -87,7 +87,7 @@ functions:
 <br>
 
 Question:  
-If we created a new folder called "src" and put requestRock.js in there. What do you think we will have to update the handler stanza to? 
+If we created a new folder called "src" and put requestRock.js in there. What do you think we will have to update the <b>handler:</b> stanza to? 
 
 <ol type="a">
     <li>src/requestRock.handler</li>
@@ -131,7 +131,7 @@ Looking at the above snippet we need to figure out what to replace the variables
 Starting from the top, we need to decide on what AWS resource type we want to provision. This is determined where we specify the <b>RESOURCE_TYPE</b>. What do you think variable should be? 
 If unsure, your best resource would be the <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html">list of AWS template resource types</a>. Replace it with the appropriate value.
 
-<details><summary><strong>See answer</strong></summary>
+<details><summary><strong>See answer (click to expand)</strong></summary>
 AWS::DynamoDB::Table
 </details>
 <br>
@@ -202,9 +202,6 @@ service: mechrockservice
 provider:
   name: aws
   runtime: nodejs6.10
-  stackTags:
-    Owner: "Serverless Bootcamp"
-
   stage: dev
   region: ap-southeast-2 
 
@@ -328,13 +325,6 @@ After you've created the table, note the ARN for use in the next step.
 1. Scroll to the bottom of the Overview section of your new table and note the **ARN**. You will use this in the next section.
 
 </p></details>
-
-
-<b>Note for shared accounts</b>: If one user creates the cloudformation stack and others attempt to follow suit, then from their experience no new stacks will be created and instead the existing will be updated. This is because serverless checks if another stack with the same name exists first before deciding to create a new one. 
-
-We can remedy this by changing the service name in serverless.yml. However another problem will arise.
-
-
 
 
 ### 2. Create an IAM Role for Your Lambda function

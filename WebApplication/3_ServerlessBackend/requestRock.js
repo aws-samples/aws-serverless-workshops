@@ -6,19 +6,19 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 const fleet = [
     {
-        Name: 'Bucephalus',
-        Color: 'Golden',
-        Gender: 'Male',
+        Name: 'Obsidian',
+        Color: 'Black',
+        Type: 'Igneous',
     },
     {
-        Name: 'Shadowfax',
-        Color: 'White',
-        Gender: 'Male',
+        Name: 'Sandstone',
+        Color: 'Brown',
+        Type: 'Sedimentary',
     },
     {
-        Name: 'Rocinante',
-        Color: 'Yellow',
-        Gender: 'Female',
+        Name: 'Quartzite',
+        Color: 'Red',
+        Type: 'Metamorphic',
     },
 ];
 
@@ -28,8 +28,8 @@ exports.handler = (event, context, callback) => {
       return;
     }
 
-    const rideId = toUrlString(randomBytes(16));
-    console.log('Received event (', rideId, '): ', event);
+    const rockId = toUrlString(randomBytes(16));
+    console.log('Received event (', rockId, '): ', event);
 
     // Because we're using a Cognito User Pools authorizer, all of the claims
     // included in the authentication token are provided in the request context.
@@ -44,9 +44,9 @@ exports.handler = (event, context, callback) => {
 
     const pickupLocation = requestBody.PickupLocation;
 
-    const unicorn = findUnicorn(pickupLocation);
+    const rock = findRock(pickupLocation);
 
-    recordRide(rideId, username, unicorn).then(() => {
+    recordRock(rockId, username, rock).then(() => {
         // You can use the callback function to provide a return value from your Node.js
         // Lambda functions. The first parameter is used for failed invocations. The
         // second parameter specifies the result data of the invocation.
@@ -56,10 +56,10 @@ exports.handler = (event, context, callback) => {
         callback(null, {
             statusCode: 201,
             body: JSON.stringify({
-                RideId: rideId,
-                Unicorn: unicorn,
+                RockId: rockId,
+                Rock: rock,
                 Eta: '30 seconds',
-                Rider: username,
+                Rocker: username,
             }),
             headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -76,21 +76,21 @@ exports.handler = (event, context, callback) => {
     });
 };
 
-// This is where you would implement logic to find the optimal unicorn for
-// this ride (possibly invoking another Lambda function as a microservice.)
-// For simplicity, we'll just pick a unicorn at random.
-function findUnicorn(pickupLocation) {
-    console.log('Finding unicorn for ', pickupLocation.Latitude, ', ', pickupLocation.Longitude);
+// This is where you would implement logic to find the optimal rock for
+// this rock (possibly invoking another Lambda function as a microservice.)
+// For simplicity, we'll just pick a rock at random.
+function findRock(pickupLocation) {
+    console.log('Finding rock for ', pickupLocation.Latitude, ', ', pickupLocation.Longitude);
     return fleet[Math.floor(Math.random() * fleet.length)];
 }
 
-function recordRide(rideId, username, unicorn) {
+function recordRock(rockId, username, rock) {
     return ddb.put({
-        TableName: 'Rides',
+        TableName: 'Rocks',
         Item: {
-            RideId: rideId,
+            RockId: rockId,
             User: username,
-            Unicorn: unicorn,
+            Rock: rock,
             RequestTime: new Date().toISOString(),
         },
     }).promise();

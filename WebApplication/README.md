@@ -134,15 +134,13 @@ AWS::DynamoDB::Table
 </details>
 <br>
 
-Next, lets return to the code in requestRock.js and search for the function called <b>recordRock</b>.
-
-As expected during creation of new DynamoDB tables, we need to define at minimum one main partition/hash key. Read the few lines of code and substitute <b>TABLE_NAME</b> and <b>HASH_FIELD_NAME</b> with the appropriate values. 
+Next, lets return to the code in requestRock.js and search for the function called <b>recordRock</b>. We need to find out the table name and as expected for your standard dynamodb table, we need to define at minimum one main partition/hash key. Read the few lines of code and substitute <b>TABLE_NAME</b> and <b>HASH_FIELD_NAME</b> with the appropriate values. 
 
 <details>
 <summary><strong>See answer (click to expand)</strong></summary>
     <b>TABLE_NAME:</b> Rocks
     <br>
-    <b>HASH_FIELD_NAME:</b> RocksId
+    <b>HASH_FIELD_NAME:</b> RockId
 </details>
 <br>
 
@@ -246,9 +244,13 @@ Firstly, dynamodb table names have to be unique per region. If you are using sha
 
 Lastly, if someone else has already deployed, then any further attempts on your end will result in updating the same stack rather than creating it as expected.  
 
-With that said the best solution is refactoring two things:
-1. Change <b>service:</b> in serverless.yml to something nobody else is using
-2. Change dynamodb table name references in requestRock.js and serverless.yml
+The best steps to avoid these conflicts are:
+1. Change <b>service:</b> in serverless.yml to something not in use
+2. Change dynamodb table name references in requestRock.js and serverless.yml to something not in use 
+
+OR  
+
+1. Specify a different region not used by others
 
 <br>
 

@@ -18,7 +18,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 ### Serverless Framework Tutorial
 The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. 
 
-You may notice that some reference materials are from the official Cloudformation documentation and others from Serverless. That is because for various things, there is a 1:1 overlap in syntax (i.e. specifying <b>resources:</b>).
+You may notice that some reference materials are from the official Cloudformation and others from Serverless. That is because for various things, there is a 1:1 overlap in syntax that Serverless relies on Cloudformation for documentation  (i.e. specifying <b>resources:</b>).  
 
 If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
 
@@ -48,12 +48,11 @@ provider:
   region: ap-southeast-2 
 ```
 
-The above is just the bare bones to get you equipped for everything that is to come. 
-Two stanzas worth noting above are <b>region</b>, <b>runtime</b>. 
+The above is just the bare bones that specifies the project namespace <b>service:</b> and also to have AWS as the provider. Two stanzas worth noting above are <b>region</b>, <b>runtime</b>. 
 
-<b>region</b>: The region in which you want to provision the cloud formation stack. In our example we choose ap-southeast-2 as that is in Sydney which is closer to us. Else, change it to another region that pleases you.  
+<b>region:</b> is The region in which you want to provision the cloud formation stack. In our example we choose ap-southeast-2 as that is in Sydney which is closer to us. Else, change it to another region that pleases you.  
 
-<b>runtime</b>: As we using javascript as our main language here, we should pick nodejs6.10. If we were using java, then we would have specified this value as "java8" instead. Same applies for other supported languages.
+<b>runtime:</b> is our runtime environment. We should pick nodejs6.10 as this will be a NodeJS app.
 
 <br>
 <h4>Lambda</h4>
@@ -62,7 +61,7 @@ Now we can get into the meat and bones of our infrastructure. To start off, we c
 
 Copy and paste the yml snippet below in the serverless.yml file. This is what you need to specify for each new lambda function you intend on creating. The <b>RocksHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just leave it at that.  
 
-You find comprehensive documentation on serverless <a href="https://serverless.com/framework/docs/providers/aws/guide/functions/">functions</a> if you want to know its full capabilities.
+You find comprehensive documentation on serverless <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/">functions</a> if you want to know its full capabilities.
 
 ```YAML
 functions:
@@ -153,7 +152,7 @@ Next, lets return to the code in requestRock.js and search for the function call
 
 We now require an IAM Role that lambda can assume when performing its tasks in order to interact with other AWS services. 
 
-For simplicity sake, we will just specify a default role that will be assumed by all Lambda functions created for our service that has only the bare minimum permissions assigned.
+For simplicity sake, we will just specify a default role that will be assumed by all Lambda functions created for our service that has only the bare minimum permissions assigned. 
 
 We should start by appending the below snippet under the <b>provider</b> section of the serverless.yml file. Since we only need to interact with DynamoDB in our application, theres only one specification that is required. 
 
@@ -184,7 +183,7 @@ PutItem
 
 Lastly, we need to find out which resource we want this policy to apply to. Here, we will need to specify the Arn of the DynamoDB table resource. To achieve this, we should tell Serverless (Cloudformation) to retrieve the Arn of the particular table. 
 
-To achieve that, you need to know the mechanism for retrieving resource attributes. Take a look in <a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a> if unsure and that should give you <b>FUNCTION_NAME</b>.  
+To achieve that, you need to know the mechanism for retrieving resource attributes. Take a look in <a target="_blank"  href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a> if unsure and that should give you <b>FUNCTION_NAME</b>.  
 
 Can you figure out the appropriate value for <b>TABLE_RESOURCE_NAME</b>? A hint would be looking at the <b>Resources:</b> in your existing serverless.yml file.  
 

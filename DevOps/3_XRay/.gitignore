@@ -1,5 +1,5 @@
 output.yaml
-*template-export.json
+*template-export.yml
 *.zip
 node_modules
 site-packages

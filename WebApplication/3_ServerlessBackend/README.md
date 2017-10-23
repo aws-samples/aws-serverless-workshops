@@ -1,8 +1,8 @@
 # Module 3: Serverless Service Backend
 
-In this module you'll use AWS Lambda and Amazon DynamoDB to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a unicorn be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
+In this module you'll use AWS Lambda and Amazon DynamoDB to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a rock be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
 
-You'll implement a Lambda function that will be invoked each time a user requests a unicorn. The function will select a unicorn from the fleet, record the request in a DynamoDB table and then respond to the front-end application with details about the unicorn being dispatched.
+You'll implement a Lambda function that will be invoked each time a user requests a rock. The function will select a rock from the fleet, record the request in a DynamoDB table and then respond to the front-end application with details about the rock being dispatched.
 
 ![Serverless backend architecture](../images/serverless-backend-architecture.png)
 
@@ -24,7 +24,9 @@ If you wish to know more, visit the <a target="_blank" href="https://serverless.
 
 Lets get started!  
 
-Prerequisites: 
+
+### 1. Prerequisites
+
 1. Install latest Node (https://nodejs.org/en/) if you have not done so yet. 
 2. Run "npm install npm@latest -g" in CLI - updates to the latest NPM version 
 3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
@@ -32,7 +34,8 @@ Prerequisites:
 
 
 <br>
-<h4>Setup</h4>
+
+### 2. Choose Cloud Provider
 
 1. Create a yaml file called <b>serverless.yml</b> in root project (3_ServerlessBackend) level
 
@@ -55,7 +58,8 @@ The above is just the bare bones that specifies the project namespace <b>service
 <b>runtime:</b> is our runtime environment. We should pick nodejs6.10 as this will be a NodeJS app.
 
 <br>
-<h4>Lambda</h4>
+
+### 3. Create a Lambda Function for Handling Requests
 
 Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function. 
 
@@ -103,7 +107,7 @@ If we created a new folder called "src" and put requestRock.js in there. What do
 <br>
 
 
-<h4>DynamoDB</h4>
+### 4. Create an Amazon DynamoDB Table
 
 Next, we proceed to specify the stanzas to provision a DynamoDB table. Copy and paste the yaml snippet below into the serverless.yml file.
 
@@ -148,7 +152,7 @@ Next, lets return to the code in requestRock.js and search for the function call
 <br>
 
 
-<h4>Lambda IAM Role</h4>
+### 5. Create an IAM Role for Your Lambda function
 
 We now require an IAM Role that lambda can assume when performing its tasks in order to interact with other AWS services. 
 
@@ -236,7 +240,7 @@ resources:
 </details>
 <br>  
 
-<h4>Deployment</h4>
+### 6. Deploy Your Infrastructure
 
 Well, that should be all the infrastructure we need for now. We are ready to begin provisioning resources on AWS. So, bring up the command line and ensure you are navigated to root project level. 
 
@@ -303,7 +307,7 @@ Verify that the execution succeeded and that the function result looks similar t
 
 ### 1. Create an Amazon DynamoDB Table
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
+Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rocks` and give it a partition key called `RockId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
 
 After you've created the table, note the ARN for use in the next step.
 
@@ -314,9 +318,9 @@ After you've created the table, note the ARN for use in the next step.
 
 1. Choose **Create table**.
 
-1. Enter `Rides` for the **Table name**. This field is case sensitive.
+1. Enter `Rocks` for the **Table name**. This field is case sensitive.
 
-1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
+1. Enter `RockId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
 
 1. Check the **Use default settings** box and choose **Create**.
 
@@ -335,7 +339,7 @@ Every Lambda function has an IAM role associated with it. This role defines what
 
 #### High-Level Instructions
 
-Use the IAM console to create a new role. Name it `WildRydesLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
+Use the IAM console to create a new role. Name it `MechRockLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
 
 Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to grant the necessary CloudWatch Logs permissions. Also, create a custom inline policy for your role that allows the `ddb:PutItem` action for the table you created in the previous section.
 
@@ -354,11 +358,11 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Choose **Next Step**.
 
-1. Enter `WildRydesLambda` for the **Role name**.
+1. Enter `MechRockLambda` for the **Role name**.
 
 1. Choose **Create role**.
 
-1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
+1. Type `MechRockLambda` into the filter box on the Roles page and choose the role you just created.
 
 1. On the Permissions tab, expand the **Inline Policies** section and choose the **click here** link to create a new inline policy.
 
@@ -384,13 +388,13 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 #### Background
 
-AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a unicorn. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
+AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a rock. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
 
 #### High-Level Instructions
 
-Use the AWS Lambda console to create a new Lambda function called `RequestUnicorn` that will process the API requests. Use the provided [requestUnicorn.js](requestUnicorn.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
+Use the AWS Lambda console to create a new Lambda function called `RequestRock` that will process the API requests. Use the provided [requestRock.js](requestRock.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
 
-Make sure to configure your function to use the `WildRydesLambda` IAM role you created in the previous section.
+Make sure to configure your function to use the `MechRockLambda` IAM role you created in the previous section.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -403,19 +407,19 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Don't add any triggers at this time. Choose **Next** to proceed to defining your function.
 
-1. Enter `RequestUnicorn` in the **Name** field.
+1. Enter `RequestRock` in the **Name** field.
 
 1. Optionally enter a description.
 
 1. Select **Node.js 6.10** for the **Runtime**.
 
-1. Copy and paste the code from [requestUnicorn.js](requestUnicorn.js) into the code entry area.
+1. Copy and paste the code from [requestRock.js](requestRock.js) into the code entry area.
 
     ![Create Lambda function screenshot](../images/create-lambda-function.png)
 
 1. Leave the default of `index.handler` for the **Handler** field.
 
-1. Select `WildRydesLambda` from the **Existing Role** dropdown.
+1. Select `MechRockLambda` from the **Existing Role** dropdown.
 
 1. Choose **Next** and then choose **Create function** on the Review page.
 
@@ -433,27 +437,27 @@ For this module you will test the function that you built using the AWS Lambda c
 
 1. Copy and paste the following test event into the editor:
 
-    ```JSON
-    {
-        "path": "/ride",
-        "httpMethod": "POST",
-        "headers": {
-            "Accept": "*/*",
-            "Authorization": "eyJraWQiOiJLTzRVMWZs",
-            "content-type": "application/json; charset=UTF-8"
-        },
-        "queryStringParameters": null,
-        "pathParameters": null,
-        "requestContext": {
-            "authorizer": {
-                "claims": {
-                    "cognito:username": "the_username"
-                }
+```JSON
+{
+    "path": "/rock",
+    "httpMethod": "POST",
+    "headers": {
+        "Accept": "*/*",
+        "Authorization": "eyJraWQiOiJLTzRVMWZs",
+        "content-type": "application/json; charset=UTF-8"
+    },
+    "queryStringParameters": null,
+    "pathParameters": null,
+    "requestContext": {
+        "authorizer": {
+            "claims": {
+                "cognito:username": "the_username"
             }
-        },
-        "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
-    }
-    ```
+        }
+    },
+    "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
+}
+```  
 
 1. Choose **Save and test**.
 
@@ -463,11 +467,11 @@ For this module you will test the function that you built using the AWS Lambda c
 ```JSON
 {
     "statusCode": 201,
-    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Rocinante\",\"Color\":\"Yellow\",\"Gender\":\"Female\"},\"Eta\":\"30 seconds\"}",
+    "body": "{\"RockId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Rock\":{\"Name\":\"Obsidian\",\"Color\":\"Black\",\"Type\":\"Igneous\"},\"Eta\":\"30 seconds\"}",
     "headers": {
         "Access-Control-Allow-Origin": "*"
     }
-}
+} 
 ```
 
 After you have successfully tested your new function using the Lambda console, you can move on to the next module, [RESTful APIs](../4_RESTfulAPIs).

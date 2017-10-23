@@ -4,9 +4,9 @@ phases:
   build:
     commands:
       - cd app && npm install
-      - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.json
+      - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.yml
 
 artifacts:
   type: zip
   files:
-    - template-export.json
+    - template-export.yml

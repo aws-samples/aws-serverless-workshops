@@ -2,13 +2,13 @@
 
 이 워크샵에서는 RESTful API를 배포하여 사용자로 하여금 Wild Rydes 유니콘 마굿간(Stable)을 관리할 수 있게 합니다. 여러분은 서버리스 어플리케이션 모델([Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model))를 이용하여 API 인터페이스, 비지니스 로직 그리고 데이터베이스를 여러분의 계정에 배포할 것입니다. RESful API는 사용자로 하여금 Wild Rydes 마굿간에 유니콘들을 list, create, view, update 그리고 delete 할 수 있게 합니다.
 
-이 인프라를 구축하기위해 [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon API Gateway](https://aws.amazon.com/api-gateway/), [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)과 같은 AWS의 서비스를 이용합니다. API는 Lambda와 API Gateway를 이용하여 만들고 유니콘 데이터 저장소로는 DynamoDB를 사용합니다.
+이 인프라를 구축하기위해 [AWS Lambda](https://aws.amazon.com/lambda/), [Amazon API Gateway](https://aws.amazon.com/api-gateway/), [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)과 같은 AWS의 서비스를 이용합니다. API는 Lambda and API Gateway를 이용하여 만들고 유니콘 데이터 저장소로는 DynamoDB를 사용합니다.
 
 아래 그림은 API 아키텍쳐입니다.
 
 ![Wild Rydes DevOps RESTful API Application Architecture](images/wildrydes-devops-api-architecture.png)
 
-지속적 통합 및 전달(CI/CD) 데브옵스 파이프라인을 구축하기 위해서는 [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), [Amazon S3](https://aws.amazon.com/s3/)를 사용합니다. CodePipeline은 소스 코드가 업데이트 됨에 따라 각 스텝별 빌드, 테스트, 그리고 배포를 관리 및 조율합니다. CodeBuild는 소스 코드를 컴파일 하고 테스트를 수행하여 배포할 수 있는 패키징된 결과물을 생성합니다.
+지속적 통합 및 전달(CI/CD) 데브옵스 파이프라인을 구축하기 위해서는 [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), 그리고 [Amazon S3](https://aws.amazon.com/s3/)를 사용합니다. CodePipeline은 코드가 업데이트 됨에 따라 각 스텝별 빌드, 테스트, 그리고 배포를 관리 및 조율합니다. CodeBuild는 소스코드를 컴파일 하고 테스트를 수행하여 배포할 수 있는 패키징된 결과물을 생성합니다.
 
 아래 그림은 모듈4에서 생성할 지속적 통합 및 전달 파이프라인의 개요입니다.
 

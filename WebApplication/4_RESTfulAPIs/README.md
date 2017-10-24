@@ -44,6 +44,7 @@ What you need to do now is specify a lambda-proxy integration that is contactabl
 
 <h4>Enable CORS</h4>
 Modern web browsers prevent HTTP requests from scripts on pages hosted on one domain to APIs hosted on another domain unless the API provides cross-origin resource sharing (CORS) response headers that explicitly allow them.  For this reason, we need to tell serverless to enable the cors option as well.  
+<br>
 
 Once you have filled in the missing fields, your yaml file should look quite similar to the below snippet.  
 
@@ -64,14 +65,24 @@ functions:
 </details>  
 
 Go ahead and run "serverless deploy" in the CLI. That should provision a new API gateway resource and serverless should in turn print out the endpoint url. However attempting to POST to that url will result in a message returned "Authorization not configured". That brings us to the final step.     
+
 <br>
 ### 3. Create a Cognito User Pools Authorizer
 
-Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In the next step you'll configure an authorizer for your API to use the user pool you created in module 2.  
+Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In this step you'll configure an authorizer for your API to use the user pool you created in module 2.  
 
-What we need to do now is set the Cognito User Pool we created in module 2 as an authorizer to our <b>RidesHandler</b> lambda function. For that, we should go into the console and retrieve the Arn of the user pool.  
+What we need to do now is set the Cognito User Pool we created in module 2 as an authorizer to our <b>RidesHandler</b> lambda function. Below is a snippet that shows us how the <b>authorizer</b> stanza is written. You will need to find out what goes in it.  
 
-You can see various examples of attaching a Cognito User Pool authorizer to your API <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoints-with-custom-authorizers">here</a>.  What is required can be found in the section "You can also configure an existing Cognito User Pool as the authorizer, as shown in the following example:".  
+```YAML
+functions:
+    RidesHandler:
+        handler: requestUnicorn.handler
+        events:
+            ...
+        authorizer: ?
+```  
+
+The best resources on setting this up can be found in the <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoints-with-custom-authorizers">http endpoint with custom authorizer documentation</a>, in our case its under the section: <i>"You can also configure an existing Cognito User Pool as the authorizer, as shown in the following example:"</i>.  
 
 <details><summary><strong>The handler function yaml should look similar to: (click to expand)</strong></summary>
 

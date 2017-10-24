@@ -28,7 +28,9 @@ Lets get started!
 
 ### 2. Create a Lambda Function for Handling Requests
 
-Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function. Copy and paste the yml snippet below in the existing serverless.yml file. 
+Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function.  
+
+Copy and paste the yml snippet below in the existing serverless.yml file. 
 
 ```YAML
 functions:
@@ -36,7 +38,9 @@ functions:
         handler: ?
 ```  
 
-This is what you need to specify for each new lambda function you intend on creating. The <b>RidesHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just call it that.    
+This is the bare minimum of what you need for now. In more complex scenarios, you may want to know more about the configuration variables available to you when creating a new function. You will find that knowledge in the <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/">serverless functions documentation</a>.  
+
+The <b>RidesHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just call it that.  
 
 What we need to do here is figure out that should be substituted in place of the question mark. To start off, there should be a requestUnicorn.js file in your project. Open it, navigate to line 25 and take note the name of the function.  
 

@@ -4,6 +4,49 @@ This page provides instructions for cleaning up the resources created during the
 
 ## Resource Cleanup Instructions
 
+### 1. Modules 3-4 Cleanup
+Run "<b>serverless remove</b>" in the CLI in the root directory of module 4 only as it was technically just an extension of everything created in module 3. That should remove all provisioned resources.  
+
+If you want to be absolutely certain, then log into the console and view the Cloudformation service. You should see that the stack no longer exists. Also check API Gateway, S3 and Lambda in the console.  
+
+### 2. Module 2 Cleanup
+If you used the provided AWS CloudFormation template to complete module 2, simply delete the stack using the AWS CloudFormation Console. Otherwise, delete the Amazon Cognito user pool you created in module 2.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. From the AWS Console click **Services** then select **Cognito** under Mobile Services.
+
+1. Choose **Manage your User Pools**.
+
+1. Select the **WildRydes** user pool you created in module 2.
+
+1. Choose **Delete Pool** in the upper right corner of the page.
+
+1. Type `delete` and choose **Delete Pool** when prompted to confirm.
+
+</p></details>
+
+### 3. Module 1 Cleanup
+If you used the provided AWS CloudFormation template to complete module 1, simply delete the stack using the AWS CloudFormation Console. Otherwise, delete the Amazon S3 bucket you created in module 1.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console choose **Services** then select **S3** under Storage.
+
+1. Select the bucket you created in module 1.
+
+1. Choose **Delete bucket**.
+
+1. Enter the name of your bucket when prompted to confirm, Then choose confirm.
+
+</p></details>
+
+
+<details>
+<summary><strong>Manual steps (expand for details)</strong></summary><p>
+
 ### 1. Module 4 Cleanup
 Delete the REST API created in module 4. There is a **Delete API** option in the **Actions** drop-down when you select your API in the Amazon API Gateway Console.
 
@@ -119,3 +162,5 @@ AWS Lambda automatically creates a new log group per function in Amazon CloudWat
 1. If you launched any CloudFormation templates to complete a module, repeat steps 3-5 for any log groups which begin with `/aws/lambda/wildrydes-webapp`.
 
 </p></details>
+
+</details>

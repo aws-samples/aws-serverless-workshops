@@ -10,6 +10,92 @@ The static website you deployed in the first module already has a page configure
 
 This module will focus on the steps required to build the cloud components of the API, but if you're interested in how the browser code works that calls this API, you can inspect the [ride.js](../1_StaticWebHosting/website/js/ride.js) file of the website. In this case the application uses jQuery's [ajax()](https://api.jquery.com/jQuery.ajax/) method to make the remote request.
 
+
+## Implementation Instructions
+
+The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. 
+
+You may notice that some reference materials are from the official Cloudformation and others from Serverless. That is because for various things, there is a 1:1 overlap in syntax that Serverless relies on Cloudformation for documentation  (i.e. specifying <b>resources:</b>).  
+
+If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
+
+### 1. Prerequisites
+
+1. Install latest Node (https://nodejs.org/en/) if you have not done so yet. 
+2. Run "npm install npm@latest -g" in CLI - updates to the latest NPM version 
+3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
+4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/4_RESTfulAPIs project folder 
+
+### 2. Create a New REST API
+
+As before, there is a serverless yml file that is readily available for use. Otherwise, you can replace its contents with the one you have been working with in the past modules.
+
+Its time to expose our Lambda function in the form of a Restful API with a proper endpoint. To help you get started, you should copy and paste the <b>events</b> stanza in the serverless.yml file so it looks similar to below. 
+
+```YAML
+functions:
+    RidesHandler:
+        handler: requestUnicorn.handler
+        events:
+            - ? 
+``` 
+
+What you need to do now is specify a lambda-proxy integration that is contactable via a "post" to the endpoint "ride". The serverless <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/apigateway/">API Gateway documentation</a> should provide you more information on different ways you can achieve this.   
+
+<h4>Enable CORS</h4>
+Modern web browsers prevent HTTP requests from scripts on pages hosted on one domain to APIs hosted on another domain unless the API provides cross-origin resource sharing (CORS) response headers that explicitly allow them.  For this reason, we need to tell serverless to enable the cors option as well.  
+
+Once you have filled in the missing fields, your yaml file should look quite similar to the below snippet.  
+
+<details>
+<summary><strong>See answers (expand for details)</strong></summary>
+
+```YAML
+functions:
+    RidesHandler:
+        handler: requestUnicorn.handler
+        events:
+            - http:
+                path: ride
+                method: post
+                cors: true
+``` 
+
+</details>  
+
+Go ahead and run "serverless deploy" in the CLI. That should provision a new API gateway resource and serverless should in turn print out the endpoint url. However attempting to POST to that url will result in a message returned "Authorization not configured". That brings us to the final step.     
+<br>
+### 3. Create a Cognito User Pools Authorizer
+
+Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In the next step you'll configure an authorizer for your API to use the user pool you created in module 2.  
+
+What we need to do now is set the Cognito User Pool we created in module 2 as an authorizer to our <b>RidesHandler</b> lambda function. For that, we should go into the console and retrieve the Arn of the user pool.  
+
+You can see various examples of attaching a Cognito User Pool authorizer to your API <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoints-with-custom-authorizers">here</a>.  What is required can be found in the section "You can also configure an existing Cognito User Pool as the authorizer, as shown in the following example:".  
+
+<details><summary><strong>The handler function yaml should look similar to: (click to expand)</strong></summary>
+
+```YAML
+functions:
+  RidesHandler:
+    handler: requestUnicorn.handler
+    events:
+      - http: 
+          integration: lambda-proxy
+          path: rocks        
+          method: post
+          cors: true
+          authorizer:
+            name: request-ride-auth
+            arn: arn:aws:cognito-idp:ap-southeast-2:XXXXXXXXX:userpool/ap-southeast-2_XXXXXXXXX
+```
+
+</details>
+  
+
+<details>
+<summary><strong>Manual steps (expand for details)</strong></summary>
+
 ## Implementation Instructions
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
@@ -218,3 +304,5 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 Congratulations, you have completed the Wild Rydes Web Application Workshop! Check out our [other workshops](../../README.md#workshops) covering additional serverless use cases.
 
 See this workshop's [cleanup guide](../9_CleanUp) for instructions on how to delete the resources you've created.
+
+</details>

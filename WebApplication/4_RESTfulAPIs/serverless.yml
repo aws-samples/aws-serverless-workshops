@@ -1,0 +1,36 @@
+service: unicornservice
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: ap-southeast-2 
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:PutItem"
+      Resource: 
+        "Fn::GetAtt": [RidesTable, Arn]
+       
+functions:
+  RidesHandler:
+    handler: requestUnicorn.handler
+
+resources:
+  Resources:
+    RidesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Rides
+        AttributeDefinitions:
+          -
+            AttributeName: RideId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: RideId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

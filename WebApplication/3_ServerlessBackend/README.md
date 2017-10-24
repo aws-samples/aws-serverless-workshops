@@ -1,81 +1,46 @@
 # Module 3: Serverless Service Backend
 
-In this module you'll use AWS Lambda and Amazon DynamoDB to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a rock be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
+In this module you'll use AWS Lambda and Amazon DynamoDB to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a unicorn be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
 
-You'll implement a Lambda function that will be invoked each time a user requests a rock. The function will select a rock from the fleet, record the request in a DynamoDB table and then respond to the front-end application with details about the rock being dispatched.
+You'll implement a Lambda function that will be invoked each time a user requests a unicorn. The function will select a unicorn from the fleet, record the request in a DynamoDB table and then respond to the front-end application with details about the unicorn being dispatched.
 
 ![Serverless backend architecture](../images/serverless-backend-architecture.png)
 
 The function is invoked from the browser using Amazon API Gateway. You'll implement that connection in the next module. For this module you'll just test your function in isolation.
 
+
 ## Implementation Instructions
-
-Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
-
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
-
-
-### Serverless Framework Tutorial
 The primary focus here is learning how to use the serverless framework to provision the necessary services for our backend application. 
 
 You may notice that some reference materials are from the official Cloudformation and others from Serverless. That is because for various things, there is a 1:1 overlap in syntax that Serverless relies on Cloudformation for documentation  (i.e. specifying <b>resources:</b>).  
 
 If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
-
 Lets get started!  
-
 
 ### 1. Prerequisites
 
 1. Install latest Node (https://nodejs.org/en/) if you have not done so yet. 
 2. Run "npm install npm@latest -g" in CLI - updates to the latest NPM version 
 3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
-4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/3_ServerlessBackend project folder 
-
-
-<br>
-
-### 2. Choose Cloud Provider
-
-1. Create a yaml file called <b>serverless.yml</b> in root project (3_ServerlessBackend) level
-
-2. Copy and paste the lines below into the yml file.
-
-```YAML
-service: rockservice
-
-provider:
-  name: aws
-  runtime: nodejs6.10
-  stage: dev
-  region: ap-southeast-2 
-```
-
-The above is just the bare bones that specifies the project namespace <b>service:</b> and also to have AWS as the provider. Two stanzas worth noting above are <b>region</b>, <b>runtime</b>. 
-
-<b>region:</b> is The region in which you want to provision the cloud formation stack. In our example we choose ap-southeast-2 as that is in Sydney which is closer to us. Else, change it to another region that pleases you.  
-
-<b>runtime:</b> is our runtime environment. We should pick nodejs6.10 as this will be a NodeJS app.
+4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/3_ServerlessBackend project folder  
 
 <br>
 
-### 3. Create a Lambda Function for Handling Requests
+### 2. Create a Lambda Function for Handling Requests
 
-Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function. 
-
-Copy and paste the yml snippet below in the serverless.yml file. This is what you need to specify for each new lambda function you intend on creating. The <b>RocksHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just leave it at that.  
-
-You find comprehensive documentation on serverless <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/">functions</a> if you want to know its full capabilities.
+Now we can get into the meat and bones of our infrastructure. To start off, we can specify the stanzas to provision our lambda function. Copy and paste the yml snippet below in the existing serverless.yml file. 
 
 ```YAML
 functions:
-    RocksHandler:
+    RidesHandler:
         handler: ?
 ```  
 
-What we need to do here is figure out that should be substituted in place of the question mark. To start off, there should be a requestRock.js file in your project. Open it, navigate to line 25 and take note the name of the function.  
+This is what you need to specify for each new lambda function you intend on creating. The <b>RidesHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just call it that.    
 
-Replace the "?" with something that resembles {file_path}.{function_name}, excluding the curly brackets.  
+What we need to do here is figure out that should be substituted in place of the question mark. To start off, there should be a requestUnicorn.js file in your project. Open it, navigate to line 25 and take note the name of the function.  
+
+Replace the "?" with something that resembles {file_name}.{function_name}, excluding the curly brackets.  
 
 If you figured it out correctly, we should end up with something looking like below.
 
@@ -84,20 +49,20 @@ If you figured it out correctly, we should end up with something looking like be
 
 ```YAML
 functions:
-    RocksHandler:
-        handler: requestRock.handler
+    RidesHandler:
+        handler: requestUnicorn.handler
 ```
 
 </details>
 <br>
 
 Question:  
-If we created a new folder called "src" and put requestRock.js in there. What do you think we will have to update the <b>handler:</b> stanza to? 
+If we created a new folder called "src" and put requestUnicorn.js in there. What do you think we will have to update the <b>handler:</b> stanza to? 
 
 <ol type="a">
-    <li>src/requestRock.handler</li>
-    <li>../src/requestRock.handler</li> 
-    <li>src.requestRock.handler</li>
+    <li>src/requestUnicorn.handler</li>
+    <li>../src/requestUnicorn.handler</li> 
+    <li>src.requestUnicorn.handler</li>
 </ol>
 
 <details>
@@ -107,28 +72,26 @@ If we created a new folder called "src" and put requestRock.js in there. What do
 <br>
 
 
-### 4. Create an Amazon DynamoDB Table
+### 3. Create an Amazon DynamoDB Table
 
-Next, we proceed to specify the stanzas to provision a DynamoDB table. Copy and paste the yaml snippet below into the serverless.yml file.
+Next, we proceed to specify the stanzas to provision a DynamoDB table. Copy and paste the yaml snippet below into the serverless.yml file under the existing <b>Resources</b> section.  
 
 ```YAML
-resources:
-  Resources:
-    RocksTable:
-      Type: {RESOURCE_TYPE}
-      Properties:
-        TableName: {TABLE_NAME}
-        AttributeDefinitions:
-          -
-            AttributeName: {HASH_FIELD_NAME}
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: {HASH_FIELD_NAME}
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+RidesTable:
+    Type: {RESOURCE_TYPE}
+    Properties:
+    TableName: {TABLE_NAME}
+    AttributeDefinitions:
+        -
+        AttributeName: {HASH_FIELD_NAME}
+        AttributeType: S
+    KeySchema:
+        -
+        AttributeName: {HASH_FIELD_NAME}
+        KeyType: HASH
+    ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
 ```  
 
 Looking at the above snippet we need to figure out what to replace the variables in curly braces with.  
@@ -141,18 +104,18 @@ Your best resource for that information is the <a target="_blank" href="https://
 </details>
 <br>
 
-Next, lets return to the code in requestRock.js and search for the function called <b>recordRock</b>. We need to find out the table name and as expected for your standard dynamodb table, we need to define at minimum one main partition/hash key. Read the few lines of code and substitute <b>TABLE_NAME</b> and <b>HASH_FIELD_NAME</b> with the appropriate values. 
+Next, lets return to the code in requestUnicorn.js and search for the function called <b>recordUnicorn</b>. We need to find out the table name and as expected for your standard dynamodb table, we need to define at minimum one main partition/hash key. Read the few lines of code and substitute <b>TABLE_NAME</b> and <b>HASH_FIELD_NAME</b> with the appropriate values. 
 
 <details>
 <summary><strong>See answer (click to expand)</strong></summary>
-    <b>TABLE_NAME:</b> Rocks
+    <b>TABLE_NAME:</b> Rides
     <br>
-    <b>HASH_FIELD_NAME:</b> RockId
+    <b>HASH_FIELD_NAME:</b> RideId
 </details>
 <br>
 
 
-### 5. Create an IAM Role for Your Lambda function
+### 4. Create an IAM Role for Your Lambda function
 
 We now require an IAM Role that lambda can assume when performing its tasks in order to interact with other AWS services. 
 
@@ -193,14 +156,14 @@ Can you figure out the appropriate value for <b>TABLE_RESOURCE_NAME</b>? A hint 
 
 
 <details><summary><strong>See answer (click to expand)</strong></summary>
-"Fn::GetAtt": [RocksTable, Arn]
+"Fn::GetAtt": [RidesTable, Arn]
 </details>
 <br> 
 
 <details><summary><strong>In summary, the serverless yml should look similiar to following snippet (click to expand)</strong></summary>
 
 ```YAML
-service: mechrockservice
+service: unicornservice
 
 provider:
   name: aws
@@ -213,25 +176,25 @@ provider:
       Action:
         - "dynamodb:PutItem"
       Resource: 
-        "Fn::GetAtt": [RocksTable, Arn]
+        "Fn::GetAtt": [RidesTable, Arn]
        
 functions:
-  RequestRock:
-    handler: requestRock.handler
+  RidesHandler:
+    handler: requestUnicorn.handler
 
 resources:
   Resources:
-    RocksTable:
+    RidesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: Rocks
+        TableName: Rides
         AttributeDefinitions:
           -
-            AttributeName: RockId
+            AttributeName: RideId
             AttributeType: S
         KeySchema:
           -
-            AttributeName: RockId
+            AttributeName: RideId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
@@ -240,36 +203,19 @@ resources:
 </details>
 <br>  
 
-### 6. Deploy Your Infrastructure
+### 5. Deploy Your Infrastructure
 
 Well, that should be all the infrastructure we need for now. We are ready to begin provisioning resources on AWS. So, bring up the command line and ensure you are navigated to root project level. 
 
-<br>
-**Two important points before deploying:**
-
-Firstly, dynamodb table names have to be unique per region. If you are using shared accounts, then whomever deploys first should have no issues (unless there is already a table called "Rocks"). Others will ultimately run into a duplicate table name problem.  
-
-Lastly, if someone else has already deployed, then any further attempts on your end will result in updating the same stack instead of creating it as the names are conflicting.  
-
-The best steps to avoid these conflicts are:
-- Change <b>service:</b> in serverless.yml to something not in use
-- Change dynamodb table name references in requestRock.js and serverless.yml to something not in use 
-
-OR  
-
-- Specify a different region not used by others
-
-<br>
-
 Execute the command "serverless deploy" and watch the logs.  
 
-If the deployment ran successfully, login to AWS and navigate to Cloudformation service and confirm that there is a new stack called "mechrockservice-dev". This name is formed as a combination of the <b>service name</b> and <b>stage</b>.
+If the deployment ran successfully, login to AWS and navigate to Cloudformation service and confirm that there is a new stack called "unicornservice-dev". This name is formed as a combination of the <b>service name</b> and <b>stage</b>.
 
 Now, we should quickly verify that our Lambda will run as expected. Go into Lambda AWS console and configure and run a new test event with the following body: 
 
 ```JSON
 {
-    "path": "/rock",
+    "path": "/unicorn",
     "httpMethod": "POST",
     "headers": {
         "Accept": "*/*",
@@ -294,7 +240,7 @@ Verify that the execution succeeded and that the function result looks similar t
 ```JSON
 {
     "statusCode": 201,
-    "body": "{\"RockId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Rock\":{\"Name\":\"Obsidian\",\"Color\":\"Black\",\"Type\":\"Igneous\"},\"Eta\":\"30 seconds\"}",
+    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Obsidian\",\"Color\":\"Black\",\"Type\":\"Igneous\"},\"Eta\":\"30 seconds\"}",
     "headers": {
         "Access-Control-Allow-Origin": "*"
     }
@@ -305,9 +251,15 @@ Verify that the execution succeeded and that the function result looks similar t
 <details>
 <summary><strong>See manual steps (click to expand)</strong></summary>
 
+## Implementation Instructions
+
+Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+
+If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+
 ### 1. Create an Amazon DynamoDB Table
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rocks` and give it a partition key called `RockId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
+Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
 
 After you've created the table, note the ARN for use in the next step.
 
@@ -318,9 +270,9 @@ After you've created the table, note the ARN for use in the next step.
 
 1. Choose **Create table**.
 
-1. Enter `Rocks` for the **Table name**. This field is case sensitive.
+1. Enter `Rides` for the **Table name**. This field is case sensitive.
 
-1. Enter `RockId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
+1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
 
 1. Check the **Use default settings** box and choose **Create**.
 
@@ -339,7 +291,7 @@ Every Lambda function has an IAM role associated with it. This role defines what
 
 #### High-Level Instructions
 
-Use the IAM console to create a new role. Name it `MechRockLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
+Use the IAM console to create a new role. Name it `WildRydesLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
 
 Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to grant the necessary CloudWatch Logs permissions. Also, create a custom inline policy for your role that allows the `ddb:PutItem` action for the table you created in the previous section.
 
@@ -358,11 +310,11 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Choose **Next Step**.
 
-1. Enter `MechRockLambda` for the **Role name**.
+1. Enter `WildRydesLambda` for the **Role name**.
 
 1. Choose **Create role**.
 
-1. Type `MechRockLambda` into the filter box on the Roles page and choose the role you just created.
+1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
 
 1. On the Permissions tab, expand the **Inline Policies** section and choose the **click here** link to create a new inline policy.
 
@@ -388,13 +340,13 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 #### Background
 
-AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a rock. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
+AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a unicorn. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
 
 #### High-Level Instructions
 
-Use the AWS Lambda console to create a new Lambda function called `RequestRock` that will process the API requests. Use the provided [requestRock.js](requestRock.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
+Use the AWS Lambda console to create a new Lambda function called `RequestUnicorn` that will process the API requests. Use the provided [requestUnicorn.js](requestUnicorn.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
 
-Make sure to configure your function to use the `MechRockLambda` IAM role you created in the previous section.
+Make sure to configure your function to use the `WildRydesLambda` IAM role you created in the previous section.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -407,19 +359,19 @@ Make sure to configure your function to use the `MechRockLambda` IAM role you cr
 
 1. Don't add any triggers at this time. Choose **Next** to proceed to defining your function.
 
-1. Enter `RequestRock` in the **Name** field.
+1. Enter `RequestUnicorn` in the **Name** field.
 
 1. Optionally enter a description.
 
 1. Select **Node.js 6.10** for the **Runtime**.
 
-1. Copy and paste the code from [requestRock.js](requestRock.js) into the code entry area.
+1. Copy and paste the code from [requestUnicorn.js](requestUnicorn.js) into the code entry area.
 
     ![Create Lambda function screenshot](../images/create-lambda-function.png)
 
 1. Leave the default of `index.handler` for the **Handler** field.
 
-1. Select `MechRockLambda` from the **Existing Role** dropdown.
+1. Select `WildRydesLambda` from the **Existing Role** dropdown.
 
 1. Choose **Next** and then choose **Create function** on the Review page.
 
@@ -437,27 +389,27 @@ For this module you will test the function that you built using the AWS Lambda c
 
 1. Copy and paste the following test event into the editor:
 
-```JSON
-{
-    "path": "/rock",
-    "httpMethod": "POST",
-    "headers": {
-        "Accept": "*/*",
-        "Authorization": "eyJraWQiOiJLTzRVMWZs",
-        "content-type": "application/json; charset=UTF-8"
-    },
-    "queryStringParameters": null,
-    "pathParameters": null,
-    "requestContext": {
-        "authorizer": {
-            "claims": {
-                "cognito:username": "the_username"
+    ```JSON
+    {
+        "path": "/ride",
+        "httpMethod": "POST",
+        "headers": {
+            "Accept": "*/*",
+            "Authorization": "eyJraWQiOiJLTzRVMWZs",
+            "content-type": "application/json; charset=UTF-8"
+        },
+        "queryStringParameters": null,
+        "pathParameters": null,
+        "requestContext": {
+            "authorizer": {
+                "claims": {
+                    "cognito:username": "the_username"
+                }
             }
-        }
-    },
-    "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
-}
-```  
+        },
+        "body": "{\"PickupLocation\":{\"Latitude\":47.6174755835663,\"Longitude\":-122.28837066650185}}"
+    }
+    ```
 
 1. Choose **Save and test**.
 
@@ -467,11 +419,11 @@ For this module you will test the function that you built using the AWS Lambda c
 ```JSON
 {
     "statusCode": 201,
-    "body": "{\"RockId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Rock\":{\"Name\":\"Obsidian\",\"Color\":\"Black\",\"Type\":\"Igneous\"},\"Eta\":\"30 seconds\"}",
+    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Rocinante\",\"Color\":\"Yellow\",\"Gender\":\"Female\"},\"Eta\":\"30 seconds\"}",
     "headers": {
         "Access-Control-Allow-Origin": "*"
     }
-} 
+}
 ```
 
 After you have successfully tested your new function using the Lambda console, you can move on to the next module, [RESTful APIs](../4_RESTfulAPIs).

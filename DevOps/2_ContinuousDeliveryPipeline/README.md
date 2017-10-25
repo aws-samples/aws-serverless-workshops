@@ -93,9 +93,9 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 
 1. **Timeout**는 `10` 입니다.
 
-1. **Event** 타입은 `Api` 이며 `/unicorns/{name}` **Path** 와 연동 `delete` **Method**
+1. **Event** 타입은 `Api` 이며 **Path**를 `/unicorns/{name}` 와 연동하여 주시기 바랍니다. 그리고 **Method**는 `delete` 입니다.
 
-1. **Environment** 변수 이름은 `TABLE_NAME` 값으로는 `Table` Resource 참조값
+1. **Environment** 변수 이름은 `TABLE_NAME` 값으로는 `Table` 자원의 참조 주소를 입력하여 주시기 바랍니다.
 
 1. **Role**은 다른 함수와 같이 사용합니다.
 

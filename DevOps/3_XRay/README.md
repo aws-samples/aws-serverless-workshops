@@ -72,7 +72,7 @@ const tableName = process.env.TABLE_NAME;
 
     ![Attach Policy](images/role-3.png)
  
-1. 역할 요약 페이지에서 이제 **AWSXRayWriteOnlyAccess** 정책이 **Managed Policies** 리스트에 추가가 되어 있는 것을 확인하실수 있습니다.
+1. 역할 요약 페이지에서 **Managed Policies** 리스트에 **AWSXRayWriteOnlyAccess** 정책이 추가가 되어 있는 것을 확인 하실 수 있습니다.
 
     ![Policy Attached](images/role-4.png)
 

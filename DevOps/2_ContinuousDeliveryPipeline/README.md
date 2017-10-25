@@ -134,15 +134,15 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 
 1. 깃 클라이언트를 이용하여 로컬 변경 사항을 깃에 저장 하시고 커밋을 하시기 바랍니다. 예를 들면:
 
-    ```
-    %> git add .
-    %> git commit -m "Add delete function"
+    ```bash
+    git add .
+    git commit -m "Add delete function"
     ```
 
 1. 깃 클라이언트를 이용해서 업데이트 사항을 origin에 푸쉬 하시기 바랍니다. 예를 들면:
 
-    ```
-    %> git push origin
+    ```bash
+    git push origin
     ```
 
 ### 5. CodePipeline 유니콘 API 배포 검증
@@ -162,7 +162,7 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 1. 각 단계의 창의 색갈은 실행중일때 파란색으로 바뀌고 완료가 되면 녹색으로 바뀝니다. 모든 단계를 성공적으로 마쳤다면 파이프 라인은 아래 화면과 같은 결과를 나타내야 합니다.
 
     ![CodeStar Dashboard 2](images/codestar-3.png)
-    
+
 ### 6. Delete API Method 테스트
 
 1. AWS Management 콘솔에서 **Services**를 선택한 다음 Application Services 섹션에서 **API Gateway**를 선택하십시오.

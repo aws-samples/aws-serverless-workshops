@@ -136,19 +136,19 @@ CodeStar는 AWS 자원 접근을 제어하는 IAM 역활과 정책을 생성합�
 1. 왼쪽 네비게이션바에서 **Roles** 을 선택하고 **Filter** 입력란에 `CodeStarWorker-uni-api-CloudFormation`를 입력하고 해당 역할 옆의 확인란을 선택하십시오.
 
     ![Select Role](images/role1-1.png)
- 
+
 1. 역할 요약 페이지에서 **Permissions** 탭에서 **Managed Policies** 영역의 **Attach Policy** 버튼을 클릭하십시오.
 
     ![Role Details](images/role1-2.png)
- 
+
 1. **Filter** 입력 란에 `AWSLambdaReadOnlyAccess`을 입력한뒤 **AWSLambdaReadOnlyAccess**의 좌측 체크 박스를 선택하고 **Attach Policy** 버튼을 클릭하십시오.
 
     ![Attach Policy](images/role1-3.png)
- 
+
 1. 역할 요약 페이지에서 **Managed Policies** 리스트에 **AWSLambdaReadOnlyAccess** 정책이 추가가 되어 있는 것을 확인 하실 수 있습니다.
 
     ![Policy Attached](images/role1-4.png)
-    
+
 ### 2. `uni-api` CodeCommit 깃 저장소 시작 하기
 
 1. 각각의 모듈은 해당 워크숍 진행에 필요한 소스 코드와 CodeStar 및 CodeCommit 깃 저장소와 연동이 되어 있습니다. 깃 저장소를 시작하기 위해서는 여러분이 선택하신 리전의 **Launch Stack** 버튼을 클릭 하여 주시기 바랍니다.
@@ -389,7 +389,7 @@ CloudFormation의 배포 명령어가 완료가 되면 AWS API Gateway를 이용
 
 1. 웹 브라우저 JSON 결과 중 `Shadowfox`의 "breed" 와 "description" 항목이 이전 모듈에서 작성한 바와 같이 출력이 되는 지를 확인 하시기 바랍니다.
 
-> Note: CodeStar 프로젝트 You may notice that your CodeStar project shows the Build stage has failed in the project pipeline.  That's to be expected, and will be corrected in the next module.
+> 중요!: CodeStar 프로젝트 중 빌드 단계가 실패하신 것을 확인 하실 수 있으실 것입니다. 이는 알고 있는 문제로써 다음 모듈에서 해당 버그를 수정 할 것입니다.
 
 ## 완료
 

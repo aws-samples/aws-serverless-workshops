@@ -63,15 +63,15 @@ const tableName = process.env.TABLE_NAME;
 1. 왼쪽 네비게이션바에서 **Roles** 을 선택하고 **Filter** 입력란에 `CodeStarWorker-uni-api-Lambda`를 입력하고 해당 역할 옆의 확인란을 선택하십시오.
 
     ![Select Role](images/role-1.png)
- 
+
 1. 역할 요약 페이지에서 **Permissions** 탭에서 **Managed Policies** 영역의 **Attach Policy** 버튼을 클릭하십시오.
 
     ![Role Details](images/role-2.png)
- 
+
 1. **Filter** 입력 란에 `AWSXRayWriteOnlyAccess`을 입력한뒤 **AWSXRayWriteOnlyAccess**의 좌측 체크 박스를 선택하고 **Attach Policy** 버튼을 클릭하십시오.
 
     ![Attach Policy](images/role-3.png)
- 
+
 1. 역할 요약 페이지에서 **Managed Policies** 리스트에 **AWSXRayWriteOnlyAccess** 정책이 추가가 되어 있는 것을 확인 하실 수 있습니다.
 
     ![Policy Attached](images/role-4.png)
@@ -88,7 +88,6 @@ const tableName = process.env.TABLE_NAME;
     EU (Ireland) | [![Launch Module 3 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codestar-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=eu-west-1)
     EU (Frankfurt) | [![Launch Module 3 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codestar-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=eu-central-1)
     Asia Pacific (Sydney) | [![Launch Module 3 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codestar-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=ap-southeast-2)
-
 
 1. CloudFormation 템플레이트는 이번 모듈을 진행하는데 있어서 필요한 항목들이 사전에 정의 되어 있습니다.
 
@@ -170,7 +169,7 @@ const tableName = process.env.TABLE_NAME;
 
 ### Traces (추적)
 
-1. 좌측 네비게이션 패널에서 **Traces**를 클릭하시기 바랍니다. 
+1. 좌측 네비게이션 패널에서 **Traces**를 클릭하시기 바랍니다.
 
 1. **Trace Overview**의 응답 리스트를 보시면 7번의 에러가 발생했음을 알 수 있습니다.
 
@@ -186,7 +185,7 @@ const tableName = process.env.TABLE_NAME;
 
    ![Segment Details](images/xray-trace-3.png)
 
-1.  **Segment Detail**에서 **Exception**이 발생 했음을 확인 할 수 있습니다. `list.js` **line 17**에서 에러가 발생한 원인이었음을 알 수 있습니다. 다음은 버그를 찾고 수정 하도록 하겠습니다.
+1. **Segment Detail**에서 **Exception**이 발생 했음을 확인 할 수 있습니다. `list.js` **line 17**에서 에러가 발생한 원인이었음을 알 수 있습니다. 다음은 버그를 찾고 수정 하도록 하겠습니다.
 
 1. **Close** 버튼을 클릭하여 창을 닫아 주시기 바랍니다.
 
@@ -198,7 +197,7 @@ const tableName = process.env.TABLE_NAME;
 
 1. 로컬 컴퓨터에서 `app/list.js` 파일을 연다음 17번째 줄로 이동하시기 바랍니다. 아래와 같은 코드를 보실 수 있습니다.
 
-   ```
+   ```javascript
    docClient.scan(params, function(error, data) {
      // Comment or Delete the following line of code to remove simulated error
      error = Error("something is wrong");
@@ -212,15 +211,15 @@ const tableName = process.env.TABLE_NAME;
 
 1. 깃 클라이언트를 이용하여 로컬 변경 사항을 깃에 저장 하시고 커밋을 하시기 바랍니다. 예를 들면:
 
-    ```
-    %> git add .
-    %> git commit -m "Fix bug"
+    ```bash
+    git add .
+    git commit -m "Fix bug"
     ```
 
 1. 깃 클라이언트를 이용해서 업데이트 사항을 origin에 푸쉬 하시기 바랍니다. 예를 들면:
 
-    ```
-    %> git push origin
+    ```bash
+    git push origin
     ```
 
 ### 3. CodePipeline 유니콘 API 배포 검증
@@ -240,7 +239,7 @@ const tableName = process.env.TABLE_NAME;
 1. 각 단계의 창의 색갈은 실행중일때 파란색으로 바뀌고 완료가 되면 녹색으로 바뀝니다. 모든 단계를 성공적으로 마쳤다면 파이프 라인은 아래 화면과 같은 결과를 나타내야 합니다.
 
     ![CodeStar Dashboard 2](images/codestar-3.png)
-    
+
 ### 4. Unicorn API List Resource 실행하기
 
 1. AWS Management 콘솔에서 **Services**를 선택한 다음 Developer Tools 섹션에서 **CodeStar** 를 선택하십시오.

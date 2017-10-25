@@ -56,19 +56,27 @@ Create an Amazon Kinesis Firehose delivery stream named **wildrydes** that is co
 
 1. In "Source", select **Direct PUT or other sources**
 
+	<kbd>![Create delivery stream screenshot](../images/data-archiving-create-delivery-stream.png)</kbd>
+
 1. Click "Next"
 
 1. Click "Next" with "Disabled" being selected
 
+	<kbd>![Create delivery stream screenshot](../images/data-archiving-create-delivery-stream-2.png)</kbd>
 
 1. Select **Amazon S3** from **Destination**, and select the name of the bucket you created in the previous section from **S3 bucket**. Click **Next**.
 
+	<kbd>![Create delivery stream screenshot](../images/data-archiving-create-delivery-stream-3.png)</kbd>
+
 1. Enter `60` into **Buffer interval** under **S3 Buffer** to set the frequency of S3 deliveries to once per minute.
+
+	<kbd>![Create delivery stream screenshot](../images/data-archiving-create-delivery-stream-4.png)</kbd>
 
 1. Scroll down to the bottom of the page and click **Create new, or Choose** button from **IAM role**. This will walk you through the steps needed to create a new role for Firehose.
 
 1. Click **Allow**, click **Next**, and then click **Create Delivery Stream**.
 
+	<kbd>![Create delivery stream screenshot](../images/data-archiving-delivery-streams.png)</kbd>
 
 </p></details>
 
@@ -100,6 +108,7 @@ Create an inline policy allowing the role access to the `firehose:PutRecordBatch
 1. Type `WildRydesLambdaKinesisRole` into the filter box on the Roles page and click the role you just created.
 
 1. On the Permissions tab, click **Add inline policy** link to create a new inline policy.
+	<kbd>![Inline policies screenshot](../images/stream-processing-policies.png)</kbd>
 
 1. Ensure **Policy Generator** is selected and click **Select**.
 
@@ -152,11 +161,15 @@ Make sure you configure your function to use the `WildRydesLambdaKinesisRole` IA
 
 1. Select `WildRydesLambdaKinesisRole` from the **Existing Role** dropdown.
 
+	<kbd>![Create Lambda function screenshot](../images/data-archiving-lambda-create.png)</kbd>
+
 1. Click on **Create function**.
 
 1. Click on **Triggers** then click **+ Add trigger**
 
 1. Click on the dotted outline and select **Kinesis**. Select **wildrydes** from **Kinesis stream**, **Trim horizon** from **Starting position**, and tick the **Enable trigger** checkbox.
+
+	<kbd>![Create Lambda function screenshot](../images/data-archiving-trigger.png)</kbd>
 
     Starting position refers to the position in the stream where AWS Lambda should start reading and trim horizon configures this to the oldest data record in the shard. See [ShardIteratorType][shard-iterator-type-documentation] in the Amazon Kinesis API Reference for more details.
 
@@ -170,9 +183,12 @@ Make sure you configure your function to use the `WildRydesLambdaKinesisRole` IA
 
 1. Copy and paste the code from [index.js](lambda/WildRydesStreamToFirehose/index.js) into the code entry area.
 
+	<kbd>![Create Lambda function screenshot](../images/data-archiving-lambda-content.png)</kbd>
+
 1. Extend **Environment variables** under the entry area
 
 1. In **Environment variables**, enter an environment variable with key `DELIVERY_STREAM_NAME` and value `wildrydes`.
+	<kbd>![Lambda environment variable screenshot](../images/data-archiving-lambda-env-var.png)</kbd>
 
 1. Optionally enter a description under Timeout.
 
@@ -181,6 +197,8 @@ Make sure you configure your function to use the `WildRydesLambdaKinesisRole` IA
 1. Click on **Triggers** 
 
 1. **Last processing result** on the trigger status screen will transition from **No records processed** to **OK** within a minute or so:
+
+	<kbd>![Lambda trigger status screenshot](../images/data-archiving-trigger-status.png)</kbd>
 
     Click **Refresh triggers** every minute or so until you see **OK**.
 

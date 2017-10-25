@@ -46,6 +46,7 @@ You'll need to grant this role permissions to access the Amazon DynamoDB table c
 1. Type `WildRydesStreamProcessorRole` into the filter box on the Roles page and click the role you just created.
 
 1. On the Permissions tab, click **Add inline policy** link to create a new inline policy.
+	<kbd>![Inline policies screenshot](../images/stream-processing-policies.png)</kbd>
 
 1. Ensure **Policy Generator** is selected and click **Select**.
 
@@ -98,12 +99,15 @@ Make sure you configure your function to use the `WildRydesStreamProcessorRole` 
 
 1. Select `WildRydesStreamProcessorRole` from the **Existing Role** dropdown.
 
+	<kbd>![Create Lambda function screenshot](../images/stream-processing-lambda-create.png)</kbd>
+
 1. Click on **Create function**.
 
 1. Click on **Triggers** then click **+ Add trigger**
 
 1. Click on the dotted outline and select **Kinesis**. Select **wildrydes-aggregated** from **Kinesis stream**, select **Trim horizon** from **Starting position**, and tick the **Enable trigger** checkbox.
 
+	<kbd>![Create Lambda trigger screenshot](../images/stream-processing-configure-trigger.png)</kbd>
 
 	Starting position refers to the position in the stream where AWS Lambda should start reading and trim horizon configures this to the oldest data record in the shard. See [ShardIteratorType][shard-iterator-type-documentation] in the Amazon Kinesis API Reference for more details.
 
@@ -116,10 +120,12 @@ Make sure you configure your function to use the `WildRydesStreamProcessorRole` 
 1. Leave the default of `index.handler` for the **Handler** field.
 
 1. Copy and paste the code from [index.js](lambda/WildRydesStreamProcessor/index.js) into the code entry area.
+	<kbd>![Create Lambda function screenshot](../images/stream-processing-lambda-create.png)</kbd>
 
 1. Extend **Environment variables** under the entry area
 
 1. In **Environment variables**, enter an environment variable with key `TABLE_NAME` and value `UnicornSensorData`.
+	<kbd>![Lambda environment variable screenshot](../images/file-processing-lambda-env-var.png)</kbd>
 
 1. Scroll to top and click **"Save"** (**Not** "Save and test" since we haven't configured any test event)
 

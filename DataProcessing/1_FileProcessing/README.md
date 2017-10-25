@@ -167,12 +167,14 @@ Make sure you configure your function to use the `WildRydesFileProcessorRole` IA
 1. Enter `WildRydesFileProcessor` in the **Name** field.
 
 1. Select `WildRydesFileProcessorRole` from the **Existing Role** dropdown.
+	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-create.png)</kbd>
 
 1. Click on **Create function**.
 
 1. Click on **Triggers** then click **+ Add trigger**
 
 1. Click on the dotted outline and select **S3**. Select **wildrydes-uploads-yourname** from **Bucket**, **Object Created (All)** from **Event type**, and tick the **Enable trigger** checkbox.
+	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-create-add-trigger.png)</kbd>
 
 1. Click **Submit**.
 
@@ -187,9 +189,9 @@ Make sure you configure your function to use the `WildRydesFileProcessorRole` IA
 1. Extend **Environment variables** under the entry area
 
 1. In **Environment variables**, enter an environment variable with key `TABLE_NAME` and value `UnicornSensorData`.
-
+	<kbd>![Lambda environment variable screenshot](../images/file-processing-lambda-env-var.png)</kbd>
 1. Scroll down to **Basic settings** and set **Timeout** to **5** minutes to accommodate large files.
-
+	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-basic-settings.png)</kbd>
 1. Optionally enter a description under Timeout.
 
 1. Scroll to top and click **"Save"** (**Not** "Save and test" since we haven't configured any test event)

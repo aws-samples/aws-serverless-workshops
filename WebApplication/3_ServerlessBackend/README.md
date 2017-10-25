@@ -59,13 +59,13 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Select **Roles** in the left navigation bar and then choose **Create new role**.
 
-1. Select **AWS Lambda** for the role type.
+1. Select **Lambda** for the role type from **AWS Service Role**, then click **Next: Permissions**
 
     **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
 
 1. Begin typing `AWSLambdaBasicExecutionRole` in the **Filter** text box and check the box next to that role.
 
-1. Choose **Next Step**.
+1. Click **Next: Review**.
 
 1. Enter `WildRydesLambda` for the **Role name**.
 
@@ -73,9 +73,8 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
 
-1. On the Permissions tab, expand the **Inline Policies** section and choose the **click here** link to create a new inline policy.
-
-   ![Inline policies screenshot](../images/inline-policies.png)
+1. On the Permissions tab, click **Add inline policy** link to create a new inline policy.
+    ![Inline policies screenshot](../images/inline-policies.png)
 
 1. Ensure **Policy Generator** is selected and choose **Select**.
 
@@ -110,29 +109,27 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Choose on **Services** then select **Lambda** in the Compute section.
 
-1. Choose **Create a Lambda function**.
+1. Click **Create function**.
 
-1. Choose the **Blank Function** blueprint card.
-
-1. Don't add any triggers at this time. Choose **Next** to proceed to defining your function.
+1. Click on **Author from scratch**.
 
 1. Enter `RequestUnicorn` in the **Name** field.
 
-1. Optionally enter a description.
+1. Select `WildRydesLambda` from the **Existing Role** dropdown.
+    ![Create Lambda function screenshot](../images/create-lambda-function.png)
+
+1. Click on **Create function**.
+
+1. Click **Configuration**.
 
 1. Select **Node.js 6.10** for the **Runtime**.
 
-1. Copy and paste the code from [requestUnicorn.js](requestUnicorn.js) into the code entry area.
-
-    ![Create Lambda function screenshot](../images/create-lambda-function.png)
-
 1. Leave the default of `index.handler` for the **Handler** field.
 
-1. Select `WildRydesLambda` from the **Existing Role** dropdown.
+1. Copy and paste the code from [requestUnicorn.js](requestUnicorn.js) into the code entry area.
+    ![Create Lambda function screenshot](../images/create-lambda-function-code.png)
 
-1. Choose **Next** and then choose **Create function** on the Review page.
-
-    ![Define handler and role screenshot](../images/lambda-handler-and-role.png)
+1. Scroll to top and click **"Save"** (**Not** "Save and test" since we haven't configured any test event)
 
 </p></details>
 
@@ -140,9 +137,13 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 For this module you will test the function that you built using the AWS Lambda console. In the next module you will add a REST API with API Gateway so you can invoke your function from the browser-based application that you deployed in the first module.
 
-1. From the main edit screen for your function, select **Actions** then **Configure test event**.
-
+1. From the main edit screen for your function, select **Configure test event** from "Select a test event..." dropdown list.
     ![Configure test event](../images/configure-test-event.png)
+
+1. Leave "Hello World" there
+
+1. Put "TestRequestEvent" into Event name
+    ![Configure test event](../images/configure-test-event-2.png)
 
 1. Copy and paste the following test event into the editor:
 
@@ -168,9 +169,10 @@ For this module you will test the function that you built using the AWS Lambda c
     }
     ```
 
-1. Choose **Save and test**.
 
-    ![Input test event screenshot](../images/input-test-event.png)
+1. Click **Create**.
+
+1. Click **Test**.   
 
 1. Verify that the execution succeeded and that the function result looks like the following:
 ```JSON

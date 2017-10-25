@@ -323,7 +323,7 @@ aws cloudformation package --template-file app-sam.yaml --s3-bucket YOUR_BUCKET_
 Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `awscodestar-uni-api-lambda` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.ht) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
 
 ```
-aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM
+aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM --parameter-overrides ProjectId=uni-api
 ```
 
 CloudFormation will generate a ChangeSet for the `awscodestar-uni-api-lambda` CloudFormation Stack and only update the resources that have changed since the previous deployment.  In this case, `awscodestar-uni-api-lambda` was the CloudFormation stack created by CodeStar for the Lambda functions and API Gateway specification, which you will be updating.

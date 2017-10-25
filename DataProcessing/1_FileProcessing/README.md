@@ -160,41 +160,41 @@ Make sure you configure your function to use the `WildRydesFileProcessorRole` IA
 
 1. Click on **Services** then select **Lambda** in the Compute section.
 
-1. Click **Create a Lambda function**.
+1. Click **Create function**.
 
-1. Click the **Blank Function** blueprint card.
-
-1. Click on the dotted outline and select **S3**. Select **wildrydes-uploads-yourname** from **Bucket**, **Object Created (All)** from **Event type**, and tick the **Enable trigger** checkbox.
-
-	<kbd>![Create Lambda trigger screenshot](../images/file-processing-configure-trigger.png)</kbd>
-
-1. Click **Next**.
+1. Click on **Author from scratch**.
 
 1. Enter `WildRydesFileProcessor` in the **Name** field.
 
-1. Optionally enter a description.
+1. Select `WildRydesFileProcessorRole` from the **Existing Role** dropdown.
+	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-create.png)</kbd>
+
+1. Click on **Create function**.
+
+1. Click on **Triggers** then click **+ Add trigger**
+
+1. Click on the dotted outline and select **S3**. Select **wildrydes-uploads-yourname** from **Bucket**, **Object Created (All)** from **Event type**, and tick the **Enable trigger** checkbox.
+	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-create-add-trigger.png)</kbd>
+
+1. Click **Submit**.
+
+1. Click **Configuration**.
 
 1. Select **Node.js 6.10** for the **Runtime**.
 
-1. Copy and paste the code from [index.js](lambda/WildRydesFileProcessor/index.js) into the code entry area.
-
-	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-create.png)</kbd>
-
-1. In **Environment variables**, enter an environment variable with key `TABLE_NAME` and value `UnicornSensorData`.
-
-	<kbd>![Lambda environment variable screenshot](../images/file-processing-lambda-env-var.png)</kbd>
-
 1. Leave the default of `index.handler` for the **Handler** field.
 
-1. Select `WildRydesFileProcessorRole` from the **Existing Role** dropdown.
+1. Copy and paste the code from [index.js](lambda/WildRydesFileProcessor/index.js) into the code entry area.
 
-	<kbd>![Define handler and role screenshot](../images/file-processing-lambda-role.png)</kbd>
+1. Extend **Environment variables** under the entry area
 
-1. Expand **Advanced settings** and set **Timeout** to **5** minutes to accommodate large files.
+1. In **Environment variables**, enter an environment variable with key `TABLE_NAME` and value `UnicornSensorData`.
+	<kbd>![Lambda environment variable screenshot](../images/file-processing-lambda-env-var.png)</kbd>
+1. Scroll down to **Basic settings** and set **Timeout** to **5** minutes to accommodate large files.
+	<kbd>![Create Lambda function screenshot](../images/file-processing-lambda-basic-settings.png)</kbd>
+1. Optionally enter a description under Timeout.
 
-1. Click **Next** and then click **Create function** on the Review page.
-
-	<kbd>![Lambda trigger status screenshot](../images/file-processing-trigger-status.png)</kbd>
+1. Scroll to top and click **"Save"** (**Not** "Save and test" since we haven't configured any test event)
 
 </p></details>
 

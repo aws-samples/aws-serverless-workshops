@@ -1,10 +1,10 @@
 # 모듈 1: 서버리스 어플리케이션 모델 (Serverless Application Model (SAM))
 
-이 모듈에서는 [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)를 이용하여 서버리스 RESTful API를 개발 할 것 입니다. 이렇게 개발한 RESful API의 기능은 Wild Rydes stable(마굿간)의 유니콘들을 list, create, view, update, delete 할 수 있습니다.
+이 모듈에서는 [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model)을 이용하여 서버리스 RESTful API를 개발 할 것 입니다. 이렇게 개발한 RESful API의 기능은 Wild Rydes 마굿간의 유니콘들을 list, create, view, update, delete 할 수 있습니다.
 
 ## 아키텍쳐 개요
 
-유니콘 API의 아키텍쳐는 DynamoDB 데이터베이스를 읽고 쓸 수 있는 Lambda 함수를 API Gateway를 통해 트리거 됩니다. 이 Lambda 함수가 트리거 될 수 있도록 API Gateway의 HTTP 인터페이스가 정의 되어 있습니다.
+유니콘 API의 아키텍쳐는 DynamoDB 데이터베이스를 읽고 쓸 수 있는 Lambda 함수를 API Gateway를 통해 트리거 됩니다. 또한 이 Lambda 함수를 트리거 할 수 있도록 API Gateway의 HTTP 인터페이스를 정의 하였습니다.
 
 ![Wild Rydes DevOps RESTful API Application Architecture](images/wildrydes-devops-api-architecture.png)
 
@@ -12,9 +12,9 @@
 
 AWS 서버리스 어플리케이션 모델 (AWS SAM)은 AWS 환경에서 서버리스로 동작하는 어플리케이션을 정의 하는 모델입니다.
 
-AWS SAM은 [AWS CloudFormation](https://aws.amazon.com/cloudformation/)을 기반으로 이루어져 있습니다. 서버리스 어플리케이션은 [CloudFormation template](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/gettingstarted.templatebasics.html)에 정의 되어 있으며 [CloudFormation stack](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/updating.stacks.walkthrough.html)을 통해 배포 됩니다. AWS SAM 템플레이트는 CloudFormation 템플레이트를 의미 합니다.
+AWS SAM은 [AWS CloudFormation](https://aws.amazon.com/cloudformation/)을 기반으로 이루어져 있습니다. 서버리스 어플리케이션은 [CloudFormation template](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/gettingstarted.templatebasics.html)에 정의 되어 있으며 [CloudFormation stack](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/updating.stacks.walkthrough.html)을 통해 배포 됩니다. 이 후 본 워크숍에서 언급하는 AWS SAM 템플레이트는 CloudFormation 템플레이트를 의미 합니다.
 
-AWS SAM이란 CloudFormation 템플레이트에서 기술 할 수 있는 컴포넌트의 집합이라고 할 수 있습니다. CloudFormation 템플레이트는 공통적으로 사용하는 서버리스 어플리케이션들은 손 쉽게 기술 할 수 있게 해 줍니다. CloudFormation 템플레이트에 AWS SAM 컴포넌트를 정의하기 위해서는 템플레이트 root document에 `Transform` 섹션에 `AWS::Serverless-2016-10-31` 값이 정의 되어 있어야 합니다.
+AWS SAM이란 CloudFormation 템플레이트에서 기술 할 수 있는 컴포넌트의 집합입니다. CloudFormation 템플레이트는 공통으로 사용하는 서버리스 어플리케이션들은 손 쉽게 기술 할 수 있게 해 줍니다. CloudFormation 템플레이트에 AWS SAM 컴포넌트를 정의하기 위해서는 템플레이트 root document에 `Transform` 섹션이 정의 되어 있어야 하며 또한 섹션의 값으로는 `AWS::Serverless-2016-10-31`이 정의 되어 있어야 합니다.
 
 유니콘 API는 AWS Labmda 함수를 트리거 할 수 있는 Amazon API Gateway HTTP 엔드포인트를 포함 하고 있습니다. 이 Lambda 함수들은 Amazon DynamoDB 데이터 베이스를 읽거나 쓸 수 있습니다. 유니콘 API의 SAM 템플레이트에는 해쉬키를 가지고 있는 DynamoDB 테이블, Wild Rydes 마굿간의 유니콘들을 list, view , update 할 수 있는 Lambda 함수들을 정의 하고 있습니다.
 
@@ -35,7 +35,7 @@ AWS SAM이란 CloudFormation 템플레이트에서 기술 할 수 있는 컴포�
 
 Wild Rydes 마굿간에서 유니콘들의 **name**은 단일 문자열이며 고유 식별자입니다. 또한 유니콘의 이름은 DynamoDB 테이블의 primary key로 사용 할 수 있어야 합니다.
 
-[AWS::Serverless::SimpleTable](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable) 파일의 자원에서 정의된 DynamoDB 테이블은 위의 요구 조건을 만족시키며 유니콘 API가 템플레이트 파일에서 정의된 DynamoDB 테이블을 사용할 수 있게 해 줍니다. 만약 더 복잡한 기능을 구현이 필요하시다면 SimpleTable 부분을 [AWS::DynamoDB::Table](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html)의 자원 정의 부분으로 변경하여 사용하시기 바랍니다.
+[AWS::Serverless::SimpleTable](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable) 파일의 자원에서 정의된 DynamoDB 테이블은 위의 요구 조건을 만족시키며 유니콘 API가 템플레이트 파일에서 정의된 DynamoDB 테이블을 사용할 수 있게 해 줍니다. 만약 더 복잡한 기능을 구현이 필요하시다면 SimpleTable 부분을 [AWS::DynamoDB::Table](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html)으로 변경하여 사용하시기 바랍니다.
 
 ### AWS::Serverless::Function
 
@@ -65,7 +65,7 @@ Wild Rydes 마굿간에서 유니콘들의 **name**은 단일 문자열이며 �
           !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
 ```
 
-여러 [속성값](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties)들이  [AWS::Serverless::Function](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction)에 정의 되어 있습니다. 자세한 내용은 추후에 다시 살펴 보도록 하겠습니다.
+여러 [속성값](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties)들이  [AWS::Serverless::Function](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction)에 정의 되어 있습니다.
 
 #### FunctionName (함수이름)
 
@@ -73,7 +73,7 @@ Wild Rydes 마굿간에서 유니콘들의 **name**은 단일 문자열이며 �
 
 #### Runtime (구동환경)
 
-유니콘 API는 **Node.js 6.10**을 이용하여 구동됩니다. 다른 Runtime의 구동 환경의 추가적인 정보는 [Lambda Execution Environment and Available Libraries](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html)에서 확인 하실 수 있습니다.
+유니콘 API는 **Node.js 6.10**을 이용하여 구동됩니다. 다른 Runtime의 구동 환경은 [Lambda Execution Environment and Available Libraries](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html)에서 확인 하실 수 있습니다.
 
 #### CodeUri
 
@@ -81,23 +81,23 @@ Wild Rydes 마굿간에서 유니콘들의 **name**은 단일 문자열이며 �
 
 #### Handler (핸들러)
 
-**Handler** 속성은 Lambda함수의 진입점를 의미합니다. Javascript의 경우 `Handler`는 "**file**.**function**"로 표현 됩니다.  **file**은 **CodeUri**에서 정의한 상대경로에서 Javascript의 ".js" 확장자를 제외한 파일이름 입니다. **function**은 해당 파일에서 Lambda함수가 호출되었을때 실행 할 함수 이름 입니다.
+**Handler** 속성은 Lambda함수의 진입점를 의미합니다. Javascript의 경우 `Handler`는 "**file**.**function**"으로 표현 됩니다.  **file**은 **CodeUri**에서 정의한 상대경로에서 Javascript의 ".js" 확장자를 제외한 파일이름 입니다. **function**은 해당 파일에서 Lambda함수가 호출되었을때 실행 할 함수 이름 입니다.
 
 #### Events (이벤트)
 
-**Events** 속성은 Lambda 함수를 호출을 요청한 트리거에 대한 정의 입니다. [Api](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api)는 API Gateway 종단의 이벤트을 Lambda 함수 호출를 할 수 있는 트리거와 연동시키도록 하는 이벤트 소스입니다. SAM에서는 API Gateway 뿐만아니라 Lambda 함수를 호출 할 수 있는 다양한 트리거 이벤트를 제공하고 있습니다. 더 자세한 내용은 [sources](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#event-source-types)를 확인하시기 바랍니다.
+**Events** 속성은 Lambda 함수를 호출을 요청한 트리거에 대한 정의 입니다. [Api](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api)는 API Gateway 종단의 이벤트을 Lambda 함수 호출를 할 수 있는 트리거와 연동시키도록 하는 이벤트 소스입니다. SAM에서는 API Gateway 뿐만아니라 Lambda 함수를 호출 할 수 있는 다양한 트리거 이벤트를 제공하고 있습니다. 더 자세한 내용은 [sources](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#event-source-types)에서 확인 하실 수 있으십니다.
 
 HTTP GET 메소드를 사용하여 유니콘의 자세한 사항을 확인 할 수 있는 **Api** 이벤트 소스는 RESTful 자원인 `/unicorns/{name}`에 정의 되어 있습니다. SAM에서는 Api 이벤트를 API Gateway 자원으로 변환시켜 URL의 **name** 값를 이벤트의 [pathParameter](http://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-mappings.html)로 매칭시켜 Lambda 함수를 호출 합니다.
 
 #### Environment (환경변수)
 
-[Environment](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html) 속성은 Labmda 함수에서 접근 가능한 변수와 해당하는 변수의 값을 설정 할 수 있습니다. 해당 Runtime에서 환경변수 접근 방법을 이용하여 해당 변수를 접근 하실수 있으십니다.
+[Environment](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html) 속성은 Labmda 함수에서 접근 가능한 환경변수와 해당하는 변수의 값을 설정 할 수 있습니다. 해당 Runtime에서 환경변수 접근 방법을 이용하여 해당 변수를 접근 하실수 있으십니다.
 
 Lambda 함수들은 데이터를 읽고 쓰기 위해 DynamoDB와 통신을 해야 합니다. CloudFormation 스택에서 생성한 DynamoDB 테이블의 자원 주소 참조값을 `TABLE_NAME`의 환경변수의 값으로 Lambda 함수가 접근 할 수 있도록 합니다.
 
 #### Role (역활)
 
-**Role** 속성은 Lambda 함수 실행 시 접근 할 수 있는 AWS 자원을 정의하는 [Lambda execution policy](http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role)의 IAM 역활을 설정 합니다. 각각의 프로젝트 마다 CodeStar에서는 기본적으로 설정되어있는 AWS 자원들에게 접근 할 수 있는 Lambda 실행 역활을 생성합니다. 이후 모듈에서 역할에 정책을 추가적으로 작성하여 수정해 보도록 하겠습니다.
+**Role** 속성은 Lambda 함수 실행 시 접근 할 수 있는 AWS 자원을 기술하는 [Lambda execution policy](http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role)와 관련된 IAM 역활을 설정 합니다. CodeStar에서는 기본적인 AWS 자원을 접근 할 수 있는 Lambda 실행 역활을 각각의 프로젝트 마다 생성합니다. 이후 모듈에서 역할에 정책을 추가적으로 작성하여 수정해 보도록 하겠습니다.
 
 다음은 CloudFormation을 이용하여 SAM Unicorn API를 배포하는 방법에 대해 알아보도록 하겠습니다.
 
@@ -107,19 +107,19 @@ Lambda 함수들은 데이터를 읽고 쓰기 위해 DynamoDB와 통신을 해�
 
 최신 버젼의 크롬, 파이어폭스, 사파리 웹 브라우저를 사용하신다면 단계별 지침을 클릭하셔서 자세한 내용을 확인하시기 바랍니다.
 
-### AWS 리전 선택
+### 0. AWS 리전 선택
 
 이번 워크샵에서 다루는 전체 서비스는 아래와 같습니다.
 
-- Amazon API Gateway
-- Amazon S3
-- Amazon DynamoDB
-- AWS CodeBuild
-- AWS CodePipeline
-- AWS Lambda
-- AWS X-Ray
+* Amazon API Gateway
+* Amazon S3
+* Amazon DynamoDB
+* AWS CodeBuild
+* AWS CodePipeline
+* AWS Lambda
+* AWS X-Ray
 
-본 워크샵에 필요한 모든 서비스를 지원하는 AWS 리전들은 N. Virginia, Ohio, N. California, Oregon, Ireland, Frankfurt, Singapore, Sydney 입니다. 자세한 서비스별 지원 리전을 확인하시려면 AWS 리전 테이블을 참조 하시기 바랍니다. [AWS 리전 테이블](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/)
+본 워크샵에 필요한 모든 서비스를 지원하는 AWS 리전들은 N. Virginia, Ohio, N. California, Oregon, Ireland, Frankfurt, Singapore, Sydney 입니다. 자세한 서비스별 지원 리전을 확인하시려면 [AWS 리전 테이블](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/)을 참조 하시기 바랍니다.
 
 본 워크샵의 가이드는 한 리전에서 모든 서비스를 배포하는 것을 가정하고 작성되었습니다. 따라서 서비스를 배포하시기 전 다른 서비스들과 같은 리전에서 배포가 진행 되는지 AWS 콘솔 화면에서 확인하시기 바랍니다.
 
@@ -133,7 +133,7 @@ CodeStar는 AWS 자원 접근을 제어하는 IAM 역활과 정책을 생성합�
 
 1. AWS Management 콘솔에서 **Services**를 선택한 다음 Security, Identity & Compliance 아래 **IAM**를 선택하십시오.
 
-1. 왼쪽 네비게이션바에서 **Roles** 을 선택하고 **Filter** 입력란에 `CodeStarWorker-uni-api-CloudFormation`를 입력하고 해당 역할 옆의 확인란을 선택하십시오.
+1. 왼쪽 네비게이션바에서 **Roles** 을 선택하고 **Filter** 입력란에 `CodeStarWorker-uni-api-CloudFormation`를 입력하고 해당 역할을 클릭하시기 바랍니다.
 
     ![Select Role](images/role1-1.png)
 
@@ -186,6 +186,8 @@ CodeStar는 AWS 자원 접근을 제어하는 IAM 역활과 정책을 생성합�
 ### 4. CodeStar에서 생성한 `uni-api` S3 버킷 확인 하기
 
 CodeStar는 SAM을 기반한 프로젝트의 결과물을 저장할 S3 버킷을 생성합니다. S3 버킷 이름은 `{AWS::Region}`과 `{AWS::AccountId}`를 포한한 형식으로 되어 있습니다.
+
+>AWS Management 콘솔에서 **Services**를 선택한 다음 Storage 아래 **S3**에서 버킷 이름을 확인 하실 수 있으십니다.
 
 ```bash
 aws-codestar-{AWS::Region}-{AWS::AccountId}-uni-api-pipe
@@ -260,6 +262,8 @@ CloudFormation의 배포 명령어가 완료가 되면 웹 브라우저를 이�
 ```json
 []
 ```
+
+>`{"message":"Missing Authentication Token"}`이 나타나신다면 URL에 `/unicorns`를 추가하셨는지 확인하시기 바랍니다.
 
 ## API 기능 추가
 
@@ -388,6 +392,8 @@ CloudFormation의 배포 명령어가 완료가 되면 AWS API Gateway를 이용
 1. 웹 브라우저에서 방금 복사한 URL을 붙여넣기 한뒤 주소에 `/unicorns` 를 추가해 주시기 바랍니다. 아래 주소와 같은 형식이 되어야 합니다. `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
 
 1. 웹 브라우저 JSON 결과 중 `Shadowfox`의 "breed" 와 "description" 항목이 이전 모듈에서 작성한 바와 같이 출력이 되는 지를 확인 하시기 바랍니다.
+
+>`{"message":"Missing Authentication Token"}`이 나타나신다면 URL에 `/unicorns`를 추가하셨는지 확인하시기 바랍니다.
 
 > 중요!: CodeStar 프로젝트 중 빌드 단계가 실패하신 것을 확인 하실 수 있으실 것입니다. 이는 알고 있는 문제로써 다음 모듈에서 해당 버그를 수정 할 것입니다.
 

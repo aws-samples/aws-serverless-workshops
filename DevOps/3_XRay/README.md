@@ -1,22 +1,22 @@
 # 모듈 3: AWS X-Ray 연동
 
-이번 모듈에서는 이전 모듈 [Module 2: Continuous Delivery Pipeline](../2_ContinuousDeliveryPipeline)에서 생성한 [AWS CodePipeline](https://aws.amazon.com/codepipeline/)을 통해 배포한 Unicorn API를 [AWS X-Ray](https://aws.amazon.com/xray/)를 이용하여 분석하고 디버깅하는 방법에 대해서 알아 보도록 하겠습니다.
+이번 모듈에서는 이전 [Module 2: Continuous Delivery Pipeline](../2_ContinuousDeliveryPipeline)에서 [AWS CodePipeline](https://aws.amazon.com/codepipeline/)을 통해 배포한 Unicorn API를 [AWS X-Ray](https://aws.amazon.com/xray/)를 이용하여 분석하고 디버깅하는 방법에 대해서 알아 보도록 하겠습니다.
 
 ## AWS X-Ray 개요
 
-[AWS X-Ray](https://aws.amazon.com/xray/) 여러분의 분산 어플리케이션들의 분석 및 운영과정의 디버깅을 용이하게 해주는 도구 입니다. X-Ray를 이용하면 여러분의 프로그램이 어떻게 동작하는지 그리고 어떠한 하위 서비스들과 연동되고 있는를 알 수 있습니다. 이를 통해 어플리케이션의 오동작과 성능저하의 참 원인을 밝히는 불량분석을 용이하게 해줍니다. X-Ray는 각 서비스들의 종단에서 어떠한 요청을 주고 받는지 또한 이러한 요청들이 어떻게 이동하는지를 보여줍니다. 또한 어플리케이션의 하위 컴포넌트들을 알기 쉽게 한눈에 보여줍니다. X-Ray는 여러분의 개발 환경 뿐만 아니라 운영환경에서도 사용할 수 있습니다.
+[AWS X-Ray](https://aws.amazon.com/xray/)는 여러분의 분산 어플리케이션들의 분석 및 운영과정의 디버깅을 용이하게 해주는 도구 입니다. X-Ray를 이용하면 여러분의 프로그램이 어떻게 동작하는지 그리고 어떠한 하위 서비스들과 연동되고 있는 지를 알 수 있습니다. 어플리케이션의 오동작과 성능저하의 참 원인을 밝히는 불량분석을 보다 쉽고 빠르게 수행 할 수 있도록 도와 줍니다. X-Ray는 각 서비스들의 종단에서 어떠한 요청을 주고 받는지 또한 이러한 요청들이 어떻게 이동하는지를 보여줍니다. 뿐만아니라 어플리케이션의 하위 컴포넌트들을 알기 쉽게 한 눈에 보여줍니다. X-Ray는 여러분의 개발 환경 뿐만 아니라 운영환경에서도 사용할 수 있습니다.
 
-모듈 3에서는 모듈 2에서 CodePipeline를 사용하여 배포한 Unicorn API에 버그를 삽입하여 업데이트 할 것 입니다. 또한 Unicorn API에 X-Ray가 연동되어 있으며 이 X-Ray를 이용하여 버그의 원인을 찾고 문제를 해결 할 것입니다. 버그를 수정한 뒤에는 pipeline를 통하여 수정한 코드를 배포하고 X-Ray를 통하여 문제가 제대로 고쳐졌는지 확인 할 것입니다. 다음은 Lambda함수에 X-Ray를 연동하는 법을 알아 보도록 하겠습니다.
+모듈 3에서는 모듈 2에서 CodePipeline를 통해 배포한 Unicorn API에 의도적으로 버그를 삽입하여 업데이트 할 것 입니다. 또한 Unicorn API에 X-Ray가 연동하고 X-Ray를 이용하여 버그의 원인을 찾고 문제를 해결 할 것입니다. 버그를 수정한 뒤에는 파이프라인을 통하여 수정한 코드를 배포하고 X-Ray를 통하여 문제가 해결되었는지 확인 할 것입니다. 다음은 Lambda함수에 X-Ray를 연동하는 법을 알아 보도록 하겠습니다.
 
 ## AWS Lambda와 AWS X-Ray 연동하기
 
-AWS Lambda를 이용하여 생성한 서버리스 어플리케이션의 요청 메시지들을 AWS X-Ray를 이용하여 추적 할 수 있습니다. 요청을 추적함으로써 서버리스 어플리케이션의 성능향상에 도움이 되는 힌트를 제공합니다. 또한 문제가 되는 부분의 참 원인을 정확하게 포착해 낼 수도록 도와 줍니다.
+AWS Lambda를 이용하여 생성한 서버리스 어플리케이션의 요청 메시지들을 AWS X-Ray를 이용하여 추적 할 수 있습니다. 요청을 추적함으로써 서버리스 어플리케이션의 성능 향상을 위한 힌트를 쉽게 알 수 있도록 도와 줍니다. 또한 문제가 되는 부분의 참 원인을 정확하게 포착해 낼 수도록 도와 줍니다.
 
 Lambda에 X-Ray를 연동하게 위해서는 모듈 2에서 작성한 Unicorn API에 몇 가지 수정을 해야 합니다. 이러한 코드 수정은 모듈 3의 `uni-api`에 이미 적용되어 있습니다. 코드 수정 부분를 천천히 집어보도록 하겠습니다.
 
 ### Lambda 함수의 Active Tracing 활성화 하기
 
-각 Lambda 함수들은 `Tracing` 속성을 추가하고 속성 값이 `Active`로 되어 있어야 지만 X-Ray를 위한 active tracing가 활성화 됩니다. ([see more](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties)).
+각 Lambda 함수들은 `Tracing` 속성을 추가하고 속성 값이 `Active`로 되어 있어야 지만 X-Ray를 위한 active tracing가 활성화 됩니다. ([자세한 내용](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties)).
 
 ### Lambda 함수와 AWS X-Ray SDK 연동하기
 
@@ -29,7 +29,7 @@ build:
     - aws cloudformation package --template app-sam.yaml --s3-bucket $S3_BUCKET --output-template template-export.yml
 ```
 
-추가적으로 [aws-xray-sdk](https://www.npmjs.com/package/aws-xray-sdk) 라이브러리를 추가하는 것과 더불어 어플리케이션 코드와 연동이 되어야 합니다. 아래는 X-Ray를 연동하기 전의 코드와 X-Ray가 연동된 이후의 코드 일부분을 비교를 하였습니다.
+추가적으로 [aws-xray-sdk](https://www.npmjs.com/package/aws-xray-sdk) 라이브러리를 추가하는 것과 더불어 어플리케이션 코드와 연동이 되어야 합니다. 아래는 X-Ray를 연동하기 전의 코드와 X-Ray가 연동된 이후의 코드의 일부분을 비교를 하였습니다.
 
 X-Ray 연동 전:
 
@@ -60,7 +60,7 @@ const tableName = process.env.TABLE_NAME;
 
 1. AWS Management 콘솔에서 **Services**를 선택한 다음 Security, Identity & Compliance 아래 **IAM**를 선택하십시오.
 
-1. 왼쪽 네비게이션바에서 **Roles** 을 선택하고 **Filter** 입력란에 `CodeStarWorker-uni-api-Lambda`를 입력하고 해당 역할 옆의 확인란을 선택하십시오.
+1. 왼쪽 네비게이션바에서 **Roles** 을 선택하고 **Filter** 입력란에 `CodeStarWorker-uni-api-Lambda`를 입력하고 해당 역할을 클릭하시기 바랍니다.
 
     ![Select Role](images/role-1.png)
 
@@ -138,6 +138,8 @@ const tableName = process.env.TABLE_NAME;
    }
    ```
 
+>`{"message":"Missing Authentication Token"}`이 나타나신다면 URL에 `/unicorns`를 추가하셨는지 확인하시기 바랍니다.
+
 문제가 발생했습니다! 이번 버전의 Unicorn API에 버그가 있는 것 같습니다. 다음 단계에서는 X-Ray를 사용하여 어떠 오류가 발생했는지 확인해 보도록 하겠습니다.
 
 ## X-Ray를 이용하여 검증하기
@@ -159,7 +161,7 @@ const tableName = process.env.TABLE_NAME;
 ![X-Ray Failure](images/xray-failure.png)
 
 **중요!**
-> X-Ray가 API 요청을 분석 처리하는데 시간의 소요됩니다. 따라서 약간의 지연이 발생할 수 있습니다. 현재 창에서 위의 그림과 같은 내용이 보이지 않으신다면 새로 고침 버튼을 클릭하시기 바랍니다.
+> X-Ray가 API 요청을 분석 처리하는데 시간의 소요됩니다. 따라서 약간의 지연이 발생할 수 있습니다. 현재 창에서 위의 그림과 같은 내용이 보이시지 않으신다면 새로 고침 버튼을 클릭하시기 바랍니다.
 
 ### 서비스 맵
 
@@ -191,7 +193,7 @@ const tableName = process.env.TABLE_NAME;
 
 다음에서는 버그를 찾고 수정 하도록 하겠습니다.
 
-## Remediation
+## 버그 수정
 
 ### 1. 코드 버그 수정하기
 
@@ -259,6 +261,7 @@ const tableName = process.env.TABLE_NAME;
    ```json
    [ ]
    ```
+>`{"message":"Missing Authentication Token"}`이 나타나신다면 URL에 `/unicorns`를 추가하셨는지 확인하시기 바랍니다.
 
 API가 정상적으로 응답을 하도록 버그가 수정되었습니다. X-Ray를 이용하여 API의 동작을 검증 하도록 하겠습니다.
 
@@ -266,13 +269,12 @@ API가 정상적으로 응답을 하도록 버그가 수정되었습니다. X-Ra
 
 1. AWS Management 콘솔에서 **Services**를 선택한 다음 Developer Tools 섹션에서 **CodeStar** 를 선택하십시오.
 
-1. X-Ray 콘솔이 열리면서 아래 화면과 유사한 서비스 맵을 보실 수 있으 실 것 입니다.
+1. X-Ray 콘솔이 열리면서 아래 화면과 유사한 서비스 맵을 보실 수 있으실 것 입니다.
 
 ![Successful X-Ray Service Map](images/xray-trace-4.png)
 
-**중요!**
-> X-Ray가 API 요청을 분석 처리하는데 시간의 소요됩니다. 따라서 약간의 지연이 발생할 수 있습니다. 현재 창에서 위의 그림과 같은 내용이 보이지 않으신다면 새로 고침 버튼을 클릭하시기 바랍니다.
+> **중요!** X-Ray가 API 요청을 분석 처리하는데 시간의 소요됩니다. 따라서 약간의 지연이 발생할 수 있습니다. 현재 창에서 위의 그림과 같은 내용이 보이지 않으신다면 새로 고침 버튼을 클릭하시기 바랍니다.
 
 ## 완료
 
-축하합니다! 여러분은 성공적으로 AWS X-Ray를 서비스에 연동시키셨습니다. 또한 X-Ray를 사용하여 오류를 찾아 낸 다음 복구 하셨습니다. 다음 [Multiple Environments Module](../4_MultipleEnvironments) 모듈에서는 파이프라인에 베타 단계를 추가하여 운영 환경에 배포하기전 베타 테스트를 할 수 있도록 파이프라인을 업데이트 하도록 하겠습니다.
+축하합니다! 여러분은 성공적으로 AWS X-Ray를 RESTful API 서비스에 연동시키셨습니다. 또한 X-Ray를 사용하여 오류를 확인한 다음 성공적으로 복구 하셨습니다. 다음 [Multiple Environments Module](../4_MultipleEnvironments) 모듈에서는 파이프라인에 베타 단계를 추가하여 운영 환경에 배포하기전 베타 테스트를 할 수 있도록 파이프라인을 업데이트 하도록 하겠습니다.

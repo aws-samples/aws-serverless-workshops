@@ -68,7 +68,7 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 
 ### 2. CodeCommit 깃 저장소로 부터 Fetch 하기
 
-새로운 코드가 추가된 CodeCommit 깃 저장소가 생성되었습니다. 코드를 수정 할 수 있도록 이 저장소의 변경사항을 여러분의 로컬 깃 저장소로 복사할 것 입니다. 일반적으로 리모트 깃 저장소의 업데이트된 내용은 `git pull` 명령어로 수행할 수 있습니다. 하지만 이번 워크숍에서는 저장소의 history가 새롭게 생성 되었기 때문에 `git pull`이 아닌 다른명령어를 사용 하셔야 합니다.
+새로운 코드가 추가된 CodeCommit 깃 저장소가 생성되었습니다. 코드를 수정 할 수 있도록 이 저장소의 변경사항을 여러분의 로컬 깃 저장소로 복사할 것 입니다. 일반적으로 리모트 깃 저장소의 업데이트된 내용은 `git pull` 명령어로 수행할 수 있습니다. 하지만 이번 워크숍에서는 저장소의 history가 새롭게 생성 되었기 때문에 `git pull`이 아닌 `git fetch`와 `git reset`을 사용 하도록 하겠습니다.
 
 여러분이 사용하시 편한 깃 클라이언트를 이용해서 아래 명령어 들을 여러분의 로컬 **uni-api** 깃 저장소에서 실행해 주시기 바랍니다.
 
@@ -198,6 +198,14 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 1. 웹 브라우저에서 방금 복사한 URL을 붙여넣기 한뒤 주소에 `/unicorns` 를 추가해 주시기 바랍니다. 아래 주소와 같은 형식이 되어야 합니다. `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
 
 1. 웹 브라우저에서는 유니콘 리스트에 `Shadowfox`가 삭제된 JSON 결과를 보여 주어야 합니다.
+
+    예시
+
+    ```json
+    []
+    ```
+
+>`{"message":"Missing Authentication Token"}`이 나타나신다면 URL에 `/unicorns`를 추가하셨는지 확인하시기 바랍니다.
 
 ## 완료
 

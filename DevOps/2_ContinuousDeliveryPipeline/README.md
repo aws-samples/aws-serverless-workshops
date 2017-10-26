@@ -68,7 +68,7 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 
 ### 2. CodeCommit 깃 저장소로 부터 Fetch 하기
 
-새로운 코드가 추가된 CodeCommit 깃 저장소가 생성되었습니다. 코드를 수정 할 수 있도록 이 저장소의 변경사항을 여러분의 로컬 깃 저장소로 복사할 것 입니다. 일반적으로 리모트 깃 저장소의 업데이트된 내용은 `git pull` 명령어로 수행할 수 있습니다. 하지만 이번 워크숍에서는 저장소의 history가 새롭게 생성 되었기 때문에 `git pull`이 아닌 다른명령어를 사용 하셔야 합니다.
+새로운 코드가 추가된 CodeCommit 깃 저장소가 생성되었습니다. 코드를 수정 할 수 있도록 이 저장소의 변경사항을 여러분의 로컬 깃 저장소로 복사할 것 입니다. 일반적으로 리모트 깃 저장소의 업데이트된 내용은 `git pull` 명령어로 수행할 수 있습니다. 하지만 이번 워크숍에서는 저장소의 history가 새롭게 생성 되었기 때문에 `git pull`이 아닌 `git fetch`와 `git reset`을 사용 하도록 하겠습니다.
 
 여러분이 사용하시 편한 깃 클라이언트를 이용해서 아래 명령어 들을 여러분의 로컬 **uni-api** 깃 저장소에서 실행해 주시기 바랍니다.
 
@@ -93,9 +93,9 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 
 1. **Timeout**는 `10` 입니다.
 
-1. **Event** 타입은 `Api` 이며 `/unicorns/{name}` **Path** 와 연동 `delete` **Method**
+1. **Event** 타입은 `Api` 이며 **Path**를 `/unicorns/{name}` 와 연동하여 주시기 바랍니다. 그리고 **Method**는 `delete` 입니다.
 
-1. **Environment** 변수 이름은 `TABLE_NAME` 값으로는 `Table` Resource 참조값
+1. **Environment** 변수 이름은 `TABLE_NAME` 값으로는 `Table` 자원의 참조 주소를 입력하여 주시기 바랍니다.
 
 1. **Role**은 다른 함수와 같이 사용합니다.
 
@@ -134,15 +134,15 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 
 1. 깃 클라이언트를 이용하여 로컬 변경 사항을 깃에 저장 하시고 커밋을 하시기 바랍니다. 예를 들면:
 
-    ```
-    %> git add .
-    %> git commit -m "Add delete function"
+    ```bash
+    git add .
+    git commit -m "Add delete function"
     ```
 
 1. 깃 클라이언트를 이용해서 업데이트 사항을 origin에 푸쉬 하시기 바랍니다. 예를 들면:
 
-    ```
-    %> git push origin
+    ```bash
+    git push origin
     ```
 
 ### 5. CodePipeline 유니콘 API 배포 검증
@@ -162,7 +162,7 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 1. 각 단계의 창의 색갈은 실행중일때 파란색으로 바뀌고 완료가 되면 녹색으로 바뀝니다. 모든 단계를 성공적으로 마쳤다면 파이프 라인은 아래 화면과 같은 결과를 나타내야 합니다.
 
     ![CodeStar Dashboard 2](images/codestar-3.png)
-    
+
 ### 6. Delete API Method 테스트
 
 1. AWS Management 콘솔에서 **Services**를 선택한 다음 Application Services 섹션에서 **API Gateway**를 선택하십시오.
@@ -198,6 +198,14 @@ Unicorn API의 경우 최종 결과물은 zip으로 암축되어 있으며 ``tem
 1. 웹 브라우저에서 방금 복사한 URL을 붙여넣기 한뒤 주소에 `/unicorns` 를 추가해 주시기 바랍니다. 아래 주소와 같은 형식이 되어야 합니다. `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
 
 1. 웹 브라우저에서는 유니콘 리스트에 `Shadowfox`가 삭제된 JSON 결과를 보여 주어야 합니다.
+
+    예시
+
+    ```json
+    []
+    ```
+
+>`{"message":"Missing Authentication Token"}`이 나타나신다면 URL에 `/unicorns`를 추가하셨는지 확인하시기 바랍니다.
 
 ## 완료
 

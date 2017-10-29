@@ -15,7 +15,7 @@
 1. **Filter** 입력란에 `CodeStarWorker-uni-api-CloudFormation` 를 입력하시고 역활 목록 중 **CodeStarWorker-uni-api-CloudFormation**를 클릭하시기 바랍니다.
 
 1. 추가된 IAM Managed 정책들에 대하여 **Detach Policy**를 클릭하시고 나타난 확인 창에서 **Detach**를 클릭 하셔서 정책을 분리 하시기 바랍니다.
-
+    >**주의** 아래 AWS Managed 정책들만 분리 하시기 바랍니다. Inline Policy를 삭제하실 경우 리소스 삭제가 원할이 되지 않으실수 있으십니다.
     * **AWSLambdaReadOnlyAccess**
 
 #### 1b. `CodeStarWorker-uni-api-CodePipeline` 역활에서 IAM 정책 분리
@@ -27,7 +27,7 @@
 1. **Filter** 입력란에 `CodeStarWorker-uni-api-CodePipeline` 를 입력하시고 역활 목록 중 **CodeStarWorker-uni-api-CodePipeline**를 클릭하시기 바랍니다.
 
 1. 추가된 IAM Managed 정책들에 대하여 **Detach Policy**를 클릭하시고 나타난 확인 창에서 **Detach**를 클릭 하셔서 정책을 분리 하시기 바랍니다.
-
+    >**주의** 아래 AWS Managed 정책들만 분리 하시기 바랍니다. Inline Policy를 삭제하실 경우 리소스 삭제가 원할이 되지 않으실수 있으십니다.
     * **AWSCodePipelineReadOnlyAccess**
     * **AWSLambdaRole**
 
@@ -40,7 +40,7 @@
 1. **Filter** 입력란에 `CodeStarWorker-uni-api-Lambda`를 입력하시고 역활 목록 중 **CodeStarWorker-uni-api-Lambda**를 클릭하시기 바랍니다.
 
 1. 추가된 IAM Managed 정책들에 대하여 **Detach Policy**를 클릭하시고 나타난 확인 창에서 **Detach**를 클릭 하셔서 정책을 분리 하시기 바랍니다.
-
+    >**주의** 아래 AWS Managed 정책들만 분리 하시기 바랍니다. Inline Policy를 삭제하실 경우 리소스 삭제가 원할이 되지 않으실수 있으십니다.
     * **AmazonDynamoDBFullAccess**
     * **AWSCodePipelineCustomActionAccess**
     * **AWSCloudFormationReadOnlyAccess**
@@ -55,9 +55,9 @@
 
     ![CodeStar Project List](images/codestar-1.png)
 
-1. `uni-api`를 **project ID** 입력란에 입력하신 다음, 체크 박스를 **Unselect** 하시고 **Delete** 버튼을 클릭 하시기 바랍니다.
+1. `uni-api`를 **project ID** 입력란에 입력하신 다음 **Delete** 버튼을 클릭 하시기 바랍니다.
 
-    ![Delete CodeStar Project](images/codestar-2.png)
+    ![Delete CodeStar Project](images/codestar-2-1.png)
 
 ### 2. CloudFormation CodeCommit 시작 스택 삭제
 

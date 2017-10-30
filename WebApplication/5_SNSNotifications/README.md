@@ -1,14 +1,12 @@
 # Module 5: SNS Topic and Notifications To Lambda Functions
 
-In this module you'll use SNS to publish messages from the Lambda you build in the previous modules and construct a topic in which your Lambda function will be subscribed to. 
-
 ![SNS Notification Architecture](../images/sns-notification-architecture.png)
 
 The diagram above shows how the SNS component you will build in this module integrates with the existing components you built previously. The grayed out items are pieces you have already implemented in previous steps.
 
-This module will focus on integration of Simple Notification Service (SNS) in your current architecture. The existing NodeJS code (requestUnicorn.js) has been altered slightly to publish a message containing the unicorn name to an SNS topic when a unicorn gets dispatched.  
+This module will focus on integration of Simple Notification Service (SNS) in your current architecture. The existing NodeJS code (requestUnicorn.js) has been altered slightly to publish a message containing the dispatched unicorn name to an SNS topic.  
 
-You may also notice that a new file (tallyUnicorn.js) has been introduced. This contains code for the new lambda function in which will need to be subscribed to the same SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
+You may also notice that a new file (tallyUnicorn.js) has been introduced. This contains code for the new lambda function in which will need to be subscribed to the SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
 
 This module will also be a challenge as it will take your knowledge mainly from module 3 in which you will provision a new Lambda and DynamoDB table and update the existing Lambda IAM policy.
 
@@ -242,7 +240,7 @@ You will have to fill in the values of <b>API_SERVICE</b> and <b>TABLE_NAME</b> 
 
 Remember that you can find the <b>API_SERVICE</b> in the <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">AWS documentation</a>.
 
-To retrieve the logical table name, look back into the section where you specified the new table.  
+To retrieve the logical table name, look back into the serverless.yml where you specified the new table.  
 
 You should something that looks like below: 
 

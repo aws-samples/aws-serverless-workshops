@@ -4,11 +4,11 @@
 
 The diagram above shows how the SNS component you will build in this module integrates with the existing components you built previously. The grayed out items are pieces you have already implemented in previous steps.
 
-This module will focus on integration of Simple Notification Service (SNS) in your current architecture. The existing NodeJS code (requestUnicorn.js) has been altered slightly to publish a message containing the dispatched unicorn name to an SNS topic.  
+This module will focus on integration of SNS to your current architecture. The existing NodeJS code "requestUnicorn.js" has been altered slightly to publish a message to an SNS topic.  
 
-You may also notice that a new file (tallyUnicorn.js) has been introduced. This contains code for the new lambda function in which will need to be subscribed to the SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
+You may also notice that a new file "tallyUnicorn.js" has been introduced. This contains code for the new lambda function in which will need to be subscribed to the SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
 
-This module will also be a challenge as it will take your knowledge mainly from module 3 in which you will provision a new Lambda and DynamoDB table and update the existing Lambda IAM policy.
+This module will also be a challenge as it will take your knowledge from module 3 in which you will add on serverless code to provision one more Lambda and DynamoDB table.
 
 Lets Begin!   
 
@@ -33,7 +33,9 @@ If you wish to know more, visit the <a target="_blank" href="https://serverless.
 
 ### 2. Create DynamoDB table
 
-At this point in time, you should already have the serverless.yml code to provision the DynamoDB table that records the rides. We need one more table to store a tally of the number of times each unicorn gets dispatched. To help you get started, you may paste the snippet just below everything in the <b>RidesTable</b> stanzas. 
+At this point in time, you should already have the serverless.yml code to provision the DynamoDB table that records the rides. We need one more table to store a counter of the number of times each unicorn gets dispatched. For simplicity, the unicorns will be uniquely identified by their name.  
+
+To help you get started, you may paste the snippet just below everything in the <b>RidesTable</b> stanzas. 
 
 ```YAML
     UnicornsTable:
@@ -83,11 +85,9 @@ Once finished, you should have something that looks like below:
 
 ### 3. Create new Lambda and Subscribe to SNS Topic
 
-The next task is hooking up a Lambda function to an SNS topic. The beauty with serverless is it will automatically create the topic is it doesn't exist yet. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
+The next task is hooking up a Lambda function to an SNS topic. The beauty with serverless is that you can hook up a Lambda function to a topic without having to worry about explicitly creating it. Serverless handles that for you. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
 
-Lets start by adding in a snippet below the existing <b>RidesHandler</b> lambda function. The handler function is in tallyUnicorn.js. With that information you should be able to resolve the value of <b>HANDLER_FUNCTION</b>.  
-
-The topic name can be one of your choosing. During provisioning, an SNS topic will be created if it does not exist so you don't have to worry about explicitly creating it in your serverless.yml stanzas.  
+Lets start by adding in a snippet below the existing <b>RidesHandler</b> lambda function. The handler function is in tallyUnicorn.js. With that information you should be able to resolve the value of <b>HANDLER_FUNCTION</b>. The topic name can be one of your choosing.   
 
 ```YAML
   UnicornsHandler:
@@ -96,7 +96,7 @@ The topic name can be one of your choosing. During provisioning, an SNS topic wi
       - sns: {TOPIC_NAME}
 ```
 
-Deciding on the topic name is an important detail from here on as it you will need it to reference it in several parts of the yaml. For the sake of this tutorial, we will call it "DispatchUnicorn".  
+The topic name you have decided on will be important detail from here on as it you will need it to reference it in several parts of the yaml. 
 
 <details>
 <summary><strong>See answer (expand for details)</strong></summary>
@@ -113,7 +113,7 @@ Deciding on the topic name is an important detail from here on as it you will ne
 
 ### 4. Update Lambda policy to allow sending SNS notifications
 
-If you look at the function in <b>requestUnicorn.js</b> starting from line 76, you will see that we are attempting to use SNS to publish a message to a topic. The issue here is that we will have insufficient permissions to do that.  
+If you look into <b>requestUnicorn.js</b> on line 76, you will see that we are attempting to use SNS to publish a message to a topic. The issue here is that we will have insufficient permissions to do that.  
 
 Lets look back into the serverless.yml file at the stanza <b>iamRoleStatements</b>. For starters, you can copy and paste the snippet below the existing policy.  
 
@@ -130,29 +130,29 @@ Lets look back into the serverless.yml file at the stanza <b>iamRoleStatements</
             - "{TOPIC_NAME}"
 ```  
 
-Recall that in any event you are unsure how to construct the policy above you can look into the online resources below: 
+We need to figure out a few variables here for our new policy. Recall that in any event you are unsure how to construct the policy above you can look into the online resources below: 
 
 1. <a target="_blank" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">Find the <b>SERVICE_NAMESPACE</b></a>
 
 2. <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">Find the <b>API_METHOD</b></a>
 
-If you are unfamiliar with Cloudformation's intrinsic functions, what's happening here is that we are asking it to do a string join consisting of various components as listed below: 
+If you are unfamiliar with the Join syntax above, what's happening here is that we are asking it to do a string join consisting of various components as listed below: 
 1. The Amazon service namespace
 2. AWS region
 3. AWS account id
 4. Topic name
 
-To achieve that we invoke Cloudformation's intrinsic function "Fn::Join" in which you can read more about <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a>.  
+To achieve that we invoke Cloudformation's intrinsic functions, specifically "Fn::Join" in which you can read more about <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a>.  
 
-With that said, we to set the region and account id. We have two choices here...
+With that said, we need to set the region and account id. We have two choices here...
 1. Hardcode the region and account id.
 2. Use Cloudformation's pseudo parameters (parameters defined by Cloudformation)
 
 We should opt for (2) as that means we don't tie the code to a specific account and region. The best online resources documenting pesudo parameters can be found <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html">here</a>.  
 
-We also want to find the appropriate value for <b>TOPIC_NAME</b>. If you look back to the prior section (3) where we created the Lambda that subscribes to a topic, we can use that name to insert in here.  
+We also want to find the appropriate value for <b>TOPIC_NAME</b>. If you look back to the prior section (3) where we created the Lambda that subscribes to a topic you should be able to retrieve the topic name.  
 
-There are two arguments here as denoted by the first column of the (-) character. The first is the delimiter between each component which we specify it as a colon. The second is just a list of strings. Essentially this evaluates to a string that hypothetically looks like "arn:aws:sns:ap-southeast-1:66666666:SomeTopicName".  
+There are two arguments here as denoted by the first column of (-) characters. The first is the delimiter between each component which we specify it as a colon. The second is just a list of strings. Essentially this evaluates to a string that hypothetically looks like "arn:aws:sns:ap-southeast-1:66666666:SomeTopicName".  
 
 Once completed, we should end up with something that looks similar to:
 
@@ -199,7 +199,7 @@ Now that we know the topic name, lets provide the environment variable like belo
             - "{TOPIC_NAME}"
 ```
 
-Go ahead and fill in the environment variable. Using what you have learnt from the prior section, you should be able to also fill in the remaining blanks that compose the topic Arn. Your environment stanzas should look something like below.
+Go ahead and fill in the environment variable. Using what you have learnt from the prior section, you should be able to also fill in the remaining blanks that compose the topic Arn. Your environment stanzas should look something like the snippet below. 
 
 <details>
 <summary><strong>See answer (expand for details)</strong></summary>

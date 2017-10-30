@@ -104,6 +104,7 @@ functions:
 </details>  
 
 <br>
+
 ### 4. Update Web App Configuration
 
 We now should have the TWO endpoints we need for the web application to run. Lets go back to module 1 and update the **invokeUrl** setting under the **api** key in the config.js file. Set the value to the **Invoke URL** for the deployment stage your created in the previous section.    

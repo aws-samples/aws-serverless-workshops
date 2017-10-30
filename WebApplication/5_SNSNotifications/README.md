@@ -132,11 +132,11 @@ Lets look back into the serverless.yml file at the stanza <b>iamRoleStatements</
 
 We need to figure out a few variables here for our new policy. Recall that in any event you are unsure how to construct the policy above you can look into the online resources below: 
 
-1. <a target="_blank" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">AWSService namespaces</a> 
+1. <a target="_blank" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">AWS Service namespaces</a> 
 
-2. <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">API methods</a>.  
+2. <a target="_blank" href="http://docs.aws.amazon.com/sns/latest/dg/AccessPolicyLanguage_SpecialInfo.html#sns_aspen_actions">SNS API methods</a>.  
 
-If you are unfamiliar with the Join syntax above, what's happening here is that we are asking it to do a string join consisting of various components as listed below: 
+Now we just need to specify the SNS topic Arn as the resource. If you are unfamiliar with the Join syntax above in the Resources grouping, what is happening here is we are performing a string join consisting of various components as listed below: 
 1. The Amazon service namespace
 2. AWS region
 3. AWS account id
@@ -144,11 +144,7 @@ If you are unfamiliar with the Join syntax above, what's happening here is that 
 
 To achieve that we invoke Cloudformation's intrinsic functions, specifically "Fn::Join" in which you can read more about <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a>.  
 
-With that said, we need to somehow reference the region and account id. We have two choices here...
-1. Hardcode the region and account id.
-2. Use Cloudformation's pseudo parameters (parameters defined by Cloudformation)
-
-We should opt for (2) as that means we don't tie the code to a specific account and region. The best online resources documenting pesudo parameters can be found <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html">here</a>.  
+With that said, we need to somehow reference the region and account id. We shall make use of Cloudformation's pseudo parameters to access those variables. The best online resources documenting pseudo parameters can be found <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html">here</a>.  
 
 We also want to find the appropriate value for <b>TOPIC_NAME</b>. If you look back to the prior section (3) where we created the Lambda that subscribes to a topic you should be able to retrieve the topic name.  
 

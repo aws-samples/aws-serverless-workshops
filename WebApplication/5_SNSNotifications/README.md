@@ -6,10 +6,17 @@ In this module you'll use API Gateway to expose the Lambda function you built in
 
 The diagram above shows how the API Gateway component you will build in this module integrates with the existing components you built previously. The grayed out items are pieces you have already implemented in previous steps.
 
-The static website you deployed in the first module already has a page configured to interact with the API you'll build in this module. The page at /ride.html has a simple map-based interface for requesting a unicorn ride. After authenticating using the /signin.html page, your users will be able to select their pickup location by clicking a point on the map and then requesting a ride by choosing the "Request Unicorn" button in the upper right corner.
+This module will focus on integration of Simple Notification Service (SNS) in your current architecture. The existing NodeJS code (requestUnicorn.js) has been altered slightly to publish a message containing the unicorn name to an SNS topic when a unicorn gets dispatched.  
 
-This module will focus on the steps required to build the cloud components of the API, but if you're interested in how the browser code works that calls this API, you can inspect the [ride.js](../1_StaticWebHosting/website/js/ride.js) file of the website. In this case the application uses jQuery's [ajax()](https://api.jquery.com/jQuery.ajax/) method to make the remote request.
+You may also notice that a new file (tallyUnicorn.js) has been introduced. This contains code for the new lambda function in which will need to be subscribed to the same SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
 
+This module will also be a challenge as it will take your knowledge mainly from module 3 to provision one more of each of the following: 
+1. DynamoDB table
+2. Lambda function  
+
+Most importantly, you will learn to create an SNS topic in which you will subscribe a Lambda function to, in order to receive notifications.  
+
+Lets Begin!   
 
 ## Implementation Instructions
 
@@ -19,6 +26,7 @@ You may notice that some reference materials are from the official Cloudformatio
 
 If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
 
+<br>
 ### 1. Prerequisites
 
 1. Install Node version 6.10 (https://nodejs.org/en/) if you have not done so yet.  
@@ -26,107 +34,255 @@ If you wish to know more, visit the <a target="_blank" href="https://serverless.
 3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
 4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/4_RESTfulAPIs project folder 
 
-### 2. Create a New REST API
-
-As before, there is a serverless yml file that is readily available for use. Otherwise, you can replace its contents with the one you have been working with in the past modules.
-
-Its time to expose our Lambda function in the form of a Restful API with a proper endpoint. To help you get started, you should copy and paste the <b>events</b> stanza in the serverless.yml file so it looks similar to below. 
-
-```YAML
-functions:
-    RidesHandler:
-        handler: requestUnicorn.handler
-        events:
-            - ? 
-``` 
-
-What you need to do now is specify a lambda-proxy integration that is contactable via a "post" to the endpoint "ride". The serverless <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/apigateway/">API Gateway documentation</a> should provide you more information on different ways you can achieve this.   
-
-<h4>Enable CORS</h4>
-Modern web browsers prevent HTTP requests from scripts on pages hosted on one domain to APIs hosted on another domain unless the API provides cross-origin resource sharing (CORS) response headers that explicitly allow them.  For this reason, we need to tell serverless to enable the cors option as well.  
 <br>
+### 2. Create DynamoDB table
 
-Once you have filled in the missing fields, your yaml file should look quite similar to the below snippet.  
-
-<details>
-<summary><strong>See answers (expand for details)</strong></summary>
+At this point in time, you should already have the serverless.yml code to provision the DynamoDB table that records the rides. We need one more table to store a tally of the number of times each unicorn gets dispatched. To help you get started, you may paste the snippet just below everything in the <b>RidesTable</b> stanzas. 
 
 ```YAML
-functions:
-    RidesHandler:
-        handler: requestUnicorn.handler
-        events:
-            - http:
-                path: ride
-                method: post
-                cors: true
-``` 
-
-</details>
-  
-Go ahead and run "serverless deploy" in the CLI. That should provision a new API gateway resource and serverless should in turn print out the endpoint url. However attempting to POST to that url will result in a message returned "Authorization not configured". That brings us to the final step.  
-
-<br>
-### 3. Create a Cognito User Pools Authorizer
-
-Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In this step you'll configure an authorizer for your API to use the user pool you created in module 2.  
-
-What we need to do now is set the Cognito User Pool we created in module 2 as an authorizer to our <b>RidesHandler</b> lambda function. Below is a snippet that shows us how the <b>authorizer</b> stanza is written. You will need to find out what goes in it.  
-
-```YAML
-functions:
-    RidesHandler:
-        handler: requestUnicorn.handler
-        events:
-            ...
-        authorizer: ?
+    UnicornsTable:
+      Type: {RESOURCE_TYPE}
+      Properties:
+        TableName: {TABLE_NAME}
+        AttributeDefinitions:
+          -
+            AttributeName: {ATTRIBUTE_NAME}
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: {ATTRIBUTE_NAME}
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 ```  
 
-The best resources on setting this up can be found in the <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/apigateway/#http-endpoints-with-custom-authorizers">http endpoint with custom authorizer documentation</a>, in our case its under the section: <i>"You can also configure an existing Cognito User Pool as the authorizer, as shown in the following example:"</i>.  
+As before, you need to figure out the few missing variables. For your reference, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/resources/#aws-cloudformation-resource-reference">here</a> to get the value for <b>RESOURCE_TYPE</b>. Secondly, look into tallyUnicorn.js to retrieve the <b>TABLE_NAME</b> and <b>ATTRIBUTE_NAME</b>.  
 
-<details><summary><strong>The handler function yaml should look similar to: (click to expand)</strong></summary>
+Once finished, you should have something that looks like below:  
+
+<details>
+<summary><strong>See answer (expand for details)</strong></summary>
 
 ```YAML
-functions:
-  RidesHandler:
-    handler: requestUnicorn.handler
-    events:
-      - http: 
-          integration: lambda-proxy
-          path: rocks        
-          method: post
-          cors: true
-          authorizer:
-            name: request-ride-auth
-            arn: arn:aws:cognito-idp:ap-southeast-2:XXXXXXXXX:userpool/ap-southeast-2_XXXXXXXXX
+    UnicornsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Unicorns
+        AttributeDefinitions:
+          -
+            AttributeName: Name
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: Name
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 ```
-
 </details>  
 
 <br>
-### 4. Update Web App Configuration
+### 3. Create new Lambda and Subscribe to SNS Topic
 
-We now should have the TWO endpoints we need for the web application to run. Lets go back to module 1 and update the **invokeUrl** setting under the **api** key in the config.js file. Set the value to the **Invoke URL** for the deployment stage your created in the previous section.    
+The next task is hooking up a Lambda function to an SNS topic. The beauty with serverless is it will automatically create the topic is it doesn't exist yet. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
 
-<details><summary><strong>
-An example of a complete `config.js` file is included below. Note, the actual values in your file will be different.</strong></summary>
+Lets start by adding in a snippet below the existing <b>RidesHandler</b> lambda function. The handler function is in tallyUnicorn.js. With that information you should be able to resolve the value of <b>HANDLER_FUNCTION</b>.  
 
-```JavaScript
-window._config = {
-    cognito: {
-        userPoolId: 'us-west-2_uXboG5pAb', // e.g. us-east-2_uXboG5pAb
-        userPoolClientId: '25ddkmj4v6hfsfvruhpfi7n4hv', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
-        region: 'us-west-2' // e.g. us-east-2
-    },
-    api: {
-        invokeUrl: 'https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod' // e.g.
-    }
-};
+The topic name can be one of your choosing. During provisioning, an SNS topic will be created if it does not exist so you don't have to worry about explicitly creating it in your serverless.yml stanzas.  
+
+```YAML
+  UnicornsHandler:
+    handler: {HANDLER_FUNCTION}
+    events:
+      - sns: {TOPIC_NAME}
 ```
-</details>
 
+Deciding on the topic name is an important detail from here on as it you will need it to reference it in several parts of the yaml. For the sake of this tutorial, we will call it "DispatchUnicorn".  
+
+<details>
+<summary><strong>See answer (expand for details)</strong></summary>
+
+```YAML
+  UnicornsHandler:
+    handler: tallyUnicorn.handler
+    events:
+      - sns: DispatchUnicorn
+```
+</details>  
 
 <br>
+### 4. Update Lambda policy to allow sending SNS notifications
+
+If you look at the function in <b>requestUnicorn.js</b> starting from line 76, you will see that we are attempting to use SNS to publish a message to a topic. The issue here is that we will have insufficient permissions to do that.  
+
+Lets look back into the serverless.yml file at the stanza <b>iamRoleStatements</b>. For starters, you can copy and paste the snippet below the existing policy.  
+
+```YAML
+    - Effect: "Allow"
+      Action:
+        - "{SERVICE_NAMESPACE}:{API_METHOD}"
+      Resource:
+        Fn::Join:
+          - ':'
+          - - "arn:aws:sns"
+            - Ref: "{AWS_REGION}"
+            - Ref: "{AWS_ACCOUNT_ID}"
+            - "{TOPIC_NAME}"
+```  
+
+Recall that in any event you are unsure how to construct the policy above you can look into the online resources below: 
+
+1. <a target="_blank" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">Find the <b>SERVICE_NAMESPACE</b></a>
+
+2. <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">Find the <b>API_METHOD</b></a>
+
+If you are unfamiliar with Cloudformation's intrinsic functions, what's happening here is that we are asking it to do a string join consisting of various components as listed below: 
+1. The Amazon service namespace
+2. AWS region
+3. AWS account id
+4. Topic name
+
+To achieve that we invoke Cloudformation's intrinsic function "Fn::Join" in which you can read more about <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a>.  
+
+With that said, we to set the region and account id. We have two choices here...
+1. Hardcode the region and account id.
+2. Use Cloudformation's pseudo parameters (parameters defined by Cloudformation)
+
+We should opt for (2) as that means we don't tie the code to a specific account and region. The best online resources documenting pesudo parameters can be found <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html">here</a>.  
+
+We also want to find the appropriate value for <b>TOPIC_NAME</b>. If you look back to the prior section (3) where we created the Lambda that subscribes to a topic, we can use that name to insert in here.  
+
+There are two arguments here as denoted by the first column of the (-) character. The first is the delimiter between each component which we specify it as a colon. The second is just a list of strings. Essentially this evaluates to a string that hypothetically looks like "arn:aws:sns:ap-southeast-1:66666666:SomeTopicName".  
+
+Once completed, we should end up with something that looks similar to:
+
+<details>
+<summary><strong>See answer (expand for details)</strong></summary>
+
+```YAML
+    - Effect: "Allow"
+      Action:
+        - "sns:Publish"
+      Resource:
+        Fn::Join:
+          - ':'
+          - - "arn:aws:sns"
+            - Ref: "AWS::REGION"
+            - Ref: "AWS::ACCOUNT_ID"
+            - "DispatchUnicorn"
+``` 
+
+</details>
+
+<br>
+### 5. Supply Topic Arn as an environment variable to Lambda
+
+One important detail we have yet to supply is the topic arn to the requestUnicorn lambda function. If you look at the function starting on line 80, you will notice that it is expecting a topic arn supplied as an environment variable.  
+
+You can read more about specifying environment variables <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/#environment-variables">here</a>.
+
+Now that we know the topic name, lets provide the environment variable like below.  
+
+```YAML
+  RidesHandler:
+    handler: ...
+    events:
+      ...
+    environment:
+      {ENVIRONMENT_VAR_NAME}:
+        Fn::Join:
+          - ':'
+          - - "arn:aws:sns"
+            - Ref: "{AWS_REGION}"
+            - Ref: "{AWS_ACCOUNT_ID}"
+            - "{TOPIC_NAME}"
+```
+
+Go ahead and fill in the environment variable. Using what you have learnt from the prior section, you should be able to also fill in the remaining blanks that compose the topic Arn. Your environment stanzas should look something like below.
+
+<details>
+<summary><strong>See answer (expand for details)</strong></summary>
+
+```YAML
+    environment:
+      dispatchUnicornTopicArn:
+        Fn::Join:
+          - ':'
+          - - "arn:aws:sns"
+            - Ref: "AWS::Region"
+            - Ref: "AWS::AccountId"
+            - "DispatchUnicorn"
+```  
+
+</details>
+
+<br>
+### 6. Update IAM Policy for new Lambda function
+
+There is one remaining task we have to complete here which is to add a new policy to <b>iamRoleStatements</b> so our Lambda can write to the new DynamoDB table.  
+
+If we look into tallyUnicorn.js, the first function <b>updateDispatchedUnicornCount</b> invokes the DynamoDB service to increment a tally for the dispatched unicorn. We can update the policy by tacking on the new DynamoDB table Arn and the new API service to the existing stanza. So, it will look akin to the snippet below. 
+
+```YAML
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:{API_SERVICE}"
+      Resource: 
+        - "Fn::GetAtt": [RidesTable, Arn]
+        - "Fn::GetAtt": [{TABLE_NAME}, Arn]
+```
+
+You will have to fill in the values of <b>API_SERVICE</b> and <b>TABLE_NAME</b> here.  
+
+Remember that you can find the <b>API_SERVICE</b> in the <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">AWS documentation</a>.
+
+To retrieve the logical table name, look back into the section where you specified the new table.  
+
+You should something that looks like below: 
+
+```YAML
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+      Resource: 
+        - "Fn::GetAtt": [RidesTable, Arn]
+        - "Fn::GetAtt": [UnicornsTable, Arn]
+```
+
+<br>
+### 7. Deploy and Testing the new functionality
+
+We should now deploy what we have. Run "serverless deploy" in the CLI and wait until it completes.  
+
+Now, its time to test to see if everything works as expected. What we can do here is navigate to the web application you created back in module 1, login and request a unicorn. Take note of its name as well.  
+
+We can verify that stuff works by either: 
+1. Log into the AWS console and look for the DynamoDB unicorns table. You should see an entry there for the unicorn and a DispatchCount field that has a value of 1 or however many times it has been dispatched.  
+
+2. Use AWS CLI and run <b>"aws dynamodb get-item --table-name Unicorns --key '{"Name": {"S": "Shadowfax"}}'"</b>. You will then receive a JSON response that looks a bit like:
+```JSON
+{
+    "Item": {
+        "Name": {
+            "S": "Shadowfax"
+        }, 
+        "DispatchCount": {
+            "N": "1"
+        }
+    }
+}
+```
+
+
+
+
+<!-- <br>
 <details>
 <summary><strong>Manual steps (expand for details)</strong></summary>
 
@@ -339,4 +495,4 @@ Congratulations, you have completed the Wild Rydes Web Application Workshop! Che
 
 See this workshop's [cleanup guide](../9_CleanUp) for instructions on how to delete the resources you've created.
 
-</details>
+</details> -->

@@ -19,7 +19,7 @@ Lets get started!
 
 ### 1. Prerequisites
 
-1. Install latest Node (https://nodejs.org/en/) if you have not done so yet. 
+1. Install Node version 6.10 (https://nodejs.org/en/) if you have not done so yet. 
 2. Run "npm install npm@latest -g" in CLI - updates to the latest NPM version 
 3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
 4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/3_ServerlessBackend project folder  
@@ -42,7 +42,7 @@ This is the bare minimum of what you need for now. In more complex scenarios, yo
 
 The <b>RidesHandler</b> stanza is the unique resource name and can be set to any appropriate value you see fit. For the purpose of this tutorial, we just call it that.  
 
-What we need to do here is figure out that should be substituted in place of the question mark. To start off, there should be a requestUnicorn.js file in your project. Open it, navigate to line 25 and take note the name of the function.  
+What we need to do here is figure out that should be substituted in place of the question mark. To start off, there should be a requestUnicorn.js file in your project. Open it, navigate to line 22 and take note the name of the function.  
 
 Replace the "?" with something that resembles {file_name}.{function_name}, excluding the curly brackets.  
 
@@ -78,7 +78,7 @@ If we created a new folder called "src" and put requestUnicorn.js in there. What
 
 ### 3. Create an Amazon DynamoDB Table
 
-Next, we proceed to specify the stanzas to provision a DynamoDB table. Copy and paste the yaml snippet below into the serverless.yml file under the existing <b>Resources</b> section.  
+Next, we proceed to specify the stanzas to provision a DynamoDB table to record each ride requested. Copy and paste the yaml snippet below into the serverless.yml file under the existing <b>Resources</b> section.  
 
 ```YAML
 RidesTable:
@@ -118,7 +118,6 @@ Next, lets return to the code in requestUnicorn.js and search for the function c
 </details>
 <br>
 
-
 ### 4. Create an IAM Role for Your Lambda function
 
 We now require an IAM Role that lambda can assume when performing its tasks in order to interact with other AWS services. 
@@ -133,7 +132,7 @@ We should start by appending the below snippet under the <b>provider</b> section
       Action:
         - "{SERVICE_NAMESPACE}:{API_METHOD}"
       Resource: 
-        "Fn::{FUNCTION_NAME}": [{TABLE_RESOURCE_NAME}, Arn]
+        - "Fn::{FUNCTION_NAME}": [{TABLE_RESOURCE_NAME}, Arn]
 ```  
 
 Once again, there are curly braces where we need to figure out what needs to be substituted. Starting from the top left, we have <b>SERVICE_NAMESPACE</b>. This value should be what we use to uniquely identify a particular AWS service.  
@@ -180,7 +179,7 @@ provider:
       Action:
         - "dynamodb:PutItem"
       Resource: 
-        "Fn::GetAtt": [RidesTable, Arn]
+        - "Fn::GetAtt": [RidesTable, Arn]
        
 functions:
   RidesHandler:
@@ -207,15 +206,18 @@ resources:
 </details>
 <br>  
 
+
 ### 5. Deploy Your Infrastructure
 
 Well, that should be all the infrastructure we need for now. We are ready to begin provisioning resources on AWS. So, bring up the command line and ensure you are navigated to root project level. 
 
 Execute the command "serverless deploy" and watch the logs.  
 
-If the deployment ran successfully, login to AWS and navigate to Cloudformation service and confirm that there is a new stack called "unicornservice-dev". This name is formed as a combination of the <b>service name</b> and <b>stage</b>.
+If the deployment ran successfully, login to AWS and navigate to Cloudformation service and confirm that there is a new stack called "unicornservice-dev". This name is formed as a combination of the <b>service name</b> and <b>stage</b>.  
 
-Now, we should quickly verify that our Lambda will run as expected. Go into Lambda AWS console and configure and run a new test event with the following body: 
+Now, we should be able to verify that our Lambda will run as expected. We will invoke the lambda via serverless invoke command rather than console.  
+
+First create a JSON file and paste in the data below. This will be our mock request data to send to the provisioned lambda function on AWS.  
 
 ```JSON
 {
@@ -239,7 +241,7 @@ Now, we should quickly verify that our Lambda will run as expected. Go into Lamb
 }
 ```  
 
-Verify that the execution succeeded and that the function result looks similar the following:
+Then run "<b>serverless invoke --function RidesHandler -p {name_of_file}.json</b>" in the CLI and verify that the execution succeeded and that the function result looks similar the following: 
 
 ```JSON
 {
@@ -249,7 +251,7 @@ Verify that the execution succeeded and that the function result looks similar t
         "Access-Control-Allow-Origin": "*"
     }
 } 
-```
+```  
 
 
 <details>

@@ -1,0 +1,84 @@
+service: unicornservice
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: dev
+  region: ap-southeast-2
+ 
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+      Resource: 
+        - "Fn::GetAtt": [RidesTable, Arn]
+        - "Fn::GetAtt": [UnicornsTable, Arn]
+    - Effect: "Allow"
+      Action:
+        - "sns:Publish"
+      Resource:
+        Fn::Join:
+          - ':'
+          - - "arn:aws:sns"
+            - Ref: "AWS::Region"
+            - Ref: "AWS::AccountId"
+            - "DispatchUnicorn"
+
+functions:
+  RidesHandler:
+    handler: requestUnicorn.handler
+    events:
+      - http: 
+          integration: lambda-proxy
+          path: rocks        
+          method: post
+          cors: true
+          authorizer:
+            name: request-ride-auth
+            arn:  arn:aws:cognito-idp:ap-southeast-2:613576916451:userpool/ap-southeast-2_VPLN8fAMU
+    environment:
+      dispatchUnicornTopicArn:
+        Fn::Join:
+          - ':'
+          - - "arn:aws:sns"
+            - Ref: "AWS::Region"
+            - Ref: "AWS::AccountId"
+            - "DispatchUnicorn"
+  UnicornsHandler:
+    handler: tallyUnicorn.handler
+    events:
+      - sns: DispatchUnicorn
+
+resources:
+  Resources:
+    RidesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Rides
+        AttributeDefinitions:
+          -
+            AttributeName: RideId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: RideId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    UnicornsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Unicorns
+        AttributeDefinitions:
+          -
+            AttributeName: Name
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: Name
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

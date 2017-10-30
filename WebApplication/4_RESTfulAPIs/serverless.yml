@@ -11,7 +11,7 @@ provider:
       Action:
         - "dynamodb:PutItem"
       Resource: 
-        "Fn::GetAtt": [RidesTable, Arn]
+        - "Fn::GetAtt": [RidesTable, Arn]
        
 functions:
   RidesHandler:

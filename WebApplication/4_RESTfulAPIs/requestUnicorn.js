@@ -1,8 +1,6 @@
 const randomBytes = require('crypto').randomBytes;
-
 const AWS = require('aws-sdk');
 
-const ddb = new AWS.DynamoDB.DocumentClient();
 
 const fleet = [
     {
@@ -24,8 +22,8 @@ const fleet = [
 
 exports.handler = (event, context, callback) => {
     if (!event.requestContext.authorizer) {
-      errorResponse('Authorization not configured', context.awsRequestId, callback);
-      return;
+        errorResponse('Authorization not configured', context.awsRequestId, callback);
+        return;
     }
 
     const rideId = toUrlString(randomBytes(16));
@@ -72,7 +70,7 @@ exports.handler = (event, context, callback) => {
         // from the Lambda function successfully. Specify a 500 HTTP status
         // code and provide an error message in the body. This will provide a
         // more meaningful error response to the end client.
-        errorResponse(err.message, context.awsRequestId, callback)
+        errorResponse(err.message, context.awsRequestId, callback);
     });
 };
 
@@ -85,13 +83,16 @@ function findUnicorn(pickupLocation) {
 }
 
 function recordRide(rideId, username, unicorn) {
-    return ddb.put({
+    const db = new AWS.DynamoDB.DocumentClient();
+
+    return db.put({
         TableName: 'Rides',
         Item: {
             RideId: rideId,
             User: username,
             Unicorn: unicorn,
             RequestTime: new Date().toISOString(),
+
         },
     }).promise();
 }
@@ -104,14 +105,16 @@ function toUrlString(buffer) {
 }
 
 function errorResponse(errorMessage, awsRequestId, callback) {
-  callback(null, {
-    statusCode: 500,
-    body: JSON.stringify({
-      Error: errorMessage,
-      Reference: awsRequestId,
-    }),
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
+    callback(null, {
+        statusCode: 500,
+
+        body: JSON.stringify({
+            Error: errorMessage,
+            Reference: awsRequestId,
+        }),
+
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+    });
 }

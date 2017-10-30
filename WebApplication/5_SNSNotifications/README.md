@@ -1,16 +1,16 @@
 # Module 5: SNS Topic and Notifications To Lambda Functions
 
-In this module you'll use API Gateway to expose the Lambda function you built in the previous module as a RESTful API. This API will be accessible on the public Internet. It will be secured using the Amazon Cognito user pool you created in the previous module. Using this configuration you will then turn your statically hosted website into a dynamic web application by adding client-side JavaScript that makes AJAX calls to the exposed APIs.
+In this module you'll use SNS to publish messages from the Lambda you build in the previous modules and construct a topic in which you will provision and subscribe another Lambda to. 
 
 ![SNS Notification Architecture](../images/sns-notification-architecture.png)
 
-The diagram above shows how the API Gateway component you will build in this module integrates with the existing components you built previously. The grayed out items are pieces you have already implemented in previous steps.
+The diagram above shows how the SNS component you will build in this module integrates with the existing components you built previously. The grayed out items are pieces you have already implemented in previous steps.
 
 This module will focus on integration of Simple Notification Service (SNS) in your current architecture. The existing NodeJS code (requestUnicorn.js) has been altered slightly to publish a message containing the unicorn name to an SNS topic when a unicorn gets dispatched.  
 
 You may also notice that a new file (tallyUnicorn.js) has been introduced. This contains code for the new lambda function in which will need to be subscribed to the same SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
 
-This module will also be a challenge as it will take your knowledge mainly from module 3 in which you will provision a new Lambda and DynamoDB table and update the existing Lambda IAM policy. Most importantly, you will also learn to subscribe a Lambda function to an SNS topic. 
+This module will also be a challenge as it will take your knowledge mainly from module 3 in which you will provision a new Lambda and DynamoDB table and update the existing Lambda IAM policy.
 
 Lets Begin!   
 

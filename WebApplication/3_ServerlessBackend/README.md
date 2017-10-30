@@ -78,24 +78,28 @@ If we created a new folder called "src" and put requestUnicorn.js in there. What
 
 ### 3. Create an Amazon DynamoDB Table
 
-Next, we proceed to specify the stanzas to provision a DynamoDB table to record each ride requested. Copy and paste the yaml snippet below into the serverless.yml file under the existing <b>Resources</b> section.  
+Next, we proceed to specify the stanzas to provision a DynamoDB table to record each ride requested. You can see a simple example of how to provision a DynamoDB table <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/resources/">here</a>, however you should note that everything under the <b>resources</b> logical grouping is purely Cloudformation syntax so AWS online documentation is where you should look to get more details.   
+
+You can copy and paste the yaml below into the serverless.yml file.
 
 ```YAML
-RidesTable:
-    Type: {RESOURCE_TYPE}
-    Properties:
-    TableName: {TABLE_NAME}
-    AttributeDefinitions:
-        -
-        AttributeName: {HASH_FIELD_NAME}
-        AttributeType: S
-    KeySchema:
-        -
-        AttributeName: {HASH_FIELD_NAME}
-        KeyType: HASH
-    ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+resources:
+  Resources:
+    RidesTable:
+        Type: {RESOURCE_TYPE}
+        Properties:
+        TableName: {TABLE_NAME}
+        AttributeDefinitions:
+            -
+            AttributeName: {HASH_FIELD_NAME}
+            AttributeType: S
+        KeySchema:
+            -
+            AttributeName: {HASH_FIELD_NAME}
+            KeyType: HASH
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
 ```  
 
 Looking at the above snippet we need to figure out what to replace the variables in curly braces with.  
@@ -120,7 +124,7 @@ Next, lets return to the code in requestUnicorn.js and search for the function c
 
 ### 4. Create an IAM Role for Your Lambda function
 
-We now require an IAM Role that lambda can assume when performing its tasks in order to interact with other AWS services. 
+We now require an IAM Role that lambda can assume when performing its tasks in order to interact with other AWS services. Start taking a look at <a href="https://serverless.com/framework/docs/providers/aws/guide/functions/#permissions">iamRoleStatements documentation</a> if you want to know more.  
 
 For simplicity sake, we will just specify a default role that will be assumed by all Lambda functions created for our service that has only the bare minimum permissions assigned. 
 

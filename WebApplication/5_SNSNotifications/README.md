@@ -6,9 +6,9 @@ The diagram above shows how the SNS component you will build in this module inte
 
 This module will focus on integration of SNS to your current architecture. The existing NodeJS code "requestUnicorn.js" has been altered slightly to publish a message to an SNS topic.  
 
-You may also notice that a new file "tallyUnicorn.js" has been introduced. This contains code for the new lambda function in which will need to be subscribed to the SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
+You may also notice that a new file "tallyUnicorn.js" has been introduced. This contains code for the new lambda function in which will be subscribed to an SNS topic in order to receive messages containing details on the dispatched unicorn. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
 
-This module will also be a challenge as it will take your knowledge from module 3 in which you will add on serverless code to provision one more Lambda and DynamoDB table.
+This module will also be a challenge as it will take your acquired knowledge from module 3 to provision 1 more Lambda function and DynamoDB table.
 
 Lets Begin!   
 
@@ -33,9 +33,9 @@ If you wish to know more, visit the <a target="_blank" href="https://serverless.
 
 ### 2. Create DynamoDB table
 
-At this point in time, you should already have the serverless.yml code to provision the DynamoDB table that records the rides. We need one more table to store a counter of the number of times each unicorn gets dispatched. For simplicity, the unicorns will be uniquely identified by their name.  
+By now, you should already have the serverless.yml code to provision the DynamoDB table dedicated to recording the requested rides. We need 1 more table to store a counter of the number of times each unicorn gets dispatched. For simplicity, the unicorns will be uniquely identified by their name.  
 
-To help you get started, you may paste the snippet just below everything in the <b>RidesTable</b> stanzas. 
+You can see a simple example of constructing stanzas to provision a DynamoDB table <a href="https://serverless.com/framework/docs/providers/aws/guide/resources/">here</a>. To help you get started, you may copy and paste the snippet just below everything in the <b>RidesTable</b> logical grouping.  
 
 ```YAML
     UnicornsTable:
@@ -85,7 +85,7 @@ Once finished, you should have something that looks like below:
 
 ### 3. Create new Lambda and Subscribe to SNS Topic
 
-The next task is hooking up a Lambda function to an SNS topic. The beauty with serverless is that you can hook up a Lambda function to a topic without having to worry about explicitly creating it. Serverless handles that for you. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
+The next task is hooking up a Lambda function to an SNS topic. The beauty with serverless is that you can specify to subscribe a Lambda function to a topic without having to worry about explicitly creating it. Serverless handles that process for you. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
 
 Lets start by adding in a snippet below the existing <b>RidesHandler</b> lambda function. The handler function is in tallyUnicorn.js. With that information you should be able to resolve the value of <b>HANDLER_FUNCTION</b>. The topic name can be one of your choosing.   
 
@@ -132,9 +132,9 @@ Lets look back into the serverless.yml file at the stanza <b>iamRoleStatements</
 
 We need to figure out a few variables here for our new policy. Recall that in any event you are unsure how to construct the policy above you can look into the online resources below: 
 
-1. <a target="_blank" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">Find the <b>SERVICE_NAMESPACE</b></a>
+1. <a target="_blank" href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces">AWSService namespaces</a> 
 
-2. <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">Find the <b>API_METHOD</b></a>
+2. <a target="_blank" href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/api-permissions-reference.html">API methods</a>.  
 
 If you are unfamiliar with the Join syntax above, what's happening here is that we are asking it to do a string join consisting of various components as listed below: 
 1. The Amazon service namespace
@@ -144,7 +144,7 @@ If you are unfamiliar with the Join syntax above, what's happening here is that 
 
 To achieve that we invoke Cloudformation's intrinsic functions, specifically "Fn::Join" in which you can read more about <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a>.  
 
-With that said, we need to set the region and account id. We have two choices here...
+With that said, we need to somehow reference the region and account id. We have two choices here...
 1. Hardcode the region and account id.
 2. Use Cloudformation's pseudo parameters (parameters defined by Cloudformation)
 
@@ -221,9 +221,9 @@ Go ahead and fill in the environment variable. Using what you have learnt from t
 
 ### 6. Update IAM Policy for new Lambda function
 
-There is one remaining task we have to complete here which is to add a new policy to <b>iamRoleStatements</b> so our Lambda can write to the new DynamoDB table.  
+There is one remaining task we have to complete here which is to add a new policy to <b>iamRoleStatements</b> so our Lambda can write to the new DynamoDB table. Don't forget that we can use the <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/#permissions">function permissions documentation</a> as our reference point.  
 
-If we look into tallyUnicorn.js, the first function <b>updateDispatchedUnicornCount</b> invokes the DynamoDB service to increment a tally for the dispatched unicorn. We can update the policy by tacking on the new DynamoDB table Arn and the new API service to the existing stanza. So, it will look akin to the snippet below. 
+If we look into tallyUnicorn.js, the first function <b>updateDispatchedUnicornCount</b> invokes the DynamoDB service to increment a tally for the dispatched unicorn. We can update the policy by tacking on the new DynamoDB table Arn and the new API service to the existing stanza. So, we can start off by having something that looks like below: 
 
 ```YAML
   iamRoleStatements:
@@ -280,10 +280,8 @@ We can verify that stuff works by either:
 }
 ```
 
+<br>
 
-
-
-<!-- <br>
 <details>
 <summary><strong>Manual steps (expand for details)</strong></summary>
 
@@ -292,6 +290,8 @@ We can verify that stuff works by either:
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+
+<!--
 
 ### 1. Create a New REST API
 Use the Amazon API Gateway console to create a new API.
@@ -495,5 +495,5 @@ If you completed module 2 manually, you can edit the `config.js` file you have s
 Congratulations, you have completed the Wild Rydes Web Application Workshop! Check out our [other workshops](../../README.md#workshops) covering additional serverless use cases.
 
 See this workshop's [cleanup guide](../9_CleanUp) for instructions on how to delete the resources you've created.
-
-</details> -->
+ -->
+</details> 

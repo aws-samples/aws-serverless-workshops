@@ -1,4 +1,4 @@
-# Module 4: RESTful APIs with AWS Lambda and Amazon API Gateway
+# Module 5: SNS Topic and Notifications To Lambda Functions
 
 In this module you'll use API Gateway to expose the Lambda function you built in the previous module as a RESTful API. This API will be accessible on the public Internet. It will be secured using the Amazon Cognito user pool you created in the previous module. Using this configuration you will then turn your statically hosted website into a dynamic web application by adding client-side JavaScript that makes AJAX calls to the exposed APIs.
 
@@ -10,11 +10,12 @@ This module will focus on integration of Simple Notification Service (SNS) in yo
 
 You may also notice that a new file (tallyUnicorn.js) has been introduced. This contains code for the new lambda function in which will need to be subscribed to the same SNS topic in order to receive messages. Once the message is received, it will proceed to update a separate DynamoDB table that keeps track of the number of times each unicorn has been dispatched so far. 
 
-This module will also be a challenge as it will take your knowledge mainly from module 3 to provision one more of each of the following: 
+This module will also be a challenge as it will take your knowledge mainly from module 3 in which you will provision and update: 
 1. DynamoDB table
 2. Lambda function  
+3. Lambda IAM Policy
 
-Most importantly, you will learn to create an SNS topic in which you will subscribe a Lambda function to, in order to receive notifications.  
+Most importantly, you will also learn to subscribe a Lambda function to an SNS topic. 
 
 Lets Begin!   
 

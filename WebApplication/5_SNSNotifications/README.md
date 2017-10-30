@@ -35,7 +35,7 @@ If you wish to know more, visit the <a target="_blank" href="https://serverless.
 
 By now, you should already have the serverless.yml code to provision the DynamoDB table dedicated to recording the requested rides. We need 1 more table to store a counter of the number of times each unicorn gets dispatched. For simplicity, the unicorns will be uniquely identified by their name.  
 
-You can see a simple example of constructing stanzas to provision a DynamoDB table <a href="https://serverless.com/framework/docs/providers/aws/guide/resources/">here</a>. To help you get started, you may copy and paste the snippet just below everything in the <b>RidesTable</b> logical grouping.  
+You can see a simple example of constructing stanzas to provision a DynamoDB table <a href="https://serverless.com/framework/docs/providers/aws/guide/resources/">here</a>. To help you get started, you may copy and paste the snippet below the existing <b>RidesTable</b> logical grouping.  
 
 ```YAML
     UnicornsTable:
@@ -85,7 +85,7 @@ Once finished, you should have something that looks like below:
 
 ### 3. Create new Lambda and Subscribe to SNS Topic
 
-The next task is hooking up a Lambda function to an SNS topic. The beauty with serverless is that you can specify to subscribe a Lambda function to a topic without having to worry about explicitly creating it. Serverless handles that process for you. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
+The next task is hooking up a Lambda function to an SNS topic. One of the features with serverless is that you can specify to subscribe a Lambda function to a topic without having to worry about explicitly creating it. Serverless handles that process for you. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
 
 Lets start by adding in a snippet below the existing <b>RidesHandler</b> lambda function. The handler function is in tallyUnicorn.js. With that information you should be able to resolve the value of <b>HANDLER_FUNCTION</b>. The topic name can be one of your choosing.   
 
@@ -219,7 +219,7 @@ Go ahead and fill in the environment variable. Using what you have learnt from t
 
 There is one remaining task we have to complete here which is to add a new policy to <b>iamRoleStatements</b> so our Lambda can write to the new DynamoDB table. Don't forget that we can use the <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/#permissions">function permissions documentation</a> as our reference point.  
 
-If we look into tallyUnicorn.js, the first function <b>updateDispatchedUnicornCount</b> invokes the DynamoDB service to increment a tally for the dispatched unicorn. We can update the policy by tacking on the new DynamoDB table Arn and the new API service to the existing stanza. So, we can start off by having something that looks like below: 
+If we look into "tallyUnicorn.js", the first function <b>updateDispatchedUnicornCount</b> invokes the DynamoDB service to increment a tally for the dispatched unicorn. We can update the policy by tacking on the new DynamoDB table Arn and the new API service to the existing stanza. So, we can start off by having something that looks like below: 
 
 ```YAML
   iamRoleStatements:

@@ -1,6 +1,6 @@
 # Module 5: SNS Topic and Notifications To Lambda Functions
 
-In this module you'll use SNS to publish messages from the Lambda you build in the previous modules and construct a topic in which you will provision and subscribe another Lambda to. 
+In this module you'll use SNS to publish messages from the Lambda you build in the previous modules and construct a topic in which your Lambda function will be subscribed to. 
 
 ![SNS Notification Architecture](../images/sns-notification-architecture.png)
 
@@ -23,6 +23,7 @@ You may notice that some reference materials are from the official Cloudformatio
 If you wish to know more, visit the <a target="_blank" href="https://serverless.com/framework/docs/">serverless website</a>. You will notice that there are adaptations for Azure, Google Cloud, AWS and so forth. Since we are using AWS, you should look there.  
 
 <br>
+
 ### 1. Prerequisites
 
 1. Install Node version 6.10 (https://nodejs.org/en/) if you have not done so yet.  
@@ -31,6 +32,7 @@ If you wish to know more, visit the <a target="_blank" href="https://serverless.
 4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/4_RESTfulAPIs project folder 
 
 <br>
+
 ### 2. Create DynamoDB table
 
 At this point in time, you should already have the serverless.yml code to provision the DynamoDB table that records the rides. We need one more table to store a tally of the number of times each unicorn gets dispatched. To help you get started, you may paste the snippet just below everything in the <b>RidesTable</b> stanzas. 
@@ -80,6 +82,7 @@ Once finished, you should have something that looks like below:
 </details>  
 
 <br>
+
 ### 3. Create new Lambda and Subscribe to SNS Topic
 
 The next task is hooking up a Lambda function to an SNS topic. The beauty with serverless is it will automatically create the topic is it doesn't exist yet. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
@@ -109,6 +112,7 @@ Deciding on the topic name is an important detail from here on as it you will ne
 </details>  
 
 <br>
+
 ### 4. Update Lambda policy to allow sending SNS notifications
 
 If you look at the function in <b>requestUnicorn.js</b> starting from line 76, you will see that we are attempting to use SNS to publish a message to a topic. The issue here is that we will have insufficient permissions to do that.  
@@ -173,6 +177,7 @@ Once completed, we should end up with something that looks similar to:
 </details>
 
 <br>
+
 ### 5. Supply Topic Arn as an environment variable to Lambda
 
 One important detail we have yet to supply is the topic arn to the requestUnicorn lambda function. If you look at the function starting on line 80, you will notice that it is expecting a topic arn supplied as an environment variable.  
@@ -215,6 +220,7 @@ Go ahead and fill in the environment variable. Using what you have learnt from t
 </details>
 
 <br>
+
 ### 6. Update IAM Policy for new Lambda function
 
 There is one remaining task we have to complete here which is to add a new policy to <b>iamRoleStatements</b> so our Lambda can write to the new DynamoDB table.  
@@ -252,6 +258,7 @@ You should something that looks like below:
 ```
 
 <br>
+
 ### 7. Deploy and Testing the new functionality
 
 We should now deploy what we have. Run "serverless deploy" in the CLI and wait until it completes.  

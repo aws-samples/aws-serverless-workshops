@@ -43,6 +43,7 @@ If you used the provided AWS CloudFormation template to complete module 1, simpl
 
 </p></details>
 
+<br>
 
 <details>
 <summary><strong>Manual steps (expand for details)</strong></summary><p>

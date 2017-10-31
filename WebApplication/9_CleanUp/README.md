@@ -4,10 +4,10 @@ This page provides instructions for cleaning up the resources created during the
 
 ## Resource Cleanup Instructions
 
-### 1. Modules 3-4 Cleanup
-Run "<b>serverless remove</b>" in the CLI in the root directory of module 4 only as it was technically just an extension of everything created in module 3. That should remove all provisioned resources.  
+### 1. Modules 3-5 Cleanup
+Run "<b>serverless remove</b>" in the CLI in the root directory of module 5 only as it was technically just an extension of everything created in both module 3 & 4. That should remove all provisioned resources.  
 
-If you want to be absolutely certain, then log into the console and view the Cloudformation service. You should see that the stack no longer exists. Also check API Gateway, S3 and Lambda in the console.  
+If you want to be absolutely certain, then log into the console and view the Cloudformation service. You should see that the stack no longer exists. Also check API Gateway, SNS, S3 and Lambda in the console.  
 
 ### 2. Module 2 Cleanup
 If you used the provided AWS CloudFormation template to complete module 2, simply delete the stack using the AWS CloudFormation Console. Otherwise, delete the Amazon Cognito user pool you created in module 2.
@@ -47,7 +47,52 @@ If you used the provided AWS CloudFormation template to complete module 1, simpl
 <details>
 <summary><strong>Manual steps (expand for details)</strong></summary><p>
 
-### 1. Module 4 Cleanup
+### 1. Module 5 Cleanup
+Delete the AWS Lambda function, SNS Topic and Amazon DynamoDB table you created in module 5.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+#### Lambda Function
+
+1. In the AWS Management Console, click **Services** then select **Lambda** under Compute.
+
+1. Select the `TallyUnicorn` function you created in module 5.
+
+1. From the **Actions** drop-down, choose **Delete function**.
+
+1. Choose **Delete** when prompted to confirm.
+
+
+#### DynamoDB Table
+
+1. In the AWS Management Console, click **Services** then select **DynamoDB** under Databases
+
+1. Choose **Tables** in the navigation menu.
+
+1. Choose the **Unicorns** table you created in module 3.
+
+1. Choose **Delete table** from the **Actions** drop-down.
+
+1. Leave the checkbox to **Delete all CloudWatch alarms for this table** selected and choose **Delete**.
+
+
+#### SNS Topic
+
+1. In the AWS Management Console, click **Services** then select **Simple Notification Service** under Messaging.
+
+1. Choose **Topics** in the sidebar.
+
+1. Select `DispatchUnicorn`.
+
+1. Choose **Delete topics** from the **Actions** drop-down.
+
+1. Choose **Delete** when prompted to confirm.
+
+</details>
+
+
+### 2. Module 4 Cleanup
 Delete the REST API created in module 4. There is a **Delete API** option in the **Actions** drop-down when you select your API in the Amazon API Gateway Console.
 
 <details>
@@ -64,7 +109,7 @@ Delete the REST API created in module 4. There is a **Delete API** option in the
 </p></details>
 
 
-### 2. Module 3 Cleanup
+### 3. Module 3 Cleanup
 Delete the AWS Lambda function, IAM role and Amazon DynamoDB table you created in module 3.
 
 <details>
@@ -108,7 +153,7 @@ Delete the AWS Lambda function, IAM role and Amazon DynamoDB table you created i
 
 </p></details>
 
-### 3. Module 2 Cleanup
+### 4. Module 2 Cleanup
 If you used the provided AWS CloudFormation template to complete module 2, simply delete the stack using the AWS CloudFormation Console. Otherwise, delete the Amazon Cognito user pool you created in module 2.
 
 <details>
@@ -126,7 +171,7 @@ If you used the provided AWS CloudFormation template to complete module 2, simpl
 
 </p></details>
 
-### 4. Module 1 Cleanup
+### 5. Module 1 Cleanup
 If you used the provided AWS CloudFormation template to complete module 1, simply delete the stack using the AWS CloudFormation Console. Otherwise, delete the Amazon S3 bucket you created in module 1.
 
 <details>
@@ -143,7 +188,7 @@ If you used the provided AWS CloudFormation template to complete module 1, simpl
 </p></details>
 
 
-### 5. CloudWatch Logs
+### 6. CloudWatch Logs
 AWS Lambda automatically creates a new log group per function in Amazon CloudWatch Logs and writes logs to it when your function is invoked. You should delete the log group for the **RequestUnicorn** function. Also, if you launched any CloudFormation stacks, there may be log groups associated with custom resources in those stacks that you should delete.
 
 <details>

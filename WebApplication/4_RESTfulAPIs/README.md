@@ -26,6 +26,8 @@ If you wish to know more, visit the <a target="_blank" href="https://serverless.
 3. Run "npm install -g serverless" in CLI - installs the serverless utility on your machine so it can be run in anywhere  
 4. Choose a code editor (i.e. Atom, Visual Code etc) and open WebApplication/4_RESTfulAPIs project folder 
 
+<br>
+
 ### 2. Create a New REST API
 
 As before, there is a serverless yml file that is readily available for use. Otherwise, you can replace its contents with the one you have been working with in the past modules.
@@ -67,6 +69,7 @@ functions:
 Go ahead and run "serverless deploy" in the CLI. That should provision a new API gateway resource and serverless should in turn print out the endpoint url. However attempting to POST to that url will result in a message returned "Authorization not configured". That brings us to the final step.  
 
 <br>
+
 ### 3. Create a Cognito User Pools Authorizer
 
 Amazon API Gateway can use the JWT tokens returned by Cognito User Pools to authenticate API calls. In this step you'll configure an authorizer for your API to use the user pool you created in module 2.  
@@ -93,7 +96,7 @@ functions:
     events:
       - http: 
           integration: lambda-proxy
-          path: rocks        
+          path: ride        
           method: post
           cors: true
           authorizer:

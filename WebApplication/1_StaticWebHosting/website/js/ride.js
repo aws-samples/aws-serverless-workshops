@@ -5,6 +5,7 @@ WildRydes.map = WildRydes.map || {};
 
 (function rideScopeWrapper($) {
     var authToken;
+    
     WildRydes.authToken.then(function setAuthToken(token) {
         if (token) {
             authToken = token;
@@ -15,6 +16,7 @@ WildRydes.map = WildRydes.map || {};
         alert(error);
         window.location.href = '/signin.html';
     });
+
     function requestUnicorn(pickupLocation) {
         $.ajax({
             method: 'POST',

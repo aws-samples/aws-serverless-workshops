@@ -346,6 +346,8 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 </p></details>
 
+<br>
+
 ### 3. Create a Lambda Function for Handling Requests
 
 #### Background

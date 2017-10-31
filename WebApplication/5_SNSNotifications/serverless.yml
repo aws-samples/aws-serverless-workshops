@@ -31,7 +31,7 @@ functions:
     events:
       - http: 
           integration: lambda-proxy
-          path: rocks        
+          path: ride     
           method: post
           cors: true
           authorizer:

@@ -64,8 +64,10 @@ functions:
                 cors: true
 ``` 
 
-</details>  
-  
+</details>
+
+<br>
+
 Go ahead and run "serverless deploy" in the CLI. That should provision a new API gateway resource and serverless should in turn print out the endpoint url. However attempting to POST to that url will result in a message returned "Authorization not configured". That brings us to the final step.  
 
 <br>

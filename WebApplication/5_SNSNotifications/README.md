@@ -55,9 +55,9 @@ You can see a simple example of constructing stanzas to provision a DynamoDB tab
           WriteCapacityUnits: 1
 ```  
 
-As before, you need to figure out the few missing variables. For your reference, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/resources/#aws-cloudformation-resource-reference">here</a> to get the value for <b>RESOURCE_TYPE</b>. Secondly, look into tallyUnicorn.js to retrieve the <b>TABLE_NAME</b> and <b>ATTRIBUTE_NAME</b>.  
+As before, you need to figure out the few missing variables. For your reference, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/resources/#aws-cloudformation-resource-reference">here</a> to decide on the appropriate value for <b>RESOURCE_TYPE</b>. 
 
-Once finished, you should have something that looks like below:  
+Secondly, look into tallyUnicorn.js to decide on the values for <b>TABLE_NAME</b> and <b>ATTRIBUTE_NAME</b>. Once you have filled in the blanks, you should have something that looks like below:  
 
 <details>
 <summary><strong>See answer (expand for details)</strong></summary>
@@ -85,9 +85,11 @@ Once finished, you should have something that looks like below:
 
 ### 3. Create new Lambda and Subscribe to SNS Topic
 
-The next task is hooking up a Lambda function to an SNS topic. One of the features with serverless is that you can specify to subscribe a Lambda function to a topic without having to worry about explicitly creating it. Serverless handles that process for you. If you want to learn more, you can look <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.  
+The next task is hooking up a Lambda function to an SNS topic. One of the features with serverless is that you can specify to subscribe a Lambda function to a topic without having to worry about explicitly creating it. Serverless will handle that process for you.  
 
-Lets start by adding in a snippet below the existing <b>RidesHandler</b> lambda function. The handler function is in tallyUnicorn.js. With that information you should be able to resolve the value of <b>HANDLER_FUNCTION</b>. The topic name can be one of your choosing.   
+A good place to find exampels on how to specify Lambda subscriptions to SNS topics can be found <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/events/sns/">here</a>.    
+
+Lets start by adding in a snippet beneath the existing <b>RidesHandler</b> logical grouping. The handler function is in "tallyUnicorn.js". You should be able to acquire information on the value of <b>HANDLER_FUNCTION</b> by looking in there. The topic name can be one of your choosing.   
 
 ```YAML
   UnicornsHandler:
@@ -113,9 +115,11 @@ The topic name you have decided on will be important detail from here on as it y
 
 ### 4. Update Lambda policy to allow sending SNS notifications
 
-If you look into <b>requestUnicorn.js</b> on line 76, you will see that we are attempting to use SNS to publish a message to a topic. The issue here is that we will have insufficient permissions to do that.  
+If you look into <b>requestUnicorn.js</b> on line 76, you will see that we are attempting to use SNS to publish a message to a topic. 
 
-Lets look back into the serverless.yml file at the stanza <b>iamRoleStatements</b>. For starters, you can copy and paste the snippet below the existing policy.  
+The issue here is the role assumed by the Lambda functions contains insufficient permissions to invoke the SNS API method to publish messages to that topic.  
+
+Lets remedy that by look back into the serverless.yml file at the stanza <b>iamRoleStatements</b>. For starters, you can copy and paste the snippet below the existing policy.  
 
 ```YAML
     - Effect: "Allow"
@@ -136,15 +140,15 @@ We need to figure out a few variables here for our new policy. Recall that in an
 
 2. <a target="_blank" href="http://docs.aws.amazon.com/sns/latest/dg/AccessPolicyLanguage_SpecialInfo.html#sns_aspen_actions">SNS API methods</a>.  
 
-Now we just need to specify the SNS topic Arn as the resource. If you are unfamiliar with the Join syntax above in the Resources grouping, what is happening here is we are performing a string join consisting of various components as listed below: 
+Now we just need to specify the SNS topic Arn as the resource. If you are unfamiliar with the syntax above in the <b>Resources</b> section, what is happening here is we are performing a string join using AWS <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">Cloudformation's intrinsic functions</a>.  
+
+It is useful to remember that the SNS Arn is composed of various components as listed below in sequential order: 
 1. The Amazon service namespace
 2. AWS region
 3. AWS account id
 4. Topic name
 
-To achieve that we invoke Cloudformation's intrinsic functions, specifically "Fn::Join" in which you can read more about <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">here</a>.  
-
-With that said, we need to somehow reference the region and account id. We shall make use of Cloudformation's pseudo parameters to access those variables. The best online resources documenting pseudo parameters can be found <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html">here</a>.  
+With that said, we need to gain reference to the region and account id the topic will be provisioned in. We shall make use of Cloudformation's pseudo parameters to access those variables. The best online resources documenting pseudo parameters can be found <a target="_blank" href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html">here</a>.  
 
 We also want to find the appropriate value for <b>TOPIC_NAME</b>. If you look back to the prior section (3) where we created the Lambda that subscribes to a topic you should be able to retrieve the topic name.  
 
@@ -174,11 +178,11 @@ Once completed, we should end up with something that looks similar to:
 
 ### 5. Supply Topic Arn as an environment variable to Lambda
 
-One important detail we have yet to supply is the topic arn to the requestUnicorn lambda function. If you look at the function starting on line 80, you will notice that it is expecting a topic arn supplied as an environment variable.  
+One important parameter we have yet to supply to the "requestUnicorn" Lambda is the topic arn. If you look at the function starting on line 80, you will notice that it is expecting a topic arn supplied as an environment variable.  
 
-You can read more about specifying environment variables <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/#environment-variables">here</a>.
+You can find helpful examples on passing environment variables to Lambda functions during deployment <a target="_blank" href="https://serverless.com/framework/docs/providers/aws/guide/functions/#environment-variables">here</a>.  
 
-Now that we know the topic name, lets provide the environment variable like below.  
+Now that we know the topic name, lets provide the environment variable like below. 
 
 ```YAML
   RidesHandler:
@@ -195,7 +199,9 @@ Now that we know the topic name, lets provide the environment variable like belo
             - "{TOPIC_NAME}"
 ```
 
-Go ahead and fill in the environment variable. Using what you have learnt from the prior section, you should be able to also fill in the remaining blanks that compose the topic Arn. Your environment stanzas should look something like the snippet below. 
+Go ahead and fill in the environment variable for starters based on what you observe in the JS code.  
+
+Again, we are building the SNS Arn using Cloudformation's intrinsic function "Fn::Join". Using what you have learnt from the prior section, you should be able to also fill in the remaining blanks that compose the topic Arn. Your environment stanza should look something like the snippet below. 
 
 <details>
 <summary><strong>See answer (expand for details)</strong></summary>

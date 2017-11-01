@@ -182,6 +182,10 @@ Resources:
         - email
       AutoVerifiedAttributes:
         - email
+      Schema:
+        - AttributeDataType: String
+          Name: email
+          Required: true
 
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
@@ -280,6 +284,8 @@ Resources:
           };
               """
             config_content = config_content % (userPoolId, clientId, region)
+            print "Writing config content: %s" % config_content
+            print "Writing to bucket: %s" % bucket
             config = s3.Object(bucket,'js/config.js')
             config.put(Body=config_content)
             return cfnresponse.SUCCESS, None
@@ -311,8 +317,8 @@ Resources:
             finally:
               cfnresponse.send(event, context, status, {}, new_physical_id)
 
-
     Type: AWS::Lambda::Function
+    DependsOn: WebsiteContent
 
   RidesTable:
     Type: AWS::DynamoDB::Table
@@ -619,6 +625,7 @@ Resources:
       
   UpdateApiConfigFunction:
     Type: AWS::Lambda::Function
+    DependsOn: UpdateCognitoConfigFunction
     Properties:
       Description: Adds the API endpoint to the config.js file
       Handler: index.handler
@@ -637,7 +644,9 @@ Resources:
             bucket = properties['Bucket']
             config_object = s3.Object(bucket, 'js/config.js').get()
             config_data = config_object["Body"].read()
+            print "Current config: %s" % config_data
             config_data = config_data.replace("Base URL of your API including the stage", properties["InvokeUrl"])
+            print "Modified config: %s" % config_data
             config = s3.Object(bucket,'js/config.js')
             config.put(Body=config_data)
             return cfnresponse.SUCCESS, None

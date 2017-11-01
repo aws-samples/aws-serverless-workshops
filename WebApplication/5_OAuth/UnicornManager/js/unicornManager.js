@@ -84,7 +84,7 @@ var UnicornManager = window.UnicornManager || {};
                    ".amazoncognito.com" +
                    "/oauth2/authorize?response_type=token" +
                    "&client_id=" + window._config.cognito.userPoolClientId +
-                   "&redirect_uri=" + location.protocol + '//' + location.host + location.pathname +
+                   "&redirect_uri=" + location.protocol + '//' + location.host + '/' +
                    "&scope=UnicornManager/unicorn";
         
         console.log("Redirecting to: " + loginUri);

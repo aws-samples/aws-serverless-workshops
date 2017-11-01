@@ -22,6 +22,8 @@ html, body, #main, #map {
     margin-top: 30%;
     min-width: 50%;
     background-color: white;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 #request {

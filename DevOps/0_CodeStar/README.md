@@ -62,9 +62,13 @@ Use the AWS Console to create a CodeStar project called `uni-api` using the Node
 
     ![CodeStar 4](images/codestar-4.png)
 
-1. Type `uni-api` as the **Project name** and click the **Create Project** button in the lower right corner of the browser window to proceed.
+1. Type `uni-api` as the **Project name** and click the **Next** button in the lower right corner of the browser window to proceed.
 
     ![CodeStar 5](images/codestar-5.png)
+
+1. Cick the **Create Project** button in the lower right corner of the browser window to proceed.
+
+    ![CodeStar 5b](images/codestar-5b.png)
 
 1. Your IAM user name (not pictured below) will be displayed.  Type a user **Display Name** and **Email** in the according text boxes and click the **Next** button in the lower right corner of the browser window to proceed.
 

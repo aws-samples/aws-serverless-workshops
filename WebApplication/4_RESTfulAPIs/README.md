@@ -70,9 +70,15 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. If you are redirected to the sign-in page, sign in with the user you created in the last module. You will be redirected back to `/ride.html`.
 
-1. Copy the auth token from the notification on the `/ride.html`, and paste it into the **Identity token** field in the API Gateway console tab.
+1. Copy the auth token from the notification on the `/ride.html`, 
 
-1. Choose **Test** and verify that you see the claims for your user displayed.
+1. Go back to previous tab where you have just finished creating the Authorizer
+
+1. Click "Test", paste it into the **Authorization Token** field in the popup dialog.
+
+    ![Test Authorizer screenshot](../images/apigateway-test-authorizer.png)
+
+1. Click **Test** button and verify that you see the claims for your user displayed.
 
 </p></details>
 

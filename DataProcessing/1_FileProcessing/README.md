@@ -66,7 +66,7 @@ Use the IAM console to create a new role. Give it a name like `WildRydesFileProc
 
 You'll need to grant this role permissions to access both the S3 bucket and Amazon DynamoDB table created in the previous sections:
 
-- Create an inline policy allowing the role access to the `ddb:PutItem` action for the Amazon DynamoDB table you created in the previous section.
+- Create an inline policy allowing the role access to the `ddb:BatchWriteItem` action for the Amazon DynamoDB table you created in the previous section.
 
 - Create an inline policy allowing the role access to the `s3:GetObject` action for the S3 bucket you created in the first section.
 

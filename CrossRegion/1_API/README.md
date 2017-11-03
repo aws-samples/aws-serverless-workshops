@@ -28,6 +28,8 @@ Go ahead and create a bucket using the AWS Console or the CLI. S3 bucket names m
 
 Choose **Create** in the lower left of the dialog without selecting a bucket to copy settings from.
 
+<kbd>![Create Bucket](../images/mr-api-create-bucket.png)</kbd>
+
 </details>
 
 <details>

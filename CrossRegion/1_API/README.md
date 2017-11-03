@@ -37,7 +37,7 @@ Choose **Create** in the lower left of the dialog without selecting a bucket to 
 
 You can create a bucket using the CLI with the following command:
 
-     aws s3 mb s3://[bucket_name] --region eu-west-1
+     aws s3 mb s3://wildrydes-multiregion-blake-mitchell --region eu-west-1
 
 Note that in this and in the following CLI commands, we are explicitly passing in the region. Like many things in AWS, S3 buckets are regional. If you do not specify a region, a default will be used which may not be what you want.
 

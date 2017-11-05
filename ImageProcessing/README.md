@@ -89,46 +89,46 @@ EU (Ireland) | [![Launch Module 1 in eu-west-1](http://docs.aws.amazon.com/AWSCl
 <details>
 <summary><strong>AWS CloudFormation 실행 (자세히 보기)</strong></summary><p>
 
-1. Click the **Launch Stack** link above for the region of your choice.
+1. 위의 **Launch Stack** 링크를 클릭해서 원하는 리전을 찾으십시오.
 
-1. Click **Next** on the Select Template page.
+1. Select Template 페이지에서 **Next** 를 클릭하십시오.
 
-1. On the Specify Details page, leave all the defaults and click **Next**.
+1. 세부 정보 선택 페이지에서, 모두 기본값으로 그대로 둔 상태에서 **Next** 를 클릭하십시오.
 
-1. On the Options page, leave all the defaults and click **Next**.
+1. 옵션 (Option) 페이지에서, 모두 기본값으로 그대로 둔 상태에서 **Next** 를 클릭하십시오.
 
-1. On the Review page, Click the checkboxes to give AWS CloudFormation permission to **"create IAM resources"** and **"create IAM resources with custom names"**
+1. 리뷰 (Review) 페이지에서, AWS CloudFormation 권한중에서 **"create IAM resources"** 와 **"create IAM resources with custom names"** 의 권한을 부여하는 체크박스를 선택하십시오.
 
-1. Click **"Create Change Set"** in the Transforms section
+1. 변환 (Transforms) 섹션에서 **"Create Change Set"** 를 클릭하십시오.
 
-1. Click **"Execute"**
+1. **"Execute"** 를 클릭하십시오.
 
-1. Wait for the `wildrydes-step-module-resources` stack to reach a status of `CREATE_COMPLETE`.
+1. `wildrydes-step-module-resources` 스택이 `CREATE_COMPLETE` 상태가 될때까지 기다리십시오.
 
-1. With the `wildrydes-step-module-resources` stack selected, click on the **Outputs** tab. These resources will be referenced in the later steps. 
+1. `wildrydes-step-module-resources` 스택을 선택하고, **Outputs** 탭을 클릭하십시오. 여기에 표시된 리소스 정보는 다음 단계에서 참조합니다. (메모장 등에 붙여넣으세요) 
 
 </p></details>
 
 
 
-### 3. Create an initial AWS Step Functions state machine
+### 3. 초기 AWS Step Functions 상태 머신 작성하기
 
-After the riders upload their photo, the first thing we need do in our processing pipeline is to run a face detection algorithm on it to verify that it has a recognizable face in the photo (zero or multiple faces in the photo doesn't help unicorns recognize the rider) and the face is not wearing sunglasses (makes it harder to identify the rider). If these validations fail, notify the user and end the workflow.
+라이더가 사진을 업로드 한 뒤, 처리 파이프라인에서 가장 먼저 해야할일은 얼굴 인식 알고리즘을 실행해서 사진에 인식 가능한 얼굴이 있는지 확인하는것입니다 (사진의 얼굴이 없거나, 혹은 여러개라면 라이더를 인식할 수 없어서 유니콘을 사용할 수 없습니다) 얼굴은 선글라스를 착용하면 안됩니다 (라이더를 인식하기가 더 어려워집니다). 이러한 유효성 검사가 실패하면 사용자가에 알리고 워크 플로를 종료하십시오.
 
-The AWS Lambda function that implements this check by leveraging the **Amazon Rekognition** deep-learning based image analysis API is already deployed by AWS CloudFormation in the previous step. Look in the **Outputs** section for `FaceDetectionFunctionArn` for the ARN of the Lambda function. 
+**Amazon Rekognition** 딥 러닝 기반의 이미지  분석 API를 활용해서 위의 검사를 구현하는 AWS Lambda 함수는 이미 이전 단계에서 AWS CloudFormation 에 의해 배포되었습니다. **Outputs** 섹션에서 람다 함수의 ARN에 대한 `FaceDetectionFunctionArn` 를 확인하십시오. 
 
-The AWS Lambda function to be called when the validations fail is the  `NotificationPlaceholderFunction` deployed by AWS CloudFormation. The intent behind this step is to notify the user the photo validation failed and the error reason, so they can try upload a different photo. It's currently a stub implementation that just prepares the message instead of actually sending the message. 
+유효성 검사가 실패 할 때 호출되는 AWS Lambda 함수는 AWS CloudFormation 에 의해 배포 된  `NotificationPlaceholderFunction` 입니다. 이 단계의 목적은 사진 유효성 검증 실패 및 오류의 이유를 사용자에게 알리는것입니다. 따라서 다른 사진을 업로드 할 수 있습니다. 현재는 메시지를 보내는 대신 메시지를 준비하는 임시 구현입니다.
 
-Now you can create an AWS Step Functions state machine with the initial face detection step.
+이제 초기 얼굴 검출 단계로 AWS Step Functions 상태 머신을 생성할 수 있습니다.
 
-![initial state machine diagram](./images/1st-state-machine-graph.png)
+![초기 상태 머신 다이어그램](./images/1st-state-machine-graph.png)
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. AWS Step Functions state machine flows are defined by a JSON document. In your favorite text editor, create a file called `rider-photo-state-machine.json`.
+1. AWS Step Functions 상태 머신의 흐름은 JSON 문서 형태로 정의됩니다. 좋아하는 텍스트 편집기에서(Notepad++ 혹은 VS Code 등) `rider-photo-state-machine.json` 라는 파일을 만듭니다.
 
-1. Copy and paste the following into your JSON file:
+1. 다음을 복사하여 JSON 파일에 붙여 넣으십시오.
 
 	```JSON
 	{
@@ -160,52 +160,52 @@ Now you can create an AWS Step Functions state machine with the initial face det
 
 	```
 	
-	The above JSON defines a state machine using the [Amazon States Language](https://states-language.net/spec.html). Take a moment to understand its structure. 
+	위의 JSON 파일은 [Amazon States Language](https://states-language.net/spec.html) 를 사용하여 상태 머신을 정의합니다. 잠시 시간을 내서 구조를 이해하십시오. 
 	 
-	When this state machine is launched, the AWS Step Functions interpreter begins execution by identifying the Start State. It executes that state, and then checks to see if the state is marked as an End State. If it is, the machine terminates and returns a result. If the state is not an End State, the interpreter looks for a “Next” field to determine what state to run next; it repeats this process until it reaches a Terminal State (Succeed, Fail, or an End State) or a runtime error occurs.
+	이 상태 머신이 시작되면, AWS Step Functions 인터프리터는 시작 상태를 식별해서 실행을 시작합니다. 이 상태를 실행 한 다음 상태가 종료 상태(END State) 로 표시되는지 확인합니다. 그럴 경우 상태 머신은 종료되고 결과를 리턴합니다. 상태가 End State 가 아니면 해석기는 다음에 실행할 상태를 결정하기 위해서 "Next" 필드를 찾습니다. 터미널 상태 (성공, 실패 또는 종료)에 도달하거나 런타임 오류가 발핼할 때까지 이 프로세스를 반복합니다.
 	 
-	The `ResultPath` parameter in the `FaceDetection` state causes the output of the state to be the union of the original input passed to the state and an additional `detectedFaceDetails` field that holds the output from the AWS Lambda function.
+	`FaceDetection` 상태(state) 의 `ResultPath` 매개 변수(Parameter) 는 상태의 출력을 상태로 전달된 원래 입력과 AWS Lambda 함수의 출력을 보유하는 `detectedFaceDetails` 필드의 합집합으로 만듭니다.
 	 
-	The `Catch` parameter in the `FaceDetection` state can match custom error types thrown by the AWS Lambda function and change the flow of the execution based on the error type caught. 
+	`FaceDetection` 상태(state) 의 `Catch` 매개 변수(Parameter) 는 AWS Lambda 함수에 의해 던져진 커스텀 타입 에러와 매치될 수 있고, 잡힌 에러 타입에 기반한 실행 흐름을 바꿀 수 있습니다.
 
 
-1. Replace the `REPLACE_WITH_FaceDetectionFunctionArn` in the JSON with the ARN of the face detection AWS Lambda function.
-	> To find the ARN of the face detection AWS Lambda function, in the AWS CloudFormation Console, go to the `wildrydes-step-module-resources` stack, look in the **Outputs** section for `FaceDetectionFunctionArn`)
+1. JSON 파일에서 `REPLACE_WITH_FaceDetectionFunctionArn` 를 얼굴 인식(face detection) AWS Lambda 함수의 ARN 으로 바꿔줍니다.
+	> 얼굴 인식(face detection) AWS Lambda 함수의 ARN을 찾으려면, AWS CloudFormation 콘솔에서, `wildrydes-step-module-resources` 스택으로 이동해서, **Outputs** 섹션에서 `FaceDetectionFunctionArn` 를 찾습니다)
 
-1. Replace the `REPLACE_WITH_NotificationPlaceholderFunctionArn` in the JSON with the ARN of the AWS Lambda function that mocks sending user notifications.
-	> To find the ARN of the mock notification AWS Lambda function, in the AWS CloudFormation Console, go to the `wildrydes-step-module-resources` stack, look in the **Outputs** section for `NotificationPlaceholderFunctionArn`)
+1. JSON 파일에서 `REPLACE_WITH_NotificationPlaceholderFunctionArn` 모의로 유저에게 알람을 보내는 AWS Lambda 함수의 ARN 으로 바꿔줍니다.
+	> 모의로 유저에게 알람을 보내는 AWS Lambda 함수의 ARN 을 찾으려면, AWS CloudFormation 콘솔에서, `wildrydes-step-module-resources` 스택으로 이동해서, **Outputs** 섹션에서 `NotificationPlaceholderFunctionArn` 를 찾습니다)
  
 
-1. From the AWS Management Console, choose **Services** then select **Step Functions**. 
+1. AWS Management 콘솔에서, **Services** 를 선택한 다음 **Step Functions** 를 선택하십시오. 
 
-1. You might see the Get Started page if you have not used AWS Step Functions before. If that's the case, click **Get Started**, it should lead you to the page to create a new state machine. Otherwise, click the **Create a State Machine** button. 
+1. 이전에 AWS Step Functions 를 사용하지 않았다면 시작 페이지를 볼 수 있습니다. 이 경우 **Get Started** 를 클릭하면, 새 상태 머신을 만드는 페이지로 연결됩니다. 그렇지 않으면, **Create a State Machine** 버튼을 클릭하십시오. 
 
-1. Type `RiderPhotoProcessing-1` for the state machine name.
+1. 상태 머신의 이름으로 `RiderPhotoProcessing-1` 를 입력하십시오.
 
-1. Paste in the JSON from your `rider-photo-state-machine.json` file into the **Code** editor portion. 
+1. `rider-photo-state-machine.json` 파일늬 JSON을 **Code** 편집기(Editor) 부분에 붙여 넣으십시오. 
 
-1. You can click on the &#x21ba; sign next to **Preview** to visualize the workflow:
+1. **Preview** 화면 옆의 새로고침 버튼을 눌러서 워크 플로우를 시작화하십시오:
  
-	![create initial state machine](./images/create-initial-state-machine-2.png)
+	![초기 상태 머신 만들기](./images/create-initial-state-machine-2.png)
 
 
-1. Click **Create State Machine** to create the state machine.
+1. **Create State Machine** 를 클릭해서 상태 머신을 작성하십시오.
 
-1. In the pop-up window, select the IAM role automatically generated for you (the name should look like `StatesExecutionRole-{region-name}`).
+1. 팝업 창에서, 자동 생성된 IAM 역할을 선택하십시오 (이름은 `StatesExecutionRole-{region-name}` 와 같아야합니다).
 
-	![pick IAM role for state machine](./images/pick-state-role.png)
+	![상태 머신에 대한 IAM 역할 선택](./images/pick-state-role.png)
 
-1. Click the **New execution** button to start a new execution.
+1. **New execution** 버튼을 클릭하여 새 실행을 시작합니다.
 
-1. Here you specify the input data passed into the AWS Step Functions state machine to process.
+1. AWS Step Functions 상태 머신으로 전달 된 입력 데이터를 처리하도록 지정합니다.
 
-   Each execution of a Step Functions state machine has an unique ID. You can either specify one when starting the execution, or have the service generate one for you. In the text field that says "enter your execution id here",  you can specify an execution ID, or leave it blank. 
+   Step Functions 상태 머신의 각 실행에는 고유한 ID(unique ID)가 있습니다. 실행을 시작할 때 하나를 지정하거나 서비스가 생성하도록 할 수 있습니다. "enter your execution id here" 라는 텍스트 필드에서, 실행 ID(execution ID) 를 지정하거나, 혹은 비워둘 수 있습니다. 
    
-   For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` field with your own values. 
+   입력 데이터(input date)의 경우, follow JSON 을 입력하십시오. `s3Bucket` 필드를 자신의 S3 버킷 값으로 바꿔주십시오. 
    
-	For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`. 
+	`s3Bucket` 필드의 경우, `wildrydes-step-module-resources` 스택의 **Outputs** 섹션에서 `RiderPhotoS3Bucket` 정보를 보십시오. 
 	
-	The `userId` field is needed because in later processing steps, the userId is used to record which user the profile picture is associated with.
+	`userId` 필드는 나중에 처리 단계에서 userId 를 사용하여 프로필 사진이 연결된 사용자를 기록하기 때문에 필요합니다.
 
 	
 	```JSON
@@ -215,15 +215,15 @@ Now you can create an AWS Step Functions state machine with the initial face det
 	  "s3Key": "1_happy_face.jpg"
 	} 
 	```
-	> this tells the image processing workflow the userId that uploaded the picture and the Amazon S3 bucket and keys the photo is at.  
+	> 이것은 사전 처리 작업 흐름에 사진을 업로드 한 userId 와 Amazon S3 버킷 및 사진이 있는 키를 알려줍니다.  
 	
-	![test new execution](./images/test-execution-1.png)
+	![새로운 실행 테스트](./images/test-execution-1.png)
 
-1. You can now see the state machine execution in action. Explore the different tabs in the Console to see what information is available to you for this execution:
+1. 이제 상태 머신을 실행을 볼 수 있습니다. 콘솔에서 여러 탭을 탐색하여 이 실행을 위해 사용할 수 있는 정보를 확인하십시오:
 
-	![1st execution result](./images/1st_execution_result.png)
+	![첫번째 실행 결과](./images/1st_execution_result.png)
 
-1. Create another execution by passing in the s3 key of a photo that wears sunglasses, see how the execution differs:  
+1. 선글라스를 착용한 사진의 s3 키를 전달해서 다른 실행 방법을 만들고, 실행 방법이 다른지 확인하십시오:  
 
 	```JSON
 	{
@@ -232,22 +232,22 @@ Now you can create an AWS Step Functions state machine with the initial face det
 	  "s3Key": "2_sunglass_face.jpg"
 	} 
 	```
-![sunglasses execution result](./images/initial-machine-sunglasses.png)
+![선글라스 실행 결과](./images/initial-machine-sunglasses.png)
 </p></details>
 
 
-### 4. Add steps to prevent duplication and add face to index
+### 4. 중복을 방지하고 얼굴을 색인에 추가하는 단계 추가
 
-If the uploaded photo has passed the basic face detection checks, the next step is to ensure the face has not been stored in our collection already to prevent the same user from signing up multiple times. In this section, you will add a **CheckFaceDuplicate** step to your state machine by leveraging the `FaceSearchFunction` AWS Lambda function.
+업로드 된 사진이 기본 얼굴 인식을 통과한 경우, 다음 단계는 동일한 사용자가 여러번 가입하지 못하도록 얼굴이 이미 콜렉션에 저장되지 않았는지 확인하는것입니다. 이 섹션에서는  `FaceSearchFunction` AWS Lambda 함수를 활용하여 **CheckFaceDuplicate** 상태 머신을 시스템에 추가합니다.
 
-![2nd state machine diagram](./images/2nd-state-machine-graph.png)
+![두번째 상태 머신 다이어그램](./images/2nd-state-machine-graph.png)
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요</strong></summary><p>
 
-1. Edit your `rider-photo-state-machine.json` file to add a new step to the workflow. 
+1. `rider-photo-state-machine.json` 파일을 편집해서 워크 플로우에 새로운 단계를 추가하십시오.
 
-   First, add a new state `CheckFaceDuplicate` following the `PhotoDoesNotMeetRequirement` state. Then, replace the `REPLACE_WITH_FaceSearchFunctionArn` with the `FaceSearchFunctionArn` from the AWS CloudFormation output: 
+   먼저, `PhotoDoesNotMeetRequirement` 상태 다음에 새로운 상태인 `CheckFaceDuplicate` 를 추가하십시오. 그런 다음 `REPLACE_WITH_FaceSearchFunctionArn` 를 AWS CloudFormation output 정보에서 `FaceSearchFunctionArn` 로 바꾸십시오: 
 
 
 	```JSON
@@ -268,23 +268,23 @@ If the uploaded photo has passed the basic face detection checks, the next step 
       ]
     }
 	```
-1. Find the line in the `FaceDetection` state that marks it as the End state of the state machine
+1. `FaceDetection` 상태에서 상태 머신의 종료 상태로 표시하는 라인을 찾습니다.
 
 	```JSON
 	     	 "End": true,
 
 	```
-	and replace it with
+	그리고 아래와 같이 변경하십시오
 	
 	```JSON
       		"Next": "CheckFaceDuplicate",
 
 	```
-	This tells AWS Step Functions if the  `FaceDetection` state runs successfully, go on to run the `CheckFaceDuplicate` state as the next step in the process. 
+	아곳운 `FaceDetection` 상태가 성공적으로 실행되면 AWS Step Functions 에 알려주고, 다음 단계로 `CheckFaceDuplicate` 상태를 실행합니다. 
 
-1. At this point, your `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples): 
+1. 이 시점에서, 여러분의 `rider-photo-state-machine.json` 파일은 다음과 같이 보일것입니다. (AWS Lambda ARN 은 예제입니다): 
 	<details>
-	<summary><strong>(expand to see)</strong></summary><p>
+	<summary><strong>(펼치면 보여집니다)</strong></summary><p>
 
 	```JSON
 	{
@@ -331,13 +331,13 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-2` by copy-pasting the updated JSON definition:
+1. AWS Step Functions 콘솔로 돌아가서, 업데이트 된 JSON 정의를 복사해서 붙여넣고 새로운 상태 머신인 `RiderPhotoProcessing-2` 를 생성하십시오:
 
-	![Create State Machine with dedup step](./images/create-machine-with-dedup.png)
+	![상태 머신을 만들기](./images/create-machine-with-dedup.png)
 
-	> **Note**: AWS Step Functions state machines are immutable. Therefore, every time you want to change the state machine definition, you must always create a new state machine. 
+	> **참고**: AWS Step Functions 상태 머신은 변경 불가능합니다. 따라서, 상태 머신 정의를 변경하려고 할 때 마다 항상 새 상태 머신을 만들어야 합니다. 
 	
-1. Test the new state machine with the test input you've used before:
+1. 이전에 사용한 테스트 입력을 사용하여 새 상태 머신을 테스트하십시오:
 
 	```JSON
 	{
@@ -346,28 +346,28 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	  "s3Key": "1_happy_face.jpg"
 	} 
 	```
-	Because we haven't added the step yet to index the face in the photo into the Rekognition collection, the `CheckFaceDuplicate` step will always succeed at this point. 
+	사진의 얼굴을 Rekognition 컬렉션에 색인화하기위한 단계를 아직 추가하지 않았으므로, 이 시점에서 `CheckFaceDuplicate` 단계가 항상 성공합니다. 
 
 
 </p></details>
 
-### 5. Add parallel processing step
+### 5. 병렬 처리 (parallel processing) 단계 추가
 
-If the uploaded photo passes both the `FaceDetection` and `CheckFaceDuplicate` stage, we can now proceed to index the rider's face and resize the photo for displaying in the app. Since these two steps don't depend on one another, they can be run in parallel. We will add a Parallel state in AWS Step Functions to run these steps. 
+업로드 된 사진이 `FaceDetection` 와 `CheckFaceDuplicate` 단계를 통과하면, 라이더의 얼굴을 색인화하고 사진의 크기를 조정하여 앱에 표시할 수 있습니다. AWS Step Functions에 Parallel 상태를 추가 할 것 입니다. 
 
-The ARNs of the two AWS Lambda functions that performs face index and generate thumbnails can be found in the AWS CloudFormation output `IndexFaceFunctionArn` and `ThumbnailFunctionArn` respectively. 
+얼굴 인덱스를 수행하고 축소판을 생성하는 두 개의 AWS Lambda 함수의 ARN은 AWS 람다 함수의 ARN은 AWS CloudFormation 출력의 `IndexFaceFunctionArn` 와 `ThumbnailFunctionArn` 에서 각각 찾을 수 있습니다. 
 
 <img src="./images/3rd-state-machine-graph.png" width="60%">
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. Edit your `rider-photo-state-machine.json` file to add a parallel step (with two sub-steps) to the workflow. 
+1. `rider-photo-state-machine.json` 파일을 편집하여 워크 플로우에 병렬 단계 (두개의 하위 단계가 있음) 를 추가하십시오. 
 
-   First, add a new state `ParallelProcessing` following the `CheckFaceDuplicate` state. Also make sure:
+   우선, `CheckFaceDuplicate` 상태 다음에 새로운 상태인 `ParallelProcessing` 를 추가하십시오. 또한 다음 사항을 확인하십시오:
    
-   *   Replace the `REPLACE_WITH_IndexFaceFunctionArn` with the `IndexFaceFunctionArn` from the AWS CloudFormation output.
-   *   Replace the `REPLACE_WITH_ThumbnailFunctionArn` with the `ThumbnailFunctionArn` from the AWS CloudFormation output. 
+   *   `REPLACE_WITH_IndexFaceFunctionArn` 를 AWS CloudFormation 의 output 정보 중에서 `IndexFaceFunctionArn` 로 변경하십시오.
+   *   `REPLACE_WITH_ThumbnailFunctionArn` 를 AWS CloudFormation 의 output 정보 중에서 `ThumbnailFunctionArn` 로 변경하십시오. 
 
 	```JSON
     ,
@@ -400,24 +400,24 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
     }
 	```
 	
-1. Find the line in the `CheckFaceDuplicate` state that marks it as the End state of the state machine.
+1. `CheckFaceDuplicate` 상태에서 상태 머신의 종료 상태로 표시하는 라인을 찾으십시오.
 
 	```JSON
 	     	 "End": true,
 
 	```
-	and replace it with
+	그리고 아래와 같이 변경하십시오
 	
 	```JSON
       		"Next": "ParallelProcessing",
 
 	```
-	This tells AWS Step Functions if the  `CheckFaceDuplicate ` state runs successfully, go on to run the `ParallelProcessing ` state as the next step in the process. 
+	`CheckFaceDuplicate` 상태가 성공적으로 실행되면, AWS Step Functions 에 알려주고, 프로세스 다음 단계로 `ParallelProcessing` 상태를 실행합니다. 
 
-1. At this point, your `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples): 
+1. 이 시점에서, 여러분의 `rider-photo-state-machine.json` 파일은 다음과 같이 보일것입니다. (AWS Lambda ARN은 예제입니다): 
 	
 	<details>
-	<summary><strong>(expand to see)</strong></summary><p>
+	<summary><strong>(펼치면 보여집니다)</strong></summary><p>
 
 	```JSON
 	{
@@ -491,13 +491,13 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-3` by copy-pasting the updated JSON definition:
+1. AWS Step Functions 콘솔로 돌아가서, 업데이트 된 JSON 정의를 복사한뒤 붙여넣어서 새로운 상태 머신인 `RiderPhotoProcessing-3` 를 생성하십시오:
 
-	![Create State Machine with parallel step](./images/create-machine-with-parallel.png)
+	![병렬 단계로 상태 머신 만들기](./images/create-machine-with-parallel.png)
 
-	> **Note**: AWS Step Functions state machines are immutable. Therefore, every time you want to change the state machine definition, you must always create a new state machine. 
+	> **참고**: AWS Step Functions 상태 머신은 변경 불가능합니다. 따라서, 상태 머신 정의를 변경하려고 할 때 마다 항상 새 상태 머신을 만들어야 합니다.
 	
-1. Test the new state machine with the test input you've used before:
+1. 이전에 사용한 테스트 입력을 사용하여 새 상태 머신을 테스트하십시오. :
 
 	```JSON
 	{
@@ -507,44 +507,44 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	} 
 	```
 
-1. If last step succeeds, you can use the AWS CLI to check the list of faces indexed in your Rekognition collection (replace the `REPLACE_WITH_YOUR_CHOSEN_AWS_REGION` portion with the region string of your chosen region):
+1. 마지막 단계가 성공하면, AWS CLI 를 사용하여 Rekognition 컬렉션에서 색인이 생성된 얼굴 목록을 확인할 수 있습니다 (`REPLACE_WITH_YOUR_CHOSEN_AWS_REGION` 부분을 선택한 지역의 지역 문자열로 대체하십시오):
 
 	```
 	aws rekognition list-faces --collection-id rider-photos --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
 	```
 	
-	> You might find the `delete-faces` command useful when testing:
+	> `delete-faces` 명령은 테스트 할 때 유용합니다:
 
 	```
 	aws rekognition delete-faces --collection-id rider-photos --face-ids REPLACE_WITH_ID_OF_FACE_TO_DELETE --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
 	```
 
-1. You can also use the Amazon S3 Console to check the Amazon S3 bucket created by AWS CloudFormation to store the resized thumbnail images. You should find resized thumbnail images in the bucket.
+1. 또한 Amazon S3 Console 을 이용해서 AWS CloudFormation 에서 만든 Amazon S3 버킷을 확인해서 크기가 조정된 썸네일 이미지를 저장할 수 있습니다. 버킷에서 축소된 썸네일 이미지를 찾아야합니다.
 
-	> The name of the S3 bucket can be found in the in AWS CloudFormation output `ThumbnailS3Bucket`. You can also simply search for it in the S3 Console for `wildrydes-step-module-resources-thumbnails3bucket`
+	> S3 버킷의 이름은 AWS CloudFormation output 정보에서 `ThumbnailS3Bucket` 로 찾을 수 있습니다. S3 콘솔에서 `wildrydes-step-module-resources-thumbnails3bucket` 로 검색해도 됩니다.
 
-1. What happens if you start a new workflow with a different `userId` but the same s3key and s3bucket parameters?  
+1. 다른 `userId` 지만 동일한 s3key 와 s3bucket 매개 변수를 사용하는 새 워크 플로를 시작하면 어떻게 됩니까?  
 
 
 </p></details>
 
-### 6. Add metadata persistence step
+### 6. 메타 데이터 지속성 단계 추가
 
-The last step of our image processing workflow is to persist the metadata of the profile photo with the user's profile.
+우리의 이미지 처리 워크 플로의 마지막 단계는 프로필 사진의 메타 데이터를 사용자 프로필로 유지하는것입니다.
 
-The ARN of the AWS Lambda function that persists the metadata can be found in the in AWS CloudFormation output `PersistMetadataFunctionArn`.
+메타 데이터를 지속시키는 AWS Lambda 함수의 ARM은 AWS CloudFormation output 의 `PersistMetadataFunctionArn` 에서 찾을 수 있습니다.
 
 <img src="./images/4th-state-machine-graph.png" width="60%">
 
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 
-1. Edit your `rider-photo-state-machine.json` file to add the final persistence step. 
+1. `rider-photo-state-machine.json` 파일을 편집하여 최종 영속성 단계를 추가하십시오. 
  
-   First, add a new state `PersistMetadata` following the `ParallelProcessing` state. Also make sure:
+   먼저, `ParallelProcessing` 상태 다음에 새로운 상태인 `PersistMetadata` 를 추가하십시오. 또한 다음 사항을 확인하십시오:
    
-   *   Replace the `REPLACE_WITH_PersistMetadataFunctionArn` with the `PersistMetadataFunctionArn ` from the AWS CloudFormation output
+   * `REPLACE_WITH_PersistMetadataFunctionArn` 를 AWS CloudFormation output 정보의  `PersistMetadataFunctionArn ` 로 변경하십시오.
 
 	```JSON
 	    ,
@@ -557,25 +557,25 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 
 	```
 
-1. Find the line in the `ParallelProcessing` state that marks it as the End state of the state machine.
+1. `ParallelProcessing` 상태에서 종료 상태로 표시하는 행을 찾으십시오.
 
 	```JSON
 	     	 "End": true
 
 	```
-	and replace it with
+	그리고 아래와 같이 변경하십시오
 	
 	```JSON
       		"Next": "PersistMetadata"
 
 	```
-	> **Note**: be careful to edit the `"End"` line at the `ParallelProcessing` level, not the individual branch level within the parallel state. 
+	> **참고**: 병렬 상태에 있는 개별 브랜치 레벨이 아닌 `ParallelProcessing` 레벨에서 `"End"` 라인을 편집할 때 주의하십시오. 
 	
-	This tells AWS Step Functions if the `ParallelProcessing` state runs successfully, go on to run the `PersistMetadata` state as the next step in the process. 
+	이것은 `ParallelProcessing` 상태가 성공적으로 실행되면 AWS Step Functions 에 알려주고 프로세스의 다음 단계로 `PersistMetadata` 상태를 실행합니다. 
 
-1. At this point, your `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples): 
+1. 이 시점에서, `rider-photo-state-machine.json` 파일은 다음과 같이 보일것입니다 (AWS Lambda ARN은 예제입니다): 
 	<details>
-	<summary><strong>(expand to see)</strong></summary><p>
+	<summary><strong>(펼치면 보여집니다)</strong></summary><p>
 
 	```JSON
 	{
@@ -655,11 +655,11 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-4` by copy-pasting the updated JSON definition:
+1. AWS Step Functions 콘솔로 돌아가서, 업데이트 된 JSON 정의를 복사 후 붙여넣기 해서 새로운 `RiderPhotoProcessing-4` 상태 머신을 생성하십시오:
 
-	![Create state machine with persistence step](./images/create-machine-with-persistence.png)
+	![지속성 단계가 있는 상태 시스템 만들기](./images/create-machine-with-persistence.png)
 	
-1. Test the new state machine with test input:
+1. 테스트 입력으로 새 상태머신을 테스트하십시오:
 
 	```JSON
 	{
@@ -669,19 +669,19 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	} 
 	```
 	
-	If you reference an image that's already indexed when you were testing the previous state machine, the execution would fail the `CheckFaceDuplicate` step like this:
-	![already indexed face](./images/already-indexed-face.png)
+	이전 상태 머신을 테스트 할 때 이미 인덱싱된 이미지를 참조하면, 실행시 다음과 같이 `CheckFaceDuplicate` 단계를 실패합니다:
+	![이미 색인 된 얼굴](./images/already-indexed-face.png)
 
-	You can use the `aws rekognition list-faces` and `aws rekognition delete-faces` commands to clean up the previous indexed faces during testing. Or you can upload a different picture to the `RiderPhotoS3Bucket` and use the s3 key of the new picture to test. 
+	여러분은 `aws rekognition list-faces` 와 `aws rekognition delete-faces` 명령어를 사용해서 테스트하는 동안 이전에 인덱스 된 얼굴 정보를 정리할 수 있습니다. `RiderPhotoS3Bucket` 에 다른 사진을 업로드 하고 새로운 사진의 s3 키를 사용해서 테스트 할 수도 있습니다. 
 	
 	
 </p></details>
 
-## Implementation Validation
+## 구현한 내용 검사하기
 
-1. Test the final state machine (`RiderPhotoProcessing-4`) with different test images provided 
+1. 제공된 여러가지 테스트 이미지를 사용하여 최종 상태머신 (`RiderPhotoProcessing-4`) 을 테스트 하십시오 
 
-	Photo with sunglasses:
+	선글라스가 있는 사진:
 
 	```JSON
 	{
@@ -691,7 +691,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	} 
 	```
 
-	Photo with multiple faces in it:
+	여러개의 얼굴이 있는 사진:
 	
 	```JSON
 	{
@@ -701,7 +701,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	} 
 	```
 	
-	Photo with no faces in it:
+	얼굴이 없는 사진:
 
 	```JSON
 	{
@@ -711,85 +711,84 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	} 
 	```
 	
-1. Upload some pictures you have to S3, test some executions. If you have more than one picture of the same person, upload them both and run the workflow on each picture (make sure to use different `userId` fields in the test input). Verify the **CheckFaceDuplicate** step will prevent the same face from being indexed more than once. 
+1. S3에 대한 사진을 업로드하고, 일부 실행을 테스트하십시오. 동일한 사람의 사진이 두 개 이상인 경우 둘 다 업로드하고 각 사진에서 워크 플로를 실행하십시오. (테스트 입력에서는 서로 다른 `userId` 필드를 사용해야 합니다). **CheckFaceDuplicate** 단계가 동일한 얼굴이 두 번 이상 색인되지 않도록 합니다. 
 
-1. Go to the Amazon DynamoDB console, look for a table with name starting with "wildrydes-step-module-resources-RiderPhotoDDBTable" (you can also find the table name in the CloudFormation stack output). Check out the items of the table. 
+1. Amazon DynamoDB 콘솔로 이동하여, "wildrydes-step-module-resources-RiderPhotoDDBTable" 로 시작하는 이름의 테이블을 찾습니다. (CloudFormation 스택 output 정보에서도 테이블 이름을 찾을 수 있습니다). 테이블에 표시되는 항목을 확인하십시오. 
 	
 	![](./images/dynamodb_example.png)
 
-1. Go to the Amazon S3 console, verify the thumbnail images of the photos you processed are in the thumbnail S3 Bucket. 
+1. Amazon S3 콘솔로 이동하여 처리한 사진의 썸네일 이미지가 썸네일 S3 버킷에 있는지 확인하십시오. 
 
-Now you have built a multi-step image processing workflow using AWS Step Functions! The workflow can be integrated to your app by fronting it with AWS API Gateway or triggered from an Amazon S3 upload event.  
+이제 AWS Step Functions 를 사용하여 다단계 이미지 처리 워크 플로우를 구축했습니다! 워크 플로우는 앞부분에 AWS API Gateway 를 사용하거나 Amazon S3 업로드 이벤트에서 트리거해서 어플리케이션에 통합 할 수 있습니다.  
 
-## Extra credit
-The intent of the **PhotoDoesNotMeetRequirement**  step is to send notification to the user that the verification of their profile photo failed so they might try uploading a different picture. It currently uses the AWS Lambda function `NotificationPlaceholderFunction` which simply returns the message instead of actually sending the notification. Implement sending email notifications in the Lambda function using Amazon Simple Email Service (SES). 
+## 추가 크레딧
+**PhotoDoesNotMeetRequirement** 단계의 의도는 프로필 사진 확인이 실패해서 다른 사진을 업로드 하려고 시도할 수 있음을 사용자에게 알리는 것입니다. 현재 알림을 실제로 보내지 않고 단순히 메시지를 반환하는 AWS Lambda 함수인  `NotificationPlaceholderFunction` 를 사용하고 있습니다.Amazon Simple Email Service (SES) 를 사용하여 Lambda 함수에서 전자 메일 알림을 전송하도록 구현합니다. 
 
-## Clean-up 
+## 자원 삭제 !!중요!! 
 
-1. Delete the `RiderPhotoProcessing-*` state machines from the AWS Step Functions console.
+1. AWS Step Functions 콘솔에서 `RiderPhotoProcessing-*` 상태 머신을 삭제하십시오.
 
 	<details>
-	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+	<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 	
-	In the AWS Step Functions Management Console, go to **Dashboard**, select the state machine to delete, then click **Delete**.
+	AWS Step Functions Management 콘솔에서, **Dashboard** 로 이동해서, 삭제할 상태 머신을 선택한다음, **Delete** 를 클릭하십시오.
 	
-	![delete state machines](./images/delete-machines.png) 
+	![상태 머신 삭제하기](./images/delete-machines.png) 
 	
 	</p></details>
 
-1. Empty the Amazon S3 buckets used to store rider images and thumbnails.
+1. 라이더 이미지와 썸네일 이미지를 저장하는데 사용되는 Amazon S3 버킷을 비웁니다.
 
 	<details>
-	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+	<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 	
-	1. In the Amazon S3 Management Console, click on the ![](./images/bucket-icon.png) icon next to Amazon S3 bucket used to store rider photos (The S3 bucket should have a name similar to `wildrydes-step-module-resource-riderphotos3bucket-7l698ggkdcf3`).
+	1. Amazon S3 Management 콘솔에서, S3 버킷 옆에 있는 ![](./images/bucket-icon.png) 아이콘을 클릭하십시오. (S3 버킷의 이름은 `wildrydes-step-module-resource-riderphotos3bucket-7l698ggkdcf3` 와 비슷합니다).
 	 
-		![select bucket](./images/s3-console-select-bucket.png) 
-	1. Click on the **Empty Bucket** button.
+		![버킷 선택](./images/s3-console-select-bucket.png) 
+	1. **Empty Bucket** 버튼을 선택하십시오.
 	
-		![empty bucket](./images/s3-console-empty-bucket.png)
+		![버킷 비우기](./images/s3-console-empty-bucket.png)
 		
-	1. Copy/paste the bucket name into the pop-up box, then click **Confirm**.
+	1. 버킷 이름을 팝업 상자에 복사/붙여넣기 한 다음, **Confirm** 을 클릭하십시오.
 	
-		![empty bucket](./images/s3-empty-bucket-dialog.png)
+		![버킷 비우기](./images/s3-empty-bucket-dialog.png)
 		
-	1. Repeat the steps to empty the Amazon S3 bucket used to store photo thumbnails (it should have a name similar to `wildrydes-step-module-resources-thumbnails3bucket-1j0t3m28k7mxo`).
+	1. 단계를 반복하여 썸네일 이미지를 저장하는데 사용되는 Amazon S3 버킷을 비웁니다 (S3 버킷의 이름은 `wildrydes-step-module-resources-thumbnails3bucket-1j0t3m28k7mxo` 와 비슷합니다).
 
 	</p></details>
 
-1. Delete the `wildrydes-step-module-resources` AWS CloudFormation stack that launched the AWS Lambda functions, Amazon S3 buckets and Amazon DynamoDB table.
+1. AWS Lambda 함수, Amazon S3 버킷 및 Amazon DynamoDB 테이블을 시작한 `wildrydes-step-module-resources` AWS CloudFormation 스택을 삭제하십시오.
 
 	<details>
-	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+	<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 	
-	1. In the AWS CloudFormation Management Console, select the `wildrydes-step-module-resources` stack.
+	1. AWS CloudFormation Management 콘솔에서, `wildrydes-step-module-resources` 스택을 선택하십시오.
 	
- 	1. Select **Delete Stack** under **Actions**.
+ 	1. **Actions** 드랍다운 메뉴 아래의 **Delete Stack** 를 선택하십시오.
  	
-		![delete cloudformation stack](./images/cloudformation-delete.png)
+		![cloudformation 스택 삭제](./images/cloudformation-delete.png)
 	
-	1. Click **Yes, Delete**
+	1. **Yes, Delete** 를 클릭하십시오.
 	
 	</p></details>
 	
-1. Delete the Amazon Rekognition collection.
-
+1. Amazon Rekognition 컬렉션을 삭제합니다.
 
 	<details>
-	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+	<summary><strong>단계별 지침 (자세한 내용을 보려면 펼쳐주세요)</strong></summary><p>
 	
-	1. In a terminal window, run the following command and replace the `REPLACE_WITH_YOUR_CHOSEN_AWS_REGION` portion with the AWS region you have used. 
+	1. `REPLACE_WITH_YOUR_CHOSEN_AWS_REGION` 부분을 사용한 AWS 리전으로 변경한뒤에 터미널 화면에서 다음 명령을 실행하십시오. 
 
 			aws rekognition delete-collection --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION --collection-id rider-photos
 	
-		For example:
+		예를 들면 다음과 같습니다:
 	
 			aws rekognition delete-collection --region us-east-1 --collection-id rider-photos
 			aws rekognition delete-collection --region us-west-2 --collection-id rider-photos
 			aws rekognition delete-collection --region eu-west-1 --collection-id rider-photos
 	
 	
-	2. If successful, you should get an acknowledgment from the service that looks like:
+	2. 성공한 경우, 다음과 같은 서비스에서 확인을 받아야 합니다:
 
 		```JSON
 		{

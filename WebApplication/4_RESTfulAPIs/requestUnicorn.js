@@ -1,8 +1,6 @@
 const randomBytes = require('crypto').randomBytes;
-
 const AWS = require('aws-sdk');
 
-const ddb = new AWS.DynamoDB.DocumentClient();
 
 const fleet = [
     {
@@ -24,8 +22,8 @@ const fleet = [
 
 exports.handler = (event, context, callback) => {
     if (!event.requestContext.authorizer) {
-      errorResponse('Authorization not configured', context.awsRequestId, callback);
-      return;
+        errorResponse('Authorization not configured', context.awsRequestId, callback);
+        return;
     }
 
     const rideId = toUrlString(randomBytes(16));
@@ -85,13 +83,16 @@ function findUnicorn(pickupLocation) {
 }
 
 function recordRide(rideId, username, unicorn) {
-    return ddb.put({
+    const db = new AWS.DynamoDB.DocumentClient();
+
+    return db.put({
         TableName: 'Rides',
         Item: {
             RideId: rideId,
             User: username,
             Unicorn: unicorn,
             RequestTime: new Date().toISOString(),
+
         },
     }).promise();
 }
@@ -104,14 +105,16 @@ function toUrlString(buffer) {
 }
 
 function errorResponse(errorMessage, awsRequestId, callback) {
-  callback(null, {
-    statusCode: 500,
-    body: JSON.stringify({
-      Error: errorMessage,
-      Reference: awsRequestId,
-    }),
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
+    callback(null, {
+        statusCode: 500,
+
+        body: JSON.stringify({
+            Error: errorMessage,
+            Reference: awsRequestId,
+        }),
+
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+    });
 }

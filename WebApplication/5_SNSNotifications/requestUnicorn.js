@@ -1,8 +1,5 @@
 const randomBytes = require('crypto').randomBytes;
-
 const AWS = require('aws-sdk');
-
-const ddb = new AWS.DynamoDB.DocumentClient();
 
 const fleet = [
     {
@@ -24,8 +21,8 @@ const fleet = [
 
 exports.handler = (event, context, callback) => {
     if (!event.requestContext.authorizer) {
-      errorResponse('Authorization not configured', context.awsRequestId, callback);
-      return;
+        errorResponse('Authorization not configured', context.awsRequestId, callback);
+        return;
     }
 
     const rideId = toUrlString(randomBytes(16));
@@ -46,7 +43,7 @@ exports.handler = (event, context, callback) => {
 
     const unicorn = findUnicorn(pickupLocation);
 
-    recordRide(rideId, username, unicorn).then(() => {
+    Promise.all([sendDispatchUnicornMessage(unicorn), recordRide(rideId, username, unicorn)]).then(() => {
         // You can use the callback function to provide a return value from your Node.js
         // Lambda functions. The first parameter is used for failed invocations. The
         // second parameter specifies the result data of the invocation.
@@ -76,6 +73,19 @@ exports.handler = (event, context, callback) => {
     });
 };
 
+function sendDispatchUnicornMessage(unicorn) {
+    const sns = new AWS.SNS();
+
+    return sns.publish({
+        TopicArn: process.env.dispatchUnicornTopicArn,
+        Message: JSON.stringify({
+            Unicorn: {
+                Name: unicorn.Name,
+            },
+        }),
+    }).promise();
+}
+
 // This is where you would implement logic to find the optimal unicorn for
 // this ride (possibly invoking another Lambda function as a microservice.)
 // For simplicity, we'll just pick a unicorn at random.
@@ -85,13 +95,16 @@ function findUnicorn(pickupLocation) {
 }
 
 function recordRide(rideId, username, unicorn) {
-    return ddb.put({
+    const db = new AWS.DynamoDB.DocumentClient();
+
+    return db.put({
         TableName: 'Rides',
         Item: {
             RideId: rideId,
             User: username,
             Unicorn: unicorn,
             RequestTime: new Date().toISOString(),
+
         },
     }).promise();
 }
@@ -104,14 +117,16 @@ function toUrlString(buffer) {
 }
 
 function errorResponse(errorMessage, awsRequestId, callback) {
-  callback(null, {
-    statusCode: 500,
-    body: JSON.stringify({
-      Error: errorMessage,
-      Reference: awsRequestId,
-    }),
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
+    callback(null, {
+        statusCode: 500,
+
+        body: JSON.stringify({
+            Error: errorMessage,
+            Reference: awsRequestId,
+        }),
+
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+    });
 }

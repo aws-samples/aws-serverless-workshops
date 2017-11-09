@@ -231,8 +231,7 @@ After:
 
 1. Change directory to your local **uni-api** Git repository, if necessary.
 
-
-2. Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `awscodestar-uni-api-lambda` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.html) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
+2. Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `awscodestar-uni-api-lambda` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.ht) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
 
 ```
 aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM --parameter-overrides ProjectId=uni-api
@@ -324,7 +323,7 @@ aws cloudformation package --template-file app-sam.yaml --s3-bucket YOUR_BUCKET_
 Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `awscodestar-uni-api-lambda` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.ht) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
 
 ```
-aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM --parameter-overrides ProjectId=uni-api
+aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM
 ```
 
 CloudFormation will generate a ChangeSet for the `awscodestar-uni-api-lambda` CloudFormation Stack and only update the resources that have changed since the previous deployment.  In this case, `awscodestar-uni-api-lambda` was the CloudFormation stack created by CodeStar for the Lambda functions and API Gateway specification, which you will be updating.
@@ -382,6 +381,82 @@ After the CloudFormation deploy command completes, you will use the AWS API Gate
 
 > Note: You may notice that your CodeStar project shows the Build stage has failed in the project pipeline.  That's to be expected, and will be corrected in the next module.
 
+## Unit Testing our API
+
+Now that we have a working API, let's consider wht steps we can take to ensure that we prevent bugs from creeping into our code.  Manual testing of our API has a couple of issues; we have to wait for the build process to complete and it takes a human being to go through the steps to verify the API works using the API Gateway service. It would be faster and more reliable to have an automated process that can perform this verification, and it would be even better to have these checks integrated into our build processes.
+
+The repository you cloned in the steps above already include a set of tests that verify the functionality of our Lambda functions, so we won't need to write them from scratch. In the below steps, we will install the tools necessary to execute these tests, fix an issue that we discover has crept into our code, and take steps to ensure these issues won't crop up again in the future.
+
+### 1. Install the testing tools and run our unit test 
+
+1. Change directory to your local **uni-api** Git repository if you aren't already there.
+
+1. Install the development tools needed to run unit tests using Node Package Manager:
+
+```
+npm install
+```
+
+1. Now that the tools have been installed, run our unit testing tool:
+
+```
+node_modules/.bin/mocha
+```
+
+Our suite of tests will then run, and we will discover that there's an issue in our code! One of our Lambda functions is not returning the correct response when we attempt to read a non-exitent unicorn's data.
+
+### 2. Fix our unit test failures.
+
+Let's examine the output of our test run. We see that the test expected that we would return the standard "404" error code if we attempted to read a unicorn that did not exist in the system, and instead our Lambda code returns a "500." Let's fix that.
+
+1. Using a text editor, open `app/read.js` and navigate to the end where we construct our response. We will see that, where we specify the status code to return, we use the existence of a retured item to determine whether we return a 200 (OK) or a 500 (server error) code.
+
+1. Change the code to return a 404 (resource not found) status code instead of a 500.
+
+1. Now that we have fixed our code, let's verify the behavior by re-running our unit testing tool:
+
+```
+node_modules/.bin/mocha
+```
+
+1. Verify that there are no errors reported by our test run.
+
+### 3. Ensure our tests are run during our builds
+
+Having this testing framework in place ensures that the exact same set of steps are run every time we test our code. However, we are still running this test manually. Let's configure our CodeBuild environment to run these tests for us every time a build is performed.
+
+1. Using a text editor, open `buildspec.yml` and navigate to the `build:` section. 
+
+1. We have discovered that our nemesis, Chet, has disabled our unit tests! Uncomment the line that executes the `mocha` command.
+
+1. Using your Git client, add the local changes to the Git index, commit these changes with a message, and push our local changes to the repository. For example:
+
+    ```
+    %> git add -u
+    %> git commit -m "Enabled unit tests and fixed issues."
+    %> git push
+    ```
+    
+### 4. Verify the tests are run during the build
+
+1. In the AWS Management Console, click **Services** then select **CodeStar** under Application Services.
+
+1. In the list of projects, select the `uni-api` project by clicking its name.
+
+1. In the dashboard view that is presented to you, scroll down until you can see the "Continuous Deployment" tile.
+
+1. Ensure that the most recent execution of the Build step took place after you committed the code in the steps above. If you have just committed your changes it may take a few minutes for your changes to be detected and executed.
+
+1. Once the Build step has completed, click the `CodeBuild` link inside the step to view the CodeBuild project and build history.
+
+1. Scroll down to the "Build History" section.
+
+1. Click the entry for the most recent build to view the details of the build.
+
+1. Scroll down to the Build logs section.
+
+1. Inspect the build log, looking for a section that begins with `Running command mocha` and reports the results of the test pass (should be `5 passing`).
+
 ## Completion
 
-Congratulations!  You have successfully deployed a RESTful serverless API using the Serverless Application Model, and demonstrated that the same tools can be used to make modifications to the API.  In the next [Continuous Delivery Pipeline Module](../2_ContinuousDeliveryPipeline), you will learn how to automate this deployment process using AWS CodePipeline and AWS CodeBuild.
+Congratulations!  You have successfully deployed a RESTful serverless API using the Serverless Application Model, demonstrated that the same tools can be used to make modifications to the API, and established an automated test process.  In the next [Continuous Delivery Pipeline Module](../2_ContinuousDeliveryPipeline), you will learn how to automate this deployment process using AWS CodePipeline and AWS CodeBuild.

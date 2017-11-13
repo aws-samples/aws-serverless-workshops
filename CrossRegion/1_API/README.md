@@ -28,7 +28,7 @@ Go ahead and create a bucket using the AWS Console or the CLI. S3 bucket names m
 
 Choose **Create** in the lower left of the dialog without selecting a bucket to copy settings from.
 
-![Create Bucket](../images/mr-api-create-bucket.png)
+![Create Bucket](images/mr-api-create-bucket.png)
 
 </details>
 
@@ -112,3 +112,5 @@ You can confirm that your API is working by copying your API URL and appending `
 ## Completion
 
 Congratulations! You have successfully deployed an API running on AWS Lambda and API Gateway by using CloudFormation. In the next module you will deploy a UI that uses this API to expose it to our users.
+
+Module 2: [Build a UI layer](2_UI/README.md)

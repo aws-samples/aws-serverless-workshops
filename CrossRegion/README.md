@@ -4,8 +4,8 @@ In this module you will use AWS Lambda to build a Customer Ticketing application
 
 The Wild Rydes team wants this application to meet the following requirements:
 1. Users must be able to submit and view support tickets
-2. Users must be able to log in with their Facebook credentials
-3. The application should use an entirely serverless architecture (we don't have an ops team to manage our infrastructure!)
+2. Users must be able to log in with their Facebook or Amazon credentials
+3. The application should use an entirely serverless architecture (we don't have an operations team to manage our infrastructure!)
 4. The application must be able to failover to another region in the case of a disaster. The [RTO][] and [RPO][] must both be less than 15 minutes.
 
 [RTO]: Recovery time objective – the targeted duration of time and a service level within which a business process must be restored after a disaster.
@@ -19,7 +19,7 @@ The application will utilize three layers:
 2. An API layer built using Node.js running on AWS Lambda and exposed via Amazon API Gateway.
 3. A data layer storing customer tickets in DynamoDB.
 
-***[TODO FULL ARCH DIAGRAM]***
+![Architecture diagram](images/architecture.png)
 
 Each of these layers will be replicated in a second region so that we can failover in the event of a disaster. In addition, all data in DynamoDB will be replicated from the primary region to the secondary region ensuring that our application data will be available when we failover.
 
@@ -37,11 +37,11 @@ We will be using Facebook federated identity to allow our users to login with th
 
 ### AWS Command Line Interface
 
-To complete parts of this workshop you'll need the AWS Command Line Interface (CLI) installed on your local machine. You'll use the CLI to copy objects into your S3 website bucket.
+To complete parts of this workshop you'll need the AWS Command Line Interface (CLI) installed on your local machine. Make sure you have the latest version installed.
 
 Follow the [AWS CLI Getting Started guide](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) to install and configure the CLI on your machine.
 
-### A local environment with Git, Node.js, NPM and Angular2
+### A local environment with Git, Node.js and NPM
 
 ***[TODO: instructions on doing this or setting up in EC2 - maybe cfn'd with custom AMI]***
 
@@ -51,7 +51,7 @@ We recommend you use the latest version of Chrome or Firefox when testing the we
 
 ### Text Editor
 
-You will need a local text editor for making minor updates to configuration files or
+You will need a local text editor for making minor updates to configuration files.
 
 
 ## Implementation Instructions

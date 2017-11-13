@@ -32,7 +32,7 @@ Resources:
   UserPoolClient:
     Properties:
       ServiceToken: !GetAtt CreateUserPoolClientFunction.Arn
-      Name: WildRydesWeb
+      Name: WildRydesWebApp
       UserPool: !Ref UserPool
     Type: "Custom::UserPoolClient"
 
@@ -172,8 +172,18 @@ Resources:
           def create(properties, physical_id):
             result = cognito.create_user_pool(
               PoolName=properties['Name'],
-              AutoVerifiedAttributes=[],
-              AliasAttributes=['email']
+              VerificationMessageTemplate={
+                  'DefaultEmailOption': 'CONFIRM_WITH_CODE'
+              },
+              AutoVerifiedAttributes=['email'],
+              Schema=[
+                  {
+                      'Name': 'email',
+                      'AttributeDataType': 'String',
+                      'Required': True
+                      
+                  }
+              ]
             )
             return cfnresponse.SUCCESS, result['UserPool']['Id']
 

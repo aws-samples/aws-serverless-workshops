@@ -339,6 +339,7 @@ You will use start-api option wich creates a local HTTP server hosting all of yo
 
 ```
 
+
 SAM Local will launch the Lambda function defined in **AWS::Serverless::Function** section.  You will be able to interact with the function using your browser.  After you make changes to the code, those will be immediately visible in your browser.
 
 In command prompt, execute SAM Local start-api in the directory containing local copy of the code:

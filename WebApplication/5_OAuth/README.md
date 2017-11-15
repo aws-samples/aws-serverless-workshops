@@ -26,7 +26,7 @@ Asia Pacific (Seoul) | [![Launch Modules 1, 2, 3, and 4 in ap-northeast-2](http:
 Asia Pacific (Sydney) | [![Launch Modules 1, 2, 3, and 4 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=wildrydes-webapp&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/WebApplication/5_Oauth/prerequisites.yaml)
 Asia Pacific (Mumbai) | [![Launch Modules 1, 2, 3, and 4 in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=wildrydes-webapp&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/WebApplication/5_Oauth/prerequisites.yaml)
 
-The stack creation process will ask you for a **Website Bucket Name**, specify a unique name for your bucket such as **wildrydes-webapp-<username>**.
+The stack creation process will ask you for a **Website Bucket Name**, specify a unique name for your bucket such as **wildrydes-webapp-&lt;username&gt;**.
 
 #### Populate the rides database
 After the stack created successfully, open the **Outputs** tab in the CloudFormation console. Copy the **WebsiteURL** output value and navigate to the page with a browser window.
@@ -42,7 +42,7 @@ AWS Lambda runs your code in response to an API request. In this step, you will 
 Take a look at the code in the [listUnicornRides.js](./listUnicornRides.js) file. The Lambda function expects the current unicorn name to be present in the authorizer context of the event. Once the event is parsed, the function queries our DynamoDB rides table to extract all of the rows for the current unicorn. The field is set by the custom authorizer you'll create in the next step.
 
 #### High-Level Instructions
-Use the AWS Lambda console to create a new Lambda function called **ListUnicornRides** that will process the API requests. Use the provided [listUnicornRides.js](./listUnicornRides.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
+Use the AWS Lambda console to create a new Lambda function called **ListUnicornRides** that will process the API requests. Use the provided [listUnicornRides.js](./listUnicornRides.js?raw=1) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
 
 Make sure to configure your function to use the `WildRydesLambda` IAM role you created in module 2 of this workshop.
 

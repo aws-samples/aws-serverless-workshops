@@ -254,4 +254,6 @@ Congratulations! You have successfully deployed an API running on AWS Lambda and
 
 </details>
 
+
+
 Module 2: [Build a UI layer](../2_UI/README.md)

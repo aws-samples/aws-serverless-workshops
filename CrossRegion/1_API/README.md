@@ -130,6 +130,40 @@ Keep “Lambda Function” selected, enable “Use Lambda Proxy Integration” a
 
 ![Setup api method get](images/api-method-get-setup.png)
 
+Click OK when asked to “Add Permission to Lambda Function”
+
+![api lambda permission](images/api-lambda-permission.png)
+
+Now we’ll create our POST method following the same basic steps – from the “Actions” drop-down select “Create Method” but this time we’ll choose POST.
+
+Ensure you choose “Wild_Rydes_Lambda_Put” as your function this time.
+
+![Setup api method post](images/api-method-post-setup.png)
+
+Again, click “OK” when asked to “Add Permission to Lambda Function”
+
+Finally, we will enable Cross-Origin.  From the Actions drop-down, select “Enable CORS”
+
+![actions enable cors apigw](images/actions-enable-cors.png)
+
+Simply Accept the Default Settings and click on the “Enable CORS and Replace Existing CORS Headers” button:
+
+![accept replace cors apigw](images/accept-replace-cors.png)
+
+Click “Yes, replace existing values” if prompted.
+
+Next we will deploy the API – this is done from the “Actions” pull-down, selecting “Deploy API”
+
+![deploy api to prod](images/deploy-api-prod.png)
+
+Then select “New Stage” for Deployment Stage and enter the Stage Name of “Prod” and click “Deploy”
+
+![deploy api to prod](images/deploy-api-prod-new-stage.png)
+
+You have now completed the setup of all the API and backend components needed for your primary region
+
+
+
 </details>
 
 <details>

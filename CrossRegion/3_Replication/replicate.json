@@ -9,7 +9,7 @@
                 "dynamodb:DescribeStream"
                 "dynamodb:ListStreams",
             ],
-            "Resource": "arn:aws:dynamodb:*:025043127083:table/SXRTickets",
+            "Resource": "arn:aws:dynamodb:*:*:table/SXRTickets",
             "Effect": "Allow"
         }
     ]

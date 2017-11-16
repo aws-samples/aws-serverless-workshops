@@ -2,7 +2,7 @@
 
 Now that we have a working API, let's deploy a UI that can expose this functionality to our users.
 
-Navigate to the `api` folder in your local Git repository.
+Navigate to the `2_UI/cfn` folder in your local Git repository.
 
 ## 1. Create the AWS Cognito Identity Pool and S3 hosting bucket
 

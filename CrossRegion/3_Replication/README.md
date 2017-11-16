@@ -1,7 +1,6 @@
 # Replicate to a second region
 
-Now that we have the app set up, lets replicate this in a second region so we
-have something to failover to.
+Now that we have the app set up, lets replicate this in a second region so we have something to failover to.
 
 ## 1. Replicate the primary stack
 
@@ -24,8 +23,7 @@ We will be using a feature of DynamoDB called Streams for this. DynamoDB Streams
 
 We need a way to be able to failover quickly with minimal impact to the customer. Route53 provides an easy way to do this using DNS and healthchecks. Be aware that some steps in this module will take time to go into effect because of the nature of DNS. Be patient when making changes.
 
-NOTE: You will need the latest AWS CLI for this. Ensure you have updated
-recently. See http://docs.aws.amazon.com/cli/latest/userguide/installing.html
+NOTE: You will need the latest AWS CLI for this. Ensure you have updated recently. See http://docs.aws.amazon.com/cli/latest/userguide/installing.html
 
 
 ### 3.1 Purchase (or repurpose) your own domain
@@ -33,6 +31,8 @@ recently. See http://docs.aws.amazon.com/cli/latest/userguide/installing.html
 In this step, you will provision your own domain name to use for this application. If you already have a domain name registered with Route53 and would like to use this you can use skip to the next step.
 
 If using an existing domain name, ensure there is no CloudFront distribution already setup for the domain. You will also need to ensure that your email contacts are configured and up-to-date on the since you will need to receive mail in the next step.
+
+For the remainder of this workshop we will use `example.com` as to demonstrate. Please substitute your own domain into any commands
 
 #### High-level instructions
 Navigate over to the Route53 Console and under **Registered domains** select **Register domain** and follow the instructions. You will first have to find an available domain before specifying your contact details and confirming the purchase.
@@ -55,30 +55,74 @@ Navigate over to the Route53 Console and under **Registered domains** select **R
 We will need an SSL certificate in order to configure our domain name with API Gateway. AWS makes this simple with AWS Certificate Manager.
 
 #### High-level instructions
-Navigate over to the *Certificate Manager* service and request a new certificate for your domain. You will specify the domain name you just created (or repurposed). Make sure to request a wildcard certificate which includes both `yourdomain.com` and `*.yourdomain.com`. You will have to approve the request via email and see it as `Issued` in the console before proceeding.
+Navigate over to the *Certificate Manager* service and request a new certificate for your domain. You will specify the domain name you just created (or repurposed). Make sure to request a wildcard certificate which includes both `example.com` and `*.example.com`. You will have to approve the request via email and see it as `Issued` in the console before proceeding.
+
+Make sure to follow this same process for your second region.
 
 <details>
 <summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
 
-1. Navigate to the **Certificate Manager** service page
-2. Select **Request a certificate**
-3. In this next step you will configure the domain name you just registered (or repurposed). You will want to add two domains to make sure you can access your site using subdomains. Add both `yourdomain.com` and `*.yourdomain.com`. The `*` acts as a wildcard allowing any subdomain to be covered by this certificate.
-4. Select **Review and request**. Confirm both domains are configured and select **Confirm and request**
-5. A validation email will be sent to the email address configured for the
-   domain. Ensure that you received this email and click the validation link before moving on. Now click **Continue**.
-6. Once you have confirmed your certificate, it will appear as `Issued` in your list of certificates.
+1. Ensure you are in your primary region
+2. Navigate to the **Certificate Manager** service page
+3. Select **Request a certificate**
+4. In this next step you will configure the domain name you just registered (or repurposed). You will want to add two domains to make sure you can access your site using subdomains. Add both `example.com` and `*.example.com`. The `*` acts as a wildcard allowing any subdomain to be covered by this certificate.
+5. Select **Review and request**. Confirm both domains are configured and select **Confirm and request**
+6. A validation email will be sent to the email address configured for the domain. Ensure that you received this email and click the validation link before moving on. Now click **Continue**.
+7. Once you have confirmed your certificate, it will appear as `Issued` in your list of certificates.
+8. Repeat steps 2-7 again in your second region
 
 </details>
 
 
 ### 3.3 Configure custom domains on each API, in each region
-    - NOTE: if running into rate limits, wait a minute before creating again
-### 3.4 Configure Zone in R53
-    - NOTE: You must use HTTPS when visiting your domain. You will get a 504
-      error if not.
-### 3.5 Configure healthchecks on each and verify
+
+Now that you have a domain name and a valid certificate for it, you can go ahead and setup your APIs for each region to use your custom domain. API Gateway Custom domains allow you to access your API using your own domain name. While you can configure DNS records to point directly to the regular API Gateway endpoint, an error will be returned unless you have this custom domain configuration.
+
+You will want two domain configurations in each Region. We will be using the `api.` subdomain prefix for our application and `ireland.` and `singapore.` so we can visit each region independently for convenience.
+
+* `eu-west-1` Ireland:
+    * api.example.com
+    * ireland.example.com
+* `ap-southeast-1` Singapore:
+    * api.example.com
+    * singapore.example.com
+
+#### High-level instructions
+Navigate over to the **API Gateway** service, choose **Custom Domain Names** then go ahead and configure a custom domain name for `api.example.com`. Make sure to choose the **Regional** endpoint configuration. For the Base Path Mappings you will want to choose `/` as the path, your API as the destination and `Prod` as the stage then hit **Save**. If you get an error about rate limits, wait a minute before attempting to create again.
+
+![Custom API Gateway domain](images/custom-domain.png)
+
+Now repeat for the three other subdomains in the respective regions.
+
+Your newly-created Custom Domains will each show a Target Domain Name. You will use this to configure your health checks and DNS records next.
+
+![API Gateway Target Domain](images/custom-domains-configured-ireland.png)
+
+### 3.4 Configure a health check for the primary region
+
+In this step you will configure a Route53 health check on the primary regional endpoint. This health check will be responsible for triggering a failover to the second region if a problem is detected in the primary region. Note that if you were configuring an active-active model with something like Weighted Routing then you would configure a health check on all endpoints, but only one is necessary in this case since only our primary region will be handling traffic under normal conditions.
+
+#### High-level instructions
+
+Navigate over to the **Route53** service and choose **Health checks**.
+
+![Route53 Health check configuration](images/create-health-check.png)
+
     - NOTE: use port 443. 80 Won't work.
     - Must use HTTPS, not HTTP
+
+Once configured, wait a few minutes and you should see your health check go green and say Healthy in the console.
+
+![Route53 Health check configuration](images/created-health-check.png)
+
+
+### 3.5 Configure Zone in R53
+
+Now let's configure the zone records in a failover pattern.
+
+Before you can
+    - NOTE: You must use HTTPS when visiting your domain. You will get a 504
+      error if not.
 ### 3.6 Configure both APIs using primary/secondary filaover Alias records
 
 ## Completion

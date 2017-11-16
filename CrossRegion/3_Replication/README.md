@@ -1,14 +1,15 @@
 # Replicate to a second region
 
-Now that we have the app set up, lets replicate this in a second region.
+Now that we have the app set up, lets replicate this in a second region so we
+have something to failover to.
 
 ## 1. Replicate the primary stack
 
-For the first part of this, all of the steps will be the same but performed in our secondary region (AP Singapore) instead. Please follow modules 1 and 2 again. You can use the CloudFormation templates from those modules to make this quicker.
+For the first part of this module, all of the steps will be the same but performed in our secondary region (AP Singapore) instead. Please follow modules 1 and 2 again. You can use the CloudFormation templates from those modules to make this quicker.
 
 Previous modules:
-1. [Build an API layer](1_API/README.md)
-2. [Build a UI layer](2_UI/README.md)
+1. [Build an API layer](../1_API/README.md)
+2. [Build a UI layer](../2_UI/README.md)
 
 Once you are done, verify that you get a second URL (the S3 bucket URL) for your application and that there are no tickets displayed in this second copy of your application yet. If you see the tickets you created in the first region then something has gone wrong and you are not using a completely separate stack which means there is a dependency on the primary region. You will need to resolve this before moving on.
 
@@ -84,4 +85,4 @@ Navigate over to the *Certificate Manager* service and request a new certificate
 
 Congratulations...
 
-Module 4: [Test failover](4_Testing/README.md)
+Module 4: [Test failover](../4_Testing/README.md)

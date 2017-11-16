@@ -92,7 +92,7 @@ Ensure the runtime is Node.js 6.10.  If it isn’t, simply select it.
 
 For the Handler, enter “tickets-get.handler” and then paste the following code into the editor you see on your screen:
 
-[Lambda ticket-get.js](ticket-get.js)
+[Lambda tickets-get.js](tickets-get.js)
 
 Next, under “Environment Variables”, enter they key TABLE_NAME and the value SXRTickets
 
@@ -102,9 +102,9 @@ Once everything is set correctly, click “Save” near the top center of the sc
 
 We will repeat the same steps for the put/post Lambda function, and one more time for the DynamoDB_Replication function.  Note that no environment variables are needed for the replication Lambda.
 
-[Lambda ticket-post.js](ticket-post.js)
+[Lambda tickets-post.js](tickets-post.js)
 
-[Lambda replicate.js](get-tickets.js)
+[Lambda replicate.js](replicate.js)
 
 ## 4. Now that we have our Roles, Policies, DynamoDB Table and our three Lambda functions set up, we can create our API Gateway Endpoint
 
@@ -251,5 +251,7 @@ You can confirm that your API is working by copying your API URL and appending `
 ## Completion
 
 Congratulations! You have successfully deployed an API running on AWS Lambda and API Gateway by using CloudFormation. In the next module you will deploy a UI that uses this API to expose it to our users.
+
+</details>
 
 Module 2: [Build a UI layer](../2_UI/README.md)

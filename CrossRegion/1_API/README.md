@@ -8,6 +8,8 @@ Navigate to the `api` folder within your local Git repository and take a look at
 * `tickets-get.js` – This is the Node.js code required by our Lambda function needed to retrieve tickets from DynamoDB
 * `tickets-post.js` – This is the Node.js code required by our second Lambda function to create new tickets in DynamoDB
 
+
+
 There is no modification necessary to this application code so we can go ahead and deploy it to AWS. Since it comes with a CloudFormation template, we can use this to upload our code and create all of the necessary AWS resources for us rather than doing this manually using the console which would take much longer. Remember that we will be setting all of this up again in a second region so using templates makes this process easily repeatable.  Feel free to open the template and take a look at the resources it is creating and how they are defined.
 
 ## 1. Create an S3 bucket to store the app code
@@ -20,6 +22,11 @@ Go ahead and create a bucket using the AWS Console or the CLI. S3 bucket names m
 
 <details>
 <summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
+
+The following objects will be used as you create the resources in the console for this module:
+* `Wild_Rydes_DynamoDB_Get.json` - This is the policy needed in order to read from DynamoDB using our the `tickets-get.js` Lambda functions
+* `Wild_Rydes_DynamoDB_Put.json` - This is the policy needed in order to write to DynamoDB using our the `tickets-post.js` Lambda function
+* `Wild_Rydes_DynamoDB_Replication.json` - This is the policy needed in order to use DynambDB Streams to replicate to a second region using the `replicate.js` Lambda function
 
 1. In the AWS Console choose **Services** then select **S3** under Storage.
 2. Choose **+ Create Bucket**
@@ -54,7 +61,20 @@ Go ahead and create two new Lambda functions using the the Node.js code from `ti
 <details>
 <summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
 
-***[TODO: How to do this using the Console]***
+There are several steps needed to deploy the API and Lambda functions via the console.  The basic steps are:
+
+1. Create the appropriate IAM policies and roles our three lambda functions
+2. Create the API Gateway for the primary application region
+3. Create the “Get” Lambda Function
+4. Create the “Post” Lambda function
+5. Create the "Replication" Lambda function
+5. Create the required DynamoDB table
+
+Let’s go ahead and create all the needed polices and roles for our workshop
+
+In the Console – open IAM and select “Policies” from the left and click on the “Create policy” button:
+
+![Create Policy](images/create-policy-1.png)
 
 </details>
 

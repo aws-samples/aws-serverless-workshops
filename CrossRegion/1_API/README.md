@@ -76,6 +76,11 @@ In the Console – open IAM and select “Policies” from the left and click on
 
 ![Create Policy](images/create-policy-1.png)
 
+Select “Create Your Own Policy” from the next screen
+Under Policy Name, enter “Wild_Rydes_DynamoDB_Get”
+
+[Download Policy json](Wild_Rydes_DynamoDB_Get.json)
+
 </details>
 
 <details>

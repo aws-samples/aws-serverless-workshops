@@ -65,7 +65,7 @@ Download policy:
 Next you will create the three roles that correspond to the three polices that
 were just created. Each of these roles will be used by a different Lambda
 function thereby limiting the permissions of each function. This follows an
-AWS Best Practice of granting the [least privilege](http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
+AWS Best Practice of granting [least privilege](http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
 
 In the Console, select the **IAM** service and choose **Roles** from the left,
 and click on the “Create role” button:

@@ -72,35 +72,48 @@ and click on the “Create role” button:
 
 ![Create Role](images/create-role-1.png)
 
-Select the type of “AWS Service” and choose Lambda from the list below and select “Next: Permissions”:
+Select the type of “AWS Service” and choose Lambda from the list below then
+select **Next: Permissions**.
 
 ![Choose Role Type](images/create-role-lambda.png)
 
-Find the Wild_Rydes_DynamoDB_Get policy you just created on the next screen and select “Next: Review”
+Find the `Wild_Rydes_DynamoDB_Get` policy you just created on the next screen
+and select **Next: Review**
 
 ![Select Policy to Role](images/create-role-select-policy.png)
 
-On the next screen, enter “Wild_Rydes_DynamoDB_Get” for the Role Name and select “Create role”
+On the next screen, enter `Wild_Rydes_DynamoDB_Get` for the Role Name and select **Create role**
 
 ![Choose Role Final](images/create-role-final.png)
 
-Repeat the same steps two more times, this time creating the role for “Wild_Rydes_DynamoDB_Put” and "Wild_Rydes_DynamoDB_Replication" and attaching the corresponding policy you created earlier.
+Repeat the same steps two more times, this time creating the role for
+`Wild_Rydes_DynamoDB_Put` and `Wild_Rydes_DynamoDB_Replication` and attaching
+the corresponding policy you created earlier.
 
-## 2. Next we will create our DynamoDB Table for our application data
+## 2. Create the DynamoDB Table
 
-Ensure you are set to Ireland (eu-west-1) in the upper right corner of the console.  If you mistakenly create the DynamoDB table in the wrong region, the application will not work.
+Next we will create the DynamoDB Table for our application data. Ensure you
+are set to Ireland (eu-west-1) in the upper right corner of the console. If
+you mistakenly create the DynamoDB table in the wrong region, the application
+will not work.
 
-In the console, open DynamoDB (it can be found under Database).  Select “Create Table” (your screen may be slightly different depending on whether this is your first DynamoDB table in this region or not):
+In the console, open **DynamoDB** (it can be found under Database).  Select
+**Create Table**. Your screen may be slightly different depending on whether
+this is your first DynamoDB table in this region or not.
 
 ![DymamoDB Create Button](images/dynamodb-create-button.png)
 
-For the table name, enter “SXRTickets” and enter “id” as the Primary Key Partition Key and then click “Create”.  That’s all that is required for now to set up the table.
+For the table name, enter `SXRTickets` and enter `id` as the Primary Key
+Partition Key and then click **Create**. That’s all that is required for now
+to set up the table.
 
 ![DymamoDB Create SXRTickets](images/dynamodb-create-sxrtickets.png)
 
-## 3. Next, we will create our two Lambda functions:
+## 3. Create your Lambda functions
 
-First, navigate to Lambda in the console (again ensuring you are still in the Ireland region) and click “Create a function”
+Next, you will create two Lambda functions. First, navigate to **Lambda** in
+the console (again ensuring you are still in the Ireland region) and click
+**Create a function**
 
 ![Create Lambda function](images/create-lambda-function.png)
 

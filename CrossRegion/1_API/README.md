@@ -31,7 +31,13 @@ In the Console – open IAM and select “Policies” from the left and click on
 Select "Create Your Own Policy" from the next screen
 Under Policy Name, enter "Wild_Rydes_DynamoDB_Get"
 
+Next, open the policy below and cut and paste it into the editor in the AWS Console
+
 [Download Policy json](Wild_Rydes_DynamoDB_Get.json)
+
+Click on "Validate policy" followed by "Create policy"
+
+![Create Policy Editory](images/create-policy-2.png)
 
 </details>
 

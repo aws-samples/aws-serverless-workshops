@@ -137,7 +137,10 @@ var WildRydes = window.WildRydes || {};
         var onSuccess = function registerSuccess(result) {
             var cognitoUser = result.user;
             console.log('user name is ' + cognitoUser.getUsername());
-            alert('Registration successful. Please check your email for your verification code');
+            var confirmation = ('Registration successful. Please check your email inbox or spam folder for your verification code.');
+            if (confirmation) {
+                window.location.href = 'verify.html';
+            }
         };
         var onFailure = function registerFailure(err) {
             alert(err);

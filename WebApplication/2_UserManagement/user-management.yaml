@@ -24,17 +24,20 @@ Metadata:
 Resources:
 
   UserPool:
+    Type: AWS::Cognito::UserPool
     Properties:
-      ServiceToken: !GetAtt CreateUserPoolFunction.Arn
-      Name: WildRydes
-    Type: "Custom::UserPool"
+      UserPoolName: WildRydes
+      AliasAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
 
   UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
     Properties:
-      ServiceToken: !GetAtt CreateUserPoolClientFunction.Arn
-      Name: WildRydesWebApp
-      UserPool: !Ref UserPool
-    Type: "Custom::UserPoolClient"
+      ClientName: WildRydesWeb
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
 
   UpdateConfig:
     Properties:
@@ -90,134 +93,6 @@ Resources:
                   - "s3:PutObjectVersionAcl"
                 Resource:
                   - !Sub "arn:aws:s3:::${WebsiteBucket}/*"
-
-
-  CreateUserPoolClientFunction:
-    Properties:
-      Description: Creates an Amazon Cognito User Pool Client
-      Handler: index.handler
-      Runtime: python2.7
-      Role: !GetAtt CognitoConfigRole.Arn
-      Timeout: 120
-      Code:
-        ZipFile: |
-          import json
-          import boto3
-          import cfnresponse
-
-          cognito = boto3.client('cognito-idp')
-
-          def create(properties, physical_id):
-            response = cognito.create_user_pool_client(
-                UserPoolId=properties['UserPool'],
-                ClientName=properties['Name'],
-                GenerateSecret=False
-            )
-            return cfnresponse.SUCCESS, response['UserPoolClient']['ClientId']
-
-          def update(properties, physical_id):
-            response = cognito.update_user_pool_client(
-                UserPoolId=properties['UserPool'],
-                ClientId=physical_id,
-                ClientName=properties['Name'],
-                GenerateSecret=False
-            )
-            return cfnresponse.SUCCESS, response['UserPoolClient']['ClientId']
-
-          def delete(properties, physical_id):
-            cognito.delete_user_pool_client(
-              UserPoolId=properties['UserPool'],
-              ClientId=physical_id
-            )
-            return cfnresponse.SUCCESS, physical_id
-
-          def handler(event, context):
-            print "Received event: %s" % json.dumps(event)
-
-            status = cfnresponse.FAILED
-            new_physical_id = None
-
-            try:
-              properties = event.get('ResourceProperties')
-              physical_id = event.get('PhysicalResourceId')
-
-              status, new_physical_id = {
-                'Create': create,
-                'Update': update,
-                'Delete': delete
-              }.get(event['RequestType'], lambda x, y: (cfnresponse.FAILED, None))(properties, physical_id)
-            except Exception as e:
-              print "Exception: %s" % e
-              status = cfnresponse.FAILED
-            finally:
-              cfnresponse.send(event, context, status, {}, new_physical_id)
-
-    Type: AWS::Lambda::Function
-
-  CreateUserPoolFunction:
-    Properties:
-      Description: Creates an Amazon Cognito User Pool
-      Handler: index.handler
-      Runtime: python2.7
-      Role: !GetAtt CognitoConfigRole.Arn
-      Timeout: 120
-      Code:
-        ZipFile: |
-          import json
-          import boto3
-          import cfnresponse
-
-          cognito = boto3.client('cognito-idp')
-
-          def create(properties, physical_id):
-            result = cognito.create_user_pool(
-              PoolName=properties['Name'],
-              VerificationMessageTemplate={
-                  'DefaultEmailOption': 'CONFIRM_WITH_CODE'
-              },
-              AutoVerifiedAttributes=['email'],
-              Schema=[
-                  {
-                      'Name': 'email',
-                      'AttributeDataType': 'String',
-                      'Required': True
-                      
-                  }
-              ]
-            )
-            return cfnresponse.SUCCESS, result['UserPool']['Id']
-
-          def update(properties, physical_id):
-            cognito.delete_user_pool(UserPoolId=physical_id)
-            return create(properties, physical_id)
-
-          def delete(properties, physical_id):
-            cognito.delete_user_pool(UserPoolId=physical_id)
-            return cfnresponse.SUCCESS, physical_id
-
-          def handler(event, context):
-            print "Received event: %s" % json.dumps(event)
-
-            status = cfnresponse.FAILED
-            new_physical_id = None
-
-            try:
-              properties = event.get('ResourceProperties')
-              physical_id = event.get('PhysicalResourceId')
-
-              status, new_physical_id = {
-                'Create': create,
-                'Update': update,
-                'Delete': delete
-              }.get(event['RequestType'], lambda x, y: (cfnresponse.FAILED, None))(properties, physical_id)
-            except Exception as e:
-              print "Exception: %s" % e
-              status = cfnresponse.FAILED
-            finally:
-              cfnresponse.send(event, context, status, {}, new_physical_id)
-
-
-    Type: AWS::Lambda::Function
 
   UpdateConfigFunction:
     Properties:

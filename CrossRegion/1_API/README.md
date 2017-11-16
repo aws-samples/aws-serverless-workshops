@@ -17,11 +17,9 @@ The following objects will be used as you create the resources in the console fo
 There are several steps needed to deploy the API and Lambda functions via the console.  The basic steps are:
 
 1. Create the appropriate IAM policies and roles our three lambda functions
-2. Create the required DynamoDB table
-3. Create the API Gateway for the primary application region
-4. Create the “Get” Lambda Function
-5. Create the “Post” Lambda function
-6. Create the "Replication" Lambda function
+2. Create the required Amazon DynamoDB table
+3. Create the AWS Lambda functions
+4. Create the Amazon API Gateway for the primary application region
 
 Let’s go ahead and create all the needed polices and roles for our workshop
 
@@ -73,6 +71,64 @@ Ensure you are set to Ireland (eu-west-1) in the upper right corner of the conso
 In the console, open DynamoDB (it can be found under Database).  Select “Create Table” (your screen may be slightly different depending on whether this is your first DynamoDB table in this region or not):
 
 ![DymamoDB Create Button](images/dynamodb-create-button.png)
+
+For the table name, enter “SXRTickets” and enter “id” as the Primary Key Partition Key and then click “Create”.  That’s all that is required for now to set up the table.
+
+![DymamoDB Create SXRTickets](images/dynamodb-create-sxrtickets.png)
+
+## 3. Next, we will create our two Lambda functions:
+
+First, navigate to Lambda in the console (again ensuring you are still in the Ireland region) and click “Create a function”
+
+![Create Lambda function](images/create-lambda-function.png)
+
+Next select “Author from scratch”
+
+![Lambda author from scratch](images/lambda-author-scratch.png)
+
+Name your first function “Wild_Rydes_Lambda_Get” and assign the role you created previously to it and click “Create function”
+
+Ensure the runtime is Node.js 6.10.  If it isn’t, simply select it.
+
+For the Handler, enter “tickets-get.handler” and then paste the following code into the editor you see on your screen:
+
+[Lambda ticket-get.js](ticket-get.js)
+
+Next, under “Environment Variables”, enter they key TABLE_NAME and the value SXRTickets
+
+![Create Lambda Wild Rydes Get](images/create-lambda-wild-rydes-get.png)
+
+Once everything is set correctly, click “Save” near the top center of the screen.
+
+We will repeat the same steps for the put/post Lambda function, and one more time for the DynamoDB_Replication function.  Note that no environment variables are needed for the replication Lambda.
+
+[Lambda ticket-post.js](ticket-post.js)
+
+[Lambda replicate.js](get-tickets.js)
+
+## 4. Now that we have our Roles, Policies, DynamoDB Table and our three Lambda functions set up, we can create our API Gateway Endpoint
+
+In the console, under Application Services, open Amazon API Gateway and click on “Get Started”.  Click on OK if you are given a “Create Example API” dialogue.
+
+![Create Example API](images/create-example-api.png)
+
+Select “New API” and enter the API Name of “Wild_Rydes_API” and choose the Endpoint Type of “Regional” and then click “Create API”
+
+![Create new API](images/create-new-api.png)
+
+Next, from the Actions drop-down, choose “Create Resource” and name the resource “ticket” and select the “Enable API Gateway CORS” option and then click “Create Resource”
+
+![Create api child CORS](images/api-child-resource-cors.png)
+
+Next we will create two methods – one for Get and one for Post/Put
+
+From the “Actions” drop-down select “Create Method” and then choose “GET” as your first method and select the check-box to confirm creation:
+
+![Create api method get](images/api-method-get.png)
+
+Keep “Lambda Function” selected, enable “Use Lambda Proxy Integration” and choose “eu-west-1” as the Lambda Region and then start typing in the Lambda Function box and choose “Wild_Rydes_Lambda_Get” and then click “Save"
+
+![Setup api method get](images/api-method-get-setup.png)
 
 </details>
 

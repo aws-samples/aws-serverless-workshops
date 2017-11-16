@@ -1,10 +1,10 @@
 # Building the Wild Rydes Backend Components Layer
 
-In this module, you will deploy application code to AWS Lambda to build the API that will allow our users to create their support tickets.  This will include creating the needed polices and roles, along with the needed DynamoDB table that will house the application data.
+In this module, you will deploy backend application components to AWS to build out API Gateway, Lambda and a DynamoDB table that will allow our users to create their support tickets.  This will include creating the needed polices and roles.
 
-There are two ways to complete this module.  For learning purposes, we recommend that workshop participants step through the Console instructions while deploying the primary Ireland region, and then for time reasons, use the provide CloudFormation instructions to quickly set up the second region.
+There are two ways to complete this module.  For learning purposes, we recommend that workshop participants step through the Console instructions while deploying the primary Ireland region, and then for time reasons, use the provide CloudFormation instructions to quickly set up the second Singapore region.
 
-We have provided both sets of instructions here – simply expand your preferred path.
+Both sets of instructions are provided – simply expand your preferred path.
 
 <details>
 <summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
@@ -33,11 +33,16 @@ Under Policy Name, enter "Wild_Rydes_DynamoDB_Get"
 
 Next, open the policy below and cut and paste it into the editor in the AWS Console
 
-[Download Policy json](Wild_Rydes_DynamoDB_Get.json)
+[Download Policy Wild_Rydes_DynamoDB_Get.json](Wild_Rydes_DynamoDB_Get.json)
 
 Click on "Validate policy" followed by "Create policy"
 
 ![Create Policy Editory](images/create-policy-2.png)
+
+Go ahead and repeat these exact same steps two more times in order to create the following two additional polices that will be needed during the workshop.
+
+[Download Policy Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
+[Download Policy Wild_Rydes_DynamoDB_Replication.json](Wild_Rydes_DynamoDB_Replication.json)
 
 </details>
 

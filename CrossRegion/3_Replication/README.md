@@ -142,8 +142,9 @@ Gateway endpoint, an error will be returned unless you have this custom domain
 configuration.
 
 You will want two domain configurations in each Region. We will be using the
-`api.` subdomain prefix for our application and `ireland.` and `singapore.` so
-we can visit each region independently for convenience.
+`api.` subdomain prefix for our application UI and `ireland.` and `singapore.`
+to configure health checks and also so we can visit each region independently
+for convenience.
 
 * `eu-west-1` Ireland:
     * `api.example.com`
@@ -191,24 +192,34 @@ purpose of this workshop.
 
 ![Create regional subdomain record](images/ireland-subdomain-record.png)
 
-Now repeat in your second region and create a CNAME for the `singapore.`
-subdomain with Target Domain Name for Singapore.
+Now repeat in your second region to create a CNAME for the `singapore.`
+subdomain with the Target Domain Name for Singapore.
+
+At this point you should now be able to visit your subdomain and see your API
+working. Navigate to the health check endpoint on your API using your custom
+domain in your web browser (e.g. `https://ireland.example.com/health`) and
+ensure that you see a successful response.
+
+This endpoint should return the region it is running in so you can also
+confirm that this response region matches up with the domain you have
+configured. Notice how we're explicitly using HTTPS. You will get a gateway
+error if you try to use HTTP. It may take a few minutes for your records to
+become active so check back later if you do not get a response as this must
+work in order for your health check to function.
+
+***[TODO: screenshot of response]***
 
 ### 3.4 Configure a health check for the primary region
 
 In this step you will configure a Route53 health check on the primary
 (Ireland) regional endpoint. This health check will be responsible for
 triggering a failover to the second region if a problem is detected in the
-primary region. Note that if you were configuring an active-active model with
-something like Weighted Routing then you would configure a health check on all
-endpoints, but only one is necessary in this case since only our primary
-region will be handling traffic under normal conditions.
+primary region.
 
-At this point you should now be able to visit your subdomain and see your API
-working. Navigate to an endpoint on your API using your custom domain in your
-web browser and ensure that you see a JSON response (e.g.
-`https://ireland.example.com/ticket`). Notice how we're explicitly using
-HTTPS. You will get a gateway error if you try to use HTTP.
+Note that if you were configuring an active-active model with something like
+Weighted Routing then you would configure a health check on all endpoints, but
+only one is necessary in this case since only our primary region will be
+handling traffic under normal conditions.
 
 #### High-level instructions
 
@@ -232,7 +243,9 @@ green and say Healthy in the console.
 
 ### 3.5 Configure DNS failover records
 
-Now let's configure the zone records in a failover pattern.
+Now let's configure the zone records for our `api.` subdomain prefix. You will
+configure these records in a primary/secondary failover pattern using your
+health check.
 
 Before you can
     - NOTE: You must use HTTPS when visiting your domain. You will get a 504

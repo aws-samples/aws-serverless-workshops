@@ -1,12 +1,51 @@
-# Building an API Layer
+# Building the Wild Rydes Backend Components Layer
 
-In this module you will deploy application code to AWS Lambda to build the API that will allow our users to create their support tickets.
+In this module, you will deploy application code to AWS Lambda to build the API that will allow our users to create their support tickets.  This will include creating the needed polices and roles, along with the needed DynamoDB table that will house the application data.
+
+There are two ways to complete this module.  For learning purposes, we recommend that workshop participants step through the Console instructions while deploying the primary Ireland region, and then for time reasons, use the provide CloudFormation instructions to quickly set up the second region.
+
+We have provided both sets of instructions here – simply expand your preferred path.
+
+<details>
+<summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
+
+The following objects will be used as you create the resources in the console for this module:
+* `Wild_Rydes_DynamoDB_Get.json` - This is the policy needed in order to read from DynamoDB using our the `tickets-get.js` Lambda functions
+* `Wild_Rydes_DynamoDB_Put.json` - This is the policy needed in order to write to DynamoDB using our the `tickets-post.js` Lambda function
+* `Wild_Rydes_DynamoDB_Replication.json` - This is the policy needed in order to use DynambDB Streams to replicate to a second region using the `replicate.js` Lambda function
+
+There are several steps needed to deploy the API and Lambda functions via the console.  The basic steps are:
+
+1. Create the appropriate IAM policies and roles our three lambda functions
+2. Create the API Gateway for the primary application region
+3. Create the “Get” Lambda Function
+4. Create the “Post” Lambda function
+5. Create the "Replication" Lambda function
+6. Create the required DynamoDB table
+Let’s go ahead and create all the needed polices and roles for our workshop
+
+In the Console – open IAM and select “Policies” from the left and click on the “Create policy” button:
+
+![Create Policy](images/create-policy-1.png)
+
+Select "Create Your Own Policy" from the next screen
+Under Policy Name, enter "Wild_Rydes_DynamoDB_Get"
+
+[Download Policy json](Wild_Rydes_DynamoDB_Get.json)
+
+</details>
+
+<details>
+<summary><strong>CLI step-by-step instructions (expand for details)</strong></summary>
+
 
 Navigate to the `api` folder within your local Git repository and take a look at the files within. You will see three files
 
 * `ticket-service.yaml` – This is a CloudFormation template (using SAM syntax) that describes the infrastructure needed to for the API and how each component should be configured.
 * `tickets-get.js` – This is the Node.js code required by our Lambda function needed to retrieve tickets from DynamoDB
 * `tickets-post.js` – This is the Node.js code required by our second Lambda function to create new tickets in DynamoDB
+
+
 
 There is no modification necessary to this application code so we can go ahead and deploy it to AWS. Since it comes with a CloudFormation template, we can use this to upload our code and create all of the necessary AWS resources for us rather than doing this manually using the console which would take much longer. Remember that we will be setting all of this up again in a second region so using templates makes this process easily repeatable.  Feel free to open the template and take a look at the resources it is creating and how they are defined.
 
@@ -18,30 +57,11 @@ We'll first need a bucket to store our source code in AWS.
 
 Go ahead and create a bucket using the AWS Console or the CLI. S3 bucket names must be globally unique so choose a name for your bucket using something unique to you such as your name e.g. `wildrydes-firstname-lastname`. If you get an error that your bucket name already exists, try adding additional numbers or characters until you find an unused name.
 
-<details>
-<summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
-
-1. In the AWS Console choose **Services** then select **S3** under Storage.
-2. Choose **+ Create Bucket**
-3. Provide a globally unique name for your bucket such as `wildrydes-firstname-lastname`.
-4. Select the primary region for this workshop from the dropdown (EU Ireland).
-
-Choose **Create** in the lower left of the dialog without selecting a bucket to copy settings from.
-
-![Create Bucket](images/mr-api-create-bucket.png)
-
-</details>
-
-<details>
-<summary><strong>CLI step-by-step instructions (expand for details)</strong></summary>
-
 You can create a bucket using the CLI with the following command:
 
      aws s3 mb s3://wildrydes-multiregion-blake-mitchell --region eu-west-1
 
 Note that in this and in the following CLI commands, we are explicitly passing in the region. Like many things in AWS, S3 buckets are regional. If you do not specify a region, a default will be used which may not be what you want.
-
-</details>
 
 ## 2. Package up the API code and push to S3
 
@@ -50,16 +70,6 @@ Because this is a SAM Template, we must first package it. This process will uplo
 #### High-level instructions
 
 Go ahead and create two new Lambda functions using the the Node.js code from `tickets-post.js` and `tickets-get.js`.
-
-<details>
-<summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
-
-***[TODO: How to do this using the Console]***
-
-</details>
-
-<details>
-<summary><strong>CLI/CloudFormation step-by-step instructions (expand for details)</strong></summary>
 
 You can do this using the following CLI command. Note that you must replace `[bucket-name]` in this command with the bucket you just created):
 
@@ -70,8 +80,6 @@ You can do this using the following CLI command. Note that you must replace `[bu
     --s3-bucket [bucket_name]
 
 If all went well, you should get a success message and instructions to deploy your new template.
-
-</details>
 
 ## 3. Deploy a stack of resources
 

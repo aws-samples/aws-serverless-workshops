@@ -42,6 +42,7 @@ Click on "Validate policy" followed by "Create policy"
 Go ahead and repeat these exact same steps two more times in order to create the following two additional polices that will be needed during the workshop.
 
 [Download Policy Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
+
 [Download Policy Wild_Rydes_DynamoDB_Replication.json](Wild_Rydes_DynamoDB_Replication.json)
 
 </details>

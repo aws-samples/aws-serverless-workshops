@@ -40,46 +40,60 @@ Go into your Facebook Developer account and create an new application by [follow
 Next, we must configure the Cognito Identity Pool to use Facebook as our identity provider. To do this, open up the AWS Console in your browser and navigate to Cognito from the menu. Double check that you are still in the primary region (EU Ireland).
 
 1. Choose Manage Federated Identities and select the SXRIdentityPool.
-2. Click the Edit Identity Pool button in the top right then navigate to the Authentication Providers section.
-3. Select the Facebook tab and specify your Facebook App ID
-4. Save Changes at the bottom of the page.
+2. Click the Edit Identity Pool button in the top right
+3. Take note of the Identity pool ID noted at the top of this page
+4. Navigate to the Authentication Providers section.
+5. Select the Facebook tab, hit Unlock then specify your Facebook App ID
+6. Save Changes at the bottom of the page.
 
 ## 3. Configure and build the application code
 
-Our application will need to know the location of the API in order to push and 
-pull data from it. In addition, the application will need to know our Facebook 
-App ID and Cognito Identity Pool ID so it can authenticate our users. See the 
-Prerequisites section at the beginning of this guide if you have not already 
+Our application will need to know the location of the API in order to push and
+pull data from it. In addition, the application will need to know our Facebook
+App ID and Cognito Identity Pool ID so it can authenticate our users. See the
+Prerequisites section at the beginning of this guide if you have not already
 setup your Facebook Developer account and App ID.
 
-All of these attributes must be configured in `/src/environments/environment.ts`. 
+***TODO: Detailed insturctions on how to retrieve ticketAPI ***
+***TODO: Add Amazon instructions ***
+***TODO: Improve Facebook instructions ***
+
+All of these attributes must be configured in `/src/environments/environment.ts`.
 Open up your favorite text editor and edit this file before moving on.
 
-You will need Node Package Manager (NPM) installed on your local machine in order 
-to build the application. You can follow instructions TODO to set up a dev instance. 
+You will need Node Package Manager (NPM) installed on your local machine in order
+to build the application. You can follow instructions TODO to set up a dev instance.
 Once you have created your dev instance build your project by executing the following:
 
 - navigate to the root folder of the ui project, i.e. 2_UI.
 - run `npm install` to install project dependencies
 - build your app with by running `npm run build`
 
-This will produce a `dist/` folder containing the compiled application with your 
+If you get an error about NPM command not found, then go back and check the
+prerequisites section of the README to find instructions to install NPM.
+
+This will produce a `dist/` folder containing the compiled application with your
 custom settings.
 
 ## 4. Upload the application
 
-Next, you'll need to upload the UI to the S3 bucket specified in step 1. You can 
+Next, you'll need to upload the UI to the S3 bucket specified in step 1. You can
 do this with:
 
-    aws s3 sync dist/ s3://[bucket_name] --acl public-read
+    aws s3 sync --acl public-read dist/ s3://[bucket_name]
 
-Note that you must replace `[bucket-name]` in this command with the bucket name output from the CloudFormation stack in step 1.
+Note that you must replace `[bucket-name]` in this command with the bucket
+name output from the CloudFormation stack in step 1.
 
-To confirm everything went as expected, navigate to your bucket URL. You should see a simple ticketing application. Go ahead and login using Facebook and submit a couple of tickets to check that everything is working.
+To confirm everything went as expected, navigate to your bucket URL. You
+should see a simple ticketing application. Go ahead and login using Facebook
+and submit a couple of tickets to check that everything is working.
 
-If you have trouble in this step, double check your configured settings and Facebook App configuration. Note that if you change any of the settings you will need to build and deploy the code again.
+If you have trouble in this step, double check your configured settings and
+Facebook App configuration. Note that if you change any of the settings you
+will need to build and deploy the code again.
 
-***[TODO: Screenshot of the app]***
+![App Screenshot](images/app-screenshot.png)
 
 ## Completion
 

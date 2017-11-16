@@ -37,13 +37,27 @@ Next, open the policy below and cut and paste it into the editor in the AWS Cons
 
 Click on "Validate policy" followed by "Create policy"
 
-![Create Policy Editory](images/create-policy-2.png)
+![Create Policy Editor](images/create-policy-2.png)
 
 Go ahead and repeat these exact same steps two more times in order to create the following two additional polices that will be needed during the workshop.
 
 [Download Policy Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
 
 [Download Policy Wild_Rydes_DynamoDB_Replication.json](Wild_Rydes_DynamoDB_Replication.json)
+
+Next will be creation of three roles that correspond to the three polices that were just created.
+
+In the Console – open IAM and select “Roles” from the left, and click on the “Create role” button:
+
+![Create Role](images/create-role-1.png)
+
+Select the type of “AWS Service” and choose Lambda from the list below and select “Next: Permissions”:
+
+![Choose Role Type](images/create-role-lambda.png)
+
+Find the Wild_Rydes_DynamoDB_Put policy you just created on the next screen and select “Next: Review”
+
+![Select Policy to Role](images/create-role-select-policy.png)
 
 </details>
 

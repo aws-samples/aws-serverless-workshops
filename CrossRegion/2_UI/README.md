@@ -78,4 +78,4 @@ If you have trouble in this step, double check your configured settings and Face
 
 Congratulations! You have successfully deployed a user interface for our users on S3. In the next module you will learn how to replicate this app to a second region and configure automatic failover using Route53.
 
-Module 3: [Replicate to a second region](3_Replication/README.md)
+Module 3: [Replicate to a second region](../3_Replication/README.md)

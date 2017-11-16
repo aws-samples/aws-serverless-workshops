@@ -113,4 +113,4 @@ You can confirm that your API is working by copying your API URL and appending `
 
 Congratulations! You have successfully deployed an API running on AWS Lambda and API Gateway by using CloudFormation. In the next module you will deploy a UI that uses this API to expose it to our users.
 
-Module 2: [Build a UI layer](2_UI/README.md)
+Module 2: [Build a UI layer](../2_UI/README.md)

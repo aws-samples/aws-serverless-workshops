@@ -1,25 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: ServerlessXR
 Resources:
-  CognitoUserPool:
-    Type: "AWS::Cognito::UserPool"
-    Properties:
-      UserPoolName: SXRUserPool
-      AutoVerifiedAttributes: ['email']
-  CognitoUserPoolClient:
-    Type: "AWS::Cognito::UserPoolClient"
-    Properties:
-        ClientName: SXRClient
-        GenerateSecret: false
-        UserPoolId: !Ref CognitoUserPool
   CognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"
     Properties:
       IdentityPoolName: SXRIdentityPool
-      CognitoIdentityProviders:
-        -
-          ClientId: !Ref CognitoUserPoolClient
-          ProviderName: !GetAtt CognitoUserPool.ProviderName
       AllowUnauthenticatedIdentities: false
   SXRAuthenticatedRole:
       Type: AWS::IAM::Role
@@ -72,11 +57,11 @@ Resources:
 
 Outputs:
 
-  CognitoUserPoolId:
-    Description: Cognito User Pool Id
-    Value: !Ref CognitoUserPool
+  CognitoIdentityPoolId:
+    Description: Cognito Identity Pool Id
+    Value: !Ref CognitoIdentityPool
     Export:
-      Name: !Sub "${AWS::StackName}-CognitoUserPoolId"
+      Name: !Sub "${AWS::StackName}-CognitoIdentityPoolId"
 
   BucketName:
     Value: !Ref WebsiteBucket

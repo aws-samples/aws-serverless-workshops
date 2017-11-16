@@ -46,23 +46,30 @@ Next, we must configure the Cognito Identity Pool to use Facebook as our identit
 
 ## 3. Configure and build the application code
 
-Our application will need to know the location of the API in order to push and pull data from it. In addition, the application will need to know our Facebook App ID and Cognito Identity Pool ID so it can authenticate our users. See the Prerequisites section at the beginning of this guide if you have not already setup your Facebook Developer account and App ID.
+Our application will need to know the location of the API in order to push and 
+pull data from it. In addition, the application will need to know our Facebook 
+App ID and Cognito Identity Pool ID so it can authenticate our users. See the 
+Prerequisites section at the beginning of this guide if you have not already 
+setup your Facebook Developer account and App ID.
 
-All of these attributes must be configured in `/src/environments/environment.ts`. Open up your favorite text editor and edit this file before moving on.
+All of these attributes must be configured in `/src/environments/environment.ts`. 
+Open up your favorite text editor and edit this file before moving on.
 
-You will need Node Package Manager (NPM) installed on your local machine in order to build the application. You can follow [this guide to install NPM](https://www.npmjs.com/get-npm). You will also need to install the NPM dependencies required for this code before testing or building it. Assuming you have NPM install successfully, you can go ahead and run the following CLI command:
+You will need Node Package Manager (NPM) installed on your local machine in order 
+to build the application. You can follow instructions TODO to set up a dev instance. 
+Once you have created your dev instance build your project by executing the following:
 
-    npm install
+- navigate to the root folder of the ui project, i.e. 2_UI.
+- run `npm install` to install project dependencies
+- build your app with by running `npm run build`
 
-You can then build your app with:
-
-    npm run build
-
-This will produce a `dist/` folder containing the compiled application with your custom settings embedded.
+This will produce a `dist/` folder containing the compiled application with your 
+custom settings.
 
 ## 4. Upload the application
 
-Next, you'll need to upload the UI to the S3 bucket specified in step 1. You can do this with:
+Next, you'll need to upload the UI to the S3 bucket specified in step 1. You can 
+do this with:
 
     aws s3 sync dist/ s3://[bucket_name] --acl public-read
 

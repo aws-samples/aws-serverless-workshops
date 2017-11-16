@@ -17,14 +17,15 @@ The following objects will be used as you create the resources in the console fo
 There are several steps needed to deploy the API and Lambda functions via the console.  The basic steps are:
 
 1. Create the appropriate IAM policies and roles our three lambda functions
-2. Create the API Gateway for the primary application region
-3. Create the “Get” Lambda Function
-4. Create the “Post” Lambda function
-5. Create the "Replication" Lambda function
-6. Create the required DynamoDB table
+2. Create the required DynamoDB table
+3. Create the API Gateway for the primary application region
+4. Create the “Get” Lambda Function
+5. Create the “Post” Lambda function
+6. Create the "Replication" Lambda function
+
 Let’s go ahead and create all the needed polices and roles for our workshop
 
-In the Console – open IAM and select “Policies” from the left and click on the “Create policy” button:
+## 1. In the Console – open IAM and select “Policies” from the left and click on the “Create policy” button:
 
 ![Create Policy](images/create-policy-1.png)
 
@@ -55,9 +56,23 @@ Select the type of “AWS Service” and choose Lambda from the list below and s
 
 ![Choose Role Type](images/create-role-lambda.png)
 
-Find the Wild_Rydes_DynamoDB_Put policy you just created on the next screen and select “Next: Review”
+Find the Wild_Rydes_DynamoDB_Get policy you just created on the next screen and select “Next: Review”
 
 ![Select Policy to Role](images/create-role-select-policy.png)
+
+On the next screen, enter “Wild_Rydes_DynamoDB_Get” for the Role Name and select “Create role”
+
+![Choose Role Final](images/create-role-final.png)
+
+Repeat the same steps two more times, this time creating the role for “Wild_Rydes_DynamoDB_Put” and "Wild_Rydes_DynamoDB_Replication" and attaching the corresponding policy you created earlier.
+
+## 2. Next we will create our DynamoDB Table for our application data
+
+Ensure you are set to Ireland (eu-west-1) in the upper right corner of the console.  If you mistakenly create the DynamoDB table in the wrong region, the application will not work.
+
+In the console, open DynamoDB (it can be found under Database).  Select “Create Table” (your screen may be slightly different depending on whether this is your first DynamoDB table in this region or not):
+
+![DymamoDB Create Button](images/dynamodb-create-button.png)
 
 </details>
 

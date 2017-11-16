@@ -93,7 +93,6 @@ Resources:
                   - "s3:PutObjectVersionAcl"
                   - "s3:DeleteObject"
                   - "s3:DeleteObjectVersion"
-                  - "s3:CopyObject"
                 Resource:
                   - !Sub "arn:aws:s3:::${BucketName}"
                   - !Sub "arn:aws:s3:::${BucketName}/*"

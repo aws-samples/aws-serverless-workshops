@@ -1,8 +1,15 @@
 # Building the Wild Rydes Backend Components Layer
 
-In this module, you will deploy backend application components to AWS to build out API Gateway, Lambda and a DynamoDB table that will allow our users to create their support tickets.  This will include creating the needed polices and roles.
+In this module, you will deploy backend application components to AWS. These
+backend components include AWS Lambda functions, API Gateway Endpoints and a
+DynamoDB table. You will also create the IAM polices and roles required by
+these components.
 
-There are two ways to complete this module.  For learning purposes, we recommend that workshop participants step through the Console instructions while deploying the primary Ireland region, and then for time reasons, use the provide CloudFormation instructions to quickly set up the second Singapore region.
+There are two ways to complete this module.  For learning purposes, we
+recommend that workshop participants step through the Console instructions
+while deploying the primary Ireland region, and then for time reasons, use the
+provided CloudFormation instructions to quickly set up the second Singapore
+region during module 3.
 
 Both sets of instructions are provided – simply expand your preferred path.
 
@@ -10,43 +17,58 @@ Both sets of instructions are provided – simply expand your preferred path.
 <summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
 
 The following objects will be used as you create the resources in the console for this module:
-* `Wild_Rydes_DynamoDB_Get.json` - This is the policy needed in order to read from DynamoDB using our the `tickets-get.js` Lambda functions
-* `Wild_Rydes_DynamoDB_Put.json` - This is the policy needed in order to write to DynamoDB using our the `tickets-post.js` Lambda function
-* `Wild_Rydes_DynamoDB_Replication.json` - This is the policy needed in order to use DynambDB Streams to replicate to a second region using the `replicate.js` Lambda function
 
-There are several steps needed to deploy the API and Lambda functions via the console.  The basic steps are:
+* `Wild_Rydes_DynamoDB_Get.json` - This is the policy needed in order to read
+  from DynamoDB using our the `tickets-get.js` Lambda functions
+* `Wild_Rydes_DynamoDB_Put.json` - This is the policy needed in order to write
+  to DynamoDB using our the `tickets-post.js` Lambda function
+* `Wild_Rydes_DynamoDB_Replication.json` - This is the policy needed in order
+  to use DynambDB Streams to replicate to a second region using the
+  `replicate.js` Lambda function
 
-1. Create the appropriate IAM policies and roles our three lambda functions
+There are several steps needed to deploy the API and Lambda functions via the
+console. The basic steps are:
+
+1. Create the appropriate IAM policies and roles our three AWS Lambda functions
 2. Create the required Amazon DynamoDB table
 3. Create the AWS Lambda functions
 4. Create the Amazon API Gateway for the primary application region
 
 Let’s go ahead and create all the needed polices and roles for our workshop
 
-## 1. In the Console – open IAM and select “Policies” from the left and click on the “Create policy” button:
+## 1. Create IAM Policies and Roles
+
+Log into the AWS Console then select the **IAM** service. Now select
+**Policies** from the left and click on the **Create policy** button.
 
 ![Create Policy](images/create-policy-1.png)
 
-Select "Create Your Own Policy" from the next screen
-Under Policy Name, enter "Wild_Rydes_DynamoDB_Get"
+Select **Create Your Own Policy** from the next screen. Under Policy Name,
+enter `Wild_Rydes_DynamoDB_Get`.
 
 Next, open the policy below and cut and paste it into the editor in the AWS Console
 
-[Download Policy Wild_Rydes_DynamoDB_Get.json](Wild_Rydes_DynamoDB_Get.json)
+Download policy: [Wild_Rydes_DynamoDB_Get.json](Wild_Rydes_DynamoDB_Get.json)
 
-Click on "Validate policy" followed by "Create policy"
+Click on **Validate policy** followed by **Create policy**.
 
 ![Create Policy Editor](images/create-policy-2.png)
 
-Go ahead and repeat these exact same steps two more times in order to create the following two additional polices that will be needed during the workshop.
+Now repeat these exact same steps two more times in order to create the
+following two additional polices that will be needed during the workshop.
 
-[Download Policy Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
+Download policy: [Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
 
-[Download Policy Wild_Rydes_DynamoDB_Replication.json](Wild_Rydes_DynamoDB_Replication.json)
+Download policy:
+[Wild_Rydes_DynamoDB_Replication.json](Wild_Rydes_DynamoDB_Replication.json)
 
-Next will be creation of three roles that correspond to the three polices that were just created.
+Next you will create the three roles that correspond to the three polices that
+were just created. Each of these roles will be used by a different Lambda
+function thereby limiting the permissions of each function. This follows an
+AWS Best Practice of granting the [least privilege](http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
 
-In the Console – open IAM and select “Roles” from the left, and click on the “Create role” button:
+In the Console, select the **IAM** service and choose **Roles** from the left,
+and click on the “Create role” button:
 
 ![Create Role](images/create-role-1.png)
 
@@ -254,6 +276,10 @@ Congratulations! You have successfully deployed an API running on AWS Lambda and
 
 </details>
 
+## Completion
 
+Congratulations you have configured the backend components required by the
+ticketing application. In the next module you will deploy a frontend that uses
+these components.
 
 Module 2: [Build a UI layer](../2_UI/README.md)

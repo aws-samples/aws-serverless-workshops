@@ -89,17 +89,19 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Under your newly created API, choose **Authorizers**.
 
-1. From the **Create** drop-down list, select **Cognito User Pool Authorizer**.
+1. Chose **Create New Authorizer**.
 
     ![Create user pool authorizer screenshot](../images/create-user-pool-authorizer.png)
 
-1. Select the Region where you created your Cognito user pool in module 2.
-
-1. Select the `WildRydes` Cognito user pool from the drop-down list.
-
 1. Enter `WildRydes` for the Authorizer name.
 
-1. Ensure that the **Identity token source** is set to `method.request.header.Authorization`.
+1. Select **Cognito** for the type.
+
+1. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in module 2.
+
+1. Enter `WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
+
+1. Enter `Authorization` for the **Token Source**.
 
 1. Choose **Create**.
 
@@ -109,9 +111,15 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. If you are redirected to the sign-in page, sign in with the user you created in the last module. You will be redirected back to `/ride.html`.
 
-1. Copy the auth token from the notification on the `/ride.html`, and paste it into the **Identity token** field in the API Gateway console tab.
+1. Copy the auth token from the notification on the `/ride.html`, 
 
-1. Choose **Test** and verify that you see the claims for your user displayed.
+1. Go back to previous tab where you have just finished creating the Authorizer
+
+1. Click "Test", paste it into the **Authorization Token** field in the popup dialog.
+
+    ![Test Authorizer screenshot](../images/apigateway-test-authorizer.png)
+
+1. Click **Test** button and verify that you see the claims for your user displayed.
 
 </p></details>
 
@@ -133,7 +141,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 1. With the newly created `/ride` resource selected, from the **Action** dropdown select **Create Method**.
 
-1. Select `POST` from the new dropdown that appears, then click the checkmark.
+1. Select `POST` from the new dropdown that appears, then **click the checkmark**.
 
     ![Create method screenshot](../images/create-method.png)
 

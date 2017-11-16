@@ -8,14 +8,14 @@ Alternatively, you can use one of the AMIs which contain the required
 dependencies baked in to the AMI. See the "Use AMI" section of readme 
 to use a pre-baked AMI.
 
-#EC2 dev instance configuration.
+# EC2 dev instance configuration.
 
 Make sure to use the AWS linux AMI already configured with the AWS CLI. 
 Your EC2 instance should have:
 - a role assigned that allows access to S3 (see sample policy below).
 - a security group that allows ssh from your ip address.
 
-Once launched log in to your dev ec2 instance.
+Once launched, log in to your dev ec2 instance.
 
 #### Update to latest packages
 `sudo yum update -y`
@@ -39,11 +39,11 @@ Execute the following commands to install node & npm:
 
 confirm installation by typing the following
 - `npm -v` should output 'v8.9.1'
-- `node -v`should output '5.5.1'
+- `node -v` should output '5.5.1'
 
 #### Clone the SXR project
 
-` git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/aws-serverless-workshops`
+`git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/aws-serverless-workshops`
 
 #### Angular CLI installation
 

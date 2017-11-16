@@ -244,16 +244,42 @@ green and say Healthy in the console.
 ### 3.5 Configure DNS failover records
 
 Now let's configure the zone records for our `api.` subdomain prefix. You will
-configure these records in a primary/secondary failover pattern using your
-health check.
+configure these as CNAME ALIAS records in a primary/secondary failover pattern using
+your health check.
 
-Before you can
-    - NOTE: You must use HTTPS when visiting your domain. You will get a 504
-      error if not.
-### 3.6 Configure both APIs using primary/secondary filaover Alias records
+#### High-level instructions
+
+Ensure you are in your primary (Ireland) region. Navigate over to the
+**Route53** service and choose **Hosted zones**. Choose the zone for your
+domain and select **Create Record Set**. Enter `api` as the name and choose
+CNAME as the type. Now change Alias to Yes and select the `ireland.` prefixed
+version of your domain. Since this is an alias, it should appear in the
+dropdown list.
+
+Next, choose the Failover routing policy. You'll want to select the Primary
+record type for your Ireland record. Turn on both Evaluate Target Health and
+Associate with Health Check then select the `ireland-api` health check you
+created previously. Hit **Save Record Set**.
+
+You will now want to repear this step again but for your Singapore domain. You
+will select the Secondary record type and not associate with a health check
+this time.
+
+Your completed DNS configuration should look something like the screenshot
+below.
+
+![Zone failover configuration](images/zone-configuration.png)
+
+With the DNS configured, you should now be able to visit the `api.` prefix of
+your domain (remember to use HTTPS). Go to the `/health` path and notice how
+it always returns the Ireland region indicating that our Primary region is
+always being served.
 
 ## Completion
 
-Congratulations...
+Congratulations you have configured a multi-region API and set up a a
+healthcheck-based failover using Route53. In the next module we will
+intentionally break the primary region and verify that our failover to the
+second works.
 
 Module 4: [Test failover](../4_Testing/README.md)

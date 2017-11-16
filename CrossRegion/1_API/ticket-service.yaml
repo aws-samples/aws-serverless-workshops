@@ -55,6 +55,42 @@ Resources:
                   application/json: "{\"statusCode\": 200}"
                 passthroughBehavior: "when_no_match"
                 type: "mock"
+          "/health":
+            get:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HealthFunction.Arn}/invocations
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            options:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              responses:
+                '200':
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
         swagger: '2.0'
   TicketGetFunction:
     Type: AWS::Serverless::Function
@@ -104,6 +140,31 @@ Resources:
           Properties:
             Path: /ticket
             Method: post
+            RestApiId: !Ref TicketServiceAPI
+  HealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: health-check.handler
+      Runtime: nodejs6.10
+      FunctionName: SXRHealthCheckFunction
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:GetItem
+              Resource: !GetAtt DynamoDBTicketTable.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTicketTable
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /health
+            Method: get
             RestApiId: !Ref TicketServiceAPI
   DynamoDBTicketTable:
    Type: AWS::DynamoDB::Table

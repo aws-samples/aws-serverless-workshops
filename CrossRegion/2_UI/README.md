@@ -16,10 +16,7 @@ no package step is needed.
 You can go ahead and deploy this template in the primary region using the `aws
 cloudformation deploy` CLI command as before.
 
-<details>
-<summary>CLI step-by-step instructions (expand for details)</summary>
-
-The full command will look like:
+For the Ireland region, the full command will look like:
 
     aws cloudformation deploy \
     --region eu-west-1 \
@@ -27,7 +24,7 @@ The full command will look like:
     --stack-name ticket-service-ui \
     --capabilities CAPABILITY_IAM
 
-</details>
+Change the `--region` parameter when deploying to your second region.
 
 Again, you can confirm that this was created successfully and see the resource
 in the AWS Console. Navigate to the CloudFormation service and take a look at

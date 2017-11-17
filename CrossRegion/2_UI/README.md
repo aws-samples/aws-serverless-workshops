@@ -1,14 +1,20 @@
 # Building a UI layer
 
-Now that we have a working API, let's deploy a UI that can expose this functionality to our users.
+Now that we have a working API, let's deploy a UI that can expose this
+functionality to our users.
 
 Navigate to the `2_UI/cfn` folder in your local Git repository.
 
 ## 1. Create the AWS Cognito Identity Pool and S3 hosting bucket
 
-Our first task is to setup AWS Cognito to allow our UI application to authenticate users and gain access credentials to allow our UI to call the API. As in module 1, a CloudFormation template is available to create all the necessary resources for us. This template does not rely on any local code so no package step is needed.
+Our first task is to setup AWS Cognito to allow our UI application to
+authenticate users and gain access credentials to allow our UI to call the
+API. As in module 1, a CloudFormation template is available to create all the
+necessary resources for us. This template does not rely on any local code so
+no package step is needed.
 
-You can go ahead and deploy this template in the primary region using the `aws cloudformation deploy` CLI command as before.
+You can go ahead and deploy this template in the primary region using the `aws
+cloudformation deploy` CLI command as before.
 
 <details>
 <summary>CLI step-by-step instructions (expand for details)</summary>
@@ -23,7 +29,9 @@ The full command will look like:
 
 </details>
 
-Again, you can confirm that this was created successfully and see the resource in the AWS Console. Navigate to the CloudFormation service and take a look at the Outputs tab. This time you will see two keys:
+Again, you can confirm that this was created successfully and see the resource
+in the AWS Console. Navigate to the CloudFormation service and take a look at
+the Outputs tab. This time you will see two keys:
 
 * CognitoIdentityPoolId
 * BucketName
@@ -33,11 +41,19 @@ Take note of the values for each of these, you will need them in the next steps.
 
 ## 2. Configure Facebook Federated Identity with Cognito
 
-Go into your Facebook Developer account and create an new application by [following these steps](https://developers.facebook.com/docs/apps/register/) and choosing the Website platform. You will need to configure your Facebook application with the Bucket URL created in the above step. Once you have done this, take note of your App ID as you will need it next.
+Go into your Facebook Developer account and create an new application by
+[following these steps](https://developers.facebook.com/docs/apps/register/).
+Once you've created your app, under settings you'll want to add a Platform and
+choose the Website platform. You will need to configure your Facebook
+application with the Bucket URL created in the above step. Once you have done
+this, take note of your App ID as you will need it next.
 
-***[TODO: Add screenshot of configured app here]***
+![Facebook Config](images/facebook-config.png)
 
-Next, we must configure the Cognito Identity Pool to use Facebook as our identity provider. To do this, open up the AWS Console in your browser and navigate to Cognito from the menu. Double check that you are still in the primary region (EU Ireland).
+Next, we must configure the Cognito Identity Pool to use Facebook as our
+identity provider. To do this, open up the AWS Console in your browser and
+navigate to Cognito from the menu. Double check that you are still in the
+primary region (EU Ireland).
 
 1. Choose Manage Federated Identities and select the SXRIdentityPool.
 2. Click the Edit Identity Pool button in the top right
@@ -58,12 +74,14 @@ setup your Facebook Developer account and App ID.
 ***TODO: Add Amazon instructions ***
 ***TODO: Improve Facebook instructions ***
 
-All of these attributes must be configured in `/src/environments/environment.ts`.
-Open up your favorite text editor and edit this file before moving on.
+All of these attributes must be configured in
+`/src/environments/environment.ts`. Open up your favorite text editor and edit
+this file before moving on.
 
-You will need Node Package Manager (NPM) installed on your local machine in order
-to build the application. You can follow instructions TODO to set up a dev instance.
-Once you have created your dev instance build your project by executing the following:
+You will need Node Package Manager (NPM) installed on your local machine in
+order to build the application. You can follow instructions TODO to set up a
+dev instance. Once you have created your dev instance build your project by
+executing the following:
 
 - navigate to the root folder of the ui project, i.e. 2_UI.
 - run `npm install` to install project dependencies
@@ -97,6 +115,8 @@ will need to build and deploy the code again.
 
 ## Completion
 
-Congratulations! You have successfully deployed a user interface for our users on S3. In the next module you will learn how to replicate this app to a second region and configure automatic failover using Route53.
+Congratulations! You have successfully deployed a user interface for our users
+on S3. In the next module you will learn how to replicate this app to a second
+region and configure automatic failover using Route53.
 
 Module 3: [Replicate to a second region](../3_Replication/README.md)

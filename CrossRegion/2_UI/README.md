@@ -33,13 +33,27 @@ Again, you can confirm that this was created successfully and see the resource
 in the AWS Console. Navigate to the CloudFormation service and take a look at
 the Outputs tab. This time you will see two keys:
 
-* CognitoIdentityPoolId
-* BucketName
-* BucketURL
+* `CognitoIdentityPoolId`
+* `BucketName`
+* `BucketURL`
 
 Take note of the values for each of these, you will need them in the next steps.
 
-## 2. Configure Facebook Federated Identity with Cognito
+## 2. Configure Federated Identity with Cognito
+
+You have the option here of which identity provider you would like to
+integrate. Choose either Amazon, Facebook or both. You will need a developer
+account for either of these options.
+
+<details>
+<summary>Configure with Amazon instructions (expand for details)</summary>
+
+***TODO***
+
+</details>
+
+<details>
+<summary>Configure with Facebook instructions (expand for details)</summary>
 
 Go into your Facebook Developer account and create an new application by
 [following these steps](https://developers.facebook.com/docs/apps/register/).
@@ -61,6 +75,8 @@ primary region (EU Ireland).
 4. Navigate to the Authentication Providers section.
 5. Select the Facebook tab, hit Unlock then specify your Facebook App ID
 6. Save Changes at the bottom of the page.
+
+</details>
 
 ## 3. Configure and build the application code
 

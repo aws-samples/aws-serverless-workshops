@@ -5,25 +5,16 @@ var https = require('https');
 http.globalAgent.maxSockets = 500;
 https.globalAgent.maxSockets = 500;
 
-//const table = process.env.TABLE_NAME;
-//const targetregion = process.env.TARGET_REGION;
+//We are reading in the environment variables from Lambda
+var table = process.env.TABLE_NAME;
+var targetregion = process.env.TARGET_REGION;
 
-//const params = {
-//    replicatetotable: table
-//};
-
-//const params = {
-//    replicatetoregion: targetregion
-//};
-
-var replicatetoregion = 'ap-southeast-1';
-var replicatetotable = 'SXRTickets';
 
 //We are configuring the AWS Client
 var AWS = require('aws-sdk');
 
 //Lets set the destination AWS Region
-AWS.config.update({region : replicatetoregion});
+AWS.config.update({region : targetregion});
 
 //Lets set up the DynamoDB Client
 var dynamodb = new AWS.DynamoDB();
@@ -64,9 +55,9 @@ exports.handler = function(event, context) {
 
         // decide what type of request to send
         if (validate(oldItemImage) && !validate(newItemImage)) {
-            dynamodb.deleteItem({Key : buffer[key].Keys, TableName : replicatetotable}, handleResponse);
+            dynamodb.deleteItem({Key : buffer[key].Keys, TableName : table}, handleResponse);
         } else if (validate(newItemImage)) {
-            dynamodb.putItem({Item : newItemImage, TableName : replicatetotable}, handleResponse);
+            dynamodb.putItem({Item : newItemImage, TableName : table}, handleResponse);
         } else {
             console.error("The old image and the new image are not valid.");
         }

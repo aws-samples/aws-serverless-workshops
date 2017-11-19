@@ -43,28 +43,25 @@ Let’s go ahead and create all the needed polices and roles for our workshop
 ## 1. Create IAM Policies and Roles
 
 Log into the AWS Console then select the **IAM** service. Now select
-**Policies** from the left and click on the **Create policy** button.
+**Policies** from the left and click on the **Create policy** button.  Then
+select the *JSON* tab and paste the code below into the editing window.
+
+Download policy: [TicketGetPolicy](wild-rydes-dynamodb-get.json)
 
 ![Create Policy](images/create-policy-1.png)
 
-Select **Create Your Own Policy** from the next screen. Under Policy Name,
-enter `TicketGetPolicy`.
+Click on **Review Policy**
 
-Next, open the policy below and cut and paste it into the editor in the AWS Console
-
-Download policy: [wild-rydes-dynamodb-get.json](wild-rydes-dynamodb-get.json)
-
-Click on **Validate Policy** followed by **Create Policy**.
+Name your policy `TicketGetPolicy` and click **Create policy**
 
 ![Create Policy Editor](images/create-policy-2.png)
 
 Now repeat these exact same steps two more times in order to create the
 following two additional polices that will be needed during the workshop.
 
-**Download policy**: [wild-rydes-dynamodb-post.json](wild-rydes-dynamodb-post.json)
+**Download policy**: [TicketPostPolicy](wild-rydes-dynamodb-post.json)
 
-**Download policy**:
-[wild-rydes-dynamodb-replication.json](wild-rydes-dynamodb-replication.json)
+**Download policy**: [TicketReplicatePolicy](wild-rydes-dynamodb-replication.json)
 
 Next you will create the three roles that correspond to the three polices that
 were just created. Each of these roles will be used by a different Lambda

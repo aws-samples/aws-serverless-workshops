@@ -61,9 +61,9 @@ Click on **Validate policy** followed by **Create policy**.
 Now repeat these exact same steps two more times in order to create the
 following two additional polices that will be needed during the workshop.
 
-Download policy: [Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
+**Download policy**: [Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
 
-Download policy:
+**Download policy**:
 [Wild_Rydes_DynamoDB_Replication.json](Wild_Rydes_DynamoDB_Replication.json)
 
 Next you will create the three roles that correspond to the three polices that

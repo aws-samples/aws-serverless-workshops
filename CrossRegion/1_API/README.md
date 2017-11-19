@@ -105,7 +105,7 @@ In the console, open **DynamoDB** (it can be found under Database).  Select
 **Create Table**. Your screen may be slightly different depending on whether
 this is your first DynamoDB table in this region or not.
 
-![DymamoDB Create Button](images/dynamodb-create-button.png)
+![DymamoDB Create Button](images/dynamodb-create-button.png) <!-- .element height="50%" width="50%" -->
 
 For the table name, enter `SXRTickets` and enter `id` as the Primary Key
 Partition Key and then click **Create**. That’s all that is required for now
@@ -119,11 +119,11 @@ Next, you will create two Lambda functions. First, navigate to **Lambda** in
 the console (again ensuring you are still in the Ireland region) and click
 **Create a function**
 
-![Create Lambda function](images/create-lambda-function.png)
+![Create Lambda function](images/create-lambda-function.png) <!-- .element height="50%" width="50%" -->
 
 Next select “Author from scratch”
 
-![Lambda author from scratch](images/lambda-author-scratch.png)
+![Lambda author from scratch](images/lambda-author-scratch.png) <!-- .element height="50%" width="50%" -->
 
 Name your first function “Wild_Rydes_Lambda_Get” and assign the role you created previously to it and click “Create function”
 
@@ -149,7 +149,7 @@ We will repeat the same steps for the put/post Lambda function, and one more tim
 
 In the console, under Application Services, open Amazon API Gateway and click on “Get Started”.  Click on OK if you are given a “Create Example API” dialogue.
 
-![Create Example API](images/create-example-api.png)
+![Create Example API](images/create-example-api.png) <!-- .element height="30%" width="30%" -->
 
 Select “New API” and enter the API Name of “Wild_Rydes_API” and choose the Endpoint Type of “Regional” and then click “Create API”
 
@@ -163,15 +163,15 @@ Next we will create two methods – one for Get and one for Post/Put
 
 From the “Actions” drop-down select “Create Method” and then choose “GET” as your first method and select the check-box to confirm creation:
 
-![Create api method get](images/api-method-get.png)
+![Create api method get](images/api-method-get.png) <!-- .element height="50%" width="50%" -->
 
 Keep “Lambda Function” selected, enable “Use Lambda Proxy Integration” and choose “eu-west-1” as the Lambda Region and then start typing in the Lambda Function box and choose “Wild_Rydes_Lambda_Get” and then click “Save"
 
-![Setup api method get](images/api-method-get-setup.png)
+![Setup api method get](images/api-method-get-setup.png) <!-- .element height="50%" width="50%" -->
 
 Click OK when asked to “Add Permission to Lambda Function”
 
-![api lambda permission](images/api-lambda-permission.png)
+![api lambda permission](images/api-lambda-permission.png) <!-- .element height="30%" width="30%" -->
 
 Now we’ll create our POST method following the same basic steps – from the “Actions” drop-down select “Create Method” but this time we’ll choose POST.
 
@@ -183,7 +183,7 @@ Again, click “OK” when asked to “Add Permission to Lambda Function”
 
 Finally, we will enable Cross-Origin.  From the Actions drop-down, select “Enable CORS”
 
-![actions enable cors apigw](images/actions-enable-cors.png)
+![actions enable cors apigw](images/actions-enable-cors.png) <!-- .element height="30%" width="30%" -->
 
 Simply Accept the Default Settings and click on the “Enable CORS and Replace Existing CORS Headers” button:
 
@@ -193,11 +193,11 @@ Click “Yes, replace existing values” if prompted.
 
 Next we will deploy the API – this is done from the “Actions” pull-down, selecting “Deploy API”
 
-![deploy api to prod](images/deploy-api-prod.png)
+![deploy api to prod](images/deploy-api-prod.png) <!-- .element height="30%" width="30%" -->
 
 Then select “New Stage” for Deployment Stage and enter the Stage Name of “Prod” and click “Deploy”
 
-![deploy api to prod](images/deploy-api-prod-new-stage.png)
+![deploy api to prod](images/deploy-api-prod-new-stage.png) <!-- .element height="50%" width="50%" -->
 
 You have now completed the setup of all the API and backend components needed for your primary region
 

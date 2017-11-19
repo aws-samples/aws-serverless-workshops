@@ -45,7 +45,7 @@ Let’s go ahead and create all the needed polices and roles for our workshop
 Log into the AWS Console then select the **IAM** service. Now select
 **Policies** from the left and click on the **Create policy** button.
 
-<div style="width:50%">![Create Policy](images/create-policy-1.png)
+![Create Policy](images/create-policy-1.png){:height="50%" width="50%"}
 
 Select **Create Your Own Policy** from the next screen. Under Policy Name,
 enter `Wild_Rydes_DynamoDB_Get`.

@@ -79,7 +79,7 @@ select **Next: Permissions**.
 ![Choose Role Type](images/create-role-lambda.png)
 
 Find the `TicketGetPolicy` policy you just created on the next screen
-and select **Next: Review**
+and select **Next: Review** (Hint: Use the *Customer Managed* filter)
 
 ![Select Policy to Role](images/create-role-select-policy.png)
 
@@ -128,11 +128,11 @@ Ensure the runtime is `Node.js 6.10`.  If it isn’t, simply select it.
 
 For the Handler, enter `tickets-get.handler` and then paste the following code into the editor you see on your screen:
 
-[Lambda tickets-get.js](tickets-get.js)
+[TicketGetFunction](tickets-get.js)
 
 Next, under `Environment Variables`, enter they key **TABLE_NAME** and the value **SXRTickets**
 
-![Create Lambda Wild Rydes Get](images/create-lambda-wild-rydes-get.png)
+![Create Lambda Wild Rydes Get](images/create-lambda-ticket-get.png)
 
 Once everything is set correctly, click **Save** near the top center of the screen.
 

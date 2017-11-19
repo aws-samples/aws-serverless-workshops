@@ -52,7 +52,7 @@ enter `TicketGetPolicy`.
 
 Next, open the policy below and cut and paste it into the editor in the AWS Console
 
-Download policy: [Wild_Rydes_DynamoDB_Get.json](Wild_Rydes_DynamoDB_Get.json)
+Download policy: [wild-rydes-dynamodb-get.json](wild-rydes-dynamodb-get.json)
 
 Click on **Validate Policy** followed by **Create Policy**.
 
@@ -61,10 +61,10 @@ Click on **Validate Policy** followed by **Create Policy**.
 Now repeat these exact same steps two more times in order to create the
 following two additional polices that will be needed during the workshop.
 
-**Download policy**: [Wild_Rydes_DynamoDB_Put.json](Wild_Rydes_DynamoDB_Put.json)
+**Download policy**: [wild-rydes-dynamodb-post.json](wild-rydes-dynamodb-post.json)
 
 **Download policy**:
-[Wild_Rydes_DynamoDB_Replication.json](Wild_Rydes_DynamoDB_Replication.json)
+[wild-rydes-dynamodb-replication.json](Wwild-rydes-dynamodb-replication.json)
 
 Next you will create the three roles that correspond to the three polices that
 were just created. Each of these roles will be used by a different Lambda

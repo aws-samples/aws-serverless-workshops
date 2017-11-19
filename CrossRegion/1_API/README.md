@@ -179,9 +179,7 @@ Click OK when asked to *Add Permission to Lambda Function*
 
 ![api lambda permission](images/api-lambda-permission.png)
 
-Now we’ll create our POST method following the same basic steps – from the *Actions* drop-down select **Create Method** but this time we’ll choose POST.
-
-Ensure you choose *TicketPostFunction* as your function this time.
+Repeat this step one more time but choose the POST method this time. Ensure you choose *TicketPostFunction* as your function this time.
 
 Last we will create a `GET` method under the `health` resource.  You will select the *SXRHealthCheckFunction* for the Lambda function.
 
@@ -189,7 +187,8 @@ Last we will create a `GET` method under the `health` resource.  You will select
 
 Again, click **OK** when asked to *Add Permission to Lambda Function*
 
-Finally, we will enable Cross-Origin.  From the Actions drop-down, select “Enable CORS”
+Finally, we will enable Cross-Origin.  
+Select `ticket` under *resources*, and from the *Actions* drop-down select **Enable CORS**
 
 ![actions enable cors apigw](images/actions-enable-cors.png)
 
@@ -199,17 +198,27 @@ Simply Accept the Default Settings and click on the “Enable CORS and Replace E
 
 Click “Yes, replace existing values” if prompted.
 
+Repeat the same step once more time, this time choosing `health` as the resource.
+
 Next we will deploy the API – this is done from the “Actions” pull-down, selecting “Deploy API”
 
 ![deploy api to prod](images/deploy-api-prod.png)
 
-Then select “New Stage” for Deployment Stage and enter the Stage Name of “Prod” and click “Deploy”
+Then select “New Stage” for Deployment Stage and enter the Stage Name of `prod` and click **Deploy**.  Note that this needs to be all lowercase or you will run into problems later on.
 
 ![deploy api to prod](images/deploy-api-prod-new-stage.png)
 
 You have now completed the setup of all the API and backend components needed for your primary region
 
+## 5. Test your API Gateway Endpoints
 
+While still in API Gateway, select **Stages** from the left menu under your API Endpoint.  Next, expand "prod", and select `GET` from the *ticket* resource.
+
+![Test the API Gateway EndPoint](images/test-api-gateway-endpoint.png)
+
+You'll see a link to your API EndPoint.  **Click**  on the link and you should see something like the below in your browser if the test is successful:
+
+"statusCode":200,"headers":"Access-Control-Allow-Origin":"","Access-Control-Allow-Credentials":true,"body":"{"Items":[],"Count":0,"ScannedCount":0}"
 
 </details>
 

@@ -141,6 +141,35 @@ Resources:
             Path: /ticket
             Method: post
             RestApiId: !Ref TicketServiceAPI
+  TicketReplicateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: tickets-replicate.handler
+      Runtime: nodejs6.10
+      FunctionName: TicketReplicateFunction
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole #managedpolicy
+        - AmazonKinesisFullAccess #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:GetRecords
+                - dynamodb:GetShardIterator
+                - dynamodb:DescribeStream
+                - dynamodb:ListStreams
+                - dynamodb:DeleteItem
+                - kinesis:*
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: arn:aws:dynamodb:*:*:table/SXRTickets
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTicketTable
+          TARGET_REGION: ap-southeast-1
   HealthFunction:
     Type: AWS::Serverless::Function
     Properties:

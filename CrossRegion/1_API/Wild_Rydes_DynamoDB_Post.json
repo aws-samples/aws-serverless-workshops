@@ -4,13 +4,6 @@
         {
             "Action": [
                 "dynamodb:PutItem",
-                "dynamidb:Getitem"
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:DescribeStream",
-                "dynamodb:ListStreams",
-                "dynamidb:DeleteItem",
-                "kinesis:*",
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"

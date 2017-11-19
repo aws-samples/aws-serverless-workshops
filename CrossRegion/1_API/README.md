@@ -64,7 +64,7 @@ following two additional polices that will be needed during the workshop.
 **Download policy**: [wild-rydes-dynamodb-post.json](wild-rydes-dynamodb-post.json)
 
 **Download policy**:
-[wild-rydes-dynamodb-replication.json](Wwild-rydes-dynamodb-replication.json)
+[wild-rydes-dynamodb-replication.json](wild-rydes-dynamodb-replication.json)
 
 Next you will create the three roles that correspond to the three polices that
 were just created. Each of these roles will be used by a different Lambda
@@ -145,7 +145,7 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
 | [TicketGetFunction](tickets-get.js)  | tickets-get.handler   | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 | [TicketPostFunction](tickets-ost.js)  | tickets-post.handler   | TicketPostRole           | TABLE_NAME    | SXRTickets     |
-| [SXRReplication](replicate.js)         | use default           | TicketReplicateRole | TABLE_NAME    | SXRTickets     |
+| [TicketReplicateFunction](tickets-replicate.js)         | tickets-replicate.handler          | TicketReplicateRole | TABLE_NAME    | SXRTickets     |
 |                        |                       |                                 | TARGET_REGION | ap-southeast-1 |
 | [SXRHealthCheckFunction](health-check.js) | health-check.handler  | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 

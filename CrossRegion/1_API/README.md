@@ -45,7 +45,7 @@ Let’s go ahead and create all the needed polices and roles for our workshop
 Log into the AWS Console then select the **IAM** service. Now select
 **Policies** from the left and click on the **Create policy** button.
 
-![Create Policy](images/create-policy-1.png) <!-- .element height="50%" width="50%" -->
+![Create Policy](images/create-policy-1.png)
 
 Select **Create Your Own Policy** from the next screen. Under Policy Name,
 enter `Wild_Rydes_DynamoDB_Get`.
@@ -105,7 +105,7 @@ In the console, open **DynamoDB** (it can be found under Database).  Select
 **Create Table**. Your screen may be slightly different depending on whether
 this is your first DynamoDB table in this region or not.
 
-![DymamoDB Create Button](images/dynamodb-create-button.png) <!-- .element height="50%" width="50%" -->
+![DymamoDB Create Button](images/dynamodb-create-button.png)
 
 For the table name, enter `SXRTickets` and enter `id` as the Primary Key
 Partition Key and then click **Create**. That’s all that is required for now
@@ -119,11 +119,11 @@ Next, you will create two Lambda functions. First, navigate to **Lambda** in
 the console (again ensuring you are still in the Ireland region) and click
 **Create a function**
 
-![Create Lambda function](images/create-lambda-function.png) <!-- .element height="50%" width="50%" -->
+![Create Lambda function](images/create-lambda-function.png)
 
 Next select “Author from scratch”
 
-![Lambda author from scratch](images/lambda-author-scratch.png) <!-- .element height="50%" width="50%" -->
+![Lambda author from scratch](images/lambda-author-scratch.png)
 
 Name your first function “Wild_Rydes_Lambda_Get” and assign the role you created previously to it and click “Create function”
 
@@ -149,7 +149,7 @@ We will repeat the same steps for the put/post Lambda function, and one more tim
 
 In the console, under Application Services, open Amazon API Gateway and click on “Get Started”.  Click on OK if you are given a “Create Example API” dialogue.
 
-![Create Example API](images/create-example-api.png) <!-- .element height="30%" width="30%" -->
+![Create Example API](images/create-example-api.png)
 
 Select “New API” and enter the API Name of “Wild_Rydes_API” and choose the Endpoint Type of “Regional” and then click “Create API”
 
@@ -163,11 +163,11 @@ Next we will create two methods – one for Get and one for Post/Put
 
 From the “Actions” drop-down select “Create Method” and then choose “GET” as your first method and select the check-box to confirm creation:
 
-![Create api method get](images/api-method-get.png) <!-- .element height="50%" width="50%" -->
+![Create api method get](images/api-method-get.png)
 
 Keep “Lambda Function” selected, enable “Use Lambda Proxy Integration” and choose “eu-west-1” as the Lambda Region and then start typing in the Lambda Function box and choose “Wild_Rydes_Lambda_Get” and then click “Save"
 
-![Setup api method get](images/api-method-get-setup.png) <!-- .element height="50%" width="50%" -->
+![Setup api method get](images/api-method-get-setup.png)
 
 Click OK when asked to “Add Permission to Lambda Function”
 

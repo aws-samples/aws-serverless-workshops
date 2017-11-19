@@ -144,7 +144,7 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 | Function Name          | Handler Name          | Execution Role                  | Env Var Key   | Env Var Value  |
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
 | [Wild_Rydes_Lambda_Get](tickets-get.js)  | tickets-get.handler   | Wild_Rydes_Lambda_Get           | TABLE_NAME    | SXRTickets     |
-| [Lambda tickets-post.js](tickets-post.js)  | tickets-put.handler   | Wild_Rydes_Lambda_Put           | TABLE_NAME    | SXRTickets     |
+| [Wild_Rydes_Lambda_Put](tickets-put.js)  | tickets-put.handler   | Wild_Rydes_Lambda_Put           | TABLE_NAME    | SXRTickets     |
 | [SXRReplication](replicate.js)         | use default           | Wild_Rydes_DynamoDB_Replication | TABLE_NAME    | SXRTickets     |
 |                        |                       |                                 | TARGET_REGION | ap-southeast-1 |
 | [SXRHealthCheckFunction](health-check.js) | health-check.handler  | Wild_Rydes_Lambda_Get           | TABLE_NAME    | SXRTickets     |

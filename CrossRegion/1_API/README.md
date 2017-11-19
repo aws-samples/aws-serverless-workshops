@@ -152,7 +152,7 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 
 ## 4. Create API Gateway Endpoint
 
-In the console, under Application Services, open Amazon API Gateway and click on **Get Started**.  Click on OK if you are given a *Create Example API* dialogue.
+In the console, under Application Services, open Amazon API Gateway and click on **Get Started**.  Click on **OK** if you are given a *Create Example API* dialogue.
 
 ![Create Example API](images/create-example-api.png)
 
@@ -160,7 +160,7 @@ Select **New API** and enter the API Name of `Wild_Rydes_API` and choose the End
 
 ![Create new API](images/create-new-api.png)
 
-Next, from the *Actions* drop-down, choose **Create Resource** and name the resource *ticket* and select the *Enable API Gateway CORS* option and then click **Create Resource**
+Next, from the *Actions* drop-down, choose **Create Resource** and name the resource `ticket` and select the *Enable API Gateway CORS* option and then click **Create Resource**
 
 ![Create api child CORS](images/api-child-resource-cors.png)
 

@@ -11,6 +11,8 @@ export class TroubleshootingComponent implements OnInit {
 
   public env: any;
 
+  public invalidAPIURL: any;
+
   constructor(public router: Router) {
 
     this.env = environment;
@@ -29,6 +31,11 @@ export class TroubleshootingComponent implements OnInit {
 
     if(!environment.ticketAPI) {
       errorMessages.push("Ticket API not configured!");
+    }
+    //
+    if(environment.ticketAPI && !(environment.ticketAPI.slice(-1) === "/")) {
+      errorMessages.push("Ticket API URL needs a trailing slash!");
+      this.invalidAPIURL = "Ticket API URL needs a trailing slash!";
     }
 
     console.log(errorMessages.join("\n"));

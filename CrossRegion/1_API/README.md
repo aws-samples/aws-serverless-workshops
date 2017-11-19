@@ -18,13 +18,13 @@ Both sets of instructions are provided – simply expand your preferred path.
 
 The following objects will be used as you create the resources in the console for this module:
 
-* `Wild_Rydes_DynamoDB_Get.json` - This is the policy needed in order to read
+* `wild-rydes-dynamodb-get.json` - This is the policy needed in order to read
   from DynamoDB using the `tickets-get.js` and `health-check.js` Lambda functions
-* `Wild_Rydes_DynamoDB_Put.json` - This is the policy needed in order to write
+* `wild-rydes-dynamodb-post.json` - This is the policy needed in order to write
   to DynamoDB using the `tickets-post.js` Lambda function
-* `Wild_Rydes_DynamoDB_Replication.json` - This is the policy needed in order
-  to use DynambDB Streams to replicate to a second region using the `replicate.js` Lambda function
-* `replicate.js` Lambda function to replicate new DynamoDB records to our failover region
+* `wild-rydes-dynamodb-replication.json` - This is the policy needed in order
+  to use DynambDB Streams to replicate to a second region using the `tickets-replicate.js` Lambda function
+* `tickets-replicate.js` Lambda function to replicate new DynamoDB records to our failover region
 * `health-check.js` - Lambda function for checking the status of our application health
 * `tickets-get.js` - Lambda function triggered by API Gateway to put application data into DynamoDB
 * `tickets-post.js` - Lambda function triggered by API Gateway to read application data from DynamoDB
@@ -48,7 +48,7 @@ Log into the AWS Console then select the **IAM** service. Now select
 ![Create Policy](images/create-policy-1.png)
 
 Select **Create Your Own Policy** from the next screen. Under Policy Name,
-enter `Wild_Rydes_DynamoDB_Get`.
+enter `TicketGetPolicy`.
 
 Next, open the policy below and cut and paste it into the editor in the AWS Console
 
@@ -81,17 +81,17 @@ select **Next: Permissions**.
 
 ![Choose Role Type](images/create-role-lambda.png)
 
-Find the `Wild_Rydes_DynamoDB_Get` policy you just created on the next screen
+Find the `TicketGetPolicy` policy you just created on the next screen
 and select **Next: Review**
 
 ![Select Policy to Role](images/create-role-select-policy.png)
 
-On the next screen, enter `Wild_Rydes_DynamoDB_Get` for the Role Name and select **Create role**
+On the next screen, enter `TicketGetRole` for the Role Name and select **Create role**
 
 ![Choose Role Final](images/create-role-final.png)
 
 Repeat the same steps two more times, this time creating the role for
-`Wild_Rydes_DynamoDB_Put` and `Wild_Rydes_DynamoDB_Replication` and attaching
+`TicketPostRole` and `TicketReplicateRole` and attaching
 the corresponding policy you created earlier.
 
 ## 2. Create the DynamoDB Table
@@ -125,7 +125,7 @@ Next select “Author from scratch”
 
 ![Lambda author from scratch](images/lambda-author-scratch.png)
 
-Name your first function `Wild_Rydes_Lambda_Get` and assign the role with the **matching** name you created previously to it and click **Create function**
+Name your first function `TicketGetFunction` and assign the role with the **matching** name you created previously to it and click **Create function**
 
 Ensure the runtime is `Node.js 6.10`.  If it isn’t, simply select it.
 
@@ -143,11 +143,11 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 
 | Function Name          | Handler Name          | Execution Role                  | Env Var Key   | Env Var Value  |
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
-| [Wild_Rydes_Lambda_Get](tickets-get.js)  | tickets-get.handler   | Wild_Rydes_Lambda_Get           | TABLE_NAME    | SXRTickets     |
-| [Wild_Rydes_Lambda_Put](tickets-put.js)  | tickets-put.handler   | Wild_Rydes_Lambda_Put           | TABLE_NAME    | SXRTickets     |
-| [SXRReplication](replicate.js)         | use default           | Wild_Rydes_DynamoDB_Replication | TABLE_NAME    | SXRTickets     |
+| [TicketGetFunction](tickets-get.js)  | tickets-get.handler   | TicketGetRole           | TABLE_NAME    | SXRTickets     |
+| [TicketPostFunction](tickets-ost.js)  | tickets-post.handler   | TicketPostRole           | TABLE_NAME    | SXRTickets     |
+| [SXRReplication](replicate.js)         | use default           | TicketReplicateRole | TABLE_NAME    | SXRTickets     |
 |                        |                       |                                 | TARGET_REGION | ap-southeast-1 |
-| [SXRHealthCheckFunction](health-check.js) | health-check.handler  | Wild_Rydes_Lambda_Get           | TABLE_NAME    | SXRTickets     |
+| [SXRHealthCheckFunction](health-check.js) | health-check.handler  | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 
 
 ## 4. Create API Gateway Endpoint
@@ -156,7 +156,7 @@ In the console, under Application Services, open Amazon API Gateway and click on
 
 ![Create Example API](images/create-example-api.png)
 
-Select **New API** and enter the API Name of `Wild_Rydes_API` and choose the Endpoint Type of *Regional* and then click **Create API**
+Select **New API** and enter the API Name of `wild-rydes-api` and choose the Endpoint Type of *Regional* and then click **Create API**
 
 ![Create new API](images/create-new-api.png)
 
@@ -216,7 +216,7 @@ You have now completed the setup of all the API and backend components needed fo
 
 Navigate to the `api` folder within your local Git repository and take a look at the files within. You will see three files
 
-* `ticket-service.yaml` – This is a CloudFormation template (using SAM syntax) that describes the infrastructure needed to for the API and how each component should be configured.
+* `wild-rydes-api.yaml` – This is a CloudFormation template (using SAM syntax) that describes the infrastructure needed to for the API and how each component should be configured.
 * `tickets-get.js` – This is the Node.js code required by our Lambda function needed to retrieve tickets from DynamoDB
 * `tickets-post.js` – This is the Node.js code required by our second Lambda function to create new tickets in DynamoDB
 
@@ -250,8 +250,8 @@ You can do this using the following CLI command. Note that you must replace `[bu
 
     aws cloudformation package \
     --region eu-west-1 \
-    --template-file ticket-service.yaml \
-    --output-template-file ticket-service-output.yaml \
+    --template-file wild-rydes-api.yaml \
+    --output-template-file wild-rydes-api-output.yaml \
     --s3-bucket [bucket_name]
 
 If all went well, you should get a success message and instructions to deploy your new template.
@@ -269,12 +269,12 @@ You can now take the newly generated template and use it to create resources in 
 
     aws cloudformation deploy \
     --region eu-west-1 \
-    --template-file ticket-service-output.yaml \
-    --stack-name ticket-service-api \
+    --template-file wild-rydes-api-output.yaml \
+    --stack-name will-rydes-api \
     --capabilities CAPABILITY_IAM
 
 
-This command may take a few minutes to run. In this time you can hop over to the console and watch all of the resources being created for you. Open up the AWS Console in your browser and check you are in the correct region (EU Ireland) before selecting the CloudFormation service from the menu. You should your stack listed as `ticket-service-api`. You can click on this stack to see all of the resources it created.
+This command may take a few minutes to run. In this time you can hop over to the console and watch all of the resources being created for you. Open up the AWS Console in your browser and check you are in the correct region (EU Ireland) before selecting the CloudFormation service from the menu. You should your stack listed as `wild-rydes-api`. You can click on this stack to see all of the resources it created.
 
 ***[TODO: Image of Cloudformation here with key areas marked]***
 

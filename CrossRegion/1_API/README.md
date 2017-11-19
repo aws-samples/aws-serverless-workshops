@@ -32,7 +32,7 @@ The following objects will be used as you create the resources in the console fo
 There are several steps needed to deploy the API and Lambda functions via the
 console. The basic steps are:
 
-1. Create the appropriate IAM policies and roles our three AWS Lambda functions
+1. Create the appropriate IAM policies and roles our four AWS Lambda functions
 2. Create the required Amazon DynamoDB table
 3. Create the four AWS Lambda functions
 4. Create the Amazon API Gateway for the primary application region
@@ -54,7 +54,7 @@ Next, open the policy below and cut and paste it into the editor in the AWS Cons
 
 Download policy: [Wild_Rydes_DynamoDB_Get.json](Wild_Rydes_DynamoDB_Get.json)
 
-Click on **Validate policy** followed by **Create policy**.
+Click on **Validate Policy** followed by **Create Policy**.
 
 ![Create Policy Editor](images/create-policy-2.png)
 
@@ -125,21 +125,29 @@ Next select “Author from scratch”
 
 ![Lambda author from scratch](images/lambda-author-scratch.png)
 
-Name your first function “Wild_Rydes_Lambda_Get” and assign the role you created previously to it and click “Create function”
+Name your first function `Wild_Rydes_Lambda_Get` and assign the role with the **matching** name you created previously to it and click **Create function**
 
-Ensure the runtime is Node.js 6.10.  If it isn’t, simply select it.
+Ensure the runtime is `Node.js 6.10`.  If it isn’t, simply select it.
 
-For the Handler, enter “tickets-get.handler” and then paste the following code into the editor you see on your screen:
+For the Handler, enter `tickets-get.handler` and then paste the following code into the editor you see on your screen:
 
 [Lambda tickets-get.js](tickets-get.js)
 
-Next, under “Environment Variables”, enter they key TABLE_NAME and the value SXRTickets
+Next, under `Environment Variables`, enter they key **TABLE_NAME** and the value **SXRTickets**
 
 ![Create Lambda Wild Rydes Get](images/create-lambda-wild-rydes-get.png)
 
-Once everything is set correctly, click “Save” near the top center of the screen.
+Once everything is set correctly, click **Save** near the top center of the screen.
 
-We will repeat the same steps for the put/post Lambda function, and one more time for the DynamoDB_Replication function.  Note that no environment variables are needed for the replication Lambda.
+We will repeat the same steps for the PUT/POST Lambda function, and one more time for the DynamoDB_Replication function.  Note that no environment variables are needed for the replication Lambda.
+
+| Function Name          | Handler Name         | Environment Variable | Key        | Value      |
+| ---------------------  | -------------------- | -------------------- | ---------- | ---------- |
+| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
+| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
+| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
+| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
+
 
 [Lambda tickets-post.js](tickets-post.js)
 

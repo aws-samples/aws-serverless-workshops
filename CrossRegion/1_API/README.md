@@ -141,7 +141,7 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 | Function Name          | Handler Name          | Execution Role                  | Env Var Key   | Env Var Value  |
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
 | [TicketGetFunction](tickets-get.js)  | tickets-get.handler   | TicketGetRole           | TABLE_NAME    | SXRTickets     |
-| [TicketPostFunction](tickets-ost.js)  | tickets-post.handler   | TicketPostRole           | TABLE_NAME    | SXRTickets     |
+| [TicketPostFunction](tickets-post.js)  | tickets-post.handler   | TicketPostRole           | TABLE_NAME    | SXRTickets     |
 | [TicketReplicateFunction](tickets-replicate.js)         | tickets-replicate.handler          | TicketReplicateRole | TABLE_NAME    | SXRTickets     |
 |                        |                       |                                 | TARGET_REGION | ap-southeast-1 |
 | [SXRHealthCheckFunction](health-check.js) | health-check.handler  | TicketGetRole           | TABLE_NAME    | SXRTickets     |

@@ -161,13 +161,17 @@ Next, from the *Actions* drop-down, choose **Create Resource** and name the reso
 
 ![Create api child CORS](images/api-child-resource-cors.png)
 
+Repeat the same steps one more time, this time creating the resource `health`.  Ensure this resource is at the same level (directly below the root) as `ticket`
+
+![ticket and heath visual](images/api-ticket-health.png)
+
 Next we will create two methods – one for Get and one for Post/Put
 
-From the *Actions* drop-down select **Create Method** and then choose `GET` as your first method and select the check-box to confirm creation:
+Select `ticket` under *resources*, and from the *Actions* drop-down select **Create Method** and then choose `GET` as your first method and select the check-box to confirm creation:
 
 ![Create api method get](images/api-method-get.png)
 
-Keep *Lambda Function* selected, enable *Use Lambda Proxy Integration* and choose `eu-west-1` as the Lambda Region and then start typing in the Lambda Function box and choose *Wild_Rydes_Lambda_Get* and then click **Save**
+Keep *Lambda Function* selected, enable *Use Lambda Proxy Integration* and choose `eu-west-1` as the Lambda Region and then start typing in the Lambda Function box and choose *TicketGetFunction* and then click **Save**
 
 ![Setup api method get](images/api-method-get-setup.png)
 
@@ -177,9 +181,13 @@ Click OK when asked to *Add Permission to Lambda Function*
 
 Now we’ll create our POST method following the same basic steps – from the *Actions* drop-down select **Create Method** but this time we’ll choose POST.
 
-Ensure you choose *Wild_Rydes_Lambda_Put* as your function this time.
+Ensure you choose *TicketPostFunction* as your function this time.
 
 ![Setup api method post](images/api-method-post-setup.png)
+
+Last we will create a `GET` method under the `health` resource.  You will select the *SXRHealthCheckFunction* for the Lambda function.
+
+![Setup api method health get post](images/api-method-health-get-setup.png)
 
 Again, click **OK** when asked to *Add Permission to Lambda Function*
 

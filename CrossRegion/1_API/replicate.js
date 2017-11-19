@@ -5,8 +5,19 @@ var https = require('https');
 http.globalAgent.maxSockets = 500;
 https.globalAgent.maxSockets = 500;
 
-var replicatetoregion = 'ap-southeast-1';
-var replicatetotable = 'SXRTickets';
+const table = process.env.TABLE_NAME;
+const targetregion = process.env.TARGET_REGION;
+
+const params = {
+    replicatetotable: table
+};
+
+const params = {
+    replicatetoregion: targetregion
+};
+
+//var replicatetoregion = 'ap-southeast-1';
+//var replicatetotable = 'SXRTickets';
 
 //We are configuring the AWS Client
 var AWS = require('aws-sdk');
@@ -79,4 +90,3 @@ var validate = function(image) {
   }
   return false;
 };
-

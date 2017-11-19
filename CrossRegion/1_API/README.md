@@ -19,11 +19,11 @@ Both sets of instructions are provided – simply expand your preferred path.
 The following objects will be used as you create the resources in the console for this module:
 
 * `Wild_Rydes_DynamoDB_Get.json` - This is the policy needed in order to read
-  from DynamoDB using our the `tickets-get.js` Lambda functions
+  from DynamoDB using the `tickets-get.js` and `health-check.js` Lambda functions
 * `Wild_Rydes_DynamoDB_Put.json` - This is the policy needed in order to write
-  to DynamoDB using our the `tickets-post.js` Lambda function
+  to DynamoDB using the `tickets-post.js` Lambda function
 * `Wild_Rydes_DynamoDB_Replication.json` - This is the policy needed in order
-  to use DynambDB Streams to replicate to a second region using the
+  to use DynambDB Streams to replicate to a second region using the `replicate.js` Lambda function
 * `replicate.js` Lambda function to replicate new DynamoDB records to our failover region
 * `health-check.js` - Lambda function for checking the status of our application health
 * `tickets-get.js` - Lambda function triggered by API Gateway to put application data into DynamoDB
@@ -148,8 +148,6 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 | [SXRReplication](replicate.js)         | use default           | Wild_Rydes_DynamoDB_Replication | TABLE_NAME    | SXRTickets     |
 |                        |                       |                                 | TARGET_REGION | ap-southeast-1 |
 | [SXRHealthCheckFunction](health-check.js) | health-check.handler  | Wild_Rydes_Lambda_Get           | TABLE_NAME    | SXRTickets     |
-
-
 
 
 ## 4. Create API Gateway Endpoint

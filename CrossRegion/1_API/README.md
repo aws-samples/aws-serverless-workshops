@@ -141,12 +141,13 @@ Once everything is set correctly, click **Save** near the top center of the scre
 
 We will repeat the same steps for the PUT/POST Lambda function, and one more time for the DynamoDB_Replication function.  Note that no environment variables are needed for the replication Lambda.
 
-| Function Name          | Handler Name         | Environment Variable | Key        | Value      |
-| ---------------------  | -------------------- | -------------------- | ---------- | ---------- |
-| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
-| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
-| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
-| Wild_Rydes_Lambda_Get  | tickets-get.handler  | yes                  | TABLE_NAME | SXRTickets |
+| Function Name          | Handler Name          | Execution Role                  | Environment Variable | Key           | Value          |
+| ---------------------  | --------------------- | ------------------------------- | -------------------- | ------------- | -------------- |
+| Wild_Rydes_Lambda_Get  | tickets-get.handler   | Wild_Rydes_Lambda_Get           | yes                  | TABLE_NAME    | SXRTickets     |
+| Wild_Rydes_Lambda_Put  | tickets-put.handler   | Wild_Rydes_Lambda_Put           | yes                  | TABLE_NAME    | SXRTickets     |
+| SXRReplication         | use default           | Wild_Rydes_DynamoDB_Replication | yes                  | TABLE_NAME    | SXRTickets     |
+|                        |                       |                                 | yes                  | TARGET_REGION | ap-southeast-1 |
+| SXRHealthCheckFunction | health-check.handler  | Wild_Rydes_Lambda_Get           | yes                  | TABLE_NAME    | SXRTickets     |
 
 
 [Lambda tickets-post.js](tickets-post.js)

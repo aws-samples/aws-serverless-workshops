@@ -113,9 +113,9 @@ to set up the table.
 
 ![DymamoDB Create SXRTickets](images/dynamodb-create-sxrtickets.png)
 
-## 3. Create your Lambda functions
+## 3. Create Four Lambda functions
 
-Next, you will create two Lambda functions. First, navigate to **Lambda** in
+Next, you will create four Lambda functions. First, navigate to **Lambda** in
 the console (again ensuring you are still in the Ireland region) and click
 **Create a function**
 
@@ -152,39 +152,39 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 
 ## 4. Create API Gateway Endpoint
 
-In the console, under Application Services, open Amazon API Gateway and click on “Get Started”.  Click on OK if you are given a “Create Example API” dialogue.
+In the console, under Application Services, open Amazon API Gateway and click on **Get Started**.  Click on **OK** if you are given a *Create Example API* dialogue.
 
 ![Create Example API](images/create-example-api.png)
 
-Select “New API” and enter the API Name of “Wild_Rydes_API” and choose the Endpoint Type of “Regional” and then click “Create API”
+Select **New API** and enter the API Name of `Wild_Rydes_API` and choose the Endpoint Type of *Regional* and then click **Create API**
 
 ![Create new API](images/create-new-api.png)
 
-Next, from the Actions drop-down, choose “Create Resource” and name the resource “ticket” and select the “Enable API Gateway CORS” option and then click “Create Resource”
+Next, from the *Actions* drop-down, choose **Create Resource** and name the resource `ticket` and select the *Enable API Gateway CORS* option and then click **Create Resource**
 
 ![Create api child CORS](images/api-child-resource-cors.png)
 
 Next we will create two methods – one for Get and one for Post/Put
 
-From the “Actions” drop-down select “Create Method” and then choose “GET” as your first method and select the check-box to confirm creation:
+From the *Actions* drop-down select **Create Method** and then choose `GET` as your first method and select the check-box to confirm creation:
 
 ![Create api method get](images/api-method-get.png)
 
-Keep “Lambda Function” selected, enable “Use Lambda Proxy Integration” and choose “eu-west-1” as the Lambda Region and then start typing in the Lambda Function box and choose “Wild_Rydes_Lambda_Get” and then click “Save"
+Keep *Lambda Function* selected, enable *Use Lambda Proxy Integration* and choose `eu-west-1` as the Lambda Region and then start typing in the Lambda Function box and choose *Wild_Rydes_Lambda_Get* and then click **Save**
 
 ![Setup api method get](images/api-method-get-setup.png)
 
-Click OK when asked to “Add Permission to Lambda Function”
+Click OK when asked to *Add Permission to Lambda Function*
 
 ![api lambda permission](images/api-lambda-permission.png)
 
-Now we’ll create our POST method following the same basic steps – from the “Actions” drop-down select “Create Method” but this time we’ll choose POST.
+Now we’ll create our POST method following the same basic steps – from the *Actions* drop-down select **Create Method** but this time we’ll choose POST.
 
-Ensure you choose “Wild_Rydes_Lambda_Put” as your function this time.
+Ensure you choose *Wild_Rydes_Lambda_Put* as your function this time.
 
 ![Setup api method post](images/api-method-post-setup.png)
 
-Again, click “OK” when asked to “Add Permission to Lambda Function”
+Again, click **OK** when asked to *Add Permission to Lambda Function*
 
 Finally, we will enable Cross-Origin.  From the Actions drop-down, select “Enable CORS”
 

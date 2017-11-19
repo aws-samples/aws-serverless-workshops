@@ -139,11 +139,11 @@ Next, under `Environment Variables`, enter they key **TABLE_NAME** and the value
 
 Once everything is set correctly, click **Save** near the top center of the screen.
 
-We will repeat the same steps for the PUT/POST Lambda function, and one more time for the DynamoDB_Replication function.  Note that no environment variables are needed for the replication Lambda.
+We still need to create three more lambda functions.  All of them use `Node.js 6.10` as the runtime.  Repeat the same steps you used above.  The table below provides the information needed for all four functions.  Note that you have already done the first one.
 
 | Function Name          | Handler Name          | Execution Role                  | Env Var Key   | Env Var Value  |
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
-| Wild_Rydes_Lambda_Get  | tickets-get.handler   | Wild_Rydes_Lambda_Get           | TABLE_NAME    | SXRTickets     |
+| [Wild_Rydes_Lambda_Get](tickets-get.js)  | tickets-get.handler   | Wild_Rydes_Lambda_Get           | TABLE_NAME    | SXRTickets     |
 | Wild_Rydes_Lambda_Put  | tickets-put.handler   | Wild_Rydes_Lambda_Put           | TABLE_NAME    | SXRTickets     |
 | SXRReplication         | use default           | Wild_Rydes_DynamoDB_Replication | TABLE_NAME    | SXRTickets     |
 |                        |                       |                                 | TARGET_REGION | ap-southeast-1 |
@@ -154,7 +154,7 @@ We will repeat the same steps for the PUT/POST Lambda function, and one more tim
 
 [Lambda replicate.js](replicate.js)
 
-## 4. Now that we have our Roles, Policies, DynamoDB Table and our three Lambda functions set up, we can create our API Gateway Endpoint
+## 4. Create API Gateway Endpoint
 
 In the console, under Application Services, open Amazon API Gateway and click on “Get Started”.  Click on OK if you are given a “Create Example API” dialogue.
 

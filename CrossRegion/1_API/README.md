@@ -165,7 +165,7 @@ Repeat the same steps one more time, this time creating the resource `health`.  
 
 ![ticket and heath visual](images/api-ticket-health.png)
 
-Next we will create two methods – one for Get and one for Post/Put
+Next we will create two methods – one for GET and one for POST
 
 Select `ticket` under *resources*, and from the *Actions* drop-down select **Create Method** and then choose `GET` as your first method and select the check-box to confirm creation:
 
@@ -182,8 +182,6 @@ Click OK when asked to *Add Permission to Lambda Function*
 Now we’ll create our POST method following the same basic steps – from the *Actions* drop-down select **Create Method** but this time we’ll choose POST.
 
 Ensure you choose *TicketPostFunction* as your function this time.
-
-![Setup api method post](images/api-method-post-setup.png)
 
 Last we will create a `GET` method under the `health` resource.  You will select the *SXRHealthCheckFunction* for the Lambda function.
 

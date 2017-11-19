@@ -24,15 +24,19 @@ The following objects will be used as you create the resources in the console fo
   to DynamoDB using our the `tickets-post.js` Lambda function
 * `Wild_Rydes_DynamoDB_Replication.json` - This is the policy needed in order
   to use DynambDB Streams to replicate to a second region using the
-  `replicate.js` Lambda function
+* `replicate.js` Lambda function to replicate new DynamoDB records to our failover region
+* `health-check.js` - Lambda function for checking the status of our application health
+* `tickets-get.js` - Lambda function triggered by API Gateway to put application data into DynamoDB
+* `tickets-post.js` - Lambda function triggered by API Gateway to read application data from DynamoDB
 
 There are several steps needed to deploy the API and Lambda functions via the
 console. The basic steps are:
 
 1. Create the appropriate IAM policies and roles our three AWS Lambda functions
 2. Create the required Amazon DynamoDB table
-3. Create the AWS Lambda functions
+3. Create the four AWS Lambda functions
 4. Create the Amazon API Gateway for the primary application region
+5. Testing to ensure our backend components are all working as expected
 
 Let’s go ahead and create all the needed polices and roles for our workshop
 

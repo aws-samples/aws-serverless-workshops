@@ -24,6 +24,10 @@ export class ConfigGuard implements CanActivate {
       errorMessages.push("Ticket API not configured!");
     }
 
+    if(environment.ticketAPI && !(environment.ticketAPI.slice(-1) === "/")) {
+      errorMessages.push("Ticket API URL needs a trailing slash!");
+    }
+
     if(errorMessages.length > 0) {
       this.router.navigate(['/troubleshooting']);
       return false;

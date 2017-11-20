@@ -187,7 +187,7 @@ Last we will create a `GET` method under the `health` resource.  You will select
 
 Again, click **OK** when asked to *Add Permission to Lambda Function*
 
-Finally, we will enable Cross-Origin.  
+Finally, we will enable Cross-Origin.
 Select `ticket` under *resources*, and from the *Actions* drop-down select **Enable CORS**
 
 ![actions enable cors apigw](images/actions-enable-cors.png)
@@ -212,17 +212,29 @@ You have now completed the setup of all the API and backend components needed fo
 
 ## 5. Test your API Gateway Endpoints
 
-While still in API Gateway, select **Stages** from the left menu under your API Endpoint.  Next, expand "prod", and select `GET` from the *ticket* resource.
+While still in API Gateway, select **Stages** from the left menu under your
+API Endpoint.  Next, expand "prod", and select `GET` from the *ticket*
+resource.
 
 ![Test the API Gateway EndPoint](images/test-api-gateway-endpoint.png)
 
-You'll see a link to your API EndPoint.  **Click**  on the link and you should see something like the below in your browser if the test is successful:
+You'll see a link to your API EndPoint. **Click** on the link and you should
+see something like the below in your browser if the test is successful:
 
-*"statusCode":200,"headers":"Access-Control-Allow-Origin":"","Access-Control-Allow-Credentials":true,"body":"{"Items":[],"Count":0,"ScannedCount":0}"*
+    {
+        "statusCode":200,
+        "headers": "Access-Control-Allow-Origin",
+        "Access-Control-Allow-Credentials":true,
+        "body":"{"Items":[],"Count":0,"ScannedCount":0}"
+    }
 
-You can also peform the same test but select `GET` from the *health* resource instead.  You should get something like the following in your browser:
+You can also peform the same test but select `GET` from the *health* resource
+instead.  You should get something like the following in your browser:
 
-*"region":"eu-west-1","message":"Successful response reading from DynamoDB table."*
+    {
+        "region":"eu-west-1",
+        "message":"Successful response reading from DynamoDB table."
+    }
 
 </details>
 

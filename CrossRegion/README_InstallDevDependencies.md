@@ -1,21 +1,21 @@
 ## About
 
-This readme provides instructions on setting up a dev ec2 instance
-that you can use to clone the project, edit project files, build the ui
+This README provides instructions on setting up a dev EC2 instance
+that you can use to clone the project, edit project files, build the UI
 and deploy the application.
 
 Alternatively, you can use one of the AMIs which contain the required
-dependencies baked in to the AMI. See the "Use AMI" section of readme
+dependencies baked in to the AMI. See the "Use AMI" section of README
 to use a pre-baked AMI.
 
 ## EC2 dev instance configuration.
 
-Make sure to use the AWS linux AMI already configured with the AWS CLI.
-Your EC2 instance should have:
-- a role assigned that allows access to S3 (see sample policy below).
-- a security group that allows ssh from your ip address.
+Make sure to use the AWS Linux AMI already configured with the AWS CLI. Your
+EC2 instance should have:
+- A role assigned that allows access to S3 (see sample policy below).
+- A security group that allows SSH from your IP address.
 
-Once launched, log in to your dev ec2 instance.
+Once launched, log in to your dev EC2 instance with SSH.
 
 #### Update to latest packages
 `sudo yum update -y`
@@ -29,27 +29,29 @@ Once launched, log in to your dev ec2 instance.
 
 ##### Install Node & NPM
 
-We will use nvm (node version manager) to install node and npm.
+We will use NVM (Node Version Manager) to install Node and NPM (Node Package
+Manager).
 
-Execute the following commands to install node & npm:
+Execute the following commands to install Node & NPM:
 
-- install nvm: `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash`
-- activate nvm: - `. ~/.nvm/nvm.sh`
-- install node and npm: `nvm install 8.9.1`
+- Install NVM: `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash`
+- Activate NVM: - `. ~/.nvm/nvm.sh`
+- Install Node and NPM: `nvm install 8.9.1`
 
-confirm installation by typing the following
+Confirm installation by typing the following:
 - `npm -v` should output 'v8.9.1'
 - `node -v` should output '5.5.1'
 
-#### Clone the SXR project
+#### Clone the workshop project
 
-`git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/aws-serverless-workshops`
+`git clone https://github.com/awslabs/aws-serverless-workshops.git`
 
 #### Angular CLI installation
 
-Now that you have node & npm we can install the angular cli to build our project.
+Now that you have Node and NPM we can install the Angular CLI to build our
+project.
 
-Install angular cli: `npm install -g @angular/cli`
+Install Angular cli: `npm install -g @angular/cli`
 
 This will take about a minute and when done you will see a message like
 "added 968 packages in 31.494s"
@@ -57,8 +59,8 @@ This will take about a minute and when done you will see a message like
 
 #### Building the UI
 
-You should now be able to build the UI. Please go to the "Configure and build the application code"
-section of the 2_UI/README.md file.
+You should now be able to build the UI. Please go to the "Configure and build
+the application code" section of the [2_UI/README.md](2_UI/README.md#3-configure-and-build-the-application-code) file.
 
 
 ## Use an AMI for your dev environment.

@@ -1,16 +1,16 @@
-# About
+## About
 
-This readme provides instructions on setting up a dev ec2 instance 
+This readme provides instructions on setting up a dev ec2 instance
 that you can use to clone the project, edit project files, build the ui
-and deploy the application. 
+and deploy the application.
 
-Alternatively, you can use one of the AMIs which contain the required 
-dependencies baked in to the AMI. See the "Use AMI" section of readme 
+Alternatively, you can use one of the AMIs which contain the required
+dependencies baked in to the AMI. See the "Use AMI" section of readme
 to use a pre-baked AMI.
 
-# EC2 dev instance configuration.
+## EC2 dev instance configuration.
 
-Make sure to use the AWS linux AMI already configured with the AWS CLI. 
+Make sure to use the AWS linux AMI already configured with the AWS CLI.
 Your EC2 instance should have:
 - a role assigned that allows access to S3 (see sample policy below).
 - a security group that allows ssh from your ip address.
@@ -51,7 +51,7 @@ Now that you have node & npm we can install the angular cli to build our project
 
 Install angular cli: `npm install -g @angular/cli`
 
-This will take about a minute and when done you will see a message like 
+This will take about a minute and when done you will see a message like
 "added 968 packages in 31.494s"
 
 
@@ -61,13 +61,13 @@ You should now be able to build the UI. Please go to the "Configure and build th
 section of the 2_UI/README.md file.
 
 
-# Use an AMI for your dev environment.
+## Use an AMI for your dev environment.
 Coming Soon
 
 
 
 
-# Example Policy allowing EC2 dev instance to write to your S3 bucket
+## Example Policy allowing EC2 dev instance to write to your S3 bucket
 
 You can use this sample policy to attach to ec2 role.
 ```json
@@ -86,9 +86,10 @@ You can use this sample policy to attach to ec2 role.
 Security Group
 ssh from your ip address
 
-
-
-
-
 Misc
 https://github.com/swimlane/ngx-datatable/issues/1105
+
+## Completion
+
+Now you are ready to get back to the Workshop. Go back to the
+[README](README.md#implementation-instructions)

@@ -192,7 +192,7 @@ Select `ticket` under *resources*, and from the *Actions* drop-down select **Ena
 
 ![actions enable cors apigw](images/actions-enable-cors.png)
 
-Simply Accept the Default Settings and click on the “Enable CORS and Replace Existing CORS Headers” button:
+Simply Accept the Default Settings and click on the **Enable CORS and Replace Existing CORS Headers** button:
 
 ![accept replace cors apigw](images/accept-replace-cors.png)
 

@@ -16,6 +16,9 @@ export const environment = {
   // developer account.
   facebookAppId: '',
 
+  // amzn1.application-oa2-client.ab11abc0a1112223z123a4d111a8f888
+  amazonLoginId: '',
+
   // TODO 3: These Ids can be retrieved by selecting the api cloud formation stack
   // after launch and looking at outputs section. NOTE: don't forget trailing "/"
   ticketAPI: ''

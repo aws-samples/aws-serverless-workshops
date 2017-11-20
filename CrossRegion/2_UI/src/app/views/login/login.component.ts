@@ -6,6 +6,7 @@ import {
 import {Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
 import {AmazonAuthResponse} from '../../components/amazon-login/amazon-login.component';
+import {environment} from '../../../environments/environment';
 
 declare var AWS: any;
 
@@ -16,7 +17,11 @@ declare var AWS: any;
 })
 export class LoginComponent implements OnInit, FacebookCallback, AmazonLoginCallback {
 
-  private myClientId: string = 'amzn1.application-oa2-client.ca98cbe0a2154466a161c3d553a8f888';
+  /**
+   * used in view.
+   * @type {string}
+   */
+  private myClientId: string = environment.amazonLoginId;
 
   constructor(private toastr: ToastsManager, vRef: ViewContainerRef,
               public router: Router,

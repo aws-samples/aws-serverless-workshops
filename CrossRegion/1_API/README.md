@@ -196,15 +196,15 @@ Simply Accept the Default Settings and click on the **Enable CORS and Replace Ex
 
 ![accept replace cors apigw](images/accept-replace-cors.png)
 
-Click “Yes, replace existing values” if prompted.
+Click **Yes, replace existing values** if prompted.
 
 Repeat the same step once more time, this time choosing `health` as the resource.
 
-Next we will deploy the API – this is done from the “Actions” pull-down, selecting “Deploy API”
+Next we will deploy the API – this is done from the “Actions” pull-down, selecting *Deploy API*
 
 ![deploy api to prod](images/deploy-api-prod.png)
 
-Then select “New Stage” for Deployment Stage and enter the Stage Name of `prod` and click **Deploy**.  Note that this needs to be all lowercase or you will run into problems later on.
+Then select *New Stage* for Deployment Stage and enter the Stage Name of `prod` and click **Deploy**.  Note that this needs to be all lowercase or you will run into problems later on.
 
 ![deploy api to prod](images/deploy-api-prod-new-stage.png)
 
@@ -218,7 +218,11 @@ While still in API Gateway, select **Stages** from the left menu under your API 
 
 You'll see a link to your API EndPoint.  **Click**  on the link and you should see something like the below in your browser if the test is successful:
 
-"statusCode":200,"headers":"Access-Control-Allow-Origin":"","Access-Control-Allow-Credentials":true,"body":"{"Items":[],"Count":0,"ScannedCount":0}"
+*"statusCode":200,"headers":"Access-Control-Allow-Origin":"","Access-Control-Allow-Credentials":true,"body":"{"Items":[],"Count":0,"ScannedCount":0}"*
+
+You can also peform the same test but select `GET` from the *health* resource instead.  You should get something like the following in your browser:
+
+*"region":"eu-west-1","message":"Successful response reading from DynamoDB table."*
 
 </details>
 

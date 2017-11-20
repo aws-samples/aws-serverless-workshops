@@ -43,7 +43,11 @@ Follow the [AWS CLI Getting Started guide](http://docs.aws.amazon.com/cli/latest
 
 ### A local environment with Git, Node.js and NPM
 
-***[TODO: instructions on doing this or setting up in EC2 - maybe cfn'd with custom AMI]***
+If you are not familiar with setting up a development environment, we have
+separate instructions under
+[README_InstallDevDependencies.md](README_InstallDevDependencies.md). This
+also includes setting up an EC2 instance if you would prefer to do this in the
+Cloud rather than your local machine. Follow those and then come back here.
 
 ### Browser
 

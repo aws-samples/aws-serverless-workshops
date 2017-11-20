@@ -316,6 +316,47 @@ You will now use SAM Local to make modifications to a web service.  Since it exe
 You will use start-api option wich creates a local HTTP server hosting all of your Lambda functions.  SAM Local will parse the SAM template file, in this case template.yml file.  
 
 ```yaml
+<<<<<<< HEAD
+=======
+  ReadFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'uni-api-read'
+      Handler: read.lambda_handler
+      Runtime: nodejs6.10
+      CodeUri: s3://YOUR_BUCKET_NAME/540839c2fc11f0214f88f6c5dfacd389
+```
+
+### 6. Deploy the Unicorn API
+
+1. Change directory to your local **uni-api** Git repository, if necessary.
+
+2. Use the AWS CLI to execute the [CloudFormation deploy](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy/index.html) command to deploy the `app-sam-output.yaml` CloudFormation template returned by the package command, specifying the CloudFormation stack name `awscodestar-uni-api-lambda` and the `CAPABILITY_IAM` [CloudFormation capability](http://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_CreateStack.ht) as the stack will be creating IAM trust and execution policies for the Lambda functions.  You can use the following command to do so.
+
+```
+aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM --parameter-overrides ProjectId=uni-api
+```
+
+## Implementation Validation
+
+After the CloudFormation deploy command completes, you will use the browser to test your API.
+
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
+
+1. Select the `uni-api` project
+
+1. Copy the URL from the **Application endpoints** tile on the right side of the dashboard.
+
+1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-west-1.amazonaws.com/Prod/unicorns/`
+
+1. Confirm that the browser shows a JSON result with an empty list: `[]`
+
+## API Enhancement
+
+Now that you've reviewed and deployed the Unicorn API, let's enhance the API with the ability to create or update a Unicorn in the Wild Rydes stables.  The code to do so is already present in the project, so you need to add an **AWS::Serverless::Function** resource in the SAM `app-sam.yaml` template.
+
+### 1. Add Update Function to app-sam.yaml
+>>>>>>> f2fc253da4052a46c56b3d076894b22d87a5bc72
 
   HelloWorld:
     Type: AWS::Serverless::Function
@@ -337,6 +378,8 @@ You will use start-api option wich creates a local HTTP server hosting all of yo
             Path: /
             Method: post
 
+```
+aws cloudformation deploy --stack-name awscodestar-uni-api-lambda --template-file app-sam-output.yaml --capabilities CAPABILITY_IAM
 ```
 
 
@@ -387,7 +430,6 @@ That's it!  You modified the code and got immediate feedback in your browser.
 </details>
 
 To learn more about development with SAM Local, check out [AWS Documentation](http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html) and SAM Local [GitHub repository](https://github.com/awslabs/aws-sam-local).  
-
 
 ## Completion
 

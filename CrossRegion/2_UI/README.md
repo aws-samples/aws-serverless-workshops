@@ -89,7 +89,8 @@ setup your Facebook Developer account and App ID.
 
 All of these attributes must be configured in
 `/src/environments/environment.ts`. Open up your favorite text editor and edit
-this file before moving on.
+this file before moving on. Please be sure to address all TODO instructions inside 
+this file.
 
 You will need Node Package Manager (NPM) installed on your local machine in
 order to build the application. You can follow instructions TODO to set up a

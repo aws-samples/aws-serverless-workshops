@@ -4,18 +4,23 @@ This README provides instructions on setting up a dev EC2 instance
 that you can use to clone the project, edit project files, build the UI
 and deploy the application.
 
-Alternatively, you can use one of the AMIs which contain the required
-dependencies baked in to the AMI. See the "Use AMI" section of README
-to use a pre-baked AMI.
+We will be using the following two regions for this workshop. Please remember 
+these and check before creating resources to ensure you are in the correct region:
+* Primary: `eu-west-1` (Ireland)
+* Secondary: `ap-southeast-1` (Singapore)
 
 ## EC2 dev instance configuration.
 
-Make sure to use the AWS Linux AMI already configured with the AWS CLI. Your
-EC2 instance should have:
+For this dev instance
+- a t2.micro will be fine.
+- use the AWS Linux AMI already configured with the AWS CLI. 
+- deploy to the default VPC
+
+Your EC2 instance should have:
 - A role assigned that allows access to S3 (see sample policy below).
 - A security group that allows SSH from your IP address.
 
-Once launched, log in to your dev EC2 instance with SSH.
+Once launched, SSH in to your dev EC2 instance.
 
 #### Update to latest packages
 `sudo yum update -y`
@@ -39,8 +44,8 @@ Execute the following commands to install Node & NPM:
 - Install Node and NPM: `nvm install 8.9.1`
 
 Confirm installation by typing the following:
-- `npm -v` should output 'v8.9.1'
-- `node -v` should output '5.5.1'
+- `npm -v` should output '5.5.1'
+- `node -v` should output 'v8.9.1'
 
 #### Clone the workshop project
 
@@ -59,19 +64,16 @@ This will take about a minute and when done you will see a message like
 
 #### Building the UI
 
-You should now be able to build the UI. Please go to the "Configure and build
-the application code" section of the [2_UI/README.md](2_UI/README.md#3-configure-and-build-the-application-code) file.
-
-
-## Use an AMI for your dev environment.
-Coming Soon
-
-
+You should now be able to build the UI when you get to that step in the second module.
 
 
 ## Example Policy allowing EC2 dev instance to write to your S3 bucket
 
-You can use this sample policy to attach to ec2 role.
+You can use this sample policy to attach to ec2 role. 
+
+**NOTE: this is a permissive policy allowing all access to s3. For your 
+own environment we recommend a more restrictive policy that enforces 
+least privilege.**
 ```json
 {
     "Version": "2012-10-17",
@@ -79,17 +81,11 @@ You can use this sample policy to attach to ec2 role.
         {
             "Effect": "Allow",
             "Action": "s3:*",
-            "Resource": "<your s3 website bucket>"
+            "Resource": "*"
         }
     ]
 }
 ```
-
-Security Group
-ssh from your ip address
-
-Misc
-https://github.com/swimlane/ngx-datatable/issues/1105
 
 ## Completion
 

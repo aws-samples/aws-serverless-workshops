@@ -247,6 +247,7 @@ Navigate to the `api` folder within your local Git repository and take a look at
 * `wild-rydes-api.yaml` – This is a CloudFormation template (using SAM syntax) that describes the infrastructure needed to for the API and how each component should be configured.
 * `tickets-get.js` – This is the Node.js code required by our Lambda function needed to retrieve tickets from DynamoDB
 * `tickets-post.js` – This is the Node.js code required by our second Lambda function to create new tickets in DynamoDB
+* `tickets-replicate.js` – This is the Node.js code that replicates dynamodb data to another region.
 
 
 

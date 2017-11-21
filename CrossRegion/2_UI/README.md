@@ -108,10 +108,10 @@ custom settings.
 
 ## 4. Upload the application
 
-Next, you'll need to upload the UI to the S3 bucket specified in step 1. You can
+Next, you'll need to upload the UI to the S3 website bucket specified in step 1. You can
 do this with:
 
-    aws s3 sync --acl public-read dist/ s3://[bucket_name]
+    aws s3 sync --acl public-read --delete dist/ s3://[bucket_name] 
 
 Note that you must replace `[bucket-name]` in this command with the bucket
 name output from the CloudFormation stack in step 1.

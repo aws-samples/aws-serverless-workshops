@@ -236,7 +236,8 @@ ping health check Lambda function is served from.
 ![Route53 Health check configuration](images/create-health-check.png)
 
 Once configured, wait a few minutes and you should see your health check go
-green and say Healthy in the console.
+green and say Healthy in the console. Make sure this is green and healthy
+before proceeding.
 
 ![Route53 Health check configuration](images/created-health-check.png)
 
@@ -261,9 +262,13 @@ record type for your Ireland record. Turn on both Evaluate Target Health and
 Associate with Health Check then select the `ireland-api` health check you
 created previously. Hit **Save Record Set**.
 
-You will now want to repear this step again but for your Singapore domain. You
-will select the Secondary record type and not associate with a health check
-this time.
+You will now want to repeat this step again but for your Singapore domain. You
+will select the Secondary record type and *not* associate with a health check
+this time. Note that if you were to associate a health check with the second
+region it would also be taken into consideration and if the
+health check was failing in both regions then no failover would occur. By not
+associating the second region with a health check, it will always be presumed
+to be healthy.
 
 Your completed DNS configuration should look something like the screenshot
 below.

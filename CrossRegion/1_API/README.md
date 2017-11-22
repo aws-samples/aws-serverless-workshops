@@ -329,6 +329,7 @@ You can do this using the following CLI command. Note that you must replace
 `[bucket-name]` in this command with the bucket you just created):
 
 *Ireland*
+
     aws cloudformation package \
     --region eu-west-1 \
     --template-file wild-rydes-api.yaml \
@@ -336,6 +337,7 @@ You can do this using the following CLI command. Note that you must replace
     --s3-bucket [bucket_name_you_created_above]
 
 *Singapore*
+
     aws cloudformation package \
     --region ap-southeast-1 \
     --template-file wild-rydes-api.yaml \
@@ -354,6 +356,7 @@ You can now take the newly generated template and use it to create resources in 
 Go ahead and run the following CLI command:
 
 *Ireland*
+
     aws cloudformation deploy \
     --region eu-west-1 \
     --template-file wild-rydes-api-output.yaml \
@@ -361,6 +364,7 @@ Go ahead and run the following CLI command:
     --capabilities CAPABILITY_IAM
 
 *Singapore*
+
     aws cloudformation deploy \
     --region ap-southeast-1 \
     --template-file wild-rydes-api-output.yaml \
@@ -397,12 +401,6 @@ to it before navigating to it into your browser. It should return the following:
         "region":"eu-west-1",
         "message":"Successful response reading from DynamoDB table."
     }
-
-## Completion
-
-Congratulations! You have successfully deployed an API running on Amazon API Gateway,
-AWS Lambda and Amazon DynamoDB by using CloudFormation. In the next module you will deploy
-a web UI that uses this API to expose it to our users.
 
 </details>
 

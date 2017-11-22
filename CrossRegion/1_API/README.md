@@ -143,7 +143,7 @@ editor you see on your screen:
 
 Next, under `Environment Variables`, enter they key **TABLE_NAME** and the value **SXRTickets**
 
-*Note that entering these Environment Variables exactly as show is very important -
+*Note that entering these Environment Variables exactly as shown is very important -
 your function will not work - case matters*
 
 ![Create Lambda Wild Rydes Get](images/create-lambda-ticket-get.png)

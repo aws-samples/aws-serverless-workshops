@@ -11,11 +11,11 @@ The Wild Rydes team wants this application to meet the following requirements:
 3. The application should use an entirely serverless architecture (we don't
    have an operations team to manage our infrastructure!)
 4. The application must be able to failover to another region in the case of a
-   disaster. The RTO[1] and RPO[2] must both be less than 15 minutes.
+   disaster. The **RTO** and **RPO** must both be less than 15 minutes.
 
-[1] RTO: Recovery time objective – the targeted duration of time and a service
+* **RTO:** Recovery time objective – the targeted duration of time and a service
 level within which a business process must be restored after a disaster.
-[2] RPO: Recovery point objective –  the maximum targeted period in which data
+* **RPO:** Recovery point objective –  the maximum targeted period in which data
 might be lost from a service due to a major incident.
 
 ## Architecture Overview
@@ -31,9 +31,11 @@ The application will utilize three layers:
 ![Architecture diagram](images/architecture.png)
 
 For the purposes of this workshop, our failover is focused on the path from
-our application (in this case, the web application) through API Gateway,
-Lambda and DynamoDB.  We do not address failing over the website itself to a
-second region.
+our application (in this case, a web application) through API Gateway,
+Lambda and DynamoDB.  We do not address replicatio of the website UI layer
+itself to a second region, although this could be achieved using something
+like S3 [Cross Region
+Replication](http://docs.aws.amazon.com/AmazonS3/latest/dev/crr.html).
 
 The backend components will be replicated to the second region so that we can
 failover in the event of a disaster. In addition, all data in DynamoDB will be
@@ -66,18 +68,15 @@ unused domain you already own.  You will need to delegate DNS to Route53 if
 the domain is not already acquired through AWS.  You will also need access to
 the email account associated with the domain name registration.
 
-### Facebook/Amazon Developer Account and App ID
+### Facebook Developer Account and App ID
 
-Our application requires either a Facebook or Amazon federated identity to
+Our application requires a Facebook federated identity to
 allow users to login with an existing account. In order to set this up you
-will need either a Facebook Developer or Login with Amazon account.
+will need a Facebook Developer account.
 
-You can sign up using the following links:
-* [Facebook Developer](https://developers.facebook.com/docs/apps/register/).
-* [Login with Amazon](https://login.amazon.com/)
+You can sign up using [this link](https://developers.facebook.com/docs/apps/register/).
 
-
-Note that you will create the App/Client ID later on in this guide using the
+Note that you will create the App ID later on in this guide using the
 URL you set up.
 
 

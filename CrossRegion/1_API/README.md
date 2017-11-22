@@ -398,12 +398,6 @@ to it before navigating to it into your browser. It should return the following:
         "message":"Successful response reading from DynamoDB table."
     }
 
-## Completion
-
-Congratulations! You have successfully deployed an API running on Amazon API Gateway,
-AWS Lambda and Amazon DynamoDB by using CloudFormation. In the next module you will deploy
-a web UI that uses this API to expose it to our users.
-
 </details>
 
 ## Completion

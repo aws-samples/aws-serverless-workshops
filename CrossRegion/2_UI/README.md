@@ -41,9 +41,8 @@ Take note of the values for each of these, you will need them in the next steps.
 
 ## 2. Configure Federated Identities with Cognito
 
-Now we'll set up our login with Facebook capability.
-
-You will need to set up a Facebook Web Application so that your riders can log in
+Now we'll set up our login with Facebook capability. You will need to set up a
+Facebook Web Application so that your riders can log in
 to the UI and submit their Unicorn issues.
 
 Go into your Facebook Developer account and create an new application by
@@ -95,22 +94,18 @@ primary region (EU Ireland).
 5. Select the Facebook tab, hit Unlock then specify your Facebook App ID
 6. Save Changes at the bottom of the page.
 
-</details>
-
 ## 3. Configure and build the application code
 
 Our application will need to know the location of the API in order to push and
-pull data from it. In addition, the application will need to know our
-Facebook/Amazon App ID and Cognito Identity Pool ID so it can authenticate our
-users. See the Prerequisites section at the beginning of this guide if you
-have not already setup your Facebook/Amazon Developer account and App ID.
-
-***TODO: Detailed instructions on how to retrieve ticketAPI***
+pull data from it. In addition, the application will need to know our Facebook
+App ID and Cognito Identity Pool ID so it can authenticate our users. See the
+Prerequisites section at the beginning of this guide if you have not already
+setup your Facebook Developer account and App ID.
 
 All of these attributes must be configured in
 `/src/environments/environment.ts`. Open up your favorite text editor and edit
-this file before moving on. Please be sure to address all TODO instructions
-inside this file.
+this file before moving on. Please be sure to address all TODO instructions inside
+this file.
 
 You will need Node Package Manager (NPM) installed on your local machine (check out
 the workshop pre-requisites here: [Pre-requisites](../README.md)) in order to build the

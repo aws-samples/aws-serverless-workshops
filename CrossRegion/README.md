@@ -11,11 +11,11 @@ The Wild Rydes team wants this application to meet the following requirements:
 3. The application should use an entirely serverless architecture (we don't
    have an operations team to manage our infrastructure!)
 4. The application must be able to failover to another region in the case of a
-   disaster. The RTO[1] and RPO[2] must both be less than 15 minutes.
+   disaster. The **RTO** and **RPO** must both be less than 15 minutes.
 
-[1] RTO: Recovery time objective – the targeted duration of time and a service
+* **RTO:** Recovery time objective – the targeted duration of time and a service
 level within which a business process must be restored after a disaster.
-[2] RPO: Recovery point objective –  the maximum targeted period in which data
+* **RPO:** Recovery point objective –  the maximum targeted period in which data
 might be lost from a service due to a major incident.
 
 ## Architecture Overview
@@ -31,9 +31,11 @@ The application will utilize three layers:
 ![Architecture diagram](images/architecture.png)
 
 For the purposes of this workshop, our failover is focused on the path from
-our application (in this case, the web application) through API Gateway,
-Lambda and DynamoDB.  We do not address failing over the website itself to a
-second region.
+our application (in this case, a web application) through API Gateway,
+Lambda and DynamoDB.  We do not address replicatio of the website UI layer
+itself to a second region, although this could be achieved using something
+like S3 [Cross Region
+Replication](http://docs.aws.amazon.com/AmazonS3/latest/dev/crr.html).
 
 The backend components will be replicated to the second region so that we can
 failover in the event of a disaster. In addition, all data in DynamoDB will be

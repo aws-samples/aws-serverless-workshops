@@ -15,19 +15,19 @@ export const environment = {
 
   // TODO: This id can be retrieved in output section of the cognito ui cloud formation stack
   // Each region will have its own unique id.
-  cognitoIdentityPoolId: '',
+  cognitoIdentityPoolId: 'eu-west-1:74991474-c752-45ef-9b26-fe999ed1e03e',
 
   // TODO: NOTE You can choose facebook or amazon (or both) as your identity provider(s).
 
   // TODO: Facebook app id can be retrieved from the application in your facebook developer account.
-  facebookAppId: '111122223333444',
+  facebookAppId: '1003898119748019',
 
   // amazon client id can be retrieved from the application in your amazon developer account
   // if you don't use Amazon for you login, you must leave the dummy amazonLoginId below UNCOMMENTED
-  amazonLoginId: 'amzn1.application-oa2-client.ab99abc0a1112223z123a4d111a8f321',
+  amazonLoginId: 'amzn1.application-oa2-client.5ceb7d47f0e44c1ab8aece76494e4121',
 
   // TODO: The API URL is available in the outputs section of the cloud formation template.
   // cloud front NOTE: don't forget trailing "/"
-  ticketAPI: ''
+  ticketAPI: 'https://api.test2.srv331.com/prod/'
 
 };

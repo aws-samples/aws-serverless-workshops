@@ -5,7 +5,11 @@ setup, we need to test it. In this module we will artifically break our
 primary region and observe our failover in action.
 
 To demonstrate this we will replicate a scenario where a developer
-accidentally deploys incorrect code to our healthcheck, thus breaking it.
+accidentally deploys incorrect code to the health check endpoint in the
+primary region, thus breaking it. We will expect our application to detect
+this failure and adjust the DNS settings to continue service the application
+(and the unchanged health check) from the second region maintaining
+availability of the API and functionality of the UI.
 
 ## Breaking the primary region
 

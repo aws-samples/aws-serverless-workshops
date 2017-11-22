@@ -56,7 +56,7 @@ To complete parts of this workshop you'll need the AWS Command Line Interface (C
 
 Follow the [AWS CLI Getting Started guide](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) to install and configure the CLI on your machine.
 
-Please also configure a user on the AWS account you intend to use with Programatic Access and run **aws configur** and supply the need Access Key and Secret Access Key.  We recommend that this user have Administrator Access to the account for the duration of the workshop.
+Please also configure an IAM user on the AWS account you intend to use with Programatic Access and run **aws configure** and supply the need Access Key and Secret Access Key.  We recommend that this user have Administrator Access to the account for the duration of the workshop.
 
 ### A local environment with Git, Node.js and NPM
 

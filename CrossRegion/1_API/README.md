@@ -1,17 +1,17 @@
 # Building the Wild Rydes Backend Components Layer
 
 In this module, you will deploy backend application components to AWS. These
-backend components include AWS Lambda functions, API Gateway Endpoints and a
-DynamoDB table. You will also create the IAM polices and roles required by
+backend components include several AWS Lambda functions, two API Gateway Endpoints and two
+DynamoDB tables. You will also create the IAM polices and roles required by
 these components.
 
 There are two ways to complete this module.  For learning purposes, we
-recommend that workshop participants step through the Console instructions
-while deploying the primary Ireland region, and then for time reasons, use the
-provided CloudFormation instructions to quickly set up the second Singapore
+recommend that workshop participants step through the *Console step-by-step
+instructions* while deploying the primary Ireland region, and then for time reasons,
+use the provided CloudFormation instructions to quickly set up the second Singapore
 region during module 3.
 
-Both sets of instructions are provided – simply expand your preferred path.
+Both sets of instructions are provided below – simply expand your preferred path.
 
 <details>
 <summary><strong>Console step-by-step instructions (expand for details)</strong></summary>
@@ -23,11 +23,15 @@ The following objects will be used as you create the resources in the console fo
 * `wild-rydes-dynamodb-post.json` - This is the policy needed in order to write
   to DynamoDB using the `tickets-post.js` Lambda function
 * `wild-rydes-dynamodb-replication.json` - This is the policy needed in order
-  to use DynambDB Streams to replicate to a second region using the `tickets-replicate.js` Lambda function
-* `tickets-replicate.js` Lambda function to replicate new DynamoDB records to our failover region
+  to use DynambDB Streams to replicate to a second region using the `tickets-replicate.js`
+  Lambda function
+* `tickets-replicate.js` Lambda function to replicate new DynamoDB records to our
+  failover region
 * `health-check.js` - Lambda function for checking the status of our application health
-* `tickets-get.js` - Lambda function triggered by API Gateway to put application data into DynamoDB
-* `tickets-post.js` - Lambda function triggered by API Gateway to read application data from DynamoDB
+* `tickets-get.js` - Lambda function triggered by API Gateway to put application data
+  into DynamoDB
+* `tickets-post.js` - Lambda function triggered by API Gateway to read application
+  data from DynamoDB
 
 There are several steps needed to deploy the API and Lambda functions via the
 console. The basic steps are:
@@ -35,12 +39,16 @@ console. The basic steps are:
 1. Create the appropriate IAM policies and roles our four AWS Lambda functions
 2. Create the required Amazon DynamoDB table
 3. Create the four AWS Lambda functions
-4. Create the Amazon API Gateway for the primary application region
+4. Create the Amazon API Gateway for the region you are currently deploying
 5. Testing to ensure our backend components are all working as expected
 
-Let’s go ahead and create all the needed polices and roles for our workshop
+
 
 ## 1. Create IAM Policies and Roles
+
+Let’s go ahead and create all the needed polices and roles for our workshop.
+Because IAM roles and policies are global in nature, you only need to do this once.
+*You may skip this step when you are asked to deploy the failover region*
 
 Log into the AWS Console then select the **IAM** service. Now select
 **Policies** from the left and click on the **Create policy** button.  Then
@@ -94,7 +102,8 @@ the corresponding policy you created earlier.
 ## 2. Create the DynamoDB Table
 
 Next we will create the DynamoDB Table for our application data. Ensure you
-are set to Ireland (eu-west-1) in the upper right corner of the console. If
+are set to the region you are currently deploying -  Ireland (eu-west-1) or
+Singapore (ap-southeast-1) in the upper right corner of the console. If
 you mistakenly create the DynamoDB table in the wrong region, the application
 will not work.
 
@@ -113,7 +122,7 @@ to set up the table.
 ## 3. Create Four Lambda functions
 
 Next, you will create four Lambda functions. First, navigate to **Lambda** in
-the console (again ensuring you are still in the Ireland region) and click
+the console (again ensuring you are still in the correct region) and click
 **Create a function**
 
 ![Create Lambda function](images/create-lambda-function.png)
@@ -122,11 +131,13 @@ Next select “Author from scratch”
 
 ![Lambda author from scratch](images/lambda-author-scratch.png)
 
-Name your first function `TicketGetFunction` and assign the role with the **matching** name you created previously to it and click **Create function**
+Name your first function `TicketGetFunction` and assign the role with the **matching**
+name you created previously to it and click **Create function**
 
 Ensure the runtime is `Node.js 6.10`.  If it isn’t, simply select it.
 
-For the Handler, enter `tickets-get.handler` and then paste the following code into the editor you see on your screen:
+For the Handler, enter `tickets-get.handler` and then paste the following code into the
+editor you see on your screen:
 
 [TicketGetFunction](tickets-get.js)
 
@@ -136,7 +147,9 @@ Next, under `Environment Variables`, enter they key **TABLE_NAME** and the value
 
 Once everything is set correctly, click **Save** near the top center of the screen.
 
-We still need to create three more lambda functions.  All of them use `Node.js 6.10` as the runtime.  Repeat the same steps you used above.  The table below provides the information needed for all four functions.  Note that you have already done the first one.
+We still need to create three more lambda functions.  All of them use `Node.js 6.10`
+as the runtime.  Repeat the same steps you used above.  The table below provides the
+information needed for all four functions.  Note that you have already done the first one.
 
 | Function Name          | Handler Name          | Execution Role                  | Env Var Key   | Env Var Value  |
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
@@ -149,29 +162,37 @@ We still need to create three more lambda functions.  All of them use `Node.js 6
 
 ## 4. Create API Gateway Endpoint
 
-In the console, under Application Services, open Amazon API Gateway and click on **Get Started**.  Click on **OK** if you are given a *Create Example API* dialogue.
+In the console, under Application Services, open Amazon API Gateway and click on
+**Get Started**.  Click on **OK** if you are given a *Create Example API* dialogue.
 
 ![Create Example API](images/create-example-api.png)
 
-Select **New API** and enter the API Name of `wild-rydes-api` and choose the Endpoint Type of *Regional* and then click **Create API**
+Select **New API** and enter the API Name of `wild-rydes-api` and choose the
+Endpoint Type of *Regional* and then click **Create API**
 
 ![Create new API](images/create-new-api.png)
 
-Next, from the *Actions* drop-down, choose **Create Resource** and name the resource `ticket` and select the *Enable API Gateway CORS* option and then click **Create Resource**
+Next, from the *Actions* drop-down, choose **Create Resource** and name the resource
+`ticket` and select the *Enable API Gateway CORS* option and then click **Create Resource**
 
 ![Create api child CORS](images/api-child-resource-cors.png)
 
-Repeat the same steps one more time, this time creating the resource `health`.  Ensure this resource is at the same level (directly below the root) as `ticket`
+Repeat the same steps one more time, this time creating the resource `health`.
+Ensure this resource is at the same level (directly below the root) as `ticket`
 
 ![ticket and heath visual](images/api-ticket-health.png)
 
 Next we will create two methods – one for GET and one for POST
 
-Select `ticket` under *resources*, and from the *Actions* drop-down select **Create Method** and then choose `GET` as your first method and select the check-box to confirm creation:
+Select `ticket` under *resources*, and from the *Actions* drop-down select
+**Create Method** and then choose `GET` as your first method and select the
+check-box to confirm creation:
 
 ![Create api method get](images/api-method-get.png)
 
-Keep *Lambda Function* selected, enable *Use Lambda Proxy Integration* and choose `eu-west-1` as the Lambda Region and then start typing in the Lambda Function box and choose *TicketGetFunction* and then click **Save**
+Keep *Lambda Function* selected, enable *Use Lambda Proxy Integration* and choose
+`eu-west-1` as the Lambda Region and then start typing in the Lambda Function box
+and choose *TicketGetFunction* and then click **Save**
 
 ![Setup api method get](images/api-method-get-setup.png)
 
@@ -179,9 +200,11 @@ Click OK when asked to *Add Permission to Lambda Function*
 
 ![api lambda permission](images/api-lambda-permission.png)
 
-Repeat this step one more time but choose the POST method this time. Ensure you choose *TicketPostFunction* as your function this time.
+Repeat this step one more time but choose the POST method this time. Ensure you
+choose *TicketPostFunction* as your function this time.
 
-Last we will create a `GET` method under the `health` resource.  You will select the *SXRHealthCheckFunction* for the Lambda function.
+Last we will create a `GET` method under the `health` resource.  You will select
+the *SXRHealthCheckFunction* for the Lambda function.
 
 ![Setup api method health get post](images/api-method-health-get-setup.png)
 
@@ -192,7 +215,8 @@ Select `ticket` under *resources*, and from the *Actions* drop-down select **Ena
 
 ![actions enable cors apigw](images/actions-enable-cors.png)
 
-Simply Accept the Default Settings and click on the **Enable CORS and Replace Existing CORS Headers** button:
+Simply Accept the Default Settings and click on the
+ **Enable CORS and Replace Existing CORS Headers** button:
 
 ![accept replace cors apigw](images/accept-replace-cors.png)
 
@@ -200,15 +224,18 @@ Click **Yes, replace existing values** if prompted.
 
 Repeat the same step once more time, this time choosing `health` as the resource.
 
-Next we will deploy the API – this is done from the “Actions” pull-down, selecting *Deploy API*
+Next we will deploy the API – this is done from the *Actions* pull-down, selecting *Deploy API*
 
 ![deploy api to prod](images/deploy-api-prod.png)
 
-Then select *New Stage* for Deployment Stage and enter the Stage Name of `prod` and click **Deploy**.  Note that this needs to be all lowercase or you will run into problems later on.
+Then select *New Stage* for Deployment Stage and enter the Stage Name of `prod` and
+click **Deploy**.  Note that *prod* needs to be all lowercase or you will run into
+problems later on.
 
 ![deploy api to prod](images/deploy-api-prod-new-stage.png)
 
-You have now completed the setup of all the API and backend components needed for your primary region
+You have now completed the setup of all the API and backend components needed for
+your primary region
 
 ## 5. Test your API Gateway Endpoints
 
@@ -222,9 +249,6 @@ You'll see a link to your API EndPoint. **Click** on the link and you should
 see something like the below in your browser if the test is successful:
 
     {
-        "statusCode":200,
-        "headers": "Access-Control-Allow-Origin",
-        "Access-Control-Allow-Credentials":true,
         "body":"{"Items":[],"Count":0,"ScannedCount":0}"
     }
 

@@ -38,19 +38,8 @@ export class TicketListComponent implements OnInit {
 
     this.toastr.setRootViewContainerRef(vRef);
 
-    this.ticketService.getTickets()
-      .subscribe(
-        tickets => {
-          this.rows = tickets.Items;
-        },
-        error => {
-          console.log("ERROR: " + error);
-          this.toastr.error("Please check your api URL configuration " +
-            "and make sure it matches the output from Cloud Formation " +
-            "template. Here is the url you have configured: " + environment.ticketAPI, 'Error!',
-            {dismiss: 'click'});
-        }
-      );
+    this.refresh();
+
   }
 
   ngOnInit() {
@@ -82,6 +71,23 @@ export class TicketListComponent implements OnInit {
         },
         error => this.errorMessage = <any>error);
 
+  }
+
+  refresh(){
+
+    this.ticketService.getTickets()
+      .subscribe(
+        tickets => {
+          this.rows = tickets.Items;
+        },
+        error => {
+          console.log("ERROR: " + error);
+          this.toastr.error("Please check your api URL configuration " +
+            "and make sure it matches the output from Cloud Formation " +
+            "template. Here is the url you have configured: " + environment.ticketAPI, 'Error!',
+            {dismiss: 'click'});
+        }
+      );
   }
 
 }

@@ -52,9 +52,6 @@ Take note of the values for each of these, you will need them in the next steps.
 You will need to set up a Facebook Web Application so that your riders can log in
 to the UI and submit their Unicorn issues.
 
-<details>
-<summary>Configure with Facebook instructions (expand for details)</summary>
-
 Go into your Facebook Developer account and create an new application by
 [following these steps](https://developers.facebook.com/apps/).
 
@@ -103,8 +100,6 @@ primary region (EU Ireland).
 4. Navigate to the Authentication Providers section.
 5. Select the Facebook tab, hit Unlock then specify your Facebook App ID
 6. Save Changes at the bottom of the page.
-
-</details>
 
 ## 3. Configure and build the application code
 

@@ -7,9 +7,9 @@ primary region and observe our failover in action.
 To demonstrate this we will replicate a scenario where a developer
 accidentally deploys incorrect code to the health check endpoint in the
 primary region, thus breaking it. We will expect our application to detect
-this failure and adjust the DNS settings to continue service the application
-(and the unchanged health check) from the second region maintaining
-availability of the API and functionality of the UI.
+this failure and adjust the DNS settings to continue service of the
+application (and the unchanged health check) from the second region
+maintaining availability of the API and functionality of the UI.
 
 ## Breaking the primary region
 
@@ -19,7 +19,8 @@ endpoint. Under **Integration Request** change the associated Lambda function
 to instead be your *TicketPostFunction*. Click the tick next to it to save the
 change. This function expects to be called with a JSON body containing new
 ticket information however when triggered by the health endpoint it will not
-have this and will fail and return an error code.
+have this and will fail and return an error code, causing the health check to
+fail.
 
 ![Break api](images/break-api.png)
 
@@ -37,11 +38,13 @@ Since your DNS records are configured to use this health check, Route53 should
 automatically use this information to point your domain at your secondary
 region.
 
-You should now be able to visit the `api.` prefix of your domain (remember to
-use HTTPS). Go to the `/health` path and notice how it now returns the
-Singapore region indicating that our Secondary region is being served and that
-failover has occurred. You're UI should also continue to function and you
-should still be able to view and create tickets.
+You should now be able to go back and visit the `api.` prefix of your domain
+(remember to use HTTPS). Go to the `/health` path and notice how it now
+returns the Singapore region indicating that our Secondary region is being
+served and that failover has occurred. You're UI should also continue to
+function and you should still be able to view and create tickets.
+
+![Failed over health check response](images/failed-over-response.png)
 
 ## Completion
 

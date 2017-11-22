@@ -307,7 +307,7 @@ You can create a bucket using the CLI with the following command:
 *Ireland* (choose a unique bucket name)
      aws s3 mb s3://wildrydes-multiregion-blake-mitchell-eu-west-1 --region eu-west-1
 
-*Singapore*   
+*Singapore*
      aws s3 mb s3://wildrydes-multiregion-blake-mitchell-ap-southeast-1 --region ap-southeast-1
 
 Note that in this and in the following CLI commands, we are explicitly passing in the
@@ -357,14 +357,14 @@ Go ahead and run the following CLI command:
     aws cloudformation deploy \
     --region eu-west-1 \
     --template-file wild-rydes-api-output.yaml \
-    --stack-name will-rydes-api \
+    --stack-name wild-rydes-api \
     --capabilities CAPABILITY_IAM
 
 *Singapore*
     aws cloudformation deploy \
     --region ap-southeast-1 \
     --template-file wild-rydes-api-output.yaml \
-    --stack-name will-rydes-api \
+    --stack-name wild-rydes-api \
     --capabilities CAPABILITY_IAM
 
 

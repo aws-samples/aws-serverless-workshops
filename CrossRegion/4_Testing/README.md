@@ -10,19 +10,24 @@ accidentally deploys incorrect code to our healthcheck, thus breaking it.
 ## Breaking the primary region
 
 In the AWS Console, ensure you are in your primary region then head over to
-**API Gateway** and select the `/health` endpoint. Change the associated
-Lambda function to instead be your *TicketPostFunction*. This function expects
-to be called with a JSON body containing new ticket information however when
-triggered by the health endpoint it will not have this and will fail and
-return an error code.
+**API Gateway**, choose your API and select the `GET` method of the `/health`
+endpoint. Under **Integration Request** change the associated Lambda function
+to instead be your *TicketPostFunction*. Click the tick next to it to save the
+change. This function expects to be called with a JSON body containing new
+ticket information however when triggered by the health endpoint it will not
+have this and will fail and return an error code.
 
-Under **Actions** select **Deploy** to redeploy your API.
+![Break api](images/break-api.png)
+
+Under **Actions** select **Deploy** to redeploy your API to the `prod` stage.
 
 ## Verifying the failure
 
 Now head over to **Route53** and select **Health checks**. Within a few
 minutes, your health check should turn from green to red and display a
 failure.
+
+![Failed health check](images/failed-health.png)
 
 Since your DNS records are configured to use this health check, Route53 should
 automatically use this information to point your domain at your secondary
@@ -31,13 +36,14 @@ region.
 You should now be able to visit the `api.` prefix of your domain (remember to
 use HTTPS). Go to the `/health` path and notice how it now returns the
 Singapore region indicating that our Secondary region is being served and that
-failover has occurred.
+failover has occurred. You're UI should also continue to function and you
+should still be able to view and create tickets.
 
 ## Completion
 
-Congratulations! You have now setup and verified an application that fails
-over from one region to another automatically in the event of a disaster. Wild
-Rydes users are going to love this!
+Congratulations! You have now setup and verified an API that fails over from
+one region to another automatically in the event of a disaster. Wild Rydes
+users are going to love this!
 
 The application you have built includes many components that you would need to
 build your own Serverless applications in AWS including [AWS

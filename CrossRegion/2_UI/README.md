@@ -60,32 +60,32 @@ Go into your Facebook Developer account and create an new application by
 
 Click on **Add a New App** in the upper right corner
 
-![Add new FB app](!images/facebook-add-app.png)
+![Add new FB app](images/facebook-add-app.png)
 
 Name your App anything you would like, and then click **Create App ID**
 
 Once you have created your App, you will need to select *Settings* from the left menu
 
-![FB Select Settings](!images/facebook-select-settings.png)
+![FB Select Settings](images/facebook-select-settings.png)
 
 Next choose **Add Platform** from the bottom of the Settings screenshot
 
-![FB Select Add Platform](!images/facebook-add-platform.png)
+![FB Select Add Platform](images/facebook-add-platform.png)
 
 Choose **Website** from the list of choices that comes up
 
-![FB Select Website](!images/facebook-select-website.png)
+![FB Select Website](images/facebook-select-website.png)
 
 Then enter the S3 website URL (this is one of the CloudFormation outputs from the
 template you deployed in earlier steps in this module) into the *Site URL* dialog
 and then select **Save Changes** from the lower right
 
-![FB enter URL and save](!images/facebook-website-url.png)
+![FB enter URL and save](images/facebook-website-url.png)
 
 Finally, again on the left side menu, choose **App Review** and make your Facebook
 application public and select a category (Education might be a good choice)
 
-![FB Select Settings](!images/facebook-make-public.png)
+![FB Select Settings](images/facebook-make-public.png)
 
 Once you are done with this, make note of the Facebook App ID - you will need this
 in the next step as well as when you build the website code in the next section.

@@ -5,7 +5,7 @@ In this workshop you will use Amazon API Gateway, AWS Lambda and Amazon DynamoDB
 The Wild Rydes team wants this application to meet the following requirements:
 
 1. Users must be able to submit and view support tickets
-2. Users must be able to log in with their Facebook or Amazon credentials
+2. Users must be able to log in with their Facebook user id
 3. The application should use an entirely serverless architecture (we don't have an operations team to manage our infrastructure!)
 4. The application must be able to failover to another region in the case of a disaster. The RTO[1] and RPO[2] must both be less than 15 minutes.
 
@@ -29,7 +29,7 @@ The backend components will be replicated to the second region so that we can fa
 in DynamoDB will be replicated from the primary region to the secondary region ensuring that our application data will be available when we failover.
 
 A few additional components will be utilized to assist us including AWS Cognito to allow the application to authenticate users and authorize access to
-the API layer. AWS Route53 will be used for DNS and will allow us to perform healthchecks on our primary region, and upon detecting an issue,
+the API layer. AWS Route53 will be used for DNS and will allow us to perform health checks on our primary region, and upon detecting an issue,
 automatically switching to our secondary region using Route53 DNS updates.
 
 ## Prerequisites
@@ -42,13 +42,10 @@ In order to complete this workshop you'll need an AWS Account with access to cre
 
 You will also need to either purchase a domain, or repurpose an existing unused domain you already own.  You will need to delegate DNS to Route53 if the domain is not already acquired through AWS.  You will also need access to the email account associated with the domain name registration.
 
-### Facebook Developer Account and App ID or Amazon Developer Account and App ID
+### Facebook Developer Account and App ID
 
 We will be using Facebook federated identity to allow our users to login with their regular Facebook account. In order to set this up you will need a Facebook Developer account. You can sign up for this by [following this guide](https://developers.facebook.com/docs/apps/register/). Note that you will create the App ID later on in this guide using the URL you set up.
 
-Alternatively if you do not wish to use FaceBook, we offer the option to use an Amazon Login instead.
-
-You must use one of these in order for successfully complete the workshop.
 
 ### AWS Command Line Interface
 

@@ -7,10 +7,10 @@ export const environment = {
 
   production: true,
 
-  //TODO: make sure to use the appropriate region. You are building this UI once per region
+  //TODO: make sure to use the appropriate region. You are building this UI only in the primary region.
   // select the appropriate region for your deployment.
   // region: 'ap-southeast-1',
-  // region: 'eu-west-1',
+  region: 'eu-west-1',
 
 
   // TODO: This id can be retrieved in output section of the cognito ui cloud formation stack
@@ -23,6 +23,7 @@ export const environment = {
   facebookAppId: '111122223333444',
 
   // amazon client id can be retrieved from the application in your amazon developer account
+  // if you don't use Amazon for you login, you must leave the dummy amazonLoginId below UNCOMMENTED
   amazonLoginId: 'amzn1.application-oa2-client.ab99abc0a1112223z123a4d111a8f321',
 
   // TODO: The API URL is available in the outputs section of the cloud formation template.

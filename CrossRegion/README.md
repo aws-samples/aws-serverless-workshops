@@ -68,18 +68,15 @@ unused domain you already own.  You will need to delegate DNS to Route53 if
 the domain is not already acquired through AWS.  You will also need access to
 the email account associated with the domain name registration.
 
-### Facebook/Amazon Developer Account and App ID
+### Facebook Developer Account and App ID
 
-Our application requires either a Facebook or Amazon federated identity to
+Our application requires a Facebook federated identity to
 allow users to login with an existing account. In order to set this up you
-will need either a Facebook Developer or Login with Amazon account.
+will need a Facebook Developer account.
 
-You can sign up using the following links:
-* [Facebook Developer](https://developers.facebook.com/docs/apps/register/).
-* [Login with Amazon](https://login.amazon.com/)
+You can sign up using [this link](https://developers.facebook.com/docs/apps/register/).
 
-
-Note that you will create the App/Client ID later on in this guide using the
+Note that you will create the App ID later on in this guide using the
 URL you set up.
 
 

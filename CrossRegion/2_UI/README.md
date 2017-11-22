@@ -41,19 +41,7 @@ Take note of the values for each of these, you will need them in the next steps.
 
 ## 2. Configure Federated Identities with Cognito
 
-For authenticating users you can either choose to use Facebook or Amazon. Both
-will require that you sign up for a developer account and register your
-application.
-
-<details>
-<summary><strong>Set up with Amazon</strong></summary>
-
-TODO
-
-</details>
-
-<details>
-<summary><strong>Set up with Facebook</strong></summary>
+Now we'll set up our login with Facebook capability.
 
 You will need to set up a Facebook Web Application so that your riders can log in
 to the UI and submit their Unicorn issues.

@@ -347,9 +347,6 @@ Next, we need to spin up the resources needed to run our code and expose it as a
 
 #### High-level instructions
 
-<details>
-<summary><strong>CLI/CloudFormation step-by-step instructions (expand for details)</strong></summary>
-
 You can now take the newly generated template and use it to create resources in AWS.
 Go ahead and run the following CLI command:
 
@@ -384,8 +381,6 @@ and the API Gateway. Note how the gateway was configured with the `GET` method c
 our `TicketGetFunction` Lambda function and the `POST` method calling our `TicketPostFunction`
 Lambda function. You can also see that an empty DynamoDB table was set up as well as IAM
 roles to allow our functions to speak to DynamoDB.
-
-</details>
 
 You can confirm that your API is working by copying your API URL and appending `/ticket`
 to it before navigating to it into your browser. It should return the following:

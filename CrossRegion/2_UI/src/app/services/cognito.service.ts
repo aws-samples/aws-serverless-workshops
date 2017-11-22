@@ -127,7 +127,6 @@ export class CognitoLoginService {
 
         console.log('CognitoLoginService: Logging out');
 
-        localStorage.removeItem('isLoggedin');
         this.cognitoService.currentEmailID = '';
 
         // AWS.config.credentials.clearCachedId();

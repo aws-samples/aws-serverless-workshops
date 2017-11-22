@@ -23,6 +23,11 @@ export class TicketService {
             .map((res: Response) => res.json());
     }
 
+    getHealth() {
+        return this.http.get(this._API_ROOT + 'health')
+            .map((res: Response) => res.json());
+    }
+
     addTicket(ticket: ITicket): Observable<ITicket> {
 
       const headers = new Headers({ 'Content-Type': 'application/json' });

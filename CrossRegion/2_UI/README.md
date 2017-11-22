@@ -139,13 +139,14 @@ Note that you must replace `[bucket-name]` in this command with the bucket
 name output from the CloudFormation stack in step 1.
 
 To confirm everything went as expected, navigate to your bucket URL. You
-should see a simple ticketing application. Go ahead and login using either
-Facebook or Amazon depending on what you configured then submit a couple of
-tickets to check that everything is working.
+should see a simple ticketing application. Go ahead and login using your
+Facebook account and then submit a couple of tickets to check that everything is
+working.
 
 If you have trouble in this step, double check your configured settings and
-Facebook/Amazon Developer account configuration. Note that if you change any
-of the settings you will need to build and deploy the code again.
+Facebook Developer account configuration. Note that if you change any
+of the settings you will need to run *npm run build* again and then copy the website
+code to your S3 bucket again.
 
 ![App Screenshot](images/app-screenshot.png)
 

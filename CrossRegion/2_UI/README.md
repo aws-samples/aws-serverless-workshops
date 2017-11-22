@@ -1,7 +1,10 @@
 # Building a UI layer
 
 Now that we have a working API, let's deploy a UI that can expose this
-functionality to our users.
+functionality to our users.  Note that we will only deploy this UI in our *Primary*
+region.  We don't attempt to address failing over a full web application in this
+workshop.  Our failover efforts are focused on the backend API components deployed
+in the first module.
 
 Navigate to the `2_UI/cfn` folder in your local Git repository.
 
@@ -9,9 +12,19 @@ Navigate to the `2_UI/cfn` folder in your local Git repository.
 
 Our first task is to setup AWS Cognito to allow our UI application to
 authenticate users and gain access credentials to allow our UI to call the
-API. As in module 1, a CloudFormation template is available to create all the
+API. As in *Module 1*, a CloudFormation template is available to create all the
 necessary resources for us. This template does not rely on any local code so
 no package step is needed.
+
+You may deploy this CloudFormation template via the AWS Console, or via the AWS CLI
+
+<details>
+<summary><strong>Console step-by-step instructions for CloudFormation) (expand for details)</strong></summary>
+
+</details>
+
+<details>
+<summary><strong>Command Line step-by-step instructions for CloudFormation (expand for details)</strong></summary>
 
 You can go ahead and deploy this template in the primary region using the `aws
 cloudformation deploy` CLI command as before.
@@ -24,8 +37,6 @@ For the Ireland region, the full command will look like:
     --stack-name ticket-service-ui \
     --capabilities CAPABILITY_IAM
 
-Change the `--region` parameter when deploying to your second region.
-
 Again, you can confirm that this was created successfully and see the resource
 in the AWS Console. Navigate to the CloudFormation service and take a look at
 the Outputs tab. This time you will see two keys:
@@ -36,28 +47,48 @@ the Outputs tab. This time you will see two keys:
 
 Take note of the values for each of these, you will need them in the next steps.
 
-## 2. Configure Federated Identity with Cognito
+## 2. Configure Federated Identities with Cognito
 
-You have the option here of which identity provider you would like to
-integrate. Choose either Amazon, Facebook or both. You will need a developer
-account for either of these options.
-
-<details>
-<summary>Configure with Amazon instructions (expand for details)</summary>
-
-***TODO***
-
-</details>
+You will need to set up a Facebook Web Application so that your riders can log in
+to the UI and submit their Unicorn issues.
 
 <details>
 <summary>Configure with Facebook instructions (expand for details)</summary>
 
 Go into your Facebook Developer account and create an new application by
-[following these steps](https://developers.facebook.com/docs/apps/register/).
-Once you've created your app, under settings you'll want to add a Platform and
-choose the Website platform. You will need to configure your Facebook
-application with the Bucket URL created in the above step. Once you have done
-this, take note of your App ID as you will need it next.
+[following these steps](https://developers.facebook.com/apps/).
+
+Click on **Add a New App** in the upper right corner
+
+![Add new FB app](!images/facebook-add-app.png)
+
+Name your App anything you would like, and then click **Create App ID**
+
+Once you have created your App, you will need to select *Settings* from the left menu
+
+![FB Select Settings](!images/facebook-select-settings.png)
+
+Next choose **Add Platform** from the bottom of the Settings screenshot
+
+![FB Select Add Platform](!images/facebook-add-platform.png)
+
+Choose **Website** from the list of choices that comes up
+
+![FB Select Website](!images/facebook-select-website.png)
+
+Then enter the S3 website URL (this is one of the CloudFormation outputs from the
+template you deployed in earlier steps in this module) into the *Site URL* dialog
+and then select **Save Changes** from the lower right
+
+![FB enter URL and save](!images/facebook-website-url.png)
+
+Finally, again on the left side menu, choose **App Review** and make your Facebook
+application public and select a category (Education might be a good choice)
+
+![FB Select Settings](!images/facebook-make-public.png)
+
+Once you are done with this, make note of the Facebook App ID - you will need this
+in the next step as well as when you build the website code in the next section.
 
 ![Facebook Config](images/facebook-config.png)
 
@@ -83,13 +114,12 @@ App ID and Cognito Identity Pool ID so it can authenticate our users. See the
 Prerequisites section at the beginning of this guide if you have not already
 setup your Facebook Developer account and App ID.
 
-***TODO: Detailed insturctions on how to retrieve ticketAPI ***
-***TODO: Add Amazon instructions ***
-***TODO: Improve Facebook instructions ***
+***TODO: Detailed instructions on how to retrieve ticketAPI ***
+***TODO: Improve Facebook instructions***
 
 All of these attributes must be configured in
 `/src/environments/environment.ts`. Open up your favorite text editor and edit
-this file before moving on. Please be sure to address all TODO instructions inside 
+this file before moving on. Please be sure to address all TODO instructions inside
 this file.
 
 You will need Node Package Manager (NPM) installed on your local machine in
@@ -112,7 +142,7 @@ custom settings.
 Next, you'll need to upload the UI to the S3 website bucket specified in step 1. You can
 do this with:
 
-    aws s3 sync --acl public-read --delete dist/ s3://[bucket_name] 
+    aws s3 sync --acl public-read --delete dist/ s3://[bucket_name]
 
 Note that you must replace `[bucket-name]` in this command with the bucket
 name output from the CloudFormation stack in step 1.

@@ -329,6 +329,7 @@ You can do this using the following CLI command. Note that you must replace
 `[bucket-name]` in this command with the bucket you just created):
 
 *Ireland*
+
     aws cloudformation package \
     --region eu-west-1 \
     --template-file wild-rydes-api.yaml \
@@ -336,6 +337,7 @@ You can do this using the following CLI command. Note that you must replace
     --s3-bucket [bucket_name_you_created_above]
 
 *Singapore*
+
     aws cloudformation package \
     --region ap-southeast-1 \
     --template-file wild-rydes-api.yaml \
@@ -354,6 +356,7 @@ You can now take the newly generated template and use it to create resources in 
 Go ahead and run the following CLI command:
 
 *Ireland*
+
     aws cloudformation deploy \
     --region eu-west-1 \
     --template-file wild-rydes-api-output.yaml \
@@ -361,6 +364,7 @@ Go ahead and run the following CLI command:
     --capabilities CAPABILITY_IAM
 
 *Singapore*
+
     aws cloudformation deploy \
     --region ap-southeast-1 \
     --template-file wild-rydes-api-output.yaml \

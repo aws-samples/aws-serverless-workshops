@@ -252,7 +252,7 @@ see something like the below in your browser if the test is successful:
         "body":"{"Items":[],"Count":0,"ScannedCount":0}"
     }
 
-You can also peform the same test but select `GET` from the *health* resource
+You can also perform the same test but select `GET` from the *health* resource
 instead.  You should get something like the following in your browser:
 
     {
@@ -266,16 +266,27 @@ instead.  You should get something like the following in your browser:
 <summary><strong>CLI step-by-step instructions (expand for details)</strong></summary>
 
 
-Navigate to the `api` folder within your local Git repository and take a look at the files within. You will see three files
+Navigate to the `api` folder within your local Git repository and take a look at the
+files within. You will see three files
 
-* `wild-rydes-api.yaml` – This is a CloudFormation template (using SAM syntax) that describes the infrastructure needed to for the API and how each component should be configured.
-* `tickets-get.js` – This is the Node.js code required by our Lambda function needed to retrieve tickets from DynamoDB
-* `tickets-post.js` – This is the Node.js code required by our second Lambda function to create new tickets in DynamoDB
-* `tickets-replicate.js` – This is the Node.js code that replicates dynamodb data to another region.
+* `wild-rydes-api.yaml` – This is a CloudFormation template (using SAM syntax) that
+  describes the infrastructure needed to for the API and how each component should be configured.
+* `tickets-get.js` – This is the Node.js code required by our Lambda function needed
+  to retrieve tickets from DynamoDB
+* `tickets-post.js` – This is the Node.js code required by our second Lambda function
+  to create new tickets in DynamoDB
+* `tickets-replicate.js` – This is the Node.js code that replicates dynamodb data to
+  another region.
+* `health-check.js` - Lambda function for checking the status of our application health
 
 
-
-There is no modification necessary to this application code so we can go ahead and deploy it to AWS. Since it comes with a CloudFormation template, we can use this to upload our code and create all of the necessary AWS resources for us rather than doing this manually using the console which would take much longer. Remember that we will be setting all of this up again in a second region so using templates makes this process easily repeatable.  Feel free to open the template and take a look at the resources it is creating and how they are defined.
+There is no modification necessary to this application code so we can go ahead and
+deploy it to AWS. Since it comes with a CloudFormation template, we can use this to
+upload our code and create all of the necessary AWS resources for us rather than doing
+this manually using the console which would take much longer. We recommend deploying the
+primary region using the Console step-by-step instructions and then deploying the failover
+region using the CloudfFormation template  Feel free to open the template and take a look
+at the resources it is creating and how they are defined.
 
 ## 1. Create an S3 bucket to store the app code
 
@@ -283,29 +294,50 @@ We'll first need a bucket to store our source code in AWS.
 
 #### High-level Instructions
 
-Go ahead and create a bucket using the AWS Console or the CLI. S3 bucket names must be globally unique so choose a name for your bucket using something unique to you such as your name e.g. `wildrydes-firstname-lastname`. If you get an error that your bucket name already exists, try adding additional numbers or characters until you find an unused name.
+Go ahead and create a bucket using the AWS Console or the CLI. S3 bucket names must be
+globally unique so choose a name for your bucket using something unique to you such as
+your name e.g. `wildrydes-firstname-lastname`. If you get an error that your bucket name
+already exists, try adding additional numbers or characters until you find an unused name.
 
 You can create a bucket using the CLI with the following command:
 
-     aws s3 mb s3://wildrydes-multiregion-blake-mitchell --region eu-west-1
+*Ireland* (choose a unique bucket name)
+     aws s3 mb s3://wildrydes-multiregion-blake-mitchell-eu-west-1 --region eu-west-1
 
-Note that in this and in the following CLI commands, we are explicitly passing in the region. Like many things in AWS, S3 buckets are regional. If you do not specify a region, a default will be used which may not be what you want.
+*Singapore*   
+     aws s3 mb s3://wildrydes-multiregion-blake-mitchell-ap-southeast-1 --region ap-southeast-1
+
+Note that in this and in the following CLI commands, we are explicitly passing in the
+region. Like many things in AWS, S3 buckets are regional. If you do not specify a region,
+a default will be used which may not be what you want.
 
 ## 2. Package up the API code and push to S3
 
-Because this is a SAM Template, we must first package it. This process will upload the source code to our S3 bucket and generate a new template referencing the code in S3 where it can be used by AWS Lambda.
+Because this is a SAM Template, we must first package it. This process will upload the
+source code to our S3 bucket and generate a new template referencing the code in S3
+where it can be used by AWS Lambda.
 
 #### High-level instructions
 
-Go ahead and create two new Lambda functions using the the Node.js code from `tickets-post.js` and `tickets-get.js`.
+Go ahead and create two new Lambda functions using the the Node.js code from
+`tickets-post.js` and `tickets-get.js`.
 
-You can do this using the following CLI command. Note that you must replace `[bucket-name]` in this command with the bucket you just created):
+You can do this using the following CLI command. Note that you must replace
+`[bucket-name]` in this command with the bucket you just created):
 
+*Ireland*
     aws cloudformation package \
     --region eu-west-1 \
     --template-file wild-rydes-api.yaml \
     --output-template-file wild-rydes-api-output.yaml \
-    --s3-bucket [bucket_name]
+    --s3-bucket [bucket_name_you_created_above]
+
+*Singapore*
+    aws cloudformation package \
+    --region ap-southeast-1 \
+    --template-file wild-rydes-api.yaml \
+    --output-template-file wild-rydes-api-output.yaml \
+    --s3-bucket [bucket_name_you_created_above]
 
 If all went well, you should get a success message and instructions to deploy your new template.
 
@@ -318,36 +350,61 @@ Next, we need to spin up the resources needed to run our code and expose it as a
 <details>
 <summary><strong>CLI/CloudFormation step-by-step instructions (expand for details)</strong></summary>
 
-You can now take the newly generated template and use it to create resources in AWS. Go ahead and run the following CLI command:
+You can now take the newly generated template and use it to create resources in AWS.
+Go ahead and run the following CLI command:
 
+*Ireland*
     aws cloudformation deploy \
     --region eu-west-1 \
     --template-file wild-rydes-api-output.yaml \
     --stack-name will-rydes-api \
     --capabilities CAPABILITY_IAM
 
+*Singapore*
+    aws cloudformation deploy \
+    --region ap-southeast-1 \
+    --template-file wild-rydes-api-output.yaml \
+    --stack-name will-rydes-api \
+    --capabilities CAPABILITY_IAM
 
-This command may take a few minutes to run. In this time you can hop over to the console and watch all of the resources being created for you. Open up the AWS Console in your browser and check you are in the correct region (EU Ireland) before selecting the CloudFormation service from the menu. You should your stack listed as `wild-rydes-api`. You can click on this stack to see all of the resources it created.
 
-***[TODO: Image of Cloudformation here with key areas marked]***
+This command may take a few minutes to run. In this time you can hop over to the console
+and watch all of the resources being created for you Open up the AWS Console in your browser
+and check you are in the correct region (EU Ireland) before selecting the CloudFormation
+service from the menu. You should your stack listed as `wild-rydes-api`. You can click
+on this stack to see all of the resources it created.
 
-Once your stack has successfully completed, navigate to the Outputs tab of your stack where you will find an API URL. Take note of this URL as we will need it later to configure our UI.
+Once your stack has successfully completed, navigate to the Outputs tab of your stack
+where you will find an API URL. Take note of this URL as we will need it later to configure
+the website UI in the next module.
 
-***[TODO: Screenshot of the Resources tab]***
-
-You can also take a look at some of the other resources created by this template. Under the Resources section of the Cloudformation stack you can click on the Lambda functions and the API Gateway. Note how the gateway was configured with the `GET` method calling our `TicketGetFunction` Lambda function and the `POST` method calling our `TicketPostFunction` Lambda function. You can also see that an empty DynamoDB table was set up as well as IAM roles to allow our functions to speak to DynamoDB.
+You can also take a look at some of the other resources created by this template. Under
+the Resources section of the Cloudformation stack you can click on the Lambda functions
+and the API Gateway. Note how the gateway was configured with the `GET` method calling
+our `TicketGetFunction` Lambda function and the `POST` method calling our `TicketPostFunction`
+Lambda function. You can also see that an empty DynamoDB table was set up as well as IAM
+roles to allow our functions to speak to DynamoDB.
 
 </details>
 
-You can confirm that your API is working by copying your API URL and appending `/ticket` to it before navigating to it into your browser. It should return the following:
+You can confirm that your API is working by copying your API URL and appending `/ticket`
+to it before navigating to it into your browser. It should return the following:
 
     {"Items":[],"Count":0,"ScannedCount":0}
 
-***[TODO: Screenshot of the API in a browser]***
+You can also run the health check by copying your API URL and appending `/health`
+to it before navigating to it into your browser. It should return the following:
+
+    {
+        "region":"eu-west-1",
+        "message":"Successful response reading from DynamoDB table."
+    }
 
 ## Completion
 
-Congratulations! You have successfully deployed an API running on AWS Lambda and API Gateway by using CloudFormation. In the next module you will deploy a UI that uses this API to expose it to our users.
+Congratulations! You have successfully deployed an API running on Amazon API Gateway,
+AWS Lambda and Amazon DynamoDB by using CloudFormation. In the next module you will deploy
+a web UI that uses this API to expose it to our users.
 
 </details>
 

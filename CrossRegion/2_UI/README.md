@@ -51,6 +51,20 @@ Take note of the values for each of these, you will need them in the next steps.
 
 ## 2. Configure Federated Identities with Cognito
 
+For authenticating users you can either choose to use Facebook or Amazon. Both
+will require that you sign up for a developer account and register your
+application.
+
+<details>
+<summary><strong>Set up with Amazon</strong></summary>
+
+TODO
+
+</details>
+
+<details>
+<summary><strong>Set up with Facebook</strong></summary>
+
 You will need to set up a Facebook Web Application so that your riders can log in
 to the UI and submit their Unicorn issues.
 
@@ -103,21 +117,22 @@ primary region (EU Ireland).
 5. Select the Facebook tab, hit Unlock then specify your Facebook App ID
 6. Save Changes at the bottom of the page.
 
+</details>
+
 ## 3. Configure and build the application code
 
 Our application will need to know the location of the API in order to push and
-pull data from it. In addition, the application will need to know our Facebook
-App ID and Cognito Identity Pool ID so it can authenticate our users. See the
-Prerequisites section at the beginning of this guide if you have not already
-setup your Facebook Developer account and App ID.
+pull data from it. In addition, the application will need to know our
+Facebook/Amazon App ID and Cognito Identity Pool ID so it can authenticate our
+users. See the Prerequisites section at the beginning of this guide if you
+have not already setup your Facebook/Amazon Developer account and App ID.
 
-***TODO: Detailed instructions on how to retrieve ticketAPI ***
-***TODO: Improve Facebook instructions***
+***TODO: Detailed instructions on how to retrieve ticketAPI***
 
 All of these attributes must be configured in
 `/src/environments/environment.ts`. Open up your favorite text editor and edit
-this file before moving on. Please be sure to address all TODO instructions inside
-this file.
+this file before moving on. Please be sure to address all TODO instructions
+inside this file.
 
 You will need Node Package Manager (NPM) installed on your local machine in
 order to build the application. You can follow instructions TODO to set up a
@@ -145,12 +160,13 @@ Note that you must replace `[bucket-name]` in this command with the bucket
 name output from the CloudFormation stack in step 1.
 
 To confirm everything went as expected, navigate to your bucket URL. You
-should see a simple ticketing application. Go ahead and login using Facebook
-and submit a couple of tickets to check that everything is working.
+should see a simple ticketing application. Go ahead and login using either
+Facebook or Amazon depending on what you configured then submit a couple of
+tickets to check that everything is working.
 
 If you have trouble in this step, double check your configured settings and
-Facebook App configuration. Note that if you change any of the settings you
-will need to build and deploy the code again.
+Facebook/Amazon Developer account configuration. Note that if you change any
+of the settings you will need to build and deploy the code again.
 
 ![App Screenshot](images/app-screenshot.png)
 

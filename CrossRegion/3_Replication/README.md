@@ -1,25 +1,19 @@
 # Replicate to a second region
 
 Now that we have the app set up, lets replicate this in a second region so we
-have something to failover to.
+have something to failover to. For this workshop, we will focus on the API
+layer down, leaving the UI in a single region.
 
-## 1. Replicate the primary stack
+## 1. Replicate the primary API stack
 
-For the first part of this module, all of the steps will be the same but
-performed in our secondary region (AP Singapore) instead. Please follow
-modules 1 and 2 again. You can use the CloudFormation templates from those
-modules to make this quicker.
+For the first part of this module, all of the steps will be the same as module
+1 but performed in our secondary region (AP Singapore) instead. Please follow
+module 1 again then come back here. You can use the CloudFormation templates
+from that module to make this quicker.
 
-Previous modules:
-1. [Build an API layer](../1_API/README.md)
-2. [Build a UI layer](../2_UI/README.md)
+* [Build an API layer](../1_API/README.md)
 
-Once you are done, verify that you get a second URL (the S3 bucket URL) for
-your application and that there are no tickets displayed in this second copy
-of your application yet. If you see the tickets you created in the first
-region then something has gone wrong and you are not using a completely
-separate stack which means there is a dependency on the primary region. You
-will need to resolve this before moving on.
+Once you are done, verify that you get a second API URL for your application.
 
 ## 2. Replicating the data
 
@@ -33,6 +27,10 @@ table. This allows us to monitor these changes and push then to our second
 DynamoDB table. We will be using AWS Lambda to do this since we can easily
 connect this to our stream and we don't have to setup any additional
 infrastructure.
+
+During module 1, you actually already deployed a Lamba function that we can
+use to push the data. All we need to do now is hook this up to DynamoDB
+Streams.
 
 
 ## 3. Configure Route53 failover
@@ -236,7 +234,8 @@ ping health check Lambda function is served from.
 ![Route53 Health check configuration](images/create-health-check.png)
 
 Once configured, wait a few minutes and you should see your health check go
-green and say Healthy in the console.
+green and say Healthy in the console. Make sure this is green and healthy
+before proceeding.
 
 ![Route53 Health check configuration](images/created-health-check.png)
 
@@ -261,9 +260,13 @@ record type for your Ireland record. Turn on both Evaluate Target Health and
 Associate with Health Check then select the `ireland-api` health check you
 created previously. Hit **Save Record Set**.
 
-You will now want to repear this step again but for your Singapore domain. You
-will select the Secondary record type and not associate with a health check
-this time.
+You will now want to repeat this step again but for your Singapore domain. You
+will select the Secondary record type and *not* associate with a health check
+this time. Note that if you were to associate a health check with the second
+region it would also be taken into consideration and if the
+health check was failing in both regions then no failover would occur. By not
+associating the second region with a health check, it will always be presumed
+to be healthy.
 
 Your completed DNS configuration should look something like the screenshot
 below.

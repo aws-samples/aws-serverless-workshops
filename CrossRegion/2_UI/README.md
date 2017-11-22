@@ -126,7 +126,7 @@ inside this file.
 
 You will need Node Package Manager (NPM) installed on your local machine (check out
 the workshop pre-requisites here: [Pre-requisites](../README.md)) in order to build the
-application. You can follow instructions [Dev Instance Setup](../README_InstallDevDependencies.MD) to
+application. You can follow instructions [Dev Instance Setup](../README_InstallDevDependencies.md) to
 set up a dev instance. Once you have created your dev instance build your project by
 executing the following:
 

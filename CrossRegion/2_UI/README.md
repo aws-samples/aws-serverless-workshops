@@ -47,6 +47,8 @@ the Outputs tab. This time you will see two keys:
 
 Take note of the values for each of these, you will need them in the next steps.
 
+</details>
+
 ## 2. Configure Federated Identities with Cognito
 
 You will need to set up a Facebook Web Application so that your riders can log in

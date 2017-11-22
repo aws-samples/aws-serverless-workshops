@@ -15,13 +15,11 @@ import {AuthGuard} from './shared/guard/auth.guard';
 import {ConfigGuard} from './shared/guard/config.guard';
 import {ToastModule} from 'ng2-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {AmazonLoginComponent} from './components/amazon-login/amazon-login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    AmazonLoginComponent
+    LoginComponent
   ],
   imports: [
     BrowserModule,

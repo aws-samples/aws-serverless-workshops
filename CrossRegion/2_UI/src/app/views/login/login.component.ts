@@ -1,12 +1,10 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {
-  AmazonLoginCallback, CognitoLoginService, CognitoService,
+  CognitoLoginService, CognitoService,
   FacebookCallback
 } from '../../services/cognito.service';
 import {Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
-import {AmazonAuthResponse} from '../../components/amazon-login/amazon-login.component';
-import {environment} from '../../../environments/environment';
 
 declare var AWS: any;
 
@@ -15,24 +13,19 @@ declare var AWS: any;
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, FacebookCallback, AmazonLoginCallback {
+export class LoginComponent implements OnInit, FacebookCallback {
 
-  /**
-   * used in view.
-   * @type {string}
-   */
-  private myClientId: string = environment.amazonLoginId;
 
   constructor(private toastr: ToastsManager, vRef: ViewContainerRef,
               public router: Router,
-              public cognitoLoginService: CognitoLoginService,
-              public cognitoService: CognitoService) {
+              public cognitoLoginService: CognitoLoginService) {
 
     this.toastr.setRootViewContainerRef(vRef);
 
   }
 
   ngOnInit() {
+
   }
 
   loginWithFacebook() {
@@ -51,21 +44,5 @@ export class LoginComponent implements OnInit, FacebookCallback, AmazonLoginCall
     }
   }
 
-  onAmazonAuthResponse(amazonAuthResponse: AmazonAuthResponse) {
-    this.cognitoLoginService.authenticateWithAmazon(amazonAuthResponse, this);
-
-  }
-
-  amazonLoginCallback(message: string, result: any) {
-
-    console.log('LoginComponent: amazonLoginCallback --> result ' + JSON.stringify(result));
-
-    if (message === null) {
-      this.router.navigate(['/ticket']);
-
-    } else {
-      this.toastr.error(message, 'Error!');
-    }
-  }
 
 }

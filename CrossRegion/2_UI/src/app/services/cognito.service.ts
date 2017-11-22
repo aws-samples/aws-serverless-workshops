@@ -44,6 +44,12 @@ export class CognitoService {
     getCognitoIdentity(): string {
         return AWS.config.credentials.identityId;
     }
+
+  public static isLoggedin(){
+
+    return AWS.config.credentials;
+
+  }
 }
 
 @Injectable()

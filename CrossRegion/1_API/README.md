@@ -141,7 +141,7 @@ editor you see on your screen:
 
 [TicketGetFunction](tickets-get.js)
 
-Next, under `Environment Variables`, enter they key **TABLE_NAME** and the value **SXRTickets**
+Next, under `Environment Variables`, enter the key **TABLE_NAME** and the value **SXRTickets**
 
 *Note that entering these Environment Variables exactly as shown is very important -
 your function will not work - case matters*

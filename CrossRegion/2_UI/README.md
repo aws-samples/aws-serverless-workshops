@@ -16,16 +16,6 @@ API. As in *Module 1*, a CloudFormation template is available to create all the
 necessary resources for us. This template does not rely on any local code so
 no package step is needed.
 
-You may deploy this CloudFormation template via the AWS Console, or via the AWS CLI
-
-<details>
-<summary><strong>Console step-by-step instructions for CloudFormation) (expand for details)</strong></summary>
-
-</details>
-
-<details>
-<summary><strong>Command Line step-by-step instructions for CloudFormation (expand for details)</strong></summary>
-
 You can go ahead and deploy this template in the primary region using the `aws
 cloudformation deploy` CLI command as before.
 
@@ -39,7 +29,7 @@ For the Ireland region, the full command will look like:
 
 Again, you can confirm that this was created successfully and see the resource
 in the AWS Console. Navigate to the CloudFormation service and take a look at
-the Outputs tab. This time you will see two keys:
+the Outputs tab. This time you will see three keys:
 
 * `CognitoIdentityPoolId`
 * `BucketName`
@@ -117,9 +107,10 @@ All of these attributes must be configured in
 this file before moving on. Please be sure to address all TODO instructions inside
 this file.
 
-You will need Node Package Manager (NPM) installed on your local machine in
-order to build the application. You can follow instructions TODO to set up a
-dev instance. Once you have created your dev instance build your project by
+You will need Node Package Manager (NPM) installed on your local machine (check out
+the workshop pre-requisites here: [Pre-requisites](../README.md)) in order to build the
+application. You can follow instructions [Dev Instance Setup](../README_InstallDevDependencies.MD) to
+set up a dev instance. Once you have created your dev instance build your project by
 executing the following:
 
 - navigate to the root folder of the ui project, i.e. 2_UI.

@@ -278,6 +278,8 @@ your domain (remember to use HTTPS). Go to the `/health` path and notice how
 it always returns the Ireland region indicating that our Primary region is
 always being served.
 
+![Ireland health check response](images/ireland-health-response.png)
+
 ## Completion
 
 Congratulations you have configured a multi-region API and set up a a

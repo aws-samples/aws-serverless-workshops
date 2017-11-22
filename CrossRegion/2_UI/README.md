@@ -107,11 +107,11 @@ All of these attributes must be configured in
 this file before moving on. Please be sure to address all TODO instructions inside
 this file.
 
-You will need Node Package Manager (NPM) installed on your local machine (check out
-the workshop pre-requisites here: [Pre-requisites](../README.md)) in order to build the
-application. You can follow instructions [Dev Instance Setup](../README_InstallDevDependencies.md) to
-set up a dev instance. Once you have created your dev instance build your project by
-executing the following:
+You will need Node Package Manager (NPM) installed on your local machine
+(check out the [workshop prerequisites](../README.md#prerequisites)) in order
+to build the application. You can follow instructions [Dev Instance
+Setup](../README_InstallDevDependencies.md) to set up a dev instance. Once you
+have created your dev instance build your project by executing the following:
 
 - navigate to the root folder of the ui project, i.e. 2_UI.
 - run `npm install` to install project dependencies

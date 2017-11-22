@@ -140,7 +140,7 @@ working.
 
 If you have trouble in this step, double check your configured settings and
 Facebook Developer account configuration. Note that if you change any
-of the settings you will need to run *npm run build* again and then copy the website
+of the settings you will need to run *npm run build* again and then upload the website
 code to your S3 bucket again.
 
 ![App Screenshot](images/app-screenshot.png)

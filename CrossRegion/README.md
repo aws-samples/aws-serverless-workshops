@@ -1,5 +1,4 @@
-# Module: Build a Multi-Region Serverless Application for Resilience and High
-Availability
+# Module: Build a Multi-Region Serverless Application for Resilience and High Availability
 
 In this workshop you will use Amazon API Gateway, AWS Lambda and Amazon
 DynamoDB to build a Customer Ticketing application so we can provide a great
@@ -15,8 +14,8 @@ The Wild Rydes team wants this application to meet the following requirements:
    disaster. The RTO[1] and RPO[2] must both be less than 15 minutes.
 
 [1] RTO: Recovery time objective – the targeted duration of time and a service
-level within which a business process must be restored after a disaster. [2]
-RPO: Recovery point objective –  the maximum targeted period in which data
+level within which a business process must be restored after a disaster.
+[2] RPO: Recovery point objective –  the maximum targeted period in which data
 might be lost from a service due to a major incident.
 
 ## Architecture Overview

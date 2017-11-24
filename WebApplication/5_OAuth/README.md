@@ -277,6 +277,8 @@ Using the CloudFront console, create a new Distribution for web content specifyi
 
     ![Create CloudFront distribution](../images/create-cloudfront-distribution.png)
 
+1. Under **Distrubution Settings** for **Price Class**, select **Use Only US, Canada and Europe**.
+
 1. Click **Create Distribution** at the bottom of the page.
 
 1. Creating a global distribution can take some time. Let CloudFront do its work in the background and move on the next step. We will come back to get the distribution endpoint at a later step.

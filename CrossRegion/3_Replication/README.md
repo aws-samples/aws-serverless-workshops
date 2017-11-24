@@ -202,7 +202,8 @@ nameservers.
 Select **Create Record Set** and create a new CNAME record for `ireland.`
 pointing to the Target Domain Name for your corresponding API Gateway Custom
 Domain from the previous step. You can set the TTL to 1m (60 seconds) for the
-purpose of this workshop.
+purpose of this workshop.  We recommend setting ALL DNS entries to 1m (60 seconds)
+as the TTL.
 
 ![Create regional subdomain record](images/ireland-subdomain-record.png)
 
@@ -239,7 +240,7 @@ handling traffic under normal conditions.
 
 Navigate over to the **Route53** service and choose **Health checks**. Create
 a new health check, give it an easily identifyable name e.g. `ireland-api`.
-Choose to monitor and endpoint and specify the endpoint by domain name.
+Under *Monitor an endpoint*, specify the endpoint by domain name.
 
 Since our API is protected by a TLS certificate you will need to change the
 port to 443 and the protocol to HTTPS.
@@ -248,6 +249,12 @@ You will also want to specify `/health` as the path as this is where our deep
 ping health check Lambda function is served from.
 
 ![Route53 Health check configuration](images/create-health-check.png)
+
+Before saving this health check, expand the *Advanced configuration* section, and
+change the *Request Interval* to `Fast (10 seconds)` and set the failure threshold
+from *3* down to *1*.  This will greatly speed up the time you need for testing
+and failing over (this is not a recommended production configuration but it is
+useful for speeding up the remainder of this Workshop).
 
 Once configured, wait a few minutes and you should see your health check go
 green and say Healthy in the console. Make sure this is green and healthy

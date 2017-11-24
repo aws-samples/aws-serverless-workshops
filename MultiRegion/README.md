@@ -12,11 +12,10 @@ The Wild Rydes team wants this application to meet the following requirements:
    have an operations team to manage our infrastructure!)
 4. The application must be able to failover to another region in the case of a
    disaster. The **RTO** and **RPO** must both be less than 15 minutes.
-
-* **RTO:** Recovery time objective – the targeted duration of time and a service
-level within which a business process must be restored after a disaster.
-* **RPO:** Recovery point objective –  the maximum targeted period in which data
-might be lost from a service due to a major incident.
+    * **RTO:** Recovery time objective – the targeted duration of time and a service
+    level within which a business process must be restored after a disaster.
+    * **RPO:** Recovery point objective –  the maximum targeted period in which data
+    might be lost from a service due to a major incident.
 
 ## Architecture Overview
 

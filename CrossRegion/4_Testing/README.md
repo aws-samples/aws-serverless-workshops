@@ -1,7 +1,7 @@
 # Testing failover
 
 It is one thing to configure failover but to have real confidence in our
-setup, we need to test it. In this module we will artifically break our
+setup, we need to test it. In this module we will artificially break our
 primary region and observe our failover in action.
 
 To demonstrate this we will replicate a scenario where a developer
@@ -32,6 +32,8 @@ Now head over to **Route53** and select **Health checks**. Within a few
 minutes, your health check should turn from green to red and display a
 failure.
 
+
+
 ![Failed health check](images/failed-health.png)
 
 Since your DNS records are configured to use this health check, Route53 should
@@ -45,6 +47,9 @@ served and that failover has occurred. You're UI should also continue to
 function and you should still be able to view and create tickets.
 
 ![Failed over health check response](images/failed-over-response.png)
+
+Don't forget to switch your API Gateway back to the *TicketGetFunction* once
+you are done testing failover!
 
 ## Completion
 

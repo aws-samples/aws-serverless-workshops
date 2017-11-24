@@ -243,8 +243,8 @@ your primary region
 ## 5. Test your API Gateway Endpoints
 
 While still in API Gateway, select **Stages** from the left menu under your
-API Endpoint.  Next, expand "prod", and select `GET` from the *ticket*
-resource.
+API Endpoint.  Next, expand "prod", and select `POST` or `GET` from the *ticket*
+resource (either choice will provide the same API URL)
 
 ![Test the API Gateway EndPoint](images/test-api-gateway-endpoint.png)
 
@@ -269,8 +269,8 @@ instead.  You should get something like the following in your browser:
 <summary><strong>CLI step-by-step instructions (expand for details)</strong></summary>
 
 
-Navigate to the `api` folder within your local Git repository and take a look at the
-files within. You will see three files
+Navigate to the `1_API` folder within your local Git repository and take a look at the
+files within. You will see several files - here are descriptions of each:
 
 * `wild-rydes-api.yaml` – This is a CloudFormation template (using SAM syntax) that
   describes the infrastructure needed to for the API and how each component should be configured.

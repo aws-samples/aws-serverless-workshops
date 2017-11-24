@@ -103,7 +103,7 @@ Prerequisites section at the beginning of this guide if you have not already
 setup your Facebook Developer account and App ID.
 
 All of these attributes must be configured in
-`/src/environments/environment.ts`. Open up your favorite text editor and edit
+`2_UI/src/environments/environment.ts`. Open up your favorite text editor and edit
 this file before moving on. Please be sure to address all TODO instructions inside
 this file.
 

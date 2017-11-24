@@ -16,7 +16,9 @@ export const environment = {
 
   // TODO: The API URL is available in the outputs section of the cloud formation template.
   // cloud front NOTE: don't forget trailing "/"  For example:
-  // https://api.example.com/prod/
+  // Note that when you test the UI for the first time, the ticketAPI URL will have /prod/
+  // When you update this file with the final ticketAPI URL, it will NOT have /prod/ at the end
+  // https://api.example.com/
   ticketAPI: ''
 
 };

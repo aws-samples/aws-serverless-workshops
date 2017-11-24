@@ -308,7 +308,7 @@ Now that we have completed failover testing, you will need to change the API
 endpoint in your *2_UI/src/environments/environments.ts* file to use our newly
 created DNS name for our API endpoint.
 
-Edit the *environments.ts* file and use `api.example.com/prod/` (substituting your
+Edit the *environments.ts* file and use `https://api.example.com/prod/` (substituting your
 own domain) instead of the region specific name you used when setting up and
 testing the UI in the second module.
 

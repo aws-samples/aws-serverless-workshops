@@ -8,8 +8,8 @@ layer down, leaving the UI in a single region.
 
 For the first part of this module, all of the steps will be the same as module
 1 but performed in our secondary region (AP Singapore) instead. Please follow
-module 1 again then come back here. You can use the CloudFormation templates
-from that module to make this quicker.
+module 1 again then come back here. We suggest using the CloudFormation templates
+from that module to make this much quicker the second time.
 
 * [Build an API layer](../1_API/README.md)
 
@@ -28,9 +28,35 @@ DynamoDB table. We will be using AWS Lambda to do this since we can easily
 connect this to our stream and we don't have to setup any additional
 infrastructure.
 
-During module 1, you actually already deployed a Lamba function that we can
+During module 1, you actually already deployed a Lambda function that we can
 use to push the data. All we need to do now is hook this up to DynamoDB
 Streams.
+
+In your *source* region DynamoDB, select the SXRTickets table
+
+![Select SXRTickets DynamoDB Source Region](images/select-ddb-source-table.png)
+
+Then, select *Triggers* from the tabs at the top of the screenshot
+Choose **Create Trigger** and then select *Existing Lambda Function*
+
+![Select SXRTickets DynamoDB Triggers](images/select-ddb-triggers.png)
+
+Choose *TicketReplicateFunction* as the Function, reduce the batch size to *1*, ensure
+the *Enable* box is checked and then click **Create**
+
+![Create Trigger Dialogue](images/ddb-create-trigger.png)
+
+Ensure you have successfully created the trigger - you should see something like this
+in your browser:
+
+![Create Trigger Dialogue](images/ddb-trigger-enabled.png)
+
+Now that you have created the replication trigger, you can test to see if it is working
+by creating a new ticket in the UI you deployed in the second module.  Then, look at
+the DynamoDB table in your *secondary* region, and see if you can see the record
+for the ticket you just created:
+
+![Show replicated ticket in DDB](images/ddb-show-replicated-ticket.png)
 
 
 ## 3. Configure Route53 failover

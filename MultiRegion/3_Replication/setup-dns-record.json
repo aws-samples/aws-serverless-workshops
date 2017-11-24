@@ -1,0 +1,16 @@
+{
+  "Changes": [
+    {
+      "Action": "CREATE",
+      "ResourceRecordSet": {
+        "Name": "simplesurveyservice.com",
+        "Type": "A",
+        "AliasTarget": {
+          "DNSName": "d-67kz8jv3kb.execute-api.us-west-2.amazonaws.com",
+          "HostedZoneId": "Z2KETINVX67IQG",
+          "EvaluateTargetHealth": false
+        }
+      }
+    }
+  ]
+}

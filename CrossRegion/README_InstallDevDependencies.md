@@ -1,15 +1,27 @@
 ## About
 
-This README provides instructions on setting up a dev EC2 instance
+This README provides instructions on setting up a dev environment
 that you can use to clone the project, edit project files, build the UI
-and deploy the application.
+and deploy the application. 
 
-We will be using the following two regions for this workshop. Please remember 
-these and check before creating resources to ensure you are in the correct region:
-* Primary: `eu-west-1` (Ireland)
-* Secondary: `ap-southeast-1` (Singapore)
+We recommend you use the given AMI with the necessary dependencies, i.e. git, 
+node/npm, angular cli already installed and configured.
 
-## EC2 dev instance configuration.
+Our dev environment instance will be in `eu-west-1` (Ireland)
+
+## Using an AMI
+
+Make sure you are in eu-west-1 region. Launch an EC2 instance by navigating 
+to the "Community AMI"s in step 1 of EC2 launch wizard. In the "Search 
+community AMIs" text box enter "sxr-dev-instance". For this instance a 
+t2.micro will suffice. Launch the instance in a public subnet with a
+security group allowing ssh from your ip address and a role allowing
+s3 access (sample policy below).
+
+
+## EC2 Dev Instance Configuration.
+
+If you would really like to set up your own instance from scratch you can execute the following instructions.
 
 For this dev instance
 - a t2.micro will be fine.

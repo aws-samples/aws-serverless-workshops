@@ -302,9 +302,9 @@ Now that we have completed failover testing, you will need to change the API
 endpoint in your *2_UI/src/environments/environments.ts* file to use our newly
 created DNS name for our API endpoint.
 
-Edit the *environments.ts* file and use `api.example.com/prod/` instead of the
-region specific name you used when setting up and testing the UI in the second
-module.
+Edit the *environments.ts* file and use `api.example.com/prod/` (substituting your
+own domain) instead of the region specific name you used when setting up and
+testing the UI in the second module.
 
 Ensure you run `npm run build` from the *2_UI* directory, and then upload the */dist*
 contents to the S3 bucket using the same *aws s3* command you used in the second

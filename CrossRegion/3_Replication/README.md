@@ -91,11 +91,6 @@ Navigate over to the Route53 Console and under **Registered domains** select
 an available domain before specifying your contact details and confirming the
 purchase.
 
-<details>
-<summary>
-    <strong>Console step-by-step instructions (expand for details)</strong>
-</summary>
-
 1. Navigate to the **Route53** service page
 2. Navigate to **Registered domains**
 3. Select **Register domain**
@@ -114,8 +109,6 @@ purchase.
    verification before proceeding.
 7. Click **Complete Purchase**
 
-</details>
-
 ### 3.2 Configure a certificate in Certificate Manager in each region
 
 We will need an SSL certificate in order to configure our domain name with API
@@ -130,11 +123,6 @@ both `example.com` and `*.example.com`. You will have to approve the request
 via email and see it as `Issued` in the console before proceeding.
 
 Make sure to follow this same process for your second region.
-
-<details>
-<summary>
-    <strong>Console step-by-step instructions (expand for details)</strong>
-</summary>
 
 1. Ensure you are in your primary region
 2. Navigate to the **Certificate Manager** service page
@@ -152,9 +140,6 @@ Make sure to follow this same process for your second region.
 7. Once you have confirmed your certificate, it will appear as `Issued` in
    your list of certificates.
 8. Repeat steps 2-7 again in your second region
-
-</details>
-
 
 ### 3.3 Configure custom domains on each API, in each region
 

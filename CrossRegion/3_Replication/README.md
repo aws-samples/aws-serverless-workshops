@@ -58,6 +58,9 @@ for the ticket you just created:
 
 ![Show replicated ticket in DDB](images/ddb-show-replicated-ticket.png)
 
+Note that sometimes you need to create two tickets in order for the
+*TicketReplicateFunction* to fully initialize, so if you don't see anything in the
+Singapore DynamoDB table, try creating a second ticket and then check again.
 
 ## 3. Configure Route53 failover
 

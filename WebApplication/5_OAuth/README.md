@@ -9,7 +9,8 @@ You'll configure your Cognito User Pool from module #2 to enable OAuth 2.0 flows
 The diagram above shows how the component of the new third party application interact with our current Wild Rydes architecture. The web application is deployed in an S3 bucket. The application uses the Cognito User Pools built-in UI to start an implicit grant OAuth 2.0 flow and authenticate the user. Once the Unicorn user is authenticated, the client application receives an identity and access token for the Unicorn. Tokens for Unicorns include an additional `Unicorn` claim that gives them access to the new API. In API Gateway, a custom authorizer checks for the `Unicorn` claim in the JWT access token produced by Cognito and passes the unicorn name to the backend Lambda function. The backend Lambda function uses the unicorn name from the access token to query the rides table in DynamoDB.
 
 ### Prerequisites
-This module depends on all of the previous four modules in the Wild Rydes workshop. To make it easier to get started, we have prepared a CloudFormation template that can launch the complete stack for you.
+
+This module depends on all of the previous four modules in the Wild Rydes workshop. To make it easier to get started, we have prepared a CloudFormation template that can launch the complete stack for you. If you have skipped the earlier modules, and deploying using the CloudFormation template, clone the aws-serverless-workshop repository to your local working environment.
 
 If you have previously created resources from modules #1 to #4 in your account, and would still like to start fresh with the CloudFormation template below, make sure you first follow the [cleanup steps](../9_CleanUp/).
 
@@ -175,7 +176,7 @@ In the API Gateway console, open the `WildRydes` API we created in module #4 and
 
 1. Configure the new method as a **GET** and confirm the settings with the small checkmark button next to the dropdown.
 
-1. In the method integration settings screen, select **Lambda Function** as the **Integration Type**, check the **Use Lambda Proxy Integration** checkbox, then select your Lambda region and use **ListUnicornRides** as the function name.
+1. In the method integration settings screen, select **Lambda Function** as the **Integration Type**, check the **Use Lambda Proxy Integration** checkbox, then select your Lambda region and use **ListUnicornRides** (careful: NOT **ListUnicornAuthorizer**) as the function name.
 
     ![Configure List Rides integration](../images/list-rides-api-integration.png)
 
@@ -250,7 +251,7 @@ Using the CloudFront console, create a new Distribution for web content specifyi
 
     ![Update bucket policy screenshot](../images/update-bucket-policy.png)
 
-1. Choose **Save** to apply the new policy.
+1. Choose **Save** to apply the new policy. You will see a warning indicating `This bucket has public access`. This is expected.
 
 1. Next, choose the **Properties** tab.
 
@@ -268,7 +269,7 @@ Using the CloudFront console, create a new Distribution for web content specifyi
 
 1. In the **CloudFront Distributions** page, click **Create Distribution**.
 
-1. Select **Web** as the delivery method, click **Get Started**.
+1. For the delivery method, under **Web** section, click **Get Started**.
 
 1. In the **Origin Domain Name** field, paste the URL for the S3 static website we just created and **/** as the origin path. **Do not select the bucket from dropdown list, paste the full website url including the http:// prefix. The origin type should be `custom`, not `s3`**.
 

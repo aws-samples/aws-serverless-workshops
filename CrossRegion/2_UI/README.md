@@ -104,8 +104,12 @@ setup your Facebook Developer account and App ID.
 
 All of these attributes must be configured in
 `2_UI/src/environments/environment.ts`. Open up your favorite text editor and edit
-this file before moving on. Please be sure to address all TODO instructions inside
-this file.
+this file before moving on. Please be sure to address all of the parameters the file
+requires or you will fail.  If you used the console instructions to deploy Module 1,
+then you can obtain the API Gateway Endpoint using the same method you used when you
+tested at the end of the previous module.  Ensure you do *NOT* append `ticket` to
+the end of the URL but make sure you do have a `/` at the end like the comments in
+the file request.
 
 You will need Node Package Manager (NPM) installed on your local machine
 (check out the [workshop prerequisites](../README.md#prerequisites)) in order

@@ -81,11 +81,11 @@ Route53 back to to delegate the zone with your existing registrar.
 
 If using an existing domain name, ensure there is no CloudFront distribution
 already setup for the domain. You will also need to ensure that your email
-contacts are configured and up-to-date on the since you will need to receive
-mail in the next step.
+contacts are configured and up-to-date on the domain's SOA/registration records
+since you may need to receive an approval e-mail in the next step.
 
 For the remainder of this workshop we will use `example.com` as to
-demonstrate. Please substitute your own domain into any commands
+demonstrate. Please substitute your own domain into any commands or configurations.
 
 #### High-level instructions
 
@@ -123,7 +123,9 @@ Navigate over to the *Certificate Manager* service and request a new
 certificate for your domain. You will specify the domain name you just created
 (or repurposed). Make sure to request a wildcard certificate which includes
 both `example.com` and `*.example.com`. You will have to approve the request
-via email and see it as `Issued` in the console before proceeding.
+via email and see it as `Issued` in the console before proceeding.  You may also
+approve the certificate request by creating a special DNS record  - follow those
+directions if you choose/need to go this route to get the certificate approved.
 
 Make sure to follow this same process for your second region.
 
@@ -173,7 +175,7 @@ Navigate over to the **API Gateway** service, choose **Custom Domain Names**
 then go ahead and configure a custom domain name for `api.example.com`. Make
 sure to choose the **Regional** endpoint configuration. For the Base Path
 Mappings you will want to choose `/` as the path, your API as the destination
-and `Prod` as the stage then hit **Save**. If you get an error about rate
+and `prod` as the stage then hit **Save**. If you get an error about rate
 limits, wait a minute before attempting to create again.
 
 ![Custom API Gateway domain](images/custom-domain.png)
@@ -221,8 +223,6 @@ configured. Notice how we're explicitly using HTTPS. You will get a gateway
 error if you try to use HTTP. It may take a few minutes for your records to
 become active so check back later if you do not get a response as this must
 work in order for your health check to function.
-
-***[TODO: screenshot of response]***
 
 ### 3.4 Configure a health check for the primary region
 
@@ -283,13 +283,12 @@ record type for your Ireland record. Turn on both Evaluate Target Health and
 Associate with Health Check then select the `ireland-api` health check you
 created previously. Hit **Save Record Set**.
 
-You will now want to repeat this step again but for your Singapore domain. You
-will select the Secondary record type and *not* associate with a health check
+You will now want to repeat this step again but for your Singapore domain. IMPORTANT:
+You will select the Secondary record type and *not* associate with a health check
 this time. Note that if you were to associate a health check with the second
-region it would also be taken into consideration and if the
-health check was failing in both regions then no failover would occur. By not
-associating the second region with a health check, it will always be presumed
-to be healthy.
+region it would also be taken into consideration and if the health check was
+failing in both regions then no failover would occur. By not associating the
+second region with a health check, it will always be presumed to be healthy.
 
 Your completed DNS configuration should look something like the screenshot
 below.

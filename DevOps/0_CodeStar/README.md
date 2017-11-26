@@ -1,5 +1,3 @@
-<!-- $theme: default -->
-
 # Module 0: CodeStar Project
 
 In this module you'll use the [AWS CodeStar](https://aws.amazon.com/codestar/) service to create a project that will include:
@@ -10,9 +8,9 @@ In this module you'll use the [AWS CodeStar](https://aws.amazon.com/codestar/) s
 
 ## CodeStar Overview
 
-<insert here>
+AWS CodeStar is a cloud-based service for creating, managing, and working with software development projects on AWS. You can quickly develop, build, and deploy applications on AWS with an AWS CodeStar project. An AWS CodeStar project creates and integrates AWS services for your project development toolchain. Depending on your choice of AWS CodeStar project template, that toolchain might include source control, build, deployment, virtual servers or serverless resources, and more.
 
-## Implementation Instructions
+## Environment Setup
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
@@ -31,18 +29,18 @@ This workshop can be deployed in any AWS region that supports the following serv
 - AWS Lambda
 - AWS X-Ray
 
-You can refer to the [region table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are N. Virginia, Ohio, N. California, Oregon, Ireland, Frankfurt, Singapore, and Sydney.
+This workshop is available in the **Ireland** and **Sydney** regions.
+
 
 Once you've chosen a region, you should deploy all of the resources for this workshop there. Make sure you select your region from the dropdown in the upper right corner of the AWS Console before getting started.
 
-![Region selection screenshot](images/region-selection.png)
 
 ### 1. Create a CodeStar project
 
-Use the AWS Console to create a CodeStar project called `uni-api` using the Node.js Lambda Webservice template.  Use an HTTP client to confirm that the API Gateway endpoint created by CodeStar returns the message, `{"Output":"Hello World!"}`, in it's response.
+**Goal**: Use the AWS Console to create a CodeStar project called `uni-api` using the **Node.js Lambda Webservice** template.  Use a web browser to confirm that the API Gateway endpoint created by CodeStar returns the message, `{"Output":"Hello World!"}`, in its response.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>HOW TO create a CodeStar Project (expand for details)</strong></summary><p>
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
@@ -62,9 +60,13 @@ Use the AWS Console to create a CodeStar project called `uni-api` using the Node
 
     ![CodeStar 4](images/codestar-4.png)
 
-1. Type `uni-api` as the **Project name** and click the **Create Project** button in the lower right corner of the browser window to proceed.
+1. Type `uni-api` as the **Project name**, select **AWS CodeCommit** as the repository, and click the **Next** button in the lower right corner of the browser window to proceed.
 
     ![CodeStar 5](images/codestar-5.png)
+
+1. Cick the **Create Project** button in the lower right corner of the browser window to proceed.
+
+    ![CodeStar 5b](images/codestar-5b.png)
 
 1. Your IAM user name (not pictured below) will be displayed.  Type a user **Display Name** and **Email** in the according text boxes and click the **Next** button in the lower right corner of the browser window to proceed.
 
@@ -92,33 +94,37 @@ Use the AWS Console to create a CodeStar project called `uni-api` using the Node
 
     ![CodeStar 10](images/codestar-10.png)
 
-1. Congratulations!  You have successfully create a serverless web service project using CodeStar.  In the next section, you will use a Git client to clone the repository to your workstation.
-
 </p></details>
+<p>
+
+Congratulations!  You have successfully create a serverless web service project using CodeStar.  In the next section, you will use a Git client to clone the repository to your workstation.
 
 ## Clone CodeCommit Git Repository
 
-From the CodeStar project dashboard for the `uni-api`, find the CodeCommit instructions to clone the Git repository to your local workstation.
+**Goal:** From the CodeStar dashboard for the `uni-api` project, find the CodeCommit instructions to clone the Git repository to your local workstation.
 
 <details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+<summary><strong>HOW TO clone the CodeCommit git repository (expand for details)</strong></summary><p>
 
 1. In the upper right corner of the CodeStar project dashboard browser window, click the **Connect Tools** button.
 
     ![CodeStar 11](images/codestar-11.png)
     
-    If you've used CodeStar before, the link to **Connect** is also available in the bottom left corner of the **Commit* project tile.
+    You can also click the **Connect** button in the bottom left corner of the **Commit history** project tile.
     
     ![CodeStar 11](images/codestar-11b.png)
     
-1. You can select instructions to clone the CodeCommit respository using **Visual Studio**, **Eclipse**, or **Command line tools**.  There are instructions for **macOS**, **Windows**, and **Linux** operating systems, as well as **HTTPS** and **SSH** access methods.  Follow the instructions to clone the Git repository to your local workstation.
+1. You can select instructions to clone the CodeCommit respository using **Visual Studio**, **Eclipse**, or **Command line tools**.  Click **See instructions** for instructions for cloning to **macOS**, **Windows**, and **Linux** operating systems.  Complete the instructions to clone the CodeCommit Git repository to your local workstation.
 
     ![CodeStar 12](images/codestar-12.png)
 
-1. Congratulations!  You have successfully cloned the `uni-api` project to your local workstation.  In future modules, you will use this local version to commit changes to the source code, push them to the project Git repository, and trigger automatic execution of the project's continuous delivery pipeline.
-
 </p></details>
+<p>
+
+Congratulations!  You have successfully cloned the `uni-api` project to your local workstation.  In future modules, you will use this local version to commit changes to the source code, push them to the project Git repository, and trigger automatic execution of the project's continuous delivery pipeline.
+
+
 
 ## Completion
 
-Congratulations!  You have successfully created a CodeStar project, tested the sample REST API, and cloned the project Git repository to your workstation.  In the next [Serverless Application Model (SAM) Module](../1_ServerlessApplicationModel), you will learn more about SAM and how to use it change and deploy the API.
+You have successfully created a CodeStar project, tested the sample REST API, and cloned the project Git repository to your workstation.  In the next [Serverless Application Model (SAM) Module](../1_ServerlessApplicationModel), you will learn more about SAM and how to use it test your API on your workstation.

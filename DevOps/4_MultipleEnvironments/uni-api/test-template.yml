@@ -16,7 +16,7 @@ Resources:
     Properties:
       FunctionName: uni-api-test-setup
       Runtime: nodejs6.10
-      CodeUri: test/
+      CodeUri: int-test/
       Handler: setup.lambda_handler
       Description: Setup integration test
       Timeout: 10
@@ -32,7 +32,7 @@ Resources:
     Properties:
       FunctionName: uni-api-test
       Runtime: nodejs6.10
-      CodeUri: test/
+      CodeUri: int-test/
       Handler: test.lambda_handler
       Description: Execute integration test
       Timeout: 60

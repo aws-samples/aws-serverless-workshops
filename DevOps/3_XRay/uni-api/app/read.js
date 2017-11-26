@@ -1,7 +1,6 @@
 'use strict';
 
-const AWSXRay = require('aws-xray-sdk');
-const AWS = AWSXRay.captureAWS(require('aws-sdk'));
+const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.TABLE_NAME;
 
@@ -29,8 +28,15 @@ var build_unicorn = function(event) {
 };
 
 var build_response = function(data) {
-  return {
-    statusCode: data.Item ? 200 : 404,
-    body: JSON.stringify(data.Item || {})
-  };
+  if (data.Item) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data.Item)
+    };
+  } else {
+    return {
+      statusCode: 404,
+      body: JSON.stringify({})
+    };
+  }
 };

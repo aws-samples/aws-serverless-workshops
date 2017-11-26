@@ -28,8 +28,15 @@ var build_unicorn = function(event) {
 };
 
 var build_response = function(data) {
-  return {
-    statusCode: data.Item ? 200 : 404,
-    body: JSON.stringify(data.Item || {})
-  };
+  if (data.Item) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data.Item)
+    };
+  } else {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({})
+    };
+  }
 };

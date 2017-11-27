@@ -64,7 +64,7 @@ to make this work.
 
 You will also need to either purchase a domain, or repurpose an existing
 unused domain you already own.  You will need to delegate DNS to Route53 if
-the domain is not already acquired through AWS.  You will also need access to
+the domain is not already acquired through AWS.  You may also need access to
 the email account associated with the domain name registration.
 
 ### Facebook Developer Account and App ID
@@ -101,6 +101,7 @@ separate instructions under
 [README_InstallDevDependencies.md](README_InstallDevDependencies.md). This
 also includes setting up an EC2 instance if you would prefer to do this in the
 Cloud rather than your local machine. Follow those and then come back here.
+We also offer the ability to use a pre-configuted EC2 instance as well.
 
 ### Browser
 

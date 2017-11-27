@@ -177,11 +177,7 @@ If you're unable to install SAM Local on your workstation, you may find it easie
  
 1. Use SSH client to connect to the instance.  If you are using Windows, use a client such as Putty or Bitvise (you can find instructions for connecting from Windows using Putty here: [Connecting to Your Linux Instance from Windows Using PuTTY](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html))
 
-1. Clone the Git repository to the instance using the HTTPS Git repository endpoint from your CodeStar repository.  For example:
-
-   ```bash
-   git clone https://git-codecommit.eu-west-1.amazonaws.com/v1/repos/uni-api
-   ```
+1. The Git repository has been cloned to the home directory on launch, `/home/ec2-user/uni-api`.
 
 ###### Setup Port Forwarding Configuration
 

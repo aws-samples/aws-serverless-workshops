@@ -20,7 +20,7 @@ Mappings:
       amiId: "ami-8c5db7ee"
 
 Resources:
-  Ec2Instance:
+  DeveloperInstance:
     Type: "AWS::EC2::Instance"
     Properties:
       ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", amiId]
@@ -33,6 +33,14 @@ Resources:
           GroupSet:
             - !Ref "SecurityGroup"
           SubnetId: !Ref "SubnetId"
+      UserData: !Base64
+        'Fn::Join':
+          - ''
+          - - |
+              #!/bin/bash -xe
+            - |
+            - !Sub 'sudo -H -u ec2-user bash -c "git clone https://git-codecommit.${AWS::Region}.amazonaws.com/v1/repos/uni-api /home/ec2-user/uni-api"'
+            - |+
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -69,5 +77,5 @@ Resources:
 
 Outputs:
   PublicDnsName:
-    Description: "Public DNS Name for EC2 Instance"
-    Value: !GetAtt Ec2Instance.PublicDnsName
+    Description: "Public DNS Name for Developer Instance"
+    Value: !GetAtt DeveloperInstance.PublicDnsName

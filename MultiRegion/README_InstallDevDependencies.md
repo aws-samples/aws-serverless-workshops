@@ -2,21 +2,21 @@
 
 This README provides instructions on setting up a dev environment
 that you can use to clone the project, edit project files, build the UI
-and deploy the application. 
+and deploy the application.
 
-We recommend you use the given AMI with the necessary dependencies, i.e. git, 
+We recommend you use the given AMI with the necessary dependencies, i.e. git,
 node/npm, angular cli already installed and configured.
 
 Our dev environment instance will be in `eu-west-1` (Ireland)
 
 ## Using an AMI
 
-Make sure you are in eu-west-1 region. Launch an EC2 instance by navigating 
-to the "Community AMI"s in step 1 of EC2 launch wizard. In the "Search 
-community AMIs" text box enter "sxr-dev-instance". For this instance a 
+Make sure you are in eu-west-1 region. Launch an EC2 instance by navigating
+to the "Community AMI"s in step 1 of EC2 launch wizard. In the "Search
+community AMIs" text box enter "sxr-dev-instance". For this instance a
 t2.micro will suffice. Launch the instance in a public subnet with a
 security group allowing ssh from your ip address and a role allowing
-s3 access (sample policy below).
+Administrator access to the AWS account (sample policy below).
 
 
 ## EC2 Dev Instance Configuration.
@@ -25,7 +25,7 @@ If you would really like to set up your own instance from scratch you can execut
 
 For this dev instance
 - a t2.micro will be fine.
-- use the AWS Linux AMI already configured with the AWS CLI. 
+- use the AWS Linux AMI already configured with the AWS CLI.
 - deploy to the default VPC
 
 Your EC2 instance should have:
@@ -79,12 +79,14 @@ This will take about a minute and when done you will see a message like
 You should now be able to build the UI when you get to that step in the second module.
 
 
-## Example Policy allowing EC2 dev instance to write to your S3 bucket
+## Example Policy allowing EC2 dev instance access to the account
 
-You can use this sample policy to attach to ec2 role. 
+You can use this sample policy to attach to ec2 role or you can simply create
+a role and attach Administrator access to it.
 
-**NOTE: this is a permissive policy allowing all access to s3. For your 
-own environment we recommend a more restrictive policy that enforces 
+
+**NOTE: this is a permissive policy allowing all access to s3. For your
+own environment we recommend a more restrictive policy that enforces
 least privilege.**
 ```json
 {
@@ -92,7 +94,7 @@ least privilege.**
     "Statement": [
         {
             "Effect": "Allow",
-            "Action": "s3:*",
+            "Action": "*",
             "Resource": "*"
         }
     ]

@@ -48,8 +48,8 @@ function and you should still be able to view and create tickets.
 
 ![Failed over health check response](images/failed-over-response.png)
 
-Don't forget to switch your API Gateway back to the *TicketGetFunction* once
-you are done testing failover!
+Don't forget to switch your API Gateway configuration back to the
+*SXRHealthCheckFunction* once you are done testing failover!
 
 ## Completion
 

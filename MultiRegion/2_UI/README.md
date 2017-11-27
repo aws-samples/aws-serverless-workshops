@@ -16,6 +16,9 @@ API. As in *Module 1*, a CloudFormation template is available to create all the
 necessary resources for us. This template does not rely on any local code so
 no package step is needed.
 
+For time reasons we are not proving console instructions for this section.  Do
+feel free to review the CloudFormation template to see what is being created.
+
 You can go ahead and deploy this template in the primary region using the `aws
 cloudformation deploy` CLI command as before.
 

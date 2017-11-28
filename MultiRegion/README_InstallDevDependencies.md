@@ -1,6 +1,6 @@
 ## About
 
-This README provides breif instructions on setting up a dev environment
+This README provides brief instructions on setting up a dev environment
 that you can use to clone the project, edit project files, build the UI
 and deploy the application.  You can also deploy any of the CloudFormation
 templates from any module using the EC2 instance as well.
@@ -51,7 +51,15 @@ If you are using Windows and Putty, you will need to convert the .pem file to a
 .ppk file.  There are instructions available on how to do this by searching the
 internet.
 
-#### Building the UI
+## Clone the workshop project
+
+Once you get logged in to the instance,
+run `git clone https://github.com/awslabs/aws-serverless-workshops.git`
+
+This will pull down all of the files and directories you will need to complete
+the workshop and keep them on the local file system.
+
+## Building the UI
 
 You should now be able to build the UI when you get to that step in the second
 module, as well as deploy CloudFormation templates, and do any other workshop

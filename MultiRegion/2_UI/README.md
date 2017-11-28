@@ -114,6 +114,10 @@ tested at the end of the previous module.  Ensure you do *NOT* append `ticket` t
 the end of the URL but make sure you do have a `/` at the end like the comments in
 the file request.
 
+You can obtain the Cognito Identity Pool ID from the *Outputs* of the CloudfFormation
+template you deployed in Module 2_UI.  Ensure that you copy the entire string,
+including the AWS region (in this case, it should be `eu-west-1`)
+
 You will need Node Package Manager (NPM) installed on your local machine
 (check out the [workshop prerequisites](../README.md#prerequisites)) in order
 to build the application. You can follow instructions [Dev Instance
@@ -140,10 +144,10 @@ do this with:
 Note that you must replace `[bucket-name]` in this command with the bucket
 name output from the CloudFormation stack in step 1.
 
-To confirm everything went as expected, navigate to your bucket URL. You
-should see a simple ticketing application. Go ahead and login using your
-Facebook account and then submit a couple of tickets to check that everything is
-working.
+To confirm everything went as expected, navigate to your bucket URL (this is
+also one of the CloudFormation outputs from Module 2_UI). You should see our
+simple ticketing application. Go ahead and login using your Facebook account
+and then submit a couple of tickets to check that everything is working.
 
 If you have trouble in this step, double check your configured settings and
 Facebook Developer account configuration. Note that if you change any

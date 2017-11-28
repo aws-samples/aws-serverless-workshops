@@ -131,9 +131,9 @@ to the account for the duration of the workshop.
 Again, if you use the supplied EC2 AMI, you don't need to set any of this up - it
 has been done for you.
 
-[README_InstallDevDependencies.md](README_InstallDevDependencies.md).  Using the
-AMI is strongly suggested, but if you are an advanced user you manually set these
-up on your workstation - see README_InstallDevDependencies for more info.
+[README_InstallDevDependencies](README_InstallDevDependencies.md).  Using the
+AMI is strongly suggested, but if you are an advanced user you may manually set
+these up on your workstation - see README_InstallDevDependencies for more info.
 
 ### Browser
 
@@ -145,4 +145,4 @@ web application UI.
 You will need a local text editor for making minor updates to configuration
 files.  Good options are Atom, Sublime, VI/VIM, TextEdit or NotePad
 
-We have already installed vi/vi on the provided EC2 AMI.
+We have already installed vi/vim on the provided EC2 AMI.

@@ -10,7 +10,7 @@ If you manually deploy a region in module 1_API
 - Delete the four Lambda functions
 - Delete the SXRTickets DynamoDB table
 - Delete the API Gateway and Custom Domains
-- Delete the SSL Certificats in ACM (you may need to wait some time for resources
+- Delete the SSL Certificates in ACM (you may need to wait some time for resources
   to fully un-deploy before this is possible)
 - Delete the IAM Roles and Policies you created
 

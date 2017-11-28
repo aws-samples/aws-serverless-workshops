@@ -117,7 +117,7 @@ this is your first DynamoDB table in this region or not.
 ![DymamoDB Create Button](images/dynamodb-create-button.png)
 
 For the table name, enter `SXRTickets` and enter `id` as the Primary Key
-Partition Key and keep *Sring* as the type, then click **Create**.
+Partition Key and keep *String* as the type, then click **Create**.
 That’s all that is required for now to set up the table.
 
 ![DymamoDB Create SXRTickets](images/dynamodb-create-sxrtickets.png)

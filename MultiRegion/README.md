@@ -47,7 +47,36 @@ the API layer. AWS Route53 will be used for DNS and will allow us to perform
 health checks on our primary region, and upon detecting an issue,
 automatically switching to our secondary region using Route53 DNS updates.
 
+## Implementation Instructions
+
+This workshop is broken up into multiple modules. In each, we will walk
+through a high level overview of how to implement or test a part of this
+architecture. You will expand sections for detailed command or console instructions.
+
+### Region Selection
+
+We will be using the following two regions for this workshop. Please remember
+these and check before creating resources to ensure you are in the correct
+region:
+* Primary: `eu-west-1` (Ireland)
+* Secondary: `ap-southeast-1` (Singapore)
+
+Using the two regions above for this workshop is mandatory.  We will start with
+`eu-west-1` (Ireland).  You will not deploy anything in `ap-southeast-1` (Singapore)
+until Module 3.
+
+### Modules
+
+1. [Build an API layer](1_API/README.md)
+2. [Build a UI layer](2_UI/README.md)
+3. [Replicate to a second region](3_Replication/README.md)
+4. [Test failover](4_Testing/README.md)
+5. [Cleaning Up](5_Cleanup/README.md)
+
+
 ## Prerequisites
+(please read these carefully and do not jump ahead and start setting things up
+unless specifically called out)
 
 ### AWS Account
 
@@ -55,12 +84,10 @@ In order to complete this workshop you'll need an AWS Account with access to
 create AWS IAM, S3, DynamoDB, Lambda and API Gateway. The code and
 instructions in this workshop assume only one student is using a given AWS
 account at a time. If you try sharing an account with another student, you'll
-run into naming conflicts for certain resources. You can work around these by
-appending a unique suffix to the resources that fail to create due to
-conflicts, but the instructions do not provide details on the changes required
-to make this work.
+run into naming conflicts for certain resources - we do not recommend this as
+there may be unpredictable results or difficult to identify configuration issues.
 
-### Domain Name
+### Domain Name (this is covered in Module 3 - do not purchase one yet)
 
 You will also need to either purchase a domain, or repurpose an existing
 unused domain you already own.  You will need to delegate DNS to Route53 if
@@ -71,12 +98,13 @@ the email account associated with the domain name registration.
 
 Our application requires a Facebook federated identity to
 allow users to login with an existing account. In order to set this up you
-will need a Facebook Developer account.
+will need a Facebook Developer account.  You may set up the account now, but
+do not start configuring anything else yet.
 
 You can sign up using [this link](https://developers.facebook.com/docs/apps/register/).
 
 Note that you will create the App ID later on in this guide using the
-URL you set up.
+website URL you will set up in Module 2.
 
 
 ### AWS Command Line Interface
@@ -84,6 +112,10 @@ URL you set up.
 To complete parts of this workshop you'll need the AWS Command Line Interface
 (CLI) installed on your local machine. Make sure you have the latest version
 installed.
+
+If you are using the supplied EC2 AMI, this will already be done for you and
+there is no need to do anything else.  The rest of this section is only needed
+if you choose to use your own computer for the workshop modules.
 
 Follow the [AWS CLI Getting Started
 guide](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) to
@@ -96,12 +128,12 @@ to the account for the duration of the workshop.
 
 ### A local environment with Git, Node.js and NPM
 
-If you are not familiar with setting up a development environment, we have
-separate instructions under
-[README_InstallDevDependencies.md](README_InstallDevDependencies.md). This
-also includes setting up an EC2 instance if you would prefer to do this in the
-Cloud rather than your local machine. Follow those and then come back here.
-We also offer the ability to use a pre-configuted EC2 instance as well.
+Again, if you use the supplied EC2 AMI, you don't need to set any of this up - it
+has been done for you.
+
+[README_InstallDevDependencies.md](README_InstallDevDependencies.md).  Using the
+AMI is strongly suggested, but if you are an advanced user you manually set these
+up on your workstation - see README_InstallDevDependencies for more info.
 
 ### Browser
 
@@ -113,26 +145,4 @@ web application UI.
 You will need a local text editor for making minor updates to configuration
 files.  Good options are Atom, Sublime, VI/VIM, TextEdit or NotePad
 
-
-## Implementation Instructions
-
-This workshop is broken up into multiple modules. In each, we will walk
-through a high level overview of how to implement or test a part of this
-architecture. Some guidance is given regarding commands but if you need more
-detailed step-by-step instructions at any time, you can expand sections for
-more detail. You must complete each module before proceeding to the next.
-
-### Region Selection
-
-We will be using the following two regions for this workshop. Please remember
-these and check before creating resources to ensure you are in the correct
-region:
-* Primary: `eu-west-1` (Ireland)
-* Secondary: `ap-southeast-1` (Singapore)
-
-### Modules
-
-1. [Build an API layer](1_API/README.md)
-2. [Build a UI layer](2_UI/README.md)
-3. [Replicate to a second region](3_Replication/README.md)
-4. [Test failover](4_Testing/README.md)
+We have already installed vi/vi on the provided EC2 AMI.

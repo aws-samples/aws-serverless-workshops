@@ -7,13 +7,17 @@ layer down, leaving the UI in a single region.
 ## 1. Replicate the primary API stack
 
 For the first part of this module, all of the steps will be the same as module
-1 but performed in our secondary region (AP Singapore) instead. Please follow
-module 1 again then come back here. We suggest using the CloudFormation templates
+1_API but performed in our secondary region (AP Singapore) instead. Please follow
+module 1_API again then come back here. We suggest using the CloudFormation templates
 from that module to make this much quicker the second time.
+
+**IMPORTANT** Ensure you deploy only to *Singapore* the second time you go through
+Module 1_API
 
 * [Build an API layer](../1_API/README.md)
 
-Once you are done, verify that you get a second API URL for your application.
+Once you are done, verify that you get a second API URL for your application from
+the *outputs* of the CloudFormation template you deployed.
 
 ## 2. Replicating the data
 
@@ -32,7 +36,7 @@ During module 1, you actually already deployed a Lambda function that we can
 use to push the data. All we need to do now is hook this up to DynamoDB
 Streams.
 
-In your *source* region DynamoDB, select the SXRTickets table
+In your *source* region (double check this) DynamoDB, select the SXRTickets table
 
 ![Select SXRTickets DynamoDB Source Region](images/select-ddb-source-table.png)
 
@@ -43,6 +47,9 @@ Choose **Create Trigger** and then select *Existing Lambda Function*
 
 Choose *TicketReplicateFunction* as the Function, reduce the batch size to *1*, ensure
 the *Enable* box is checked and then click **Create**
+
+**IMPORTANT** Ensure you actually select the correct Lambda function here - it
+will default to *SXRHealthCheckFunction* if you don't.
 
 ![Create Trigger Dialogue](images/ddb-create-trigger.png)
 
@@ -311,9 +318,11 @@ Now that we have completed failover testing, you will need to change the API
 endpoint in your *2_UI/src/environments/environments.ts* file to use our newly
 created DNS name for our API endpoint.
 
-Edit the *environments.ts* file and use `https://api.example.com/prod/` (substituting your
+Edit the *environments.ts* file and use `https://api.example.com/` (substituting your
 own domain) instead of the region specific name you used when setting up and
 testing the UI in the second module.
+
+**IMPORTANT** This new API Endpoint URL does NOT have `/prod/` at the end.
 
 Ensure you run `npm run build` from the *2_UI* directory, and then upload the */dist*
 contents to the S3 bucket using the same *aws s3* command you used in the second

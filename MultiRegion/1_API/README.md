@@ -56,6 +56,9 @@ select the *JSON* tab and paste the code below into the editing window.
 
 Download policy: [TicketGetPolicy](wild-rydes-dynamodb-get.json)
 
+**IMPORTANT** When downloading each policy, click on *Raw* before you copy in order
+to avoid validation errors when you paste the *JSON* into the AWS Console.
+
 ![Create Policy](images/create-policy-1.png)
 
 Click on **Review Policy**
@@ -134,7 +137,8 @@ Next select “Author from scratch”
 Name your first function `TicketGetFunction` and assign the role with the **matching**
 name you created previously to it and click **Create function**
 
-Ensure the runtime is `Node.js 6.10`.  If it isn’t, simply select it.
+On the next screen, ensure the runtime is `Node.js 6.10`.  If it isn’t, simply
+select it.
 
 For the Handler, enter `tickets-get.handler` and then paste the following code into the
 editor you see on your screen:
@@ -159,9 +163,12 @@ information needed for all four functions.  Note that you have already done the 
 | [TicketGetFunction](tickets-get.js)  | tickets-get.handler   | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 | [TicketPostFunction](tickets-post.js)  | tickets-post.handler   | TicketPostRole           | TABLE_NAME    | SXRTickets     |
 | [TicketReplicateFunction](tickets-replicate.js)         | tickets-replicate.handler          | TicketReplicateRole | TABLE_NAME    | SXRTickets     |
-|                        |                       |                                 | TARGET_REGION | ap-southeast-1 |
+| TicketReplicateFunction |                       |                                 | TARGET_REGION | ap-southeast-1 |
 | [SXRHealthCheckFunction](health-check.js) | health-check.handler  | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 
+Note that `TicketReplicateFunction` has two variables - make sure you enter both.
+Also note that proper capitalization matters with `Environment Variables`.  Improper
+case will cause issues later in the workshop.
 
 ## 4. Create API Gateway Endpoint
 
@@ -263,6 +270,8 @@ instead.  You should get something like the following in your browser:
         "message":"Successful response reading from DynamoDB table."
     }
 
+Make note of the API Endpoint URL - you will need this in Module 2_UI.
+
 </details>
 
 <details>
@@ -336,7 +345,12 @@ You can do this using the following CLI command. Note that you must replace
     --output-template-file wild-rydes-api-output.yaml \
     --s3-bucket [bucket_name_you_created_above]
 
-*Singapore*
+**IMPORTANT** DO NOT deploy any resources to Singapore during your initial pass
+on Module 1. You will come back in Module 3 and then deploy the same components
+to Singapore. We are providing the commands for both regions here for your
+convenience.
+
+*Singapore* (do not deploy during your first pass on Module 1_API)
 
     aws cloudformation package \
     --region ap-southeast-1 \
@@ -363,7 +377,12 @@ Go ahead and run the following CLI command:
     --stack-name wild-rydes-api \
     --capabilities CAPABILITY_IAM
 
-*Singapore*
+**IMPORTANT** DO NOT deploy any resources to Singapore during your initial pass
+on Module 1. You will come back in Module 3 and then deploy the same components
+to Singapore. We are providing the commands for both regions here for your
+convenience.
+
+*Singapore* (do not deploy during your first pass on Module 1_API)
 
     aws cloudformation deploy \
     --region ap-southeast-1 \
@@ -401,6 +420,8 @@ to it before navigating to it into your browser. It should return the following:
         "region":"eu-west-1",
         "message":"Successful response reading from DynamoDB table."
     }
+
+Make note of the API Endpoint URL - you will need this in Module 2_UI.
 
 </details>
 

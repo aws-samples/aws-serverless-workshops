@@ -84,7 +84,7 @@ Amazon API Gateway can leverage an AWS Lambda function to make authorization dec
 You can also return a set of key/value pairs that are appended to the request context values. The code for our custom authorizer is in the `ListUnicornAuthorizer` folder, open the folder and take a look at the `index.js` file to get an idea of how our custom authorizer works. To authorize access to our new list rides API we rely on a custom scope called `UnicornManager/unicorn` - this scope is automatically added to client tokens produced by the Unicorn Manager application.
 
 #### High-Level Instructions
-Use the AWS Lambda console to create a new Lambda function called **ListUnicornsAuthorizer** that will process incoming JWT bearer tokens. Upload the provided [ListUnicornAuthorizer.zip](./ListUnicornAuthorizer.zip) as the function code. The authorizer Lambda function relies on an environment variable called **`USER_POOL_ID`**, define this in the Lambda console and set the value of the WildRydes **Pool Id** from the Cognito console.
+Use the AWS Lambda console to create a new Lambda function called **ListUnicornAuthorizer** that will process incoming JWT bearer tokens. Upload the provided [ListUnicornAuthorizer.zip](./ListUnicornAuthorizer.zip) as the function code. The authorizer Lambda function relies on an environment variable called **`USER_POOL_ID`**, define this in the Lambda console and set the value of the WildRydes **Pool Id** from the Cognito console.
 
 Make sure to configure your function to use the **WildRydesLambda** IAM role you created in module 2 of this workshop.
 

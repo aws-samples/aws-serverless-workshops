@@ -14,8 +14,8 @@ export const environment = {
   // facebook developer account.
   facebookAppId: '',
 
-  // TODO: The API URL is available in the outputs section of the cloud formation template.
-  // cloud front NOTE: don't forget trailing "/"  For example:
+  // TODO: The API URL is available in the API Gateway console under Stage
+  // NOTE: don't forget trailing "/"  For example:
   // https://api.example.com/prod/
   ticketAPI: ''
 

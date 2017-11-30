@@ -127,7 +127,7 @@ Using a text editor, open the `template.yml` file and append a new **AWS::Server
          Description: Update Unicorn
          Timeout: 10
          Events:
-           DELETE:
+           PUT:
              Type: Api
              Properties:
                Path: /unicorns/{name}

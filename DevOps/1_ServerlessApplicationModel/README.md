@@ -139,7 +139,7 @@ Verify that docker is working, and that you can run docker commands from the CLI
 The easiest way to install **`sam`** is to use [NPM](https://www.npmjs.com).
 
 ```bash
-npm install -g aws-sam-local
+npm install -g go-npm aws-sam-local
 ```
 
 Verify the installation worked:

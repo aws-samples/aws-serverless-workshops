@@ -159,18 +159,13 @@ We also release the CLI as binaries that you can download and instantly use. You
 
 If you're unable to install SAM Local on your workstation, you may find it easier to use SAM Local on an Amazon Linux EC2 instance.   In this case, you will not be performing work locally on your laptop, instead you will connect remotely into an EC2 instance to perform editing and testing.
 
-<details>
-<summary><strong>Amazon Linux (EC2) SAM Local Installation</strong></summary>
-<p>
-
-###### Launch and Configure Amazon Linux EC2 Instance
-
 1. [Create a keypair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html), if you do not have one already.
 
 1. To launch an EC2 instance with the required dependencies, click on the **Launch Stack** button for your region below.  You will need to select the keypair that you created in the previous step, as well as a VPC and Subnet for your EC2 instance:
 
     Region| Launch
     ------|-----
+    US (Oregon) | [![Launch Module 1 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=DeveloperInstance&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/developer-instance.yml)
     EU (Ireland) | [![Launch Module 1 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=DeveloperInstance&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/developer-instance.yml)
     Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=DeveloperInstance&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/developer-instance.yml)
 
@@ -224,8 +219,6 @@ On your workstation, open a new terminal and run the following command.  In the 
    C2S configuration should look similar to this:
 
    ![Bitvise Tunnel Config](images/bitvise-tunnel-config.png)
-
-</details>
 
 
 ## SAM Local Development

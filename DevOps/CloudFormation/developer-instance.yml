@@ -18,6 +18,8 @@ Mappings:
       amiId: "ami-9aa313e3"
     ap-southeast-2:
       amiId: "ami-8c5db7ee"
+    us-west-2:
+      amiId: "ami-8a35edf2"
 
 Resources:
   DeveloperInstance:

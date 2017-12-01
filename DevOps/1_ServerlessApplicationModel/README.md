@@ -143,12 +143,12 @@ The easiest way to install **`sam`** is to use [NPM](https://www.npmjs.com).
 npm install -g aws-sam-local
 ```
 
+If you get a permission error when using npm (such as `EACCES: permission denied`), please see the instructions on this page of the NPM documentation: [https://docs.npmjs.com/getting-started/fixing-npm-permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
+
 Verify the installation worked:
 ```bash
 sam --version
 ```
-
-If you get a permission error when using npm (such as `EACCES: permission denied`), please see the instructions on this page of the NPM documentation: [https://docs.npmjs.com/getting-started/fixing-npm-permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
 
 #### Binary release
 

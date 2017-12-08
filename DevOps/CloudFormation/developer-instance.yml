@@ -32,7 +32,7 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", amiId]
-      InstanceType: t1.micro
+      InstanceType: t2.micro
       KeyName: !Ref "KeyName"
       IamInstanceProfile: !Ref InstanceProfile
       NetworkInterfaces:

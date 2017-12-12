@@ -14,19 +14,25 @@ Parameters:
 
 Mappings:
   RegionMap:
-    eu-west-1:
-      amiId: "ami-9aa313e3"
-    ap-southeast-2:
-      amiId: "ami-8c5db7ee"
+    us-east-1:
+      amiId: "ami-8a3458f0"
+    us-west-1:
+      amiId: "ami-f6313496"
     us-west-2:
       amiId: "ami-8a35edf2"
+    eu-west-1:
+      amiId: "ami-9aa313e3"
+    eu-central-1:
+      amiId: "ami-822ba2ed"
+    ap-southeast-2:
+      amiId: "ami-8c5db7ee"
 
 Resources:
   DeveloperInstance:
     Type: "AWS::EC2::Instance"
     Properties:
       ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", amiId]
-      InstanceType: t1.micro
+      InstanceType: t2.micro
       KeyName: !Ref "KeyName"
       IamInstanceProfile: !Ref InstanceProfile
       NetworkInterfaces:

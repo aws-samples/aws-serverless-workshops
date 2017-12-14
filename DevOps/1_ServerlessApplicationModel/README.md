@@ -101,7 +101,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
     ![Seed Repository CloudFormation Stack Review](images/seed-repository-1.png)
 
-1. There will be a short delay as the Git repository seeded with the new source code.  Upon successful completion, the CloudFormation will show Status ``CREATE_COMPLETE``.
+1. There will be a short delay as the Git repository is seeded with the new source code.  Upon successful completion, the CloudFormation will show Status ``CREATE_COMPLETE``.
 
     ![CloudFormation Stack Creation Complete](images/seed-repository-2.png)
 

@@ -95,15 +95,15 @@ From the Amazon Cognito console select your user pool and then select the **App 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. From the Pool Details page for your user pool, select **App clients** from the left navigation bar.
+1. From the Pool Details page for your user pool, select **App clients** from the **General settings** section in the left navigation bar.
 
-1. Click **Add an app client**.
+1. Choose **Add an app client**.
 
-1. Give the app a name such as `WildRydesWebApp`.
+1. Give the app client a name such as `WildRydesWebApp`.
 
 1. **Uncheck** the Generate client secret option. Client secrets aren't supported for use with browser-based applications.
 
-1. Click **Create app client**.
+1. Choose **Create app client**.
 
    <kbd>![Create app client screenshot](../images/add-app.png)</kbd>
 

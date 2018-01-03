@@ -69,6 +69,9 @@ Use the Amazon API Gateway console to create a new API.
 
 1. Select **New API** and enter `WildRydes` for the **API Name**.
 
+1. Keep `Edge optimized` selected in the **Endpoint Type** dropdown.
+    ***Note***: Edge optimized are best for public services being accessed from the Internet. Regional endpoints are typically used for APIs that are accessed primarily from within the same AWS Region.
+
 1. Choose **Create API**
 
     ![Create API screenshot](../images/create-api.png)
@@ -91,13 +94,11 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Chose **Create New Authorizer**.
 
-    ![Create user pool authorizer screenshot](../images/create-user-pool-authorizer.png)
-
 1. Enter `WildRydes` for the Authorizer name.
 
 1. Select **Cognito** for the type.
 
-1. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in module 2.
+1. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in module 2 (by default the current region should be selected).
 
 1. Enter `WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
 
@@ -105,21 +106,25 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Choose **Create**.
 
+    ![Create user pool authorizer screenshot](../images/create-user-pool-authorizer.png)
+
 #### Verify your authorizer configuration
 
 1. Open a new browser tab and visit `/ride.html` under your website's domain.
 
 1. If you are redirected to the sign-in page, sign in with the user you created in the last module. You will be redirected back to `/ride.html`.
 
-1. Copy the auth token from the notification on the `/ride.html`, 
+1. Copy the auth token from the notification on the `/ride.html`,
 
 1. Go back to previous tab where you have just finished creating the Authorizer
 
-1. Click "Test", paste it into the **Authorization Token** field in the popup dialog.
+1. Click **Test** at the bottom of the card for the authorizer.
+
+1. Paste the auth token into the **Authorization Token** field in the popup dialog.
 
     ![Test Authorizer screenshot](../images/apigateway-test-authorizer.png)
 
-1. Click **Test** button and verify that you see the claims for your user displayed.
+1. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed.
 
 </p></details>
 
@@ -137,7 +142,11 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 1. Ensure the **Resource Path** is set to `ride`.
 
+1. Select **Enable API Gateway CORS** for the resource.
+
 1. Click **Create Resource**.
+
+    ![Create resource screenshot](../images/create-resource.png)
 
 1. With the newly created `/ride` resource selected, from the **Action** dropdown select **Create Method**.
 
@@ -169,27 +178,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 
 </p></details>
 
-### 4. Enable CORS
-Modern web browsers prevent HTTP requests from scripts on pages hosted on one domain to APIs hosted on another domain unless the API provides cross-origin resource sharing (CORS) response headers that explicitly allow them. In the Amazon API Gateway console you can add the necessary configuration to send the appropriate CORS headers under the action menu when you have a resource selected. You should enable CORS for POST and OPTIONS on your /ride resource. For simplicity, you can set the Access-Control-Allow-Origin header value to '\*', but in a production application you should always explicitly whitelist authorized domains to mitigate [cross-site request forgery (CSRF)](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29) attacks.
-
-For more information about CORS configurations in general, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
-
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
-
-1. In the Amazon API Gateway console, in the middle panel, select the `/ride` resource.
-
-1. From the **Actions** drop-down list select **Enable CORS**.
-
-1. Use the default settings and choose **Enable CORS and replace existing CORS headers**.
-
-1. Choose **Yes, replace existing values**.
-
-1. Wait for a checkmark to appear next to all the steps.
-
-</p></details>
-
-### 5. Deploy Your API
+### 4. Deploy Your API
 From the Amazon API Gateway console, choose Actions, Deploy API. You'll be prompted to create a new stage. You can use prod for the stage name.
 
 <details>
@@ -207,7 +196,7 @@ From the Amazon API Gateway console, choose Actions, Deploy API. You'll be promp
 
 </p></details>
 
-### 6. Update the Website Config
+### 5. Update the Website Config
 Update the /js/config.js file in your website deployment to include the invoke URL of the stage you just created. You should copy the invoke URL directly from the top of the stage editor page on the Amazon API Gateway console and paste it into the \_config.api.invokeUrl key of your sites /js/config.js file. Make sure when you update the config file it still contains the updates you made in the previous module for your Cognito user pool.
 
 <details>

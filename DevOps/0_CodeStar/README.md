@@ -83,7 +83,7 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 1. Once provisioning is complete, there will be a brief delay as the CodePipeline pipeline executes for the first time.  The pipeline consists of three stages:
 
     * Source stage: source code is copied from the CodeCommit repository
-    * Build stage: a CodeBuild project executes the commands defined in the project's buildspec.yml to compile the source code into a deployable artifact, in this case, a Serverless Application Model (SAM) artifact in this case
+    * Build stage: a CodeBuild project executes the commands defined in the project's buildspec.yml to compile the source code into a deployable artifact, in this case a Serverless Application Model (SAM) artifact.
     * Deploy stage: CloudFormation is used to deploy the SAM artifact, representing Lambda functions and an API Gateway environment.
 
     When these stages are complete, an API Gateway **Application endpoint** will appear in the dashboard.

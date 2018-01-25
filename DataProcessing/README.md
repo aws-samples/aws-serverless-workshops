@@ -55,31 +55,43 @@ The producer and consumer are small programs written in the [Go Programming lang
 	chmod a+x producer consumer
 	```
 
-1. Run the producer with `-h` to view its command-line arguments:
+1. Run the `producer` with `-h` to view its command-line arguments:
 
 	**macOS** / **Linux**
 
 	```console
 	$ ./producer -h
-	  -name string
+	```
+
+**Expected output**
+
+```console
+$ ./producer -h
+      -name string
       Unicorn Name (default "Shadowfax")
       -region string
       Region (default "us-east-1")
       -stream string
       Stream Name (default "wildrydes")
-	```
+```
 
 	**Windows**
 
 	```console
 	C:\Downloads>producer.exe -h
-	  -name string
+	```
+
+**Expected output**
+
+```console
+    C:\Downloads>producer.exe -h
+      -name string
       Unicorn Name (default "Shadowfax")
       -region string
       Region (default "us-east-1")
       -stream string
       Stream Name (default "wildrydes")
-	```
+```
 
 	Note the defaults. Running this command without any arguments will produce data about a unicorn named **Shadowfax** to a stream named **wildrydes** in **US East (N. Virginia)**.
 
@@ -89,21 +101,34 @@ The producer and consumer are small programs written in the [Go Programming lang
 
 	```console
 	$ ./consumer -h
+	```
+
+**Expected output**
+
+```console
+$ ./producer -h
       -region string
       Region (default "us-east-1")
       -stream string
       Stream Name (default "wildrydes")
-	```
+```
 
-	**Windows**
+**Windows**
 
 	```console
 	C:\Downloads>consumer.exe -h
+	```
+
+**Expected output**
+
+```console
+C:\Downloads>consumer.exe -h
       -region string
       Region (default "us-east-1")
       -stream string
       Stream Name (default "wildrydes")
-	```
+```
+
 
 	Note the defaults. Running this command without any arguments will read from the stream named **wildrydes** in **US East (N. Virginia)**.
 

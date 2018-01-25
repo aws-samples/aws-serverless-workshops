@@ -197,3 +197,8 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
     ![Successful login screenshot](../images/successful-login.png)
 
 After you have successfully logged into your web application, you can proceed to the next module, [Serverless Backend](../3_ServerlessBackend).
+
+### Extra
+
+* Try copying the **auth_token** you've received and paste that into an [online JWT Decoder](https://jwt.io/) to understand what this token means for your application
+

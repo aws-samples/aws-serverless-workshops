@@ -21,10 +21,8 @@ def _get_properties_from_event(event):
     return event.get('ResourceProperties')
 
 
-@handler.create
-def create(event, context):
-    '''Create Cognito config'''
-    _logger.info('Create event: {}'.format(json.dumps(event)))
+def _set_config_contents(event):
+    '''Set contents of config file'''
     properties = _get_properties_from_event(event)
 
     userPoolId = properties['UserPool']
@@ -55,12 +53,18 @@ def create(event, context):
     return resp
 
 
+@handler.create
+def create(event, context):
+    '''Create Cognito config'''
+    _logger.info('Create event: {}'.format(json.dumps(event)))
+    return _set_config_contents(event)
+
+
 @handler.update
 def update(event, context):
     '''Update Cognito config'''
     _logger.info('Update event: {}'.format(json.dumps(event)))
-    resp = create(event, context)
-    return resp
+    return _set_config_contents(event)
 
 
 @handler.delete

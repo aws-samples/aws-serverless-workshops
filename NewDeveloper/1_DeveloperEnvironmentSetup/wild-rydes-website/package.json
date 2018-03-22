@@ -1,0 +1,10 @@
+{
+  "name": "wild-rydes-website",
+  "description": "Static website on S3.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-s3-sync": "^1.3.0"
+  }
+}

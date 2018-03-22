@@ -1,0 +1,96 @@
+# Wild Rydes website
+service: wild-rydes-website
+
+plugins:
+  - serverless-s3-sync
+
+custom:
+  stage: "${opt:stage, env:SLS_STAGE, 'dev'}"
+  profile: "${opt:aws-profile, env:AWS_PROFILE, env:AWS_DEFAULT_PROFILE, 'default'}"
+  # FIXME: Change this to training-dev.serverlessops.io
+  hostedZoneName: "${env:SLS_HOSTED_ZONE_NAME, 'dev.serverlessops.io'}"
+  bucketName: "${self:service}-${self:custom.stage}.${self:custom.hostedZoneName}"
+  # Additional region zone IDs and DNS names fouind here:
+  # https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+  aliasHostedZoneId: Z3AQBSTGFYJSTF    # us-east-1
+  aliasDNSName: s3-website-us-east-1.amazonaws.com
+
+  indexDocument: index.html
+  errorDocument: error.html
+
+  s3Sync:
+    - bucketName: ${self:custom.bucketName}
+      localDir: static
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  profile: ${self:custom.profile}
+  stage: ${self:custom.stage}
+  stackTags:
+    serverless:service: ${self:service}
+
+resources:
+  Resources:
+    ## Specifying the S3 Bucket
+    StaticSite:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:custom.bucketName}
+        WebsiteConfiguration:
+          IndexDocument: ${self:custom.indexDocument}
+          ErrorDocument: ${self:custom.errorDocument}
+
+    StaticSiteS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: StaticSite
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+              - s3:GetObject
+              Resource:
+                Fn::Join: [
+                  "", [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "StaticSite"
+                    },
+                    "/*"
+                  ]
+                ]
+
+    DnsRecord:
+      Type: "AWS::Route53::RecordSet"
+      Properties:
+        AliasTarget:
+          DNSName: ${self:custom.aliasDNSName}
+          HostedZoneId: ${self:custom.aliasHostedZoneId}
+        HostedZoneName: ${self:custom.hostedZoneName}.
+        Name:
+          Ref: StaticSite
+        Type: 'A'
+
+  Outputs:
+    StaticSiteS3BucketName:
+      Description: "Name of site S3 bucket"
+      Value:
+        'Ref': StaticSite
+      Export:
+        Name: "${self:service}-${self:custom.stage}-StaticSiteS3BucketName"
+
+    StaticSiteS3BucketWebsiteURL:
+      Description: "Website URL using Route53 record"
+      Value:
+        Fn::Join:
+          - ''
+          - - 'http://'
+            - Ref: StaticSite
+      Export:
+        Name: "${self:service}-${self:custom.stage}-StaticSiteS3BucketWebsiteURL"
+

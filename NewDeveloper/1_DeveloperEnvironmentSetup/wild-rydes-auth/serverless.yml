@@ -88,3 +88,12 @@ resources:
         Bucket:
           Fn::ImportValue: "${self:custom.website_s3_bucket_export}"
 
+  Outputs:
+    UserPoolArn:
+      Description: Arn of Cognito Pool
+      Value:
+        Fn::GetAtt:
+          - UserPool
+          - Arn
+      Export:
+        Name: "${self:service}-${self:provider.stage}-UserPoolArn"

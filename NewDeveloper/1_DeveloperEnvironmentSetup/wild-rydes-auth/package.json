@@ -1,0 +1,10 @@
+{
+  "name": "wild-rydes-auth",
+  "description": "",
+  "version": "0.1.0",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-iam-roles-per-function": "^0.1.5",
+    "serverless-python-requirements": "^3.3.1"
+  }
+}

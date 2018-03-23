@@ -58,7 +58,7 @@ resources:
     UserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: WildRydes
+        UserPoolName: "WildRydes-${self:provider.stage}"
         AliasAttributes:
           - email
         AutoVerifiedAttributes:
@@ -67,7 +67,7 @@ resources:
     UserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: WildRydesWeb
+        ClientName: "WildRydes-${self:provider.stage}"
         UserPoolId:
           Ref: UserPool
         GenerateSecret: false

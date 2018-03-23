@@ -79,7 +79,7 @@ def delete(event, context):
 
     resp = {
         "ResourceProperties": properties,
-        "PhysicalResourceId": 'update-cognito-config'
+        "PhysicalResourceId": context.log_stream_name
     }
     return resp
 

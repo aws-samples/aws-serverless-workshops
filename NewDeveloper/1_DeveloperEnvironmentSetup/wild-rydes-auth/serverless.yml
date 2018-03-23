@@ -76,7 +76,7 @@ resources:
       Type: Custom::ConfigFile
       Properties:
         ServiceToken:
-         Fn::GetAtt:
+          Fn::GetAtt:
             - UpdateCognitoConfigLambdaFunction
             - Arn
         UserPool:

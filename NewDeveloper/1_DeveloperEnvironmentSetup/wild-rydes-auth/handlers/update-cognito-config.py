@@ -21,7 +21,7 @@ def _get_properties_from_event(event):
     return event.get('ResourceProperties')
 
 
-def _set_config_contents(event):
+def _set_config_contents(event, context):
     '''Set contents of config file'''
     properties = _get_properties_from_event(event)
 
@@ -48,7 +48,7 @@ def _set_config_contents(event):
 
     resp = {
         "ResourceProperties": properties,
-        "PhysicalResourceId": 'update-cognito-config'
+        "PhysicalResourceId": context.log_stream_name
     }
     return resp
 
@@ -57,14 +57,14 @@ def _set_config_contents(event):
 def create(event, context):
     '''Create Cognito config'''
     _logger.info('Create event: {}'.format(json.dumps(event)))
-    return _set_config_contents(event)
+    return _set_config_contents(event, context)
 
 
 @handler.update
 def update(event, context):
     '''Update Cognito config'''
     _logger.info('Update event: {}'.format(json.dumps(event)))
-    return _set_config_contents(event)
+    return _set_config_contents(event, context)
 
 
 @handler.delete

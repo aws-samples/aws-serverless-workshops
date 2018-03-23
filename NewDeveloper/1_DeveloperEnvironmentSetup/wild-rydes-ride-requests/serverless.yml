@@ -1,0 +1,145 @@
+# <DESCRIBE SERVICE>
+service: wild-rydes-ride-requests
+
+
+plugins:
+  - serverless-python-requirements
+  - serverless-iam-roles-per-function
+  # - serverless-apigateway-plugin
+
+custom:
+  stage: "${opt:stage, env:SLS_STAGE, 'dev'}"
+  profile: "${opt:aws-profile, env:AWS_PROFILE, env:AWS_DEFAULT_PROFILE, 'default'}"
+  log_level: "${env:LOG_LEVEL, 'INFO'}"
+  website_s3_bucket_export: "wild-rydes-website-${self:custom.stage}-StaticSiteS3BucketName"
+
+  # NOTE: Because Fn::ImportValue does not work in function events(?) we use
+  # the builtin cf: lookup.  We should switch to this everywhere.
+  auth_stack_name: "wild-rydes-auth-${self:custom.stage}"
+  user_pool_arn: "${cf:${self:custom.auth_stack_name}.UserPoolArn}"
+
+  # NOTE: Hack to handle fact that you can't use ImportValue in event.
+
+  pythonRequirements:
+    dockerizePip: true
+
+
+provider:
+  name: aws
+  profile: ${self:custom.profile}
+  stage: ${self:custom.stage}
+  runtime: python3.6
+  environment:
+    LOG_LEVEL: ${self:custom.log_level}
+
+
+functions:
+  RequestRide:
+    handler: handlers/request-ride.handler
+    description: "Request a ride.."
+    memorySize: 128
+    timeout: 30
+    environment:
+      DYNAMODB_TABLE:
+        Ref: RidesTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+          - dynamodb:Scan
+        Resource:
+          Fn::GetAtt:
+            - RidesTable
+            - Arn
+    events:
+      - http:
+          path: /ride
+          method: post
+          authorizer:
+            arn: "${self:custom.user_pool_arn}"
+          cors: true
+#      - http:
+#          path: /ride
+#          method: options
+#          integration: mock
+#          cors: true
+
+  UpdateConfig:
+    handler: handlers/update-backend-config.handler
+    description: "Updates the backend location on the frontend."
+    memorySize: 128
+    timeout: 30
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+          - "s3:PutObjectAcl"
+          - "s3:PutObjectVersionAcl"
+          - "s3:DeleteObject"
+        Resource:
+          - Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Fn::ImportValue: "${self:custom.website_s3_bucket_export}"
+              - '/*'
+
+
+resources:
+  Parameters:
+    # NOTE: While we don't use this directly due to a limitation in SLS
+    # handling CFN functions in function events, it's good for us to define
+    # the data we need from other stacks.  It effectively defines the input
+    # interface to the service.
+    UserPoolArn:
+      Type: String
+      Description: "ARN of Wild Rydes Cognito auth pool"
+      Default: "${self:custom.user_pool_arn}"
+
+
+  Resources:
+    RidesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: RideId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: RideId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    UpdateConfig:
+      Type: "Custom::ConfigFile"
+      Properties:
+        ServiceToken:
+          Fn::GetAtt:
+            - UpdateConfigLambdaFunction
+            - Arn
+        Bucket:
+          Fn::ImportValue: "${self:custom.website_s3_bucket_export}"
+        InvokeUrl:
+          Fn::Join:
+            - ""
+            - - "https://"
+              - Ref: ApiGatewayRestApi
+              - ".execute-api."
+              - Ref: AWS::Region
+              - ".amazonaws.com/${self:custom.stage}"
+
+
+  Outputs:
+    WildRydesApiInvokeUrl:
+      Description: URL for the deployed wild rydes API
+      Value:
+        Fn::Join:
+          - ""
+          - - "https://"
+            - Ref: ApiGatewayRestApi
+            - ".execute-api."
+            - Ref: AWS::Region
+            - ".amazonaws.com/${self:custom.stage}"
+      Export:
+        Name: "${self:service}-${self:provider.stage}-WildRydesApiUrl"
+

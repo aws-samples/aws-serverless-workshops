@@ -168,17 +168,7 @@ $ cd wild-rydes-ride-request
 $ npm install
 ```
 
-#### 2. Create virtual (OPTIONAL)
-
-The Python virtualenv is for installing package dependencies of the project.  This will keep packages installed during the workshop from polluting your system Python installation.  It's purely optional.
-
-```
-pyenv virtualenv -p ptyhon3.6 3.6.4 wild-rydes-ride-request
-pyenv local wild-rydes-ride-request
-```
-
-
-#### 3. Deploy to dev AWS Account
+#### 2. Deploy to dev AWS Account
 
 Deploy the ride request service.
 
@@ -223,7 +213,7 @@ WildRydesApiInvokeUrl: https://63eef7b71g.execute-api.us-east-1.amazonaws.com/tm
 ServerlessDeploymentBucketName: wild-rydes-ride-requests-serverlessdeploymentbuck-dt7kzl9bq5nr
 ```
 
-#### 4. Request A Ride
+#### 3. Request A Ride
 
 You can now request a ride in the site.  Right click the mouse on a location in the map to set a pickup point.  Then click "Request Ride" in the upper right.  You should see a unicorn make its way to your location.
 

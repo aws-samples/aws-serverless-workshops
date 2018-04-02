@@ -739,26 +739,6 @@ The intent of the **PhotoDoesNotMeetRequirement**  step is to send notification 
 
 1. Delete the `RiderPhotoProcessing` state machine from the AWS Step Functions console.
 
-1. Empty the Amazon S3 buckets used to store rider images and thumbnails.
-
-	<details>
-	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
-	
-	1. In the Amazon S3 Management Console, click on the ![](./images/bucket-icon.png) icon next to Amazon S3 bucket used to store rider photos (The S3 bucket should have a name similar to `wildrydes-step-module-resource-riderphotos3bucket-7l698ggkdcf3`).
-	 
-		![select bucket](./images/s3-console-select-bucket.png) 
-	1. Click on the **Empty Bucket** button.
-	
-		![empty bucket](./images/s3-console-empty-bucket.png)
-		
-	1. Copy/paste the bucket name into the pop-up box, then click **Confirm**.
-	
-		![empty bucket](./images/s3-empty-bucket-dialog.png)
-		
-	1. Repeat the steps to empty the Amazon S3 bucket used to store photo thumbnails (it should have a name similar to `wildrydes-step-module-resources-thumbnails3bucket-1j0t3m28k7mxo`).
-
-	</p></details>
-
 1. Delete the `wildrydes-step-module-resources` AWS CloudFormation stack that launched the AWS Lambda functions, Amazon S3 buckets and Amazon DynamoDB table.
 
 	<details>

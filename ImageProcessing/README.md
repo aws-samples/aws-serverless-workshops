@@ -75,15 +75,19 @@ The following AWS CloudFormation template will create these resources:
 	* **ThumbnailS3Bucket** stores the resized thumbnails of the rider photos
 * One Amazon DynamoDB table **RiderPhotoDDBTable** that stores the metadata of the rider's photo with rider's profile
 * AWS Lambda functions that performs the processing steps
+* IAM role **StateMachineRole** that gives the Step Functions state machine to invoke lambda functions
 
 
 Click on the link for the region you have chosen:  
 
-Region| Launch
-------|-----
-US East (N. Virginia) | [![Launch Module in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3.amazonaws.com/wild-rydes-step-module-us-east-1/0-cfn/wild-rydes-step-module-us-east-1.output.yaml)
-US West (Oregon) | [![Launch Module in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-us-west-2.amazonaws.com/wild-rydes-step-module-us-west-2/0-cfn/wild-rydes-step-module-us-west-2.output.yaml)
-EU (Ireland) | [![Launch Module 1 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-eu-west-1.amazonaws.com/wild-rydes-step-module-eu-west-1/0-cfn/wild-rydes-step-module-eu-west-1.output.yaml)
+Region| Code | Launch
+------|------|-------
+US East (Ohio)| <span style="font-family:'Courier';">us-east-2</span> | [![Launch Module in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-us-east-2.amazonaws.com/wild-rydes-sfn-module-us-east-2/0-cfn/step2-sam.yaml)
+US East (N. Virginia) | <span style="font-family:'Courier';">us-east-1</span> | [![Launch Module in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3.amazonaws.com/wild-rydes-sfn-module-us-east-1/0-cfn/step2-sam.yaml)
+US West (Oregon) | <span style="font-family:'Courier';">us-west-2</span> | [![Launch Module in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-us-west-2.amazonaws.com/wild-rydes-sfn-module-us-west-2/0-cfn/step2-sam.yaml)
+EU (Ireland) | <span style="font-family:'Courier';">eu-west-1</span> | [![Launch Module in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-eu-west-1.amazonaws.com/wild-rydes-sfn-module-eu-west-1/0-cfn/step2-sam.yaml)
+Tokyo | <span style="font-family:'Courier';">ap-northeast-1</span> | [![Launch Module in ap-northeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-ap-northeast-1.amazonaws.com/wild-rydes-sfn-module-ap-northeast-1/0-cfn/step2-sam.yaml)
+Sydney | <span style="font-family:'Courier';">ap-southeast-2</span> | [![Launch Module in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3-ap-southeast-2.amazonaws.com/wild-rydes-sfn-module-ap-southeast-2/0-cfn/step2-sam.yaml)
 
 <details>
 <summary><strong>AWS CloudFormation Launch Instructions (expand for details)</strong></summary><p>
@@ -107,6 +111,8 @@ EU (Ireland) | [![Launch Module 1 in eu-west-1](http://docs.aws.amazon.com/AWSCl
 1. With the `wildrydes-step-module-resources` stack selected, click on the **Outputs** tab. These resources will be referenced in the later steps. 
 
 </p></details>
+
+> You may copy & paste the contents of the **Outputs** tab of the CloudFormation stack to a separate text editor for ease of access later. 
 
 
 
@@ -179,20 +185,24 @@ Now you can create an AWS Step Functions state machine with the initial face det
 
 1. You might see the Get Started page if you have not used AWS Step Functions before. If that's the case, click **Get Started**, it should lead you to the page to create a new state machine. Otherwise, click the **Create a State Machine** button. 
 
-1. Type `RiderPhotoProcessing-1` for the state machine name.
+
+
+1. Type `RiderPhotoProcessing` for the state machine name.
+
+1. For **IAM role for your state machine executions**, pick **I will use an existing role**, and select the IAM role created by the CloudFormation in the previous step. 
+	> The name of the IAM role should have the prefix `wildrydes-step-modules-resources` (the name of the CloudFormation stack) To verify the IAM role's full name, you can open a new tab for the CloudFormation console and check the **Output** section of the stack you just created, and look for `StateMachineRole`.
+
+	![select IAM role](./images/3-create-statemachine-select-role.png)
+
 
 1. Paste in the JSON from your `rider-photo-state-machine.json` file into the **Code** editor portion. 
 
 1. You can click on the &#x21ba; sign next to **Preview** to visualize the workflow:
  
-	![create initial state machine](./images/create-initial-state-machine-2.png)
+	![create initial state machine](./images/3-initial-sfn-code.png)
 
 
 1. Click **Create State Machine** to create the state machine.
-
-1. In the pop-up window, select the IAM role automatically generated for you (the name should look like `StatesExecutionRole-{region-name}`).
-
-	![pick IAM role for state machine](./images/pick-state-role.png)
 
 1. Click the **New execution** button to start a new execution.
 
@@ -330,11 +340,14 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-2` by copy-pasting the updated JSON definition:
+1. Go back the AWS Step Functions Console, select the `RiderPhotoProcessing` state machine and click the **Edit state machine** button
+	
+	![edit state machine](./images/4-edit-state-machine.png)
 
-	![Create State Machine with dedup step](./images/create-machine-with-dedup.png)
+1. Copy-paste the updated JSON definition into the editor, then click **Update and start execution**
 
-	> **Note**: AWS Step Functions state machines are immutable. Therefore, every time you want to change the state machine definition, you must always create a new state machine. 
+	![update state machine definition](./images/4-update-state-machine-definition.png)
+
 	
 1. Test the new state machine with the test input you've used before:
 
@@ -346,7 +359,6 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	} 
 	```
 	Because we haven't added the step yet to index the face in the photo into the Rekognition collection, the `CheckFaceDuplicate` step will always succeed at this point. 
-
 
 </p></details>
 
@@ -490,11 +502,10 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-3` by copy-pasting the updated JSON definition:
+1. Go back the AWS Step Functions Console, update the `RiderPhotoProcessing` statemachine by copy-pasting the updated JSON definition:
 
-	![Create State Machine with parallel step](./images/create-machine-with-parallel.png)
+	![Update State Machine with parallel step](./images/5-update-state-machine-with-parallel-step.png)
 
-	> **Note**: AWS Step Functions state machines are immutable. Therefore, every time you want to change the state machine definition, you must always create a new state machine. 
 	
 1. Test the new state machine with the test input you've used before:
 
@@ -654,9 +665,10 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, create a new state machine `RiderPhotoProcessing-4` by copy-pasting the updated JSON definition:
+1. Go back the AWS Step Functions Console, update the state machine by copy-pasting the updated JSON definition:
 
-	![Create state machine with persistence step](./images/create-machine-with-persistence.png)
+	![Update state machine with persistence step](./images/6-update-state-machine-persistence.png)
+	
 	
 1. Test the new state machine with test input:
 
@@ -725,16 +737,7 @@ The intent of the **PhotoDoesNotMeetRequirement**  step is to send notification 
 
 ## Clean-up 
 
-1. Delete the `RiderPhotoProcessing-*` state machines from the AWS Step Functions console.
-
-	<details>
-	<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
-	
-	In the AWS Step Functions Management Console, go to **Dashboard**, select the state machine to delete, then click **Delete**.
-	
-	![delete state machines](./images/delete-machines.png) 
-	
-	</p></details>
+1. Delete the `RiderPhotoProcessing` state machine from the AWS Step Functions console.
 
 1. Empty the Amazon S3 buckets used to store rider images and thumbnails.
 

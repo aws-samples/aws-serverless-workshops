@@ -44,7 +44,6 @@ Our tech stack is as follows.
 Our cloud environment consists of three AWS accounts.  This allows us to segregate environments and limit the blast radius caused by mistakes.
 
 They are:
-
 * __prime:__ Where user access to the environment is managed.
 * __prod:__ The production version of our platform used by our users.
 * __dev__: This is where the development version of our application resides along with individual developer instances of services.  The development environment should nearly resemble prod as the time between deploying to development and production should be minimal.  Changes laying around undeployed to prod aren’t doing users any good.
@@ -55,30 +54,44 @@ They are:
 ### Developer Laptop Setup
 Before starting this workshop ensure you have the following tools setup.
 
-* __NodeJS / NPM:__ Our chosen tool for managing serverless systems is written in JavaScript so you will need a Node.JS runtime and package manager.  Please install by using one of the methods below.
+#### __NodeJS / NPM__
+Our chosen tool for managing serverless systems is written in JavaScript so you will need a Node.JS runtime and package manager.  Please install by using one of the methods below.
 
-Mac / Homebrew: `brew update && brew install node`
-Windows / Linux / Generic: Install the latest stable or LTS release located here: https://nodejs.org/en/download/
+* Mac / Homebrew:
+```
+brew update && brew install node
+```
+* Windows / Linux / Generic: Install the latest stable or LTS release located here: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
 
-* __Serverless Framework:__ [Serverless Framework](https://serverless.com/framework/) is our chosen tool for managing deployment of serverless systems.
+#### __Serverless Framework__
+[Serverless Framework](https://serverless.com/framework/) is our chosen tool for managing deployment of serverless systems.
 
+* All OSes:
 ```
 $ npm install -g serverless
 ```
 
-* __Python:__ Our application platform is written in Python 3.6 and we will need a Python runtime installed.
-
+#### __Python:__
+Our application platform is written in Python 3.6 and we will need a Python runtime installed.
 <!--
 __FIXME:__ Need Pyenv too; remember to set `python3.6` as python executable. `pyenv virtualenv -p python3.6 3.6`
 -->
-Mac / Homebrew: `brew update && brew install node`
-Windows / Generic: Install the latest version of Python 3.6 located here: https://www.python.org/downloads/
+* Mac / Homebrew:
+```
+brew update && brew install node
+```
+* Windows / Generic: Install the latest version of Python 3.6 located here: [https://www.python.org/downloads/](https://www.python.org/downloads/)
 
-In addition, you may find pyenv useful for managing Python virtual environments.
+In addition, you may find [pyenv](https://github.com/pyenv/pyenv) useful for managing Python virtual environments.
 
-Mac / Homebrew: `brew update && brew install pyenv`
-Windows / Linux / Generic: `curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash`
-
+* Mac / Homebrew:
+```
+brew update && brew install pyenv
+```
+* Windows / Linux / Generic
+```
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+```
 
 ### AWS Account Setup
 
@@ -122,7 +135,7 @@ $ export SLS_STAGE=%%USERNAME%%
 $ export AWS_DEFAULT_PROFILE=training-dev
 ```
 
-### Clone this Githib repository
+### Clone this Github repository
 
 Finally, clone this Github repository and initialize the git submodules.
 

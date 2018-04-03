@@ -51,7 +51,7 @@ $ travis encrypt AWS_ACCESS_KEY_ID_DEV='<ACCESS_KEY_ID>' --add
 3. Annotate the encrypted environment variable in _.travis.yml_.  Since the tool does not add the name of the environmental variable that was encrypted, it's useful to annotate the name of the environment variable.
 <!-- We want to switch to a single set of Travis CI/CD credentials. -->
 
-```
+```yaml
 env:
   global:
     - DIST_DIR="${PWD}/dist"
@@ -197,7 +197,7 @@ This stage runs integration tests against the dev instance of the service.  With
 
 This stage retrieves the build artifact from the dev S3 bucket and copies it to the production bucket.
 
-```
+```yaml
 - stage: promote-to-prod
   language: python
   python: '3.6'
@@ -223,7 +223,7 @@ This stage retrieves the build artifact from the dev S3 bucket and copies it to 
 
 This stage performs the deployment to production.
 
-```
+```yaml
 - stage: deploy-prod
   sudo: required
   services:

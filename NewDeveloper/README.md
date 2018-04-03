@@ -12,7 +12,7 @@ Today as a new developer on the team we’ll walk you through our development wo
 ## About The Wild Rydes Tech Stack
 Wild Rydes is built using an AWS serverless nanoservices architecture.  The language of choice for our services is Python.  Our stack uses the following AWS services:
 
-* [S3]((https://aws.amazon.com/s3/)
+* [S3](https://aws.amazon.com/s3/)
   * Wild Rydes front end.
   * Hosts static web resources including HTML, CSS, JavaScript, and image files.
   * Makes calls to backend to dispatch rides.
@@ -38,7 +38,7 @@ Our tech stack is as follows.
 * [wild-rydes-ride-request](https://github.com/ServerlessOpsIO/wild-rydes-ride-request)
   * Ride request backend
 
-![Wild Rydes Web Application Architecture](images/wildrydes-complete-architecture.png)
+![Wild Rydes Web Application Architecture](images/wild-rydes.png)
 
 
 ### AWS environment

@@ -1,0 +1,24 @@
+[submodule "NewDeveloper/1_DeveloperEnvironmentSetup/wild-rydes-website"]
+	path = NewDeveloper/1_DeveloperEnvironmentSetup/wild-rydes-website
+	url = https://github.com/ServerlessOpsIO/wild-rydes-website.git
+[submodule "NewDeveloper/1_DeveloperEnvironmentSetup/wild-rydes-ride-requests"]
+	path = NewDeveloper/1_DeveloperEnvironmentSetup/wild-rydes-ride-requests
+	url = https://github.com/ServerlessOpsIO/wild-rydes-ride-requests.git
+[submodule "NewDeveloper/1_DeveloperEnvironmentSetup/wild-rydes-auth/"]
+	path = NewDeveloper/1_DeveloperEnvironmentSetup/wild-rydes-auth
+	url = https://github.com/ServerlessOpsIO/wild-rydes-auth.git
+[submodule "NewDeveloper/2_LocalDevelopment/wild-rydes-ride-requests"]
+	path = NewDeveloper/2_LocalDevelopment/wild-rydes-ride-requests
+	url = https://github.com/ServerlessOpsIO/wild-rydes-ride-requests.git
+[submodule "NewDeveloper/4_DebugFailures/wild-rydes-ride-requests"]
+	path = NewDeveloper/4_DebugFailures/wild-rydes-ride-requests
+	url = https://github.com/ServerlessOpsIO/wild-rydes-ride-requests.git
+[submodule "NewDeveloper/2_LocalDevelopment/wild-rydes-promo-discount"]
+	path = NewDeveloper/2_LocalDevelopment/wild-rydes-promo-discount
+	url = https://github.com/ServerlessOpsIO/wild-rydes-promo-discount.git
+[submodule "NewDeveloper/2_LocalDevelopment/wild-rydes-ride-requests-updated"]
+	path = NewDeveloper/2_LocalDevelopment/wild-rydes-ride-requests-updated
+	url = https://github.com/ServerlessOpsIO/wild-rydes-ride-requests.git
+[submodule "NewDeveloper/4_DebugFailures/wild-rydes-ride-requests-updated"]
+	path = NewDeveloper/4_DebugFailures/wild-rydes-ride-requests-updated
+	url = https://github.com/ServerlessOpsIO/wild-rydes-ride-requests.git

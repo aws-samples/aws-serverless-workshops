@@ -2,8 +2,12 @@
 
 In this module we will now deploy our new feature to dev and production.  A merge to master will trigger the deploy pipeline to run.  Our CI/CD pipeline uses [Travis](https://travis-ci.org/ServerlessOpsIO) to build, test, and deploy.  We chose Travis for its simplicity and familiarity.
 
-At the end of this module you will have
-1. Understand how the Travis CI/CD pipeline is configured and why.
+__Objectives:__
+* Understand how the Travis CI/CD pipeline is configured and why.
+
+__Questions:__
+* How might we speedup the build process? <!-- caching, consolidating stages -->
+* How might we simplify managing dev and prod Travis accounts?
 
 ## CI/CD architecture
 
@@ -19,7 +23,7 @@ All projects go through 4-5 build stages:
 
 - unit test / build artifact
 - development environment deployment
-- integration testing (optional - now frontend testing currently)
+- integration testing (optional - no frontend testing currently)
 - artifact promotion to production
 - production environment deployment
 
@@ -38,17 +42,17 @@ Encrypting sensitive information can be done using the Travis CLI command.  In o
 
 To add an encrypted value you would perform the following steps.
 
-1. Install the Travis CLI
+#### 1. Encrypt an environment variable
+
+Travis provides a Ruby CLI tool for working with projects.  It also has the ability to add encrypted secrets.
+
 ```
 $ gem install travis
-```
-
-2. Encrypt an environment variable
-```
 $ travis encrypt AWS_ACCESS_KEY_ID_DEV='<ACCESS_KEY_ID>' --add
 ```
 
-3. Annotate the encrypted environment variable in _.travis.yml_.  Since the tool does not add the name of the environmental variable that was encrypted, it's useful to annotate the name of the environment variable.
+#### 2. Annotate the encrypted environment variable in _.travis.yml_
+Since the tool does not add the name of the environmental variable that was encrypted, it's useful to annotate the name of the environment variable.
 <!-- We want to switch to a single set of Travis CI/CD credentials. -->
 
 ```yaml
@@ -76,10 +80,10 @@ _NOTE: As an alternative you may wish to store something like AWS access keys in
 
 ### Build stages
 
-The build is divided into multiple stages.  This makes it easier to quickly asses where in the build a failure occurred.  It also makes it easier to make changes in the build with less fear of disturbing other parts of the build.  Out build process also builds a single artifact that is tested and deployed to all environments.
+The build is divided into multiple stages.  This makes it easier to quickly assess where in the build a failure occurred.  It also makes it easier to make changes in the build with less fear of disturbing other parts of the build.  Our build process also builds a single artifact that is tested and deployed to all environments.
 
 An example build can be found here:
-* https://travis-ci.org/ServerlessOpsIO/wild-rydes-ride-requests/builds/359651509
+* [https://travis-ci.org/ServerlessOpsIO/wild-rydes-ride-requests/builds/359651509](https://travis-ci.org/ServerlessOpsIO/wild-rydes-ride-requests/builds/359651509)
 
 Let's walk through each stage now.
 
@@ -128,7 +132,7 @@ This stage installs dependencies for the service, performs unit tests (the same 
 
 #### Deploy-dev
 
-This stage will retrieve the build artifact and deploy it to the dev environment
+This stage will retrieve the build artifact and deploy it to the dev environment.
 
 ```yaml
 - stage: deploy-dev
@@ -164,7 +168,7 @@ This stage will retrieve the build artifact and deploy it to the dev environment
 
 #### Integration-test
 
-This stage runs integration tests against the dev instance of the service.  With the amount of AWS resources that can go into making up a single service, not to mention interactions between your own services, it's important to ensure the entire functional path is working correctly.  A unit test can't detect a missing IAM permission but integration tests can.
+This stage runs integration tests against the dev instance of the service.  With the amount of AWS resources that can go into making up a single service, not to mention interactions between your own services, it's important to ensure the entire functional path is working correctly.  for example, unit test can't detect a missing IAM permission but integration tests can.
 
 ```yaml
 - stage: integration-test

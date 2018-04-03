@@ -4,7 +4,7 @@ In this module you will deploy your developer environment to the dev AWS environ
 
 __Objectives:__
 * Deployed your personal developer versions of the Wild Rydes services.
-* Signup for service
+* Signup for the Wild Rydes service.
 
 __Questions:__
 * Did you notice a delay in ride response on your first ride request? Why was that? <!--A: Cold start -->

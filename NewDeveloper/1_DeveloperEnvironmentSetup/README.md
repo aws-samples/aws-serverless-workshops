@@ -1,28 +1,36 @@
 # Module 1: Developer Environment Setup
 
-In this module you will deploy your developer environment to the dev AWS environment.  You will deploy the website, authentication and authorization, and ride request services.  Once the Wild Rydes services have been setup you will go through the registration process.  This involves registering, confirming your registration with the code mailed to you, and finally signing in.  Once you've signed in, right click on a spot on the map to set your pickup location.  Then click "Request Ride" in the top right to dispatch a ride.
+In this module you will deploy your developer environment to the dev AWS environment.  You will deploy the website, authentication and authorization, and ride request services.  Once the Wild Rydes services have been setup you will go through the registration process.  This involves registering, confirming your registration with the code emailed to you, and finally signing in.  Once you've signed in, right click on a spot on the map to set your pickup location.  Then click "Request Ride" in the top right to dispatch a ride.
 
-At the end of this module you will:
-* Have Serverless Framework Setup.
+__Objectives:__
 * Deployed your personal developer versions of the Wild Rydes services.
+* Signup for service
+
+__Questions:__
+* Did you notice a delay in ride response on your first ride request? Why was that? <!--A: Cold start -->
+* How is the website updated with Cognito setup information? <!-- Custom resource -->
+  * Do you see any issued with this method? <!-- Redeployinmg the website overwrites the config -->
+  * How might you resolve those issues? <!-- AWS SSM parameter store, SLS can do lookups.  App could also make lookups. -->
+* How might you refactor fetching a unicorn from the fleet? <!-- DDB + REST API -->
+
 
 ## Serverless Framework
 [Serverless Framework](https://serverless.com/framework/) is the tool we use for deploying and managing our serverless systems.  It's DSL is based off of AWS CloudFormation which makes it easy to use and understand using existing CloudFormation knowledge and documentation.  However, it adds some niceties over CloudFromation which make us choose to use it instead.
-1. Makes setup of functions, particularly around events easier.
-1. Support for plugins to enhance functionality.
-1. Support for local and remote invocation to aide testing.
-1. Support for obtaining remote function logs.
+* Makes setup of functions, particularly around events easier.
+* Support for plugins to enhance functionality.
+* Support for local and remote invocation to aide testing.
+* Support for obtaining remote function logs.
 
 ### Instructions
 To install and setup the software perform the following steps.
-1. Install Serverless Framework and ensure it's installed properly by running the following commands.
+1. Install Serverless Framework and ensure it's installed properly by running the following commands.  (The version may differ.)
 
 ```
 $ npm install serverless -g
 $ serverless version
 1.26.1
 ```
-2. Set $SLS_STAGE in your shell environment to prevent your deployments from conflicting with another developer's.  Normally you might set this to a PR or JIRA ID, but just use your initials instead for now.
+2. Set $SLS_STAGE in your shell environment to prevent your deployments from conflicting with another developer's.  Normally you might set this to a PR or JIRA ID, but just use your assigned user name.
 ```
 $ export SLS_STAGE=%%YOUR_USER_NAME%%
 ```
@@ -38,9 +46,7 @@ Deploy the Wild Rydes services.
 
 ### wild-rydes-website
 
-This service provides the web front end.  The site uses [S3's static website](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html) serving capabilities.
-
-To deploy the service.
+This service provides the web front end.  The site uses [S3's static website](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html) serving capabilities.  This provides us with a scalable web hosting service which does not require us to manage Nginx or Apache and we pay on a per request basis.  Go ahead and deploy the service.
 
 #### 1. Install Serverless Framework Plugins
 
@@ -158,9 +164,9 @@ This service uses two plugins:
 - [serverless-python-requirements](https://github.com/UnitedIncome/serverless-python-requirements)
 - [serverless-iam-roles-per-function](https://github.com/functionalone/serverless-iam-roles-per-function)
 
-The _serverless-python-requirements_ plugin handles bundling module dependencies.  The dependencies for this project are listed in [requirements.txt](./requirements.txt).  During deployment this plugin will download dependencies and bundle them with the deployment artifact that Serverless Framework will upload to S3.  _NOTE: the boto3 dependency is not packaged for deployment.  It is only listed for local tsting to work.  The AWS Lambda runtime has already contains boto3 and this reduces package size as well as cold starts.  However, this also means the module version may change in production.  Breaking changes should not happen but it is possible._
+The _serverless-python-requirements_ plugin handles bundling module dependencies.  The dependencies for this project are listed in [requirements.txt](./requirements.txt).  During deployment this plugin will download dependencies and bundle them with the deployment artifact that Serverless Framework will upload to S3.  _NOTE: the boto3 dependency is not packaged for deployment.  It is only listed for local testing to work.  The AWS Lambda runtime has already contains boto3 and this reduces package size as well as cold starts.  However, this also means the module version may change in production.  Breaking changes should not happen but it is possible._
 
-The _serverless-iam-roles-per-function_ plugin let's us create different IAM roles for each Lambda function in the service.  By default, Serverless Framework creates a single IAM role for a service that is applied to each Lambda function.  However that means you may end up granting broad privileges to a function that does not require them.  As an example in this service, the function 
+The _serverless-iam-roles-per-function_ plugin let's us create different IAM roles for each Lambda function in the service.  By default, Serverless Framework creates a single IAM role for a service that is applied to each Lambda function.  However that means you may end up granting broad privileges to a function that does not require them.  [Compare the _iamRoleStatements_ of the two functions in this service](https://github.com/ServerlessOpsIO/wild-rydes-ride-requests/blob/56a2a8b2600d993fe23921e0123e09f91f415525/serverless.yml#L45-L105) to see their different needs and why we want different roles per.
 
 
 ```
@@ -170,8 +176,7 @@ $ npm install
 
 #### 2. Deploy to dev AWS Account
 
-Deploy the ride request service.
-
+Deploy the Ride Request service to your personal environment in the AWS dev account.
 
 ```
 $ sls deploy -v

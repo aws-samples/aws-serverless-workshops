@@ -24,7 +24,7 @@ $ serverless version
 ```
 2. Set $SLS_STAGE in your shell environment to prevent your deployments from conflicting with another developer's.  Normally you might set this to a PR or JIRA ID, but just use your initials instead for now.
 ```
-$ export SLS_STAGE=%%YOUR_INITIALS%%
+$ export SLS_STAGE=%%YOUR_USER_NAME%%
 ```
 
 ## Deploy Wild Rydes Services

@@ -12,19 +12,19 @@ Today as a new developer on the team we’ll walk you through our development wo
 ## About The Wild Rydes Tech Stack
 Wild Rydes is built using an AWS serverless nanoservices architecture.  The language of choice for our services is Python.  Our stack uses the following AWS services:
 
-* [S3]((https://aws.amazon.com/s3/))
+* [S3]((https://aws.amazon.com/s3/)
   * Wild Rydes front end.
   * Hosts static web resources including HTML, CSS, JavaScript, and image files.
   * Makes calls to backend to dispatch rides.
 * [Cognito](https://aws.amazon.com/cognito/)
   * Handles user management and authenticates access to backend API
-* [API Gateway]()
+* [API Gateway](https://aws.amazon.com/api-gateway/)
   * Provides backend interface.
   * Each backend endpoint invokes a Lambda.
-* [Lambda]()
+* [Lambda](https://aws.amazon.com/lambda/)
   * Serverless compute layer
   * Responsible for managing the ride fleet.
-* [DynamoDB]()
+* [DynamoDB](https://aws.amazon.com/dynamodb/)
   * Data persistence
   * Records wrides
 
@@ -63,23 +63,24 @@ Windows / Generic: Install the latest stable or LTS release located here: https:
 
 * __Python:__ Our platform is written in Python 3.6 and we will need a Python runtime installed.
 
+<!--
 __FIXME:__ Need Pyenv too; remember to set `python3.6` as python executable. `pyenv virtualenv -p python3.6 3.6`
-
+-->
 Mac / Homebrew: `brew update && brew install node`
 Windows / Generic: Install the latest version of Python 3.6 located here: https://www.python.org/downloads/
 
 
 ### AWS Account Setup
 Now time to setup your AWS credentials.
-
+<!--
 __FIXME:__ %%NEED A WAY TO DISTRIBUTE CREDS ONLINE%%
-
+-->
 Install the AWS CLI.
 ```
 pip install awscli
 ```
 
-Configure AWS credentials by creating the following files if they do not exist for you already, and add the following contents to them.
+Configure AWS credentials by creating the following files if they do not exist for you already, and add the following contents to them.  You'll be given an AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY at the start of class to fill in below.
 
 _~/.aws/config_
 ```
@@ -112,11 +113,30 @@ role_arn = arn:aws:iam::820506766567:role/OrganizationAccountAccessUserRole
 
 ```
 
+Lastly, set the following variables in your shell environment.  You'll be given a USERNAME when assigned your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+
+```
+$ export SLS_STAGE=%%USERNAME%%
+$ export AWS_DEFAULT_PROFILE=training-dev
+```
+
 If you want to make switching between profiles easy, take a look at adding one of the following to your shell environment.
 
 * __aws-profile:__ https://github.com/jaymecd/aws-profile
 * __awsp:__ https://github.com/antonbabenko/awsp
 
+### Clone this Githib repository
+
+Finally, clone this Github repository and initialize submodules.
+
+```
+$ git clone https://github.com/ServerlessOpsIO/aws-serverless-workshops.git
+$ cd aws-serverless-workshops
+$ git submodule init
+```
+
+<!--
 ## Modules
 
-__FIXME:__ %%Explain what comes next.%%
+__FIXME:__ Explain what comes next.
+-->

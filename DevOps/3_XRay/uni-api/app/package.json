@@ -1,0 +1,11 @@
+{
+  "name": "uni-api",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-xray-sdk": "^2.153.0",
+    "aws-xray-sdk": "^1.1.6"
+  }
+}

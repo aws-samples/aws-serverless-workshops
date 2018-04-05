@@ -1,0 +1,12 @@
+{
+  "name": "uni-api-test",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^4.0.1",
+    "proxyquire": "^1.8.0"
+  }
+}

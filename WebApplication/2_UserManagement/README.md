@@ -95,15 +95,15 @@ From the Amazon Cognito console select your user pool and then select the **App 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. From the Pool Details page for your user pool, select **App clients** from the left navigation bar.
+1. From the Pool Details page for your user pool, select **App clients** from the **General settings** section in the left navigation bar.
 
-1. Click **Add an app client**.
+1. Choose **Add an app client**.
 
-1. Give the app a name such as `WildRydesWebApp`.
+1. Give the app client a name such as `WildRydesWebApp`.
 
 1. **Uncheck** the Generate client secret option. Client secrets aren't supported for use with browser-based applications.
 
-1. Click **Create app client**.
+1. Choose **Create app client**.
 
    <kbd>![Create app client screenshot](../images/add-app.png)</kbd>
 
@@ -197,3 +197,8 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
     ![Successful login screenshot](../images/successful-login.png)
 
 After you have successfully logged into your web application, you can proceed to the next module, [Serverless Backend](../3_ServerlessBackend).
+
+### Extra
+
+* Try copying the **auth_token** you've received and paste that into an [online JWT Decoder](https://jwt.io/) to understand what this token means for your application
+

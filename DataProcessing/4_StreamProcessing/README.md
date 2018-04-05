@@ -20,7 +20,7 @@ Before beginning the module ensure that you have the Kinesis command-line client
 
 Use the IAM console to create a new role. Give it a name like `WildRydesStreamProcessorRole` and select AWS Lambda for the role type. Attach the managed policy called `AWSLambdaKinesisExecutionRole` to this role in order to grant permissions for your function to read from Amazon Kinesis streams and to log to Amazon CloudWatch Logs.
 
-You'll need to grant this role permissions to access the Amazon DynamoDB table create in the previous sections. Create an inline policy allowing the role access to the `ddb:PutItem` action for the Amazon DynamoDB table you created in the [File Processing module][file-processing-module].
+You'll need to grant this role permissions to access the Amazon DynamoDB table create in the previous sections. Create an inline policy allowing the role access to the `dynamodb:BatchWriteItem` action for the Amazon DynamoDB table you created in the [File Processing module][file-processing-module].
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -29,13 +29,15 @@ You'll need to grant this role permissions to access the Amazon DynamoDB table c
 
 1. Select **Roles** from the left navigation and then click **Create new role**.
 
-1. Select **AWS Lambda** for the role type from **AWS Service Role**.
+1. Select **Lambda** for the role type from **AWS Service Role**.
 
     **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
 
+1. Click **Next: Permissions**.
+
 1. Begin typing `AWSLambdaKinesisExecutionRole` in the **Filter** text box and check the box next to that role.
 
-1. Click **Next Step**.
+1. Click **Next: Review**.
 
 1. Enter `WildRydesStreamProcessorRole` for the **Role Name**.
 
@@ -43,9 +45,8 @@ You'll need to grant this role permissions to access the Amazon DynamoDB table c
 
 1. Type `WildRydesStreamProcessorRole` into the filter box on the Roles page and click the role you just created.
 
-1. On the Permissions tab, expand the **Inline Policies** section and click the link to create a new inline policy.
-
-   <kbd>![Inline policies screenshot](../images/stream-processing-policies.png)</kbd>
+1. On the Permissions tab, click **Add inline policy** link to create a new inline policy.
+	<kbd>![Inline policies screenshot](../images/stream-processing-policies.png)</kbd>
 
 1. Ensure **Policy Generator** is selected and click **Select**.
 
@@ -90,39 +91,43 @@ Make sure you configure your function to use the `WildRydesStreamProcessorRole` 
 
 1. Click on **Services** then select **Lambda** in the Compute section.
 
-1. Click **Create a Lambda function**.
+1. Click **Create function**.
 
-1. Click the **Blank Function** blueprint card.
-
-1. Click on the dotted outline and select **Kinesis**. Select **wildrydes-aggregated** from **Kinesis stream**, select **Trim horizon** from **Starting position**, and tick the **Enable trigger** checkbox.
-
-    <kbd>![Create Lambda trigger screenshot](../images/stream-processing-configure-trigger.png)</kbd>
-
-	Starting position refers to the position in the stream where AWS Lambda should start reading and trim horizon configures this to the oldest data record in the shard. See [ShardIteratorType][shard-iterator-type-documentation] in the Amazon Kinesis API Reference for more details.
-
-1. Click **Next**.
+1. Click on **Author from scratch**.
 
 1. Enter `WildRydesStreamProcessor` in the **Name** field.
 
-1. Optionally enter a description.
+1. Select `WildRydesStreamProcessorRole` from the **Existing Role** dropdown.
+
+	<kbd>![Create Lambda function screenshot](../images/stream-processing-lambda-create.png)</kbd>
+
+1. Click on **Create function**.
+
+1. Click on **Triggers** then click **+ Add trigger**
+
+1. Click on the dotted outline and select **Kinesis**. Select **wildrydes-aggregated** from **Kinesis stream**, select **Trim horizon** from **Starting position**, and tick the **Enable trigger** checkbox.
+
+	<kbd>![Create Lambda trigger screenshot](../images/stream-processing-configure-trigger.png)</kbd>
+
+	Starting position refers to the position in the stream where AWS Lambda should start reading and trim horizon configures this to the oldest data record in the shard. See [ShardIteratorType][shard-iterator-type-documentation] in the Amazon Kinesis API Reference for more details.
+
+1. Click **Submit**.
+
+1. Click **Configuration**.
 
 1. Select **Node.js 6.10** for the **Runtime**.
 
-1. Copy and paste the code from [index.js](lambda/WildRydesStreamProcessor/index.js) into the code entry area.
-
-    <kbd>![Create Lambda function screenshot](../images/stream-processing-lambda-create.png)</kbd>
-
-1. In **Environment variables**, enter an environment variable with key `TABLE_NAME` and value `UnicornSensorData`.
-
-    <kbd>![Lambda environment variable screenshot](../images/file-processing-lambda-env-var.png)</kbd>
-
 1. Leave the default of `index.handler` for the **Handler** field.
 
-1. Select `WildRydesStreamProcessorRole` from the **Existing Role** dropdown.
+1. Copy and paste the code from [index.js](lambda/WildRydesStreamProcessor/index.js) into the code entry area.
+	<kbd>![Create Lambda function screenshot](../images/stream-processing-lambda-create.png)</kbd>
 
-    <kbd>![Define handler and role screenshot](../images/stream-processing-lambda-role.png)</kbd>
+1. Extend **Environment variables** under the entry area
 
-1. Click **Next** and then click **Create function** on the Review page.
+1. In **Environment variables**, enter an environment variable with key `TABLE_NAME` and value `UnicornSensorData`.
+	<kbd>![Lambda environment variable screenshot](../images/file-processing-lambda-env-var.png)</kbd>
+
+1. Scroll to top and click **"Save"** (**Not** "Save and test" since we haven't configured any test event)
 
 </p></details>
 

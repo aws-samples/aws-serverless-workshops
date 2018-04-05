@@ -51,7 +51,7 @@ The architecture for this module is very straightforward. All of your static web
 
 ![Static website architecture](../images/static-website-architecture.png)
 
-For the purposes of this module you'll use the Amazon S3 website endpoint URL that we supply. It takes the form `http://{your-bucket-name}.s3-website.{region}.amazonaws.com`. For most real applications you'll want to use a custom domain to host your site. If you're interested in using a your own domain, follow the instructions for [setting up a static website using a custom domain](http://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html) in the Amazon S3 documentation.
+For the purposes of this module you'll use the Amazon S3 website endpoint URL that we supply. It takes the form `http://{your-bucket-name}.s3-website-{region}.amazonaws.com` or `bucket-name.s3-website.region.amazonaws.com` depending on the region you use. For most real applications you'll want to use a custom domain to host your site. If you're interested in using a your own domain, follow the instructions for [setting up a static website using a custom domain](http://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html) in the Amazon S3 documentation.
 
 ## Implementation Instructions
 
@@ -104,32 +104,6 @@ Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your
 
 Upload the website assets for this module to your S3 bucket. You can use the AWS Management Console (requires Google Chrome browser), AWS CLI, or the provided CloudFormation template to complete this step. If you already have the AWS CLI installed and configured on your local machine, we recommend using that method. Otherwise, use the console if you have the latest version of Google Chrome installed.
 
-<details>
-<summary><strong>Console step-by-step instructions (expand for details)</strong></summary><p>
-
-In order to upload all files and subdirectories in a local directory via the AWS Management Console, you must use the latest version of the Chrome web browser. If you cannot use Chrome, please follow the instructions for using either the AWS CLI or the provided CloudFormation template.
-
-1. Download an archive of this repository using [this link](https://github.com/awslabs/aws-serverless-workshops/archive/master.zip).
-
-1. Unzip the archive you downloaded on your local machine.
-
-1. Open the AWS Management Console in Chrome. Choose **Services** then select **S3** under Storage.
-
-1. Select the bucket you created in the previous step and ensure you are viewing the **Objects** tab.
-
-1. Open either Windows File Explorer or macOS Finder and browse to the expanded contents of the zip file you downloaded in the first step.
-
-1. Browse to the WebApplication/1_StaticWebHosting/website directory on your local machine.
-
-1. Select all of the files and subdirectories under the website directory. Ensure that the website directory itself is not selected.
-
-1. Drag and drop the selected files from your local filesystem to the content under the **Objects** tab in the S3 console.
-
-1. Choose **Upload** in the lower left of the dialog box that appears.
-
-1. Wait for the upload to complete, and ensure you see the contents of the website directory listed in the S3 console. If you only see a single `website` directory, you should delete it from your bucket and follow these instructions again ensuring that you select only the contents of the directory before dragging and dropping into the S3 console.
-
-</p></details>
 <details>
 <summary><strong>CLI step-by-step instructions (expand for details)</strong></summary><p>
 
@@ -194,7 +168,7 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
 
 1. Choose the **Permissions** tab, then choose **Bucket Policy**.
 
-1. Enter the following policy document into the bucket policy editor replacing `[YOUR_BUCKET_NAME]` with the name of the bucket you created in section 1:
+1. Enter the following policy document into the bucket policy editor replacing `YOUR_BUCKET_NAME` with the name of the bucket you created in section 1:
 
     ```json
     {
@@ -204,7 +178,7 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
                 "Effect": "Allow",
                 "Principal": "*",
                 "Action": "s3:GetObject",
-                "Resource": "arn:aws:s3:::[YOUR_BUCKET_NAME]/*"
+                "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
             }
         ]
     }

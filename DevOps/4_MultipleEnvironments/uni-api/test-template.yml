@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+- 'AWS::Serverless-2016-10-31'
+- 'AWS::CodeStar'
+
+Description: Creates a function to test an api
+
+Parameters:
+  ProjectId:
+    Type: String
+    Description: AWS CodeStar projectID used to associate new resources to team members
+
+Resources:
+  SetupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: uni-api-test-setup
+      Runtime: nodejs6.10
+      CodeUri: int-test/
+      Handler: setup.lambda_handler
+      Description: Setup integration test
+      Timeout: 10
+      Environment:
+        Variables:
+          TEST_FUNCTION: !GetAtt TestFunction.Arn
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+
+  TestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: uni-api-test
+      Runtime: nodejs6.10
+      CodeUri: int-test/
+      Handler: test.lambda_handler
+      Description: Execute integration test
+      Timeout: 60
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]

@@ -1,0 +1,442 @@
+/** CONSTANTS **/
+/* UXDG colors */
+/* UXDG color palettes */
+/* UXDG status indicators */
+/* UXDG text treatments */
+/* UXDG Animation */
+/* UXDG Styles */
+.awsui {
+  /* Layout */
+  /* Side nav */
+  /* Warning banner */
+  /* Blog posts */
+  /* homepage */
+  /* Documentation pages */
+  /* Component page */
+}
+.awsui header {
+  background-color: #222;
+  padding: 10px 30px;
+}
+.awsui footer {
+  border-top: 1px solid #cccccc;
+  padding: 15px 30px 0;
+}
+.awsui footer p, .awsui footer a {
+  color: #999999;
+}
+.awsui footer a {
+  text-decoration: underline;
+}
+.awsui table {
+  width: 100%;
+}
+.awsui th {
+  text-align: left;
+}
+.awsui th, .awsui td {
+  padding: 2px;
+}
+.awsui .navigation {
+  margin: 0;
+  padding: 0;
+}
+.awsui .navigation li {
+  list-style: none;
+  padding: 0;
+  margin: 0 20px 0 0;
+}
+.awsui .navigation a {
+  color: white;
+  line-height: 18px;
+}
+.awsui .navigation a.active, .awsui .navigation a:hover, .awsui .navigation a:active {
+  color: #ff9900;
+}
+.awsui .navigation .home-link {
+  color: white;
+  font-size: 18px;
+}
+.awsui .awsui-grid #content {
+  float: left;
+  width: 100%;
+  padding: 30px;
+}
+.awsui .awsui-grid .awsui-layout-left-nav {
+  overflow: hidden;
+}
+.awsui .awsui-grid .awsui-layout-left-nav #n {
+  display: block;
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #cccccc;
+  background-color: #eeeeee;
+}
+.awsui .side-nav a, .awsui .side-nav h4 {
+  color: #444444;
+}
+.awsui .side-nav a:hover, .awsui .side-nav a:active, .awsui .side-nav a:focus,
+.awsui .side-nav .active {
+  color: #e07700;
+}
+.awsui .side-nav h4 {
+  color: #999999;
+}
+.awsui .side-nav .clickable {
+  cursor: pointer;
+}
+.awsui .error-404 {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.awsui .error-404 img {
+  max-width: 100%;
+}
+@media (min-width: 960px) {
+  .awsui .awsui-grid .awsui-layout-left-nav {
+    overflow: auto;
+    background-position: 245px;
+    background-repeat: repeat-y;
+    min-height: calc(100vh - 100px);
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHZpZXdCb3g9IjAgMCAxIDEiPjxwYXRoIGZpbGw9IiNDQ0MiIGQ9Ik0wIDBoMXYxaC0xeiIvPjwvc3ZnPg==);
+  }
+  .awsui .awsui-grid .awsui-layout-left-nav #content {
+    width: calc(98vw - 245px);
+  }
+  .awsui .awsui-grid .awsui-layout-left-nav #n {
+    width: 245px;
+    display: block;
+    float: left;
+    border-bottom: none;
+    background-color: white;
+  }
+}
+.awsui .warning-banner {
+  padding: 5px 40px;
+  background-color: #9b59b6;
+}
+.awsui .warning-with-icon {
+  margin: 0 auto;
+  padding: 12px 0px 12px 55px;
+  background: url("/static/images/favicon.png") no-repeat;
+  background-size: 45px;
+  line-height: 21px;
+  color: white;
+  margin-bottom: 0;
+  font-size: 16px;
+  display: block;
+  text-shadow: 0 1px 1px #8e44ad;
+}
+.awsui .warning-with-icon a {
+  color: white;
+  text-align: center;
+  text-decoration: underline;
+}
+@media (min-width: 960px) {
+  .awsui .warning-with-icon {
+    width: 745px;
+  }
+}
+.awsui .blog .article-title {
+  border-bottom: none;
+}
+.awsui .blog .article-title a {
+  color: #444444;
+}
+.awsui .blog article:not(:last-child) {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #cccccc;
+}
+.awsui .blog .date {
+  font-style: italic;
+  color: #999999;
+}
+.awsui .awsui-grid .page-header {
+  margin: 0px auto 40px auto;
+  float: none;
+}
+.awsui .page-title {
+  font-size: 39px;
+  border: none;
+  color: #222;
+  margin: 20px;
+  text-align: center;
+}
+.awsui .page-description {
+  font-size: 20px;
+  line-height: 30px;
+  text-align: center;
+  margin: 20px auto;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #cccccc;
+}
+.awsui .aws-ui-logo {
+  margin: 0;
+  width: 130px;
+  height: 130px;
+  display: block;
+  background: #ecf0f1;
+  /*background-image: url("../images/logo.svg");*/
+  background-position: center center;
+  background-size: contain;
+  border-radius: 100px;
+  border: 1px solid #ececec;
+  margin: 0 auto;
+}
+.awsui .component-status-bar {
+  display: inline-block;
+  padding: 2px 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  line-height: 18px;
+  position: relative;
+  top: -4px;
+  color: white;
+  font-weight: normal;
+}
+.awsui .component-status-bar a {
+  color: white;
+  text-decoration: none;
+}
+.awsui .component-status-bar.input {
+  background-color: #516fb5;
+}
+.awsui .component-status-bar.research {
+  background-color: #989898;
+}
+.awsui .component-status-bar.api {
+  background-color: #b45375;
+}
+.awsui .component-status-bar.stable {
+  background-color: #27ae60;
+}
+.awsui .component-status-bar.preview {
+  background-color: #f39c12;
+}
+.awsui .component-status-bar.experimental {
+  background-color: #c0392b;
+}
+.awsui th .component-status-bar {
+  top: 0;
+}
+.awsui .toc {
+  border: 1px solid #cccccc;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  display: block;
+  border-radius: 4px;
+}
+.awsui .toc h2 {
+  font-size: 14px;
+  font-weight: bold;
+  border-bottom: none;
+  background-color: #f6f6f6;
+  margin: -10px -15px 10px;
+  padding: 10px 10px;
+  border-radius: 4px 4px 0 0;
+}
+.awsui .highlight {
+  background-color: #F7F7F9;
+  display: block;
+}
+.awsui .editor {
+  padding: 9px 14px;
+  border-radius: 4px;
+  background-color: #F7F7F9;
+  border: 1px solid #E1E1E8;
+  display: block;
+  margin-bottom: 20px;
+}
+.awsui .scrollable-table {
+  overflow-x: auto;
+}
+.awsui .demo {
+  border: 1px solid #E1E1E8;
+  padding: 9px 14px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+.awsui .demo > span {
+  text-transform: uppercase;
+  color: #cccccc;
+  font-size: 12px;
+  display: inline-block;
+}
+.awsui .demo > span.component {
+  margin-bottom: 10px;
+}
+.awsui .demo .show-modal-button {
+  display: none;
+}
+.awsui .demo.demo-awsui-modal {
+  border: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.awsui .demo.demo-awsui-modal .component {
+  display: none;
+}
+.awsui .demo.demo-awsui-modal .show-modal-button {
+  display: block;
+}
+.awsui component-code-sample {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+.awsui .classname, .awsui section code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #930F80;
+  background-color: #fbf0ff;
+  border-radius: 4px;
+  font-family: Monaco, Menlo, Consolas, "Courier Prime", Courier, "Courier New", monospace;
+}
+.awsui .demo-heading {
+  border-bottom: none;
+}
+.awsui .color-name {
+  font-weight: bold;
+}
+.awsui .color-item {
+  padding: 15px;
+}
+.awsui .hex {
+  float: right;
+  text-transform: uppercase;
+}
+.awsui .light {
+  color: white;
+}
+.awsui .name-prefix {
+  float: right;
+}
+.awsui .main-color {
+  background-color: #eeeeee;
+  border-bottom: 1px solid #e0e0e0;
+}
+@media (min-width: 960px) {
+  .awsui .toc {
+    display: inline-block;
+  }
+  .awsui .component-status-bar {
+    margin-bottom: 0;
+  }
+}
+.awsui .item-type {
+  background-color: rgba(224, 224, 224, 0.6);
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+.awsui .item-type.required {
+  font-weight: bold;
+  background-color: #ffedb5;
+}
+.awsui .item-type.default {
+  color: #930F80;
+  background-color: #fbf0ff;
+}
+.awsui .item-type.attribute {
+  font-style: italic;
+  background: #eeeeee;
+}
+.awsui .demo-section {
+  padding: 30px;
+  margin-top: 20px;
+}
+.awsui .section-how-to {
+  padding-top: 20px;
+  margin-bottom: 20px;
+}
+.awsui .inputs .custom-label {
+  margin-bottom: 5px;
+  display: inline-block;
+  font-weight: bold;
+}
+.awsui .inputs h4 {
+  font-weight: bold;
+}
+.awsui .active-example {
+  color: #e07700;
+}
+.awsui .section-guidelines img, .awsui .guidelines img {
+  max-width: 100%;
+}
+.awsui .section-guidelines h4, .awsui .guidelines h4 {
+  border-bottom: none;
+}
+.awsui .section-guidelines h3#typography, .awsui .section-guidelines h3#color, .awsui .section-guidelines h3#iconography, .awsui .section-guidelines h3[id*=color], .awsui .section-guidelines h2 + h3, .awsui .guidelines h3#typography, .awsui .guidelines h3#color, .awsui .guidelines h3#iconography, .awsui .guidelines h3[id*=color], .awsui .guidelines h2 + h3 {
+  border-bottom: none;
+}
+.awsui .section-guidelines .markdown-list-override > ul,
+.awsui .section-guidelines .markdown-list-override > ol, .awsui .guidelines .markdown-list-override > ul,
+.awsui .guidelines .markdown-list-override > ol {
+  padding-left: 20px;
+  margin: 10px 0;
+  list-style-position: outside;
+}
+.awsui .section-guidelines .markdown-list-override > ul > li ul,
+.awsui .section-guidelines .markdown-list-override > ul > li ol,
+.awsui .section-guidelines .markdown-list-override > ol > li ul,
+.awsui .section-guidelines .markdown-list-override > ol > li ol, .awsui .guidelines .markdown-list-override > ul > li ul,
+.awsui .guidelines .markdown-list-override > ul > li ol,
+.awsui .guidelines .markdown-list-override > ol > li ul,
+.awsui .guidelines .markdown-list-override > ol > li ol {
+  padding-left: 20px;
+  margin: 0;
+}
+.awsui .section-guidelines table, .awsui .guidelines table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.awsui .section-guidelines table thead, .awsui .guidelines table thead {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+.awsui .section-guidelines table th, .awsui .guidelines table th {
+  background-image: -webkit-linear-gradient(#eee, #e0e0e0);
+  background-image: -o-linear-gradient(#eee, #e0e0e0);
+  background-image: linear-gradient(#eee, #e0e0e0);
+  height: 40px;
+  text-align: left;
+  padding: 0 15px;
+  white-space: nowrap;
+}
+.awsui .section-guidelines table td, .awsui .guidelines table td {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 15px;
+}
+.awsui .section-guidelines .color, .awsui .guidelines .color {
+  width: 24px;
+  height: 24px;
+  border: 1px solid #ccc;
+}
+.awsui .component-examples {
+  margin: 0;
+  margin-bottom: 15px;
+}
+.awsui .component-examples li {
+  float: left;
+  margin: 0 10px 0 3px;
+}
+.awsui .components-list.awsui-list li {
+  position: relative;
+}
+.awsui .components-list .component-status-bar {
+  position: absolute;
+  font-size: 12px;
+  line-height: 14px;
+  top: 1px;
+  right: 0;
+}
+
+/*# sourceMappingURL=home.css.map */

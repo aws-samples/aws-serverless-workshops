@@ -4,7 +4,7 @@ In this module, you'll use [AWS CodePipeline](https://aws.amazon.com/codepipelin
 
 ## CodePipeline Overview
 
-CodePipeline orchestrates the steps to build, test, and deploy your code changes.  Below is a screenshot of the CodePipeline you will build when have completed this module.
+CodePipeline orchestrates the steps to build, test, and deploy your code changes.  Below is a screenshot of the CodePipeline created by the CodeStar project.
 
 ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
 
@@ -12,504 +12,345 @@ CodePipeline orchestrates the steps to build, test, and deploy your code changes
 
 CodeBuild compiles source code, runs tests, and produces software packages that are ready to deploy to environments.
 
-The Unicorn API [buildspec.yml](buildspec.yml) defines the commands used to build the project and the output artifacts.
+The Unicorn API [buildspec.yml](uni-api/buildspec.yml) defines the commands used to build the project and the output artifacts.
 
 ```yaml
 version: 0.1
+
 phases:
-  install:
-    commands:
-      - echo "nothing to do in install"
-  pre_build:
-    commands:
-      - echo "Installing dependencies - `pwd`"
   build:
     commands:
-      - echo "Starting build `date` in `pwd`"
-      - aws cloudformation package --template-file app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file app-sam-output.yaml
-  post_build:
-    commands:
-      - echo "build completed on `date`"
+      - cd app && npm install
+      - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
+
 artifacts:
+  type: zip
   files:
-    - app-sam-output.yaml
-  discard-paths: yes
+    - template-export.yml
 ```
 
-For the Unicorn API, the build command is the same **CloudFormation package** command used from the [Serverless Application Model: Step 2](../1_ServerlessApplicationModel#2-package-the-unicorn-api-for-deployment), except that the S3 bucket has been externalized to an environment variable that you will define in the CodeBuild project.
+The **CloudFormation [package](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html)** command zips the local source code, uploads it to S3, and returns a new CloudFormation template that has been modified to use the S3 references as the CodeUri.
 
-As a reminder, the **CloudFormation package** command packages the local source code, uploads it to S3, and returns a new CloudFormation template that has been modified to use the S3 references as the CodeUri.
+For the Unicorn API, the output artifact is a zip archive that includes only the `template-export.yml` file.
 
-For the Unicorn API, the output artifact is a zip archive that includes only the ``app-sam-output.yaml`` file.
-
-## Implementation Instructions
+## Environment Setup
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
-### 1. Identify Wild Rydes S3 Bucket
+### 1. Seed the `uni-api` CodeCommit Git repository
 
-You will reuse the S3 Bucket that you created in [Module 1: Serverless Application Model](../1_ServerlessApplicationModel/README.md#1-create-an-s3-bucket) from the DevOps Workshop.  If you have not completed this Module, please refer to the module instructions to create the S3 Bucket.
+1. Each module has corresponding source code used to seed the CodeStar CodeCommit Git repository to support the workshop.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
-If you are unsure of your S3 Bucket's name, please follow the instructions below.
+    Region| Launch
+    ------|-----
+    US East (N. Virginia) | [![Launch Module 2 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codecommit-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-2-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-east-1)
+    US West (N. California) | [![Launch Module 2 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codecommit-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-2-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-1)
+    US West (Oregon) | [![Launch Module 2 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/codecommit-template.yml&param_sourceUrl=https://s3-us-west-2.amazonaws.com/fsd-aws-wildrydes-us-west-2/uni-api-2-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-2)
+    EU (Ireland) | [![Launch Module 2 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-2-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-west-1)
+    EU (Frankfurt) | [![Launch Module 2 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-2-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-central-1)
+    Asia Pacific (Sydney) | [![Launch Module 2 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-2-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=ap-southeast-2)
 
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console choose **Services** then select **S3** under Storage.
+1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
 
-1. Browse the list of Buckets or use the search box to identify the S3 Bucket.  `wildrydes-devops-yourname` was recommended as the Bucket name, however you may have chosen a different globaly unique name.
+1. Select the **I acknowledge that AWS CloudFormation might create IAM resources.** checkbox to grant CloudFormation permission to create IAM resources on your behalf
 
-</p></details>
+1. Click the **Create** button in the lower right corner of the browser window to create the CloudFormation stack and seed the CodeCommit repository.
 
-### 2. Create a Deployment Package
+    ![Seed Repository CloudFormation Stack Review](images/seed-repository-1.png)
 
-The CodePipeline that you will create in the next step will be triggered by updates to a deployment package in S3.
+1. There will be a short delay as the Git repository seeded with the new source code.  Upon successful completion, the CloudFormation will show Status ``CREATE_COMPLETE``.
 
-1. Change directory to `aws-serverless-workshops-master/DevOps/2_ContinuousDeliveryPipeline/unicorn-api`.
+    ![CloudFormation Stack Creation Complete](images/seed-repository-2.png)
 
-1. To create a deployment for this project, zip the contents of the `unicorn-api` directory into a file named **`unicorn-api.zip`**, which is your deployment package.  If you are unsure how to zip the files in the `unicorn-api` directory, follow the instructions for Microsoft workstations [here](https://support.microsoft.com/en-us/instantanswers/2df754f6-7039-824c-b5be-6dda11b5075e/zip-and-unzip-files), and macOS workstations [here](https://support.apple.com/kb/PH25411).
+### 2. Fetch CodeCommit Git Repository
 
-**Important**
-> Zip the directory content, not the directory. The contents of the Zip file are available as the current working directory of the Lambda function. For example: /app-sam.yaml
+Now that the CodeCommit Git repository has been seeded with new source code, you will need to fetch the changes locally so that you may modify the code.  Typically, this is accomplished using the `git pull` command, however for the workshop we have replaced the repository with a new history and different Git commands will be used.
 
-### 3. Upload the Deployment Package to S3
+Using your preferred Git client, run the commands from your local **uni-api** directory:
 
-1. In the AWS Management Console, choose **Services** then select **S3** under Storage.
-
-1. Browse the list of Buckets or use the search box to find the S3 bucket that you identified previously.
-
-1. Choose **Upload**
-
-1. Choose **Add files**, select the local copy of `unicorn-api.zip` and then choose **Upload** in the bottom left corner of the dialog.
-
-### 4. Create an IAM Policy for CodeBuild
-
-Use the IAM console to create a new role. Name it `WildRydesUnicornApiCodeBuild` and select AWS CodeBuild for the role type. You'll need to attach policies that grant your CodeBuild project permissions to write CloudWatchLogs, get and put objects from the CodePipeline S3 bucket, and put objects to the S3 bucket that you identified previously.
-
-1. From the AWS Management Console, click on **Services** and then select **IAM** in the Security, Identity & Compliance section.
-
-1. Select **Roles** in the left navigation bar and then choose **Create New Role**.
-
-1. Select **AWS CodeBuild** for the role type.
-
-    **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
-
-1. Choose **Next Step**.
-
-1. Enter `WildRydesUnicornApiCodeBuild` for the **Role name**.
-
-1. Choose **Create Role**.
-
-1. Type `WildRydesUnicornApiCodeBuild` into the filter box on the Roles page and choose the role you just created.
-
-1. On the Permissions tab, expand the **Inline Policies** section and choose the **click here** link to create a new inline policy.
-
-   ![Inline policies screenshot](images/inline-policies.png)
-
-1. Ensure **Custom Policy** is selected and choose **Select**.
-
-1. Enter `WildRydesUnicornApiCodeBuild` for the **Policy Name**.
-
-1. Enter the following for the **Policy Document**.  Make sure you replace `YOUR_BUCKET_NAME` with the name you identified previously and `YOUR_REGION` with the name of the AWS Region that you chose in Module 1, for example `us-east-1`.
-
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Effect": "Allow",
-         "Action": [
-           "logs:CreateLogGroup",
-           "logs:CreateLogStream"
-         ],
-         "Resource": [
-           "arn:aws:logs:YOUR_REGION:::log-group:/aws/codebuild/wildrydes-unicorn-api"
-         ]
-       },
-       {
-         "Effect": "Allow",
-         "Action": [
-           "logs:PutLogEvents"
-         ],
-         "Resource": [
-           "arn:aws:logs:YOUR_REGION:::log-group:/aws/codebuild/wildrydes-unicorn-api/*"
-         ]
-       },
-       {
-         "Effect": "Allow",
-         "Action": [
-           "s3:GetObject",
-           "s3:GetObjectVersion",
-           "s3:PutObject"
-         ],
-         "Resource": [
-           "arn:aws:s3:::codepipeline-*/*"
-         ]
-       },
-       {
-         "Effect": "Allow",
-         "Action": [
-           "s3:PutObject"
-         ],
-         "Resource": [
-           "arn:aws:s3:::YOUR_BUCKET_NAME/*"
-         ]
-       }
-     ]
-   }
-   ```
-
-1. Choose **Apply Policy**
-
-### 5. Create a CodePipeline Pipeline
-
-You have now prepared the dependencies required to create a pipeline.  Next, you'll create a CodePipeline with two stages, source and build.
-
-#### 5a. Create Pipeline
-
-1. From the AWS Management Console, click on **Services** and then select **CodePipeline** in the Developer Tools section.
-
-1. Choose **Create Pipeline**.
-
-1. Enter `wildrydes-unicorn-api` for the **Pipeline name**
-
-   ![CodePipeline Step 1](images/codepipeline-step1.png)
-
-#### 5b. Create Source Stage
-
-The source stage is triggered automatically when a new version of the Unicorn API zip artifact is uploaded to S3.  The source stage copies the archive from the S3 object, unzips the contents, rearchives the contents, and puts the archive to an encrypted CodePipeline S3 bucket.
-
-1. Select `Amazon S3` for the **Source provider**
-
-1. Enter `s3://YOUR_BUCKET_NAME/unicorn-api.zip` for the **Amazon S3 location**.  Make sure you replace `YOUR_BUCKET_NAME` with the name you identified previously.
-
-   ![CodePipeline Step 2](images/codepipeline-step2.png)
-
-1. Choose **Next step**
-
-#### 5c. Create Build Stage
-
-The build stage is triggered automatically when a new version of the source stage is available.  You will configure the build stage to use CodeBuild transform the source code into an artifact that is ready to be deployed.
-
-1. Select `AWS CodeBuild` for the **Build provider**.
-
-1. Select `Create a new build project` under **Configure your project**.
-
-1. Enter `wildrydes-unicorn-api` for the **Project name**.
-
-   ![CodePipeline Step 3a](images/codepipeline-step3a.png)
-
-1. Select `Use an image maintained by AWS CodeBuild` for the **Environment image**.
-
-1. Select `Ubuntu` for the **Operating System**.
-
-1. Select `Node.js` for the **Runtime**.
-
-1. Select `aws/codebuild/nodejs:6.3.1` for the **Version**.
-
-1. Select `Use the buildspec.yml in the source code root directory` for the **Build specification**.
-
-   ![CodePipeline Step 3b](images/codepipeline-step3b.png)
-
-1. Select `Choose an existing service role from your account` and enter `WildRydesUnicornApiCodeBuild` as the **Role name**.
-
-   ![CodePipeline Step 3c](images/codepipeline-step3c.png)
-
-1. Expand the **Advanced** configuration section.
-
-1. In the **Environment variables** section, enter `S3_BUCKET` for the variable **Name** and enter the name of the S3 bucket that you identified previously for the **Value**.
-
-   ![CodePipeline Step 3d](images/codepipeline-step3d.png)
-
-1. Choose **Save build project**
-
-1. Choose **Next step**
-
-#### 5d. Complete the Pipeline
-
-1. Select `No Deployment` as the **Deployment provider**
-
-1. Choose **Next step**
-
-1. Choose **Create role**
-
-1. A new browser window will open.  Choose **Create a new IAM Role** for **IAM Role**, and enter `WildRydesUnicornApiCodePipeline` for the **Role name**.
-
-   ![CodePipeline Step 3e](images/codepipeline-step3e.png)
-
-1. Choose **Allow**
-
-1. The browser window will close, returning you to the CodePipeline UI with `WildRydesUnicornApiCodePipeline` populated for the **Role name**.
-
-1. Choose **Next Step**
-
-1. Review the details of the CodePipeline and choose **Create pipeline**
-
-## Validation
-
-After you have created the wildrydes-unicorn-api CodePipeline, you will see a pipeline with two stages, Source and Build.  When the pipeline completes successfully, each stage will be green, similar to the screenshot below.
-
-![CodePipeline Validation](images/codepipeline-phase1.png)
-
-## Add Deploy Stage to CodePipeline
-
-The CodePipeline that you have created so far pulls source code updates from S3 and builds a deployable artifact using CodeBuild.  Next, you will add a stage to deploy the `app-sam-output.yaml` CloudFormation Template to update a CloudFormation Stack using the same technique used from the command line in [Module 1](../1_ServerlessApplicationModel).
-
-### 1. Create an IAM Policy for CloudFormation
-
-Use the IAM console to create a new role. Name it `WildRydesUnicornApiCloudFormation` and select AWS CloudFormation for the role type. You'll need to attach policies that grant your CloudFormation project permissions to access Lambda, DynamoDB and API Gateway.
-
-1. From the AWS Management Console, click on **Services** and then select **IAM** in the Security, Identity & Compliance section.
-
-1. Select **Roles** in the left navigation bar and then choose **Create New Role**.
-
-1. Select **AWS CloudFormation Role** for the role type.
-
-    **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
-
-1. Choose **Next Step**.
-
-1. Enter `WildRydesUnicornApiCloudFormation` for the **Role name**.
-
-1. Choose **Create Role**.
-
-1. Type `WildRydesUnicornApiCloudFormation` into the filter box on the Roles page and choose the role you just created.
-
-1. On the Permissions tab, choose the **Attach Policy** button to add a Managed Policy.
-
-1. Enter `AWSLambdaFullAccess` into the filter box, select the checkbox to the left of the role, and clear the filter box
-
-1. Enter `AmazonDynamoDBFullAccess` into the filter box, select the checkbox to the left of the role, and clear the filter box
-
-1. Enter `AmazonAPIGatewayAdministrator` into the filter box, select the checkbox to the left of the role, and clear the filter box
-
-1. Choose **Attach Policy**.
-
-1. On the Permissions tab, expand the **Inline Policies** section and choose the **click here** link to create a new inline policy.
-
-   ![Inline policies screenshot](images/inline-policies.png)
-
-1. Ensure **Custom Policy** is selected and choose **Select**.
-
-1. Enter `WildRydesUnicornApiCloudFormation` for the **Policy Name**.
-
-1. Enter the following for the **Policy Document**.
-
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Effect": "Allow",
-         "Action": [
-             "cloudformation:CreateChangeSet",
-             "cloudformation:ExecuteChangeSet",
-             "iam:AttachRolePolicy",
-             "iam:CreateRole",
-             "iam:DeleteRole",
-             "iam:DeleteRolePolicy",
-             "iam:DetachRolePolicy",
-             "iam:PutRolePolicy",
-             "iam:GetRole"
-         ],
-         "Resource": [
-            "*"
-         ]
-       }
-     ]
-   }
-   ```
-
-1. Choose **Apply Policy**
-
-### 2. Edit CodePipeline
-
-1. From the AWS Management Console, click on **Services** and then select **CodePipeline** in the Developer Tools section.
-
-1. Choose `wildrydes-unicorn-api` from the list of pipelines.
-
-1. Choose `Edit`.
-
-#### 2a. Add Prod Stage
-
-1. Choose `+Stage` at the bottom of the pipeline.
-
-   ![CodePipeline Edit](images/codepipeline-edit.png)
-
-1. Enter `Prod` for the **Stage Name**.
-
-1. Choose `+Action` below `Prod`.
-
-#### 2b. Add CreateChangeSet Action to Prod Stage
-
-1. In the **Add action** dialog, select `Deploy` for the **Action category**.
-
-1. Enter `CreateChangeSet` for the **Action name**.
-
-1. Select `AWS CloudFormation` for the **Deployment provider**.
-
-   ![CodePipeline Add Action](images/codepipeline-add-1.png)
-
-1. Select `Create or replace a change set` for **Action mode**
-
-1. Enter `wildrydes-unicorn-api` for **Stack name**
-
-1. Enter `wildrydes-unicorn-api-changeset` for **Change set name**
-
-1. Enter `MyAppBuild::app-sam-output.yaml` for **Template**
-
-1. Select `CAPABILITY_IAM` for **Capabilities**
-
-1. Enter `WildRydesUnicornApiCloudFormation` for **Role name**
-
-   ![CodePipeline Add Action CloudFormation](images/codepipeline-add-2.png)
-
-1. Enter `MyAppBuild` for **Input artifacts #1**
-
-   ![CodePipeline Add Action Artifacts](images/codepipeline-add-3.png)
-
-1. Choose **Add Action**
-
-#### 2c. Add ExecuteChangeSet Action to Prod Stage
-
-1. Choose `+Action` below `CreateChangeSet`.
-
-   ![CodePipeline Add Action](images/codepipeline-add2-1.png)
-
-1. In the **Add action** dialog, select `Deploy` for the **Action category**.
-
-1. Enter `ExecuteChangeSet` for the **Action name**.
-
-1. Select `AWS CloudFormation` for the **Deployment provider**.
-
-   ![CodePipeline Add Action](images/codepipeline-add2-2.png)
-
-1. Select `Execute a change set` for **Action mode**
-
-1. Enter `wildrydes-unicorn-api` for **Stack name**
-
-1. Enter `wildrydes-unicorn-api-changeset` for **Change set name**
-
-   ![CodePipeline Add Action](images/codepipeline-add2-3.png)
-
-1. Choose **Add Action**
-
-#### 2d. Save CodePipeline Changes
-
-The pipeline should look like the following screenshot after adding the new Prod stage.
-
-![CodePipeline Deploy Stage Complete](images/codepipeline-add2-complete.png)
-
-1. Scroll to the top of the pipeline and choose `Save pipeline changes`
-
-1. Choose `Save and Continue` when prompted by the Save Pipeline Changes dialog.
-
-## Prod Stage Validation
-
-The addition of the deploy stage is complete.  You will now validate that the Prod stage is working by updating the Unicorn API with a new method to remove a Unicorn from the Wild Ryde stables, and deploying the change using CodePipeline.
-
-### 1. Add Delete Function to app-sam.yaml
-
-Using a text editor, open the `app-sam.yaml` file and append a new **AWS::Serverless::Function** Resource labeled `DeleteFunction` that has the following definition.
-
-> Note: whitespace is important in YAML files.  Please verify that the configuration below is added with the same space indentation as the CloudFormation Resources in the app-sam.yaml file.
-
-1. **CodeUri** is ``app``
-
-1. **Runtime** is ``nodejs6.10``
-
-1. **Handler** is ``delete.lambda_handler``
-
-1. **Event** type is ``Api`` associated to the ``/unicorns/{name}`` **Path** and ``delete`` **Method**
-
-1. **Environment** variable named `TABLE_NAME` that references the `DynamodbTable` Resources for its value.
-
-1. **Policies** should mirror other Functions, however the **Action** to allow is ``dynamodb:DeleteItem``
-
-If you are unsure of the syntax to add to ``app-sam.yaml`` please refer to the code snippet below.
-
-<details>
-<summary><strong>app-sam.yaml additions to support Delete function (expand for details)</strong></summary><p>
-
-```yaml
-  DeleteFunction:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      Runtime: nodejs6.10
-      CodeUri: app
-      Handler: delete.lambda_handler
-      Description: Remove Unicorn
-      Events:
-        UpdateApi:
-          Type: Api
-          Properties:
-            Path: /unicorns/{name}
-            Method: delete
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref DynamodbTable
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${DynamodbTable}'
-              Action:
-                - 'dynamodb:DeleteItem'
+```bash
+git fetch --all
+git reset --hard origin/master
 ```
 
-</p></details>
+Congratulations, your environment setup is complete!
 
-### 2. Create a Deployment Package
 
-1. Change directory to `aws-serverless-workshops-master/DevOps/2_ContinuousDeliveryPipeline/unicorn-api`.
+## API Enhancement
 
-1. To create a deployment for this project, zip the contents of the `unicorn-api` directory into a file named **`unicorn-api.zip`**, which is your deployment package.  If you are unsure how to zip the files in the `unicorn-api` directory, follow the instructions for Microsoft workstations [here](https://support.microsoft.com/en-us/instantanswers/2df754f6-7039-824c-b5be-6dda11b5075e/zip-and-unzip-files), and macOS workstations [here](https://support.apple.com/kb/PH25411).
+Let's enhance the API with the ability to create or update a Unicorn in the Wild Rydes stables.  The code to do so is already present in the project, so you need to add an **AWS::Serverless::Function** resource in the SAM `template.yml` template.
 
-**Important**
-> Zip the directory content, not the directory. The contents of the Zip file are available as the current working directory of the Lambda function. For example: /app-sam.yaml
+### 1. Add Update Function to template.yml
 
-### 3. Upload the Deployment Package to S3
+**Goal**: Using the `AWS::Serverless::Function` definitions in the `template.yml` file as examples, add a new Serverless Function named **uni-api-update** to the `template.yml` SAM template.  The function should invoke the **lambda_handler** method in the **`app/update.js`** file when triggered by an **Api** event to the URL path **/unicorns/{name}** using the HTTP **put** method.  The function will required an environment variable, named **TABLE_NAME** that has a value referring to the `AWS::Serverless::SimpleTable` defined in the template.
 
-1. In the AWS Management Console, choose **Services** then select **S3** under Storage.
+<details>
+<summary><strong>
+HOW TO update template.yml with uni-api-update Lambda function (expand for details)
+</strong></summary>
+<p>
 
-1. Browse the list of Buckets or use the search box to find the S3 bucket that you identified previously.
+Using a text editor, open the `template.yml` file and append a new **AWS::Serverless::Function** Resource labeled `UpdateFunction` that has the following definition.
 
-1. Choose **Upload**
+> Note: whitespace is important in YAML files.  Please verify that the configuration below is added with the same space indentation as the CloudFormation Resources in the template.yml file.
 
-1. Choose **Add files**, select the local copy of `unicorn-api.zip` and then choose **Upload** in the bottom left corner of the dialog.
+1. **FunctionName** is `uni-api-update`
 
-### 4. Confirm CodePipeline Completion
+1. **Runtime** is `nodejs6.10`
 
-1. From the AWS Management Console, click on **Services** and then select **CodePipeline** in the Developer Tools section.
+1. **CodeUri** is `app`
 
-1. Choose `wildrydes-unicorn-api` from the list of pipelines.
+1. **Handler** is `update.lambda_handler`
 
-1. Observe that each stage's color will turn blue during execution and green on completion.  Following the successful execution of all stages, the pipeline should look like the following screenshot.
+1. **Description** is `Update a Unicorn`
 
-![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
+1. **Timeout** is `10`
 
-### 4. Test Delete API Method
+1. **Event** type is `Api` associated to the `/unicorns/{name}` **Path** and `put` **Method**
+
+1. **Environment** variable named `TABLE_NAME` that references the `Table` Resource for its value.
+
+1. **Role** is duplicated from another function.
+
+   If you are unsure of the syntax to add to ``template.yml`` please refer to the code snippet below.
+
+   <details>
+   <summary><strong>template.yml additions to support Update function (expand for details)</strong></summary><p>
+
+   ```yaml
+     UpdateFunction:
+       Type: 'AWS::Serverless::Function'
+       Properties:
+         FunctionName: 'uni-api-update'
+         Runtime: nodejs6.10
+         CodeUri: app
+         Handler: update.lambda_handler
+         Description: Update Unicorn
+         Timeout: 10
+         Events:
+           UPDATE:
+             Type: Api
+             Properties:
+               Path: /unicorns/{name}
+               Method: put
+         Environment:
+           Variables:
+             TABLE_NAME: !Ref Table
+         Role:
+           Fn::ImportValue:
+             !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+   ```
+   </details>
+   
+</details>
+<p>
+
+Now that you've updated the the SAM template with the changes, use Git to commit the changes and push them to remote repository.  This will trigger CodePipeline to build and deploy your changes in AWS.
+
+### 2. Commit the change to local Git repository
+
+1. Using your Git client, add the local changes to the Git index, and commit with a message.  For example:
+
+    ```bash
+    git add -u
+    git commit -m "Add update function"
+    ```
+
+1. Using your Git client, push the Git repository updates to the origin.  For example:
+
+    ```bash
+    git push origin
+    ```
+
+### 3. Confirm CodePipeline Completion
+
+**Goal**: After pushing your changes to your CodeCommit Git repository, use the AWS CodeStar Console to monitor and confirm that the changes are successfully built and deployed using CodePipeline.
+
+<details>
+<summary><strong>
+HOW TO use the CodeStar Console to monitor CodePipeline (expand for details)
+</strong></summary>
+<p>
+
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
+
+1. Select the `uni-api` project
+
+    ![CodeStar Project List](images/codestar-1.png)
+
+1. Observe that the continuous deployment pipeline on the right of the browser window now shows the Source stage to be blue, meaning that it is active.
+
+    ![CodeStar Dashboard 1](images/codestar-2.png)
+
+1. Each stage's color will turn blue during execution and green on completion.  Following the successful execution of all stages, the pipeline should look like the following screenshot.
+
+    ![CodeStar Dashboard 2](images/codestar-3.png)
+</details>
+<p>
+
+Congratulations, your changes were successfully built and deployed using CodePipeline.  Next, let's validate that you're able to use the API to add a Unicorn to the Wild Rydes Stable.
+
+## Enhancement Validation
+
+After the CloudFormation deploy command completes, you will use the AWS API Gateway to test your API.
+
+### 1. Add a Unicorn
 
 1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
 
-1. In the left nav, click on `wildrydes-unicorn-api`.
+1. In the left nav, click on `awscodestar-uni-api-lambda`.
 
-1. From the list of API resources, click on the `DELETE` link under the `/{name}` resource.
+1. From the list of API resources, click on the `PUT` link under the `/{name}` resource.
 
 1. On the resource details panel, click the `TEST` link in the client box on the left side of the panel.
 
+    ![Validate 1](images/validate-1.png)
+
 1. On the test page, enter `Shadowfox` in the **Path** field.
 
-1. Click on the **Test** button.
+1. Scroll down the test page and enter the following as the **Request Body**:
+
+    ```json
+    {
+      "breed": "Brown Jersey",
+      "description": "Shadowfox joined Wild Rydes after completing a distinguished career in the military, where he toured the world in many critical missions. Shadowfox enjoys impressing his ryders with magic tricks that he learned from his previous owner."
+    }
+    ```
+
+    ![Validate 2](images/validate-2.png)
+
+1. Scroll down and click the **Test** button.
 
 1. Scroll to the top of the test page, and verify that on the right side of the panel that the **Status** code of the HTTP response is 200.
 
-1. In the left nav, under the `wildrydes-unicorn-api` API click on **Stages**, expand the **Prod** stage, and choose the `GET` method under the `/unicorns` resource.
+    ![Validate 3](images/validate-3.png)
 
-1. At the top of the **Prod Stage Editor** panel, open the **Invoke URL** to a new browser window to display a list of Unicorns in the browser.  `Shadowfox` should not be in the list of Unicorns.
+Congratulations, you have used the API to successfully add a Unicorn!  Next, use the API to list the Unicorns and confirm Shadowfox is included.
+
+### 2. List Unicorns
+
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
+
+1. Select the `uni-api` project
+
+    ![CodeStar Project List](images/codestar-1.png)
+
+1. Copy the URL from the **Application endpoints** tile on the right side of the dashboard.
+
+    ![CodeStar App Endpoint](images/codestar-app-endpoint.png)
+
+1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
+
+1. Confirm that the browser shows a JSON result that includes `Shadowfox`, with the breed and description entered above.
+
+
+## Unit Testing our API
+
+Now that we have a working API, let's consider what steps we can take to ensure that we prevent bugs from creeping into our code.  As you can see, manual testing of our API has a couple of issues; we have to wait for the build process to complete and it takes a human being to go through the steps to verify the API works using the API Gateway service. It would be faster and more reliable to have an automated process that can perform this verification, and it would be even better to have these checks integrated into our build processes.
+
+The repository you cloned in the steps above already include a set of tests that verify the functionality of our Lambda functions, so we won't need to write them from scratch. In the below steps, we will install the tools necessary to execute these tests, fix an issue that we discover has crept into our code, and take steps to ensure these issues won't crop up again in the future.
+
+### 1. Install the testing tools and run our unit test 
+
+1. Change directory to your local **uni-api** directory, if you aren't already there.
+
+1. Install the development tools needed to run unit tests using Node Package Manager:
+
+    ```
+    npm install
+    ```
+
+1. Now that the tools have been installed, let's run our unit testing tool. Since the code for this project was written in Nodejs, we're using the Mocha test framework (https://mochajs.org/). This was already registered in our `package.json` file, so it was installed automatically in the previous step.
+
+    ```
+    node_modules/.bin/mocha
+    ```
+
+    Our suite of tests will then run, and we will discover that there's an issue in our code! One of our Lambda functions is not returning the correct response when we attempt to read a non-exitent unicorn's data.
+    
+    ![Failed tests](images/failed-tests.png)
+
+### 2. Fix unit test failures
+
+Let's examine the output of our test run. We see that the test expected that we would return the standard "404" error code if we attempted to read a unicorn that did not exist in the system, and instead our Lambda code returns a "500."
+
+**Goal**: Correct code bug in `app/read.js`, run unit tests, and verify the tests pass.
+
+<details>
+<summary><strong>
+HOW TO correct code bug and verify passing unit test (expand for details)
+</strong></summary>
+<p>
+
+1. Using a text editor, open `app/read.js` and navigate to the end where we construct our response. We will see that, where we specify the status code to return, we use the existence of a retured item to determine whether we return a 200 (OK) or a 500 (server error) code.
+
+1. Change the code to return a 404 (resource not found) status code instead of a 500.
+
+   ![Bug fix](images/bug-fix.png)
+
+1. Now that we have fixed our code, let's verify the behavior by re-running our unit testing tool:
+
+    ```
+    node_modules/.bin/mocha
+    ```
+
+1. Verify that there are no errors reported by our test run.
+
+   ![Passing tests](images/passing-tests.png)
+
+</details>
+<p>
+
+Congratuations, you've successfully corrected the code bug!  Next, let's look at how to run these tests as part of CodePipeline.
+
+
+### 3. Ensure our tests are run during our builds
+
+Having this testing framework in place ensures that the exact same set of steps are run every time we test our code. However, we are still running this test manually. Let's configure our CodeBuild environment to run these tests for us every time a build is performed.
+
+1. Using a text editor, open `buildspec.yml` and navigate to the `build:` section. 
+
+1. We have discovered that our nemesis, Chet, has disabled our unit tests! Why, Chet, why?! To fix this, uncomment the line that executes the `mocha` command so our unit tests will be run during the build.
+
+1. Using your Git client, add the local changes to the Git index, commit these changes with a message, and push our local changes to the repository. For example:
+
+    ```bash
+    git add -u
+    git commit -m "Enabled unit tests and fixed issues"
+    git push
+    ```
+    
+### 4. Verify the tests are run during the build
+
+1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
+
+1. Select the `uni-api` project
+
+    ![CodeStar Project List](images/codestar-1.png)
+
+1. Scroll down to the "Commit history" tile and verify that you see the commit message that you entered above, for example "Enabled unit tests and fixed issues".
+
+    ![CodeStar Commit](images/codestar-commit.png)
+
+1. Monitor the "Continuous Deployment" pipeline to ensure that the most recent execution of the Build step took place after you committed the code in the steps above. If you have just committed your changes it may take a few minutes for your changes to be detected and executed.
+
+1. Once the Build step has completed, click the `CodeBuild` link inside the step to view the CodeBuild project and build history.
+
+    ![CodeStar Build](images/codestar-codebuild.png)
+
+1. Scroll down to the "Build History" section, and click the entry for the most recent build to view the details of the build.
+
+    ![CodeStar Build](images/codebuild-history.png)
+
+1. Scroll down to the Build logs section, and inspect the build log, looking for a section that begins with `Running command mocha` and reports the results of the test pass (should be `5 passing`).
+
+    ![CodeStar Build](images/codebuild-logs.png)
+
+Congratulations, you have successfully integrated unit tests into your continuous delivery process!
 
 ## Completion
 
-Congratulations!  You have successfully created a Continuous Delivery Pipeline using CodePipeline to automate the deployment of the Unicorn API. In the next [X-Ray Module](../3_XRay), you will integrate AWS X-Ray to demonstrate how to troubleshoot the Unicorn API.
+You have successfully used a Continuous Delivery Pipeline using CodePipeline to automate the deployment of the Unicorn API. In the next [X-Ray Module](../3_XRay), you will integrate AWS X-Ray to demonstrate how to troubleshoot the Unicorn API.

@@ -1,0 +1,21 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - npm install -g mocha
+  build:
+    commands:
+      - npm install
+      - cd app && npm install
+      #
+      # Some unit test keeps failing, and I don't have time to fix it!
+      # -Chet
+      # (uncomment the below to restore unit tests)
+      #- mocha
+      - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
+
+artifacts:
+  type: zip
+  files:
+    - template-export.yml

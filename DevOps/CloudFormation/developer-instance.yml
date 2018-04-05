@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  KeyName:
+    Type: "AWS::EC2::KeyPair::KeyName"
+  VpcId:
+    Type: "AWS::EC2::VPC::Id"
+  SubnetId:
+    Type: "AWS::EC2::Subnet::Id"
+  IncomingIpAddress:
+    Type: "String"
+    Description: "IP Address for incoming SSH connections"
+    Default: "0.0.0.0/0"
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      amiId: "ami-8a3458f0"
+    us-west-1:
+      amiId: "ami-f6313496"
+    us-west-2:
+      amiId: "ami-8a35edf2"
+    eu-west-1:
+      amiId: "ami-9aa313e3"
+    eu-central-1:
+      amiId: "ami-822ba2ed"
+    ap-southeast-2:
+      amiId: "ami-8c5db7ee"
+
+Resources:
+  DeveloperInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", amiId]
+      InstanceType: t2.micro
+      KeyName: !Ref "KeyName"
+      IamInstanceProfile: !Ref InstanceProfile
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          GroupSet:
+            - !Ref "SecurityGroup"
+          SubnetId: !Ref "SubnetId"
+      UserData: !Base64
+        'Fn::Join':
+          - ''
+          - - |
+              #!/bin/bash -xe
+            - |
+            - !Sub 'sudo -H -u ec2-user bash -c "git clone https://git-codecommit.${AWS::Region}.amazonaws.com/v1/repos/uni-api /home/ec2-user/uni-api"'
+            - |+
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: allow ssh connections from specified CIDR ranges
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref "IncomingIpAddress"
+
+  InstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Roles:
+        - !Ref "InstanceRole"
+
+  InstanceRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AWSCodeCommitPowerUser"
+
+Outputs:
+  PublicDnsName:
+    Description: "Public DNS Name for Developer Instance"
+    Value: !GetAtt DeveloperInstance.PublicDnsName

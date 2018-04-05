@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+- 'AWS::Serverless-2016-10-31'
+- 'AWS::CodeStar'
+
+Description:
+  Creates a RESTful API using API Gateway, Lambda and DynamoDB for the Wild Rydes serverless devops workshop
+
+Parameters:
+  ProjectId:
+    Type: String
+    Description: AWS CodeStar projectID used to associate new resources to team members
+
+Resources:
+  ListFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'uni-api-list'
+      Runtime: nodejs6.10
+      CodeUri: app
+      Handler: list.lambda_handler
+      Description: List Unicorns
+      Timeout: 10
+      Events:
+        GET:
+          Type: Api
+          Properties:
+            Path: /unicorns
+            Method: get
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]

@@ -8,6 +8,8 @@ You'll implement a Lambda function that will be invoked each time a user request
 
 The function is invoked from the browser using Amazon API Gateway. You'll implement that connection in the next module. For this module you'll just test your function in isolation.
 
+If you want to skip ahead to the next module, you can **launch the stack from [module 4 (RESTful APIs)](../4_RESTfulAPIs)**.
+
 ## Implementation Instructions
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
@@ -59,13 +61,13 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Select **Roles** in the left navigation bar and then choose **Create new role**.
 
-1. Select **AWS Lambda** for the role type.
+1. Select **Lambda** for the role type from the **AWS service** group, then click **Next: Permissions**
 
     **Note:** Selecting a role type automatically creates a trust policy for your role that allows AWS services to assume this role on your behalf. If you were creating this role using the CLI, AWS CloudFormation or another mechanism, you would specify a trust policy directly.
 
 1. Begin typing `AWSLambdaBasicExecutionRole` in the **Filter** text box and check the box next to that role.
 
-1. Choose **Next Step**.
+1. Click **Next: Review**.
 
 1. Enter `WildRydesLambda` for the **Role name**.
 
@@ -73,23 +75,28 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
 
-1. On the Permissions tab, expand the **Inline Policies** section and choose the **click here** link to create a new inline policy.
+1. On the Permissions tab, choose the **Add inline policy** link in the lower right corner to create a new inline policy.
+    ![Inline policies screenshot](../images/inline-policies.png)
 
-   ![Inline policies screenshot](../images/inline-policies.png)
+1. Select **Choose a service**.
 
-1. Ensure **Policy Generator** is selected and choose **Select**.
+1. Begin typing `DynamoDB` into the search box labeled **Find a service** and select **DynamoDB** when it appears.
+    ![Select policy service](../images/select-policy-service.png)
 
-1. Select **Amazon DynamoDB** from the **AWS Service** dropdown.
+1. Choose **Select actions**.
 
-1. Select **PutItem** from the Actions list.
+1. Begin typing `PutItem` into the search box labeled **Filter actions** and check the box next to **PutItem** when it appears.
 
-1. Paste the ARN of the table you created in the previous section in the **Amazon Resource Name (ARN)** field.
+1. Select the **Resources** section.
 
-    ![Policy generator screenshot](../images/policy-generator.png)
+1. With the **Specific** option selected, choose the Add ARN link in the **table** section.
 
-1. Choose **Add Statement**.
+1. Paste the ARN of the table you created in the previous section in the **Specify ARN for table** field, and choose **Add**.
 
-1. Choose **Next Step** then **Apply Policy**.
+1. Choose **Review Policy**.
+
+1. Enter `DynamoDBWriteAccess` for the policy name and choose **Create policy**.
+    ![Review Policy](../images/review-policy.png)
 
 </p></details>
 
@@ -110,29 +117,25 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Choose on **Services** then select **Lambda** in the Compute section.
 
-1. Choose **Create a Lambda function**.
+1. Click **Create function**.
 
-1. Choose the **Blank Function** blueprint card.
-
-1. Don't add any triggers at this time. Choose **Next** to proceed to defining your function.
+1. Keep the default **Author from scratch** card selected.
 
 1. Enter `RequestUnicorn` in the **Name** field.
 
-1. Optionally enter a description.
-
 1. Select **Node.js 6.10** for the **Runtime**.
 
-1. Copy and paste the code from [requestUnicorn.js](requestUnicorn.js) into the code entry area.
-
-    ![Create Lambda function screenshot](../images/create-lambda-function.png)
-
-1. Leave the default of `index.handler` for the **Handler** field.
+1. Ensure `Choose an existing role` is selected from the **Role** dropdown.
 
 1. Select `WildRydesLambda` from the **Existing Role** dropdown.
+    ![Create Lambda function screenshot](../images/create-lambda-function.png)
 
-1. Choose **Next** and then choose **Create function** on the Review page.
+1. Click on **Create function**.
 
-    ![Define handler and role screenshot](../images/lambda-handler-and-role.png)
+1. Scroll down to the **Function code** section and replace the exiting code in the **index.js** code editor with the contents of [requestUnicorn.js](requestUnicorn.js).
+    ![Create Lambda function screenshot](../images/create-lambda-function-code.png)
+
+1. Click **"Save"** in the upper right corner of the page.
 
 </p></details>
 
@@ -140,9 +143,12 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 For this module you will test the function that you built using the AWS Lambda console. In the next module you will add a REST API with API Gateway so you can invoke your function from the browser-based application that you deployed in the first module.
 
-1. From the main edit screen for your function, select **Actions** then **Configure test event**.
-
+1. From the main edit screen for your function, select **Configure test event** from the the **Select a test event...** dropdown.
     ![Configure test event](../images/configure-test-event.png)
+
+1. Keep **Create new test event** selected.
+
+1. Enter `TestRequestEvent` in the **Event name** field
 
 1. Copy and paste the following test event into the editor:
 
@@ -168,9 +174,13 @@ For this module you will test the function that you built using the AWS Lambda c
     }
     ```
 
-1. Choose **Save and test**.
+    ![Configure test event](../images/configure-test-event-2.png)
 
-    ![Input test event screenshot](../images/input-test-event.png)
+1. Click **Create**.
+
+1. On the main function edit screen click **Test** with `TestRequestEvent` selected in the dropdown.   
+
+1. Scroll to the top of the page and expand the **Details** section of the **Execution result** section.
 
 1. Verify that the execution succeeded and that the function result looks like the following:
 ```JSON

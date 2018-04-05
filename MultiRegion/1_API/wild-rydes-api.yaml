@@ -1,0 +1,220 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  TicketServiceAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody:
+        swagger: 2.0
+        info:
+          title:
+            Ref: AWS::StackName
+        paths:
+          "/ticket":
+            get:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TicketGetFunction.Arn}/invocations
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            post:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${TicketPostFunction.Arn}/invocations
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            options:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              responses:
+                '200':
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+          "/health":
+            get:
+              responses: {}
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HealthFunction.Arn}/invocations
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                type: "aws_proxy"
+            options:
+              consumes:
+              - "application/json"
+              produces:
+              - "application/json"
+              responses:
+                '200':
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'POST,GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+        swagger: '2.0'
+  TicketGetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: tickets-get.handler
+      Runtime: nodejs6.10
+      FunctionName: TicketGetFunction
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:GetItem
+              Resource: !GetAtt DynamoDBTicketTable.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTicketTable
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /ticket
+            Method: get
+            RestApiId: !Ref TicketServiceAPI
+  TicketPostFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: tickets-post.handler
+      Runtime: nodejs6.10
+      FunctionName: TicketPostFunction
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: !GetAtt DynamoDBTicketTable.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTicketTable
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /ticket
+            Method: post
+            RestApiId: !Ref TicketServiceAPI
+  TicketReplicateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: tickets-replicate.handler
+      Runtime: nodejs6.10
+      FunctionName: TicketReplicateFunction
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole #managedpolicy
+        - AmazonKinesisFullAccess #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:GetRecords
+                - dynamodb:GetShardIterator
+                - dynamodb:DescribeStream
+                - dynamodb:ListStreams
+                - dynamodb:DeleteItem
+                - kinesis:*
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: arn:aws:dynamodb:*:*:table/SXRTickets
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTicketTable
+          TARGET_REGION: ap-southeast-1
+  HealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: health-check.handler
+      Runtime: nodejs6.10
+      FunctionName: SXRHealthCheckFunction
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:GetItem
+              Resource: !GetAtt DynamoDBTicketTable.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTicketTable
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /health
+            Method: get
+            RestApiId: !Ref TicketServiceAPI
+  DynamoDBTicketTable:
+   Type: AWS::DynamoDB::Table
+   Properties:
+     TableName: SXRTickets
+     AttributeDefinitions:
+       - AttributeName: id
+         AttributeType: S
+     KeySchema:
+       - AttributeName: id
+         KeyType: HASH
+     ProvisionedThroughput:
+       ReadCapacityUnits: 5
+       WriteCapacityUnits: 5
+Outputs:
+  ApiUrl:
+    Description: URL of your API endpoint
+    Value: !Join
+      - ''
+      - - https://
+        - !Ref TicketServiceAPI
+        - '.execute-api.'
+        - !Ref 'AWS::Region'
+        - '.amazonaws.com/prod/'

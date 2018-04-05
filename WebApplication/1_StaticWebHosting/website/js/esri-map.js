@@ -39,7 +39,7 @@ WildRydes.map = WildRydes.map || {};
         });
 
         var unicornSymbol = new PictureMarkerSymbol({
-            url: '/images/unicorn-icon.png',
+            url: 'images/unicorn-icon.png',
             width: '25px',
             height: '25px'
         });

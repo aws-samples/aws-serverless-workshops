@@ -56,6 +56,11 @@ WildRydes.map = WildRydes.map || {};
     // Register click handler for #request button
     $(function onDocReady() {
         $('#request').click(handleRequestClick);
+        $('#signOut').click(function() {
+            WildRydes.signOut();
+            alert("You have been signed out.");
+            window.location = "signin.html";
+        });
         $(WildRydes.map).on('pickupChange', handlePickupChanged);
 
         WildRydes.authToken.then(function updateAuthMessage(token) {

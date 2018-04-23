@@ -274,7 +274,7 @@ Create an Amazon Athena table to query the raw data in place on Amazon S3 using 
 ## Extra Credit
 
 - Write additional Amazon Athena queries:
-	- Write a query for the latitude and longitude point pairs a unicorn traveled on a trip and plot them on a map to see the unicorn's path.
+	- Write a query to retrieve the latitude and longitude point pairs a unicorn traveled on a trip.
 	- Write a query for all data points where a unicorn's vitals were below 100 points.
 	- Write a query to return all data points captured after a specific timestamp.
 

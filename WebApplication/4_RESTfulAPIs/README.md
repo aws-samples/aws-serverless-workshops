@@ -63,7 +63,7 @@ Use the Amazon API Gateway console to create a new API.
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
+1. In the AWS Management Console, click **Services** then select **API Gateway** under Networking & Content Delivery.
 
 1. Choose **Create API**.
 

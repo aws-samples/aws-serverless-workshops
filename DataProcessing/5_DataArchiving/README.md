@@ -262,7 +262,7 @@ Create an Amazon Athena table to query the raw data in place on Amazon S3 using 
 1. Copy and paste the following SQL query:
 
 	```sql
-	SELECT Name, SUM(Distance)
+	SELECT Name, SUM(Distance) TotalDistance
 	  FROM wildrydes
 	  GROUP BY Name
 	```

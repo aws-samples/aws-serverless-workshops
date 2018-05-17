@@ -277,7 +277,7 @@ Using the CloudFront console, create a new Distribution for web content specifyi
 
     ![Create CloudFront distribution](../images/create-cloudfront-distribution.png)
 
-1. Under **Distrubution Settings** for **Price Class**, select **Use Only US, Canada and Europe**.
+1. Under **Distribution Settings** for **Price Class**, select **Use Only US, Canada and Europe**.
 
 1. Click **Create Distribution** at the bottom of the page.
 

@@ -1,0 +1,112 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Wild Rydes Workshop Prep",
+
+  "Parameters" : {
+    "Password": {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "New account password",
+      "MinLength": "1",
+      "MaxLength": "41",
+      "AllowedPattern" : "[a-zA-Z0-9]*",
+      "ConstraintDescription" : "must contain only alphanumeric characters."
+    }
+  },
+
+  "Resources" : {
+    "CFNUser" : {
+      "Type" : "AWS::IAM::User",
+      "Properties" : {
+        "LoginProfile": {
+          "Password": { "Ref" : "Password" }
+        }
+      }
+    },
+
+    "CFNUserGroup" : {
+      "Type" : "AWS::IAM::Group"
+    },
+
+
+    "Users" : {
+      "Type" : "AWS::IAM::UserToGroupAddition",
+      "Properties" : {
+        "GroupName": { "Ref" : "CFNUserGroup" },
+        "Users" : [ { "Ref" : "CFNUser" } ]
+      }
+    },
+
+    "CFNUserPolicies" : {
+      "Type" : "AWS::IAM::Policy",
+      "Properties" : {
+        "PolicyName" : "CFNUsers",
+        "PolicyDocument" : {
+          "Statement": [{
+            "Effect"   : "Allow",
+            "Action"   : [
+              "apigateway:*",
+              "athena:*",
+              "budgets:*",
+              "cloudformation:*",
+              "cloudfront:*",
+              "cloudtrail:*",
+              "cloudwatch:*",
+              "cloud9:*",
+              "codebuild:*",
+              "codecommit:*",
+              "codedeploy:*",
+              "codepipeline:*",
+              "codestar:*",
+              "cur:describe*",
+              "cognito-identity:*",
+              "cognito-idp:*",
+              "deploy:*",
+              "dynamodb:*",
+              "glue:*",
+              "health:*",
+              "iam:get*",
+              "kinesis:*",
+              "kinesisanalytics:*",
+              "lambda:*",
+              "logs:*",
+              "mobile:*",
+              "rekognition:*",
+              "route53:*",
+              "sns:*",
+              "sqs:*",
+              "xray:*",
+              "s3:*"
+              ],
+            "Resource" : "*"
+          }]
+        },
+        "Groups" : [{ "Ref" : "CFNUserGroup" }]
+      }
+    },
+
+    "CFNKeys" : {
+      "Type" : "AWS::IAM::AccessKey",
+      "Properties" : {
+        "UserName" : { "Ref": "CFNUser" }
+      }
+    }
+  },
+
+  "Outputs" : {
+    "AccessKey" : {
+      "Value" : { "Ref" : "CFNKeys" },
+      "Description" : "AWSAccessKeyId of new user"
+    },
+    "SecretKey" : {
+      "Value" : { "Fn::GetAtt" : ["CFNKeys", "SecretAccessKey"]},
+      "Description" : "AWSSecretKey of new user"
+    }
+    ,
+    "UserName" : {
+      "Value" : { "Ref" : "CFNUser" },
+      "Description" : "AWSUserName of new user"
+    }
+  }
+}

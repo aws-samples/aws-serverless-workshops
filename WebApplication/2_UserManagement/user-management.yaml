@@ -96,7 +96,7 @@ Resources:
 
   UpdateConfigFunction:
     Properties:
-      Description: Copies objects from a source S3 bucket to a destination
+      Description: Updates object on S3 for client-side configuration
       Handler: index.handler
       Runtime: python2.7
       Role: !GetAtt CognitoConfigRole.Arn

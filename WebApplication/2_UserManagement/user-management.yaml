@@ -124,7 +124,7 @@ Resources:
                   region: '%s', // e.g. us-east-2
               },
               api: {
-                  invokeUrl: 'Base URL of your API including the stage', // e.g. https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod'
+                  invokeUrl: '', // Base URL of your API including the stage, e.g. 'https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod'
               }
           };
               """

@@ -220,7 +220,7 @@ Using the console, enable static website hosting. You can do this on the Propert
 
 ## Implementation Validation
 
-After completing these implementation steps you should be able to access your static website by visiting the the website endpoint URL for your S3 bucket.
+After completing these implementation steps you should be able to access your static website by visiting the website endpoint URL for your S3 bucket.
 
 Visit your website's base URL (this is the URL you noted in section 4) in the browser of your choice. You should see the Wild Rydes home page displayed. If you need to lookup the base URL, visit the S3 console, select your bucket and then click the **Static Web Hosting** card on the **Properties** tab.
 

@@ -378,7 +378,7 @@ Resources:
             bucket = properties['Bucket']
             config_object = s3.Object(bucket, 'js/config.js').get()
             config_data = config_object["Body"].read()
-            config_data = config_data.replace("Base URL of your API including the stage", properties["InvokeUrl"])
+            config_data = config_data.replace("invokeUrl: ''", "invokeUrl: '%s'" % properties["InvokeUrl"])
             config = s3.Object(bucket,'js/config.js')
             config.put(Body=config_data)
             return cfnresponse.SUCCESS, None

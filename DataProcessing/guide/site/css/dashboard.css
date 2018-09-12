@@ -1,0 +1,49 @@
+body {
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left; 0;
+  height: 100%;
+  width: 100%;
+}
+
+#map {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+#popUpName {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#popUpTime {
+  font-size: 11px;
+  font-weight: italic;
+  margin-top: 0px;
+}
+
+#popUpDetails {
+  border: 0;
+}
+
+.popUpDetailsHeader {
+  font-weight: bold;
+}
+
+button.copy {
+  font-size: 13px;
+  margin-bottom: 20px;
+  width: 140px;
+}
+
+.notice {
+  display: none;
+}
+
+table td {
+  padding-right: 20px;
+}

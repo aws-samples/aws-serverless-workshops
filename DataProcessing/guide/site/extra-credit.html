@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<head>
+<title>Lab Guide :: Serverless Data Processing on AWS</title>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+<link href='https://a0.awsstatic.com/main/images/site/fav/favicon.ico' rel='icon' type='image/ico'>
+<link crossorigin='anonymous' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' rel='stylesheet'>
+<link href='css/styles.css' rel='stylesheet'>
+<link href='css/syntax.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container'>
+<nav class='navbar navbar-dark bg-dark'>
+<a class='navbar-brand' href='/'>
+<img src='images/aws.png'>
+</a>
+<div class='navbar-expand'>
+<div class='navbar-nav'>
+<a class='nav-item nav-link active' href='index.html'>Lab Guide</a>
+<a class='nav-item nav-link' href='dashboard.html' target='_blank'>Unicorn Dashboard</a>
+</div>
+</div>
+</nav>
+<div class='row'>
+<div class='col-12 col-xl-9 col-lg-9' id='guide'>
+<h1>Serverless Data Processing on AWS</h1>
+<h2 id="extra-credit">Extra Credit</h2>
+<p>Finished early? Nice, lookit you! Here’s a small list of other things to try if you have spare time to continue tinkering with the unicorn monitoring system:</p>
+<ul>
+<li><p>Write a consumer for the <strong>wildrydes</strong> stream in the programming language of your choice using the <a href="https://aws.amazon.com/tools/">AWS SDKs</a>. Experiment with the output format.</p></li>
+<li><p>Build an Amazon Kinesis Data Analytics application which reads from the wildrydes stream and selects data points where any of the unicorns’ vital signs is below 100 points.</p></li>
+<li><p>Create an AWS Lambda function to read from the stream and send proactive alerts to operations personnel when any of the unicorns’ unicorn’s vital signs is below 100 points.</p></li>
+<li>Write additional Amazon Athena queries. Find:
+<ul>
+<li>Select all latitude and longitude pairs reported by a unicorn on a trip.</li>
+<li>All data points captured after a specific timestamp.</li>
+<li>The total all-time distance traveled by each unicorn.</li>
+<li>All data points where a unicorn’s vitals were below 100 points.</li>
+</ul></li>
+</ul>
+
+</div>
+<div class='col-3 d-none d-lg-block d-xl-block'>
+<div class='toc'>
+<strong>Contents</strong>
+<ul>
+<li>
+<a href='index.html'>Welcome</a>
+</li>
+<li>
+<a href='setup.html'>Setup</a>
+</li>
+<li>
+<a href='index.html#modules'>Modules</a>
+<ol>
+<li>
+<a href='streaming-data.html'>Real-time Data Streaming</a>
+</li>
+<li>
+<a href='streaming-aggregation.html'>Stream Aggregation</a>
+</li>
+<li>
+<a href='stream-processing.html'>Stream Processing</a>
+</li>
+<li>
+<a href='data-lake.html'>Data Lake</a>
+</li>
+</ol>
+</li>
+<li>
+<a href='extra-credit.html'>Extra Credit</a>
+</li>
+<li>
+<a href='cleanup.html'>Clean Up</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+<textarea id='buffer'></textarea>
+<footer></footer>
+<script crossorigin='anonymous' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
+<script src='js/guide.js'></script>
+</body>

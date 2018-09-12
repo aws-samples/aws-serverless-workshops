@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<head>
+<title>Lab Guide :: Serverless Data Processing on AWS</title>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+<link href='https://a0.awsstatic.com/main/images/site/fav/favicon.ico' rel='icon' type='image/ico'>
+<link crossorigin='anonymous' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' rel='stylesheet'>
+<link href='css/styles.css' rel='stylesheet'>
+<link href='css/syntax.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container'>
+<nav class='navbar navbar-dark bg-dark'>
+<a class='navbar-brand' href='/'>
+<img src='images/aws.png'>
+</a>
+<div class='navbar-expand'>
+<div class='navbar-nav'>
+<a class='nav-item nav-link active' href='index.html'>Lab Guide</a>
+<a class='nav-item nav-link' href='dashboard.html' target='_blank'>Unicorn Dashboard</a>
+</div>
+</div>
+</nav>
+<div class='row'>
+<div class='col-12 col-xl-9 col-lg-9' id='guide'>
+<h1>Serverless Data Processing on AWS</h1>
+<h2 id="stream-processing">Stream Processing</h2>
+<p>In this module, you’ll use AWS Lambda to process data from the <code>wildrydes</code> Amazon Kinesis stream created earlier. We’ll create and configure a Lambda function to read from the stream and write records to an Amazon DynamoDB table as they arrive.</p>
+<h3 id="implementation">Implementation</h3>
+<h4 id="create-an-amazon-dynamodb-table">1. Create an Amazon DynamoDB table</h4>
+<p>Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table <code>UnicornSensorData</code> and give it a <strong>Partition key</strong> called <code>Name</code> of type <strong>String</strong> and a <strong>Sort key</strong> called <code>StatusTime</code> of type <strong>String</strong>. Use the defaults for all other settings.</p>
+<p>After you’ve created the table, note the <strong>Amazon Resource Name (ARN)</strong> for use in the next section.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Go to the AWS Management Console, choose <strong>Services</strong> then select <strong>DynamoDB</strong> under Database.</p></li>
+<li><p>Click <strong>Create table</strong>.</p></li>
+<li><p>Enter <code>UnicornSensorData</code> for the <strong>Table name</strong>.</p></li>
+<li><p>Enter <code>Name</code> for the <strong>Partition key</strong> and select <strong>String</strong> for the key type.</p></li>
+<li><p>Tick the <strong>Add sort key</strong> checkbox. Enter <code>StatusTime</code> for the <strong>Sort key</strong> and select <strong>String</strong> for the key type.</p></li>
+<li><p>Leave the <strong>Use default settings</strong> box checked and choose <strong>Create</strong>.</p>
+<p><img src="images/stream-processing-dynamodb-create.png" /></p></li>
+<li><p>Scroll to the <strong>Table details</strong> section of your new table’s properties and note the <strong>Amazon Resource Name (ARN)</strong>. You will use this in the next step.</p></li>
+</ol>
+<h4 id="create-an-iam-role-for-your-lambda-function">2. Create an IAM role for your Lambda function</h4>
+<p>Use the IAM console to create a new role. Name it <code>WildRydesStreamProcessorRole</code> and select Lambda for the role type. Attach the managed policy called <code>AWSLambdaKinesisExecutionRole</code> to this role in order to grant permissions for your function to read from Amazon Kinesis streams and to log to Amazon CloudWatch Logs. Create a policy that allows <code>dynamodb:BatchWriteItem</code> access to the DynamoDB table created in the last section and attach it to the new role.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>From the AWS Console, click on <strong>Services</strong> and then select <strong>IAM</strong> in the Security, Identity &amp; Compliance section.</p></li>
+<li><p>Select <strong>Policies</strong> from the left navigation and then click <strong>Create policy</strong>.</p></li>
+<li><p>Using the <strong>Visual editor</strong>, we’re going to create an IAM policy to allow our Lambda function access to the DynamoDB table created in the last section. To begin, click <strong>Service</strong>, begin typing <strong>DynamoDB</strong> in <strong>Find a service</strong>, and click <strong>DynamoDB</strong>.</p></li>
+<li><p>Click <strong>Action</strong>, begin typing <strong>BatchWriteItem</strong> in <strong>Filter actions</strong>, and tick the <strong>BatchWriteItem</strong> checkbox.</p></li>
+<li><p>Click <strong>Resources</strong>, click <strong>Add ARN</strong> in <strong>table</strong>, and construct the ARN of the DynamoDB table you created in the previous section by specifying the <strong>Region</strong>, <strong>Account</strong>, and <strong>Table Name</strong>.</p>
+<p>In <strong>Region</strong>, enter the AWS Region in which you created the DynamoDB table in the previous section, e.g.: us-east-1.</p>
+<p>In <strong>Account</strong>, enter your AWS Account ID which is a twelve digit number, e.g.: 123456789012. To find your AWS account ID number in the AWS Management Console, click on <strong>Support</strong> in the navigation bar in the upper-right, and then click <strong>Support Center</strong>. Your currently signed in account ID appears in the upper-right corner below the Support menu.</p>
+<p>In <strong>Table Name</strong>, enter <strong>UnicornSensorData</strong>.</p>
+<p>You should see your ARN in the <strong>Specify ARN for table</strong> field and it should look similar to:</p>
+<p><img src="images/stream-processing-add-arn.png" /></p></li>
+<li><p>Click <strong>Add</strong>.</p></li>
+<li><p>Click <strong>Review policy</strong>.</p>
+<p><img src="images/stream-processing-review-policy.png" /></p></li>
+<li><p>Enter <code>WildRydesDynamoDBWritePolicy</code> in the <strong>Name</strong> field.</p></li>
+<li><p>Click <strong>Create policy</strong>.</p></li>
+<li><p>Select <strong>Roles</strong> from the left navigation and then click <strong>Create role</strong>.</p></li>
+<li><p>Click <strong>Lambda</strong> for the role type from the <strong>AWS service</strong> section.</p></li>
+<li><p>Click <strong>Next: Permissions</strong>.</p></li>
+<li><p>Begin typing <code>AWSLambdaKinesisExecutionRole</code> in the <strong>Filter</strong> text box and check the box next to that role.</p></li>
+<li><p>Begin typing <code>WildRydesDynamoDBWritePolicy</code> in the <strong>Filter</strong> text box and check the box next to that role.</p></li>
+<li><p>Click <strong>Next: Review</strong>.</p></li>
+<li><p>Enter <code>WildRydesStreamProcessorRole</code> for the <strong>Role name</strong>.</p></li>
+<li><p>Click <strong>Create role</strong>.</p></li>
+</ol>
+<h4 id="create-a-lambda-function-to-process-the-stream">3. Create a Lambda function to process the stream</h4>
+<p>Create a Lambda function called <code>WildRydesStreamProcessor</code> that will be triggered whenever a new record is avaialble in the <strong>wildrydes</strong> stream. Use the provided index.js implementation for your function code. Create an environment variable with the key <code>TABLE_NAME</code> and the value <code>UnicornSensorData</code>. Configure the function to use the <code>WildRydesStreamProcessor</code> role created in the previous section.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Go to the AWS Management Console, choose <strong>Services</strong> then select <strong>Lambda</strong> under Compute.</p></li>
+<li><p>Click <strong>Create a function</strong>.</p></li>
+<li><p>Enter <code>WildRydesStreamProcessor</code> in the <strong>Name</strong> field.</p></li>
+<li><p>Select <strong>WildRydesStreamProcessorRole</strong> from the <strong>Existing role</strong> dropdown.</p>
+<p><img src="./images/stream-processing-lambda-basic-information.png" /></p></li>
+<li><p>Click <strong>Create function</strong>.</p></li>
+<li><p>Scroll down to the <strong>Function code</strong> section.</p></li>
+<li><p>Select <strong>Node.js 6.10</strong> from <strong>Runtime</strong>.</p></li>
+<li><p>Copy and paste the JavaScript code below into the code editor.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="st">&#39;use strict&#39;</span><span class="op">;</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">const</span> AWS <span class="op">=</span> <span class="at">require</span>(<span class="st">&#39;aws-sdk&#39;</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">const</span> dynamoDB <span class="op">=</span> <span class="kw">new</span> <span class="va">AWS</span>.<span class="va">DynamoDB</span>.<span class="at">DocumentClient</span>()<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">const</span> tableName <span class="op">=</span> <span class="va">process</span>.<span class="va">env</span>.<span class="at">TABLE_NAME</span><span class="op">;</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="va">exports</span>.<span class="at">handler</span> <span class="op">=</span> <span class="kw">function</span>(event<span class="op">,</span> context<span class="op">,</span> callback) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">  <span class="kw">const</span> requestItems <span class="op">=</span> <span class="at">buildRequestItems</span>(<span class="va">event</span>.<span class="at">Records</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="kw">const</span> requests <span class="op">=</span> <span class="at">buildRequests</span>(requestItems)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">  <span class="va">Promise</span>.<span class="at">all</span>(requests)</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">    .<span class="at">then</span>(() <span class="op">=&gt;</span> <span class="at">callback</span>(<span class="kw">null</span><span class="op">,</span> <span class="vs">`Delivered </span><span class="sc">${</span><span class="va">event</span>.<span class="va">Records</span>.<span class="at">length</span><span class="sc">}</span><span class="vs"> records`</span>))</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">    .<span class="at">catch</span>(callback)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="op">};</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="kw">function</span> <span class="at">buildRequestItems</span>(records) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">  <span class="cf">return</span> <span class="va">records</span>.<span class="at">map</span>((record) <span class="op">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">    <span class="kw">const</span> json <span class="op">=</span> <span class="va">Buffer</span>.<span class="at">from</span>(<span class="va">record</span>.<span class="va">kinesis</span>.<span class="at">data</span><span class="op">,</span> <span class="st">&#39;base64&#39;</span>).<span class="at">toString</span>(<span class="st">&#39;ascii&#39;</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">    <span class="kw">const</span> item <span class="op">=</span> <span class="va">JSON</span>.<span class="at">parse</span>(json)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21">    <span class="cf">return</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22">      <span class="dt">PutRequest</span><span class="op">:</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-23" data-line-number="23">        <span class="dt">Item</span><span class="op">:</span> item<span class="op">,</span></a>
+<a class="sourceLine" id="cb1-24" data-line-number="24">      <span class="op">},</span></a>
+<a class="sourceLine" id="cb1-25" data-line-number="25">    <span class="op">};</span></a>
+<a class="sourceLine" id="cb1-26" data-line-number="26">  <span class="op">}</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="op">}</span></a>
+<a class="sourceLine" id="cb1-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb1-29" data-line-number="29"><span class="kw">function</span> <span class="at">buildRequests</span>(requestItems) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-30" data-line-number="30">  <span class="kw">const</span> requests <span class="op">=</span> []<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb1-32" data-line-number="32">  <span class="cf">while</span> (<span class="va">requestItems</span>.<span class="at">length</span> <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-33" data-line-number="33">    <span class="kw">const</span> request <span class="op">=</span> <span class="at">batchWrite</span>(<span class="va">requestItems</span>.<span class="at">splice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">25</span>))<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-34" data-line-number="34"></a>
+<a class="sourceLine" id="cb1-35" data-line-number="35">    <span class="va">requests</span>.<span class="at">push</span>(request)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-36" data-line-number="36">  <span class="op">}</span></a>
+<a class="sourceLine" id="cb1-37" data-line-number="37"></a>
+<a class="sourceLine" id="cb1-38" data-line-number="38">  <span class="cf">return</span> requests<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-39" data-line-number="39"><span class="op">}</span></a>
+<a class="sourceLine" id="cb1-40" data-line-number="40"></a>
+<a class="sourceLine" id="cb1-41" data-line-number="41"><span class="kw">function</span> <span class="at">batchWrite</span>(requestItems<span class="op">,</span> attempt <span class="op">=</span> <span class="dv">0</span>) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-42" data-line-number="42">  <span class="kw">const</span> params <span class="op">=</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-43" data-line-number="43">    <span class="dt">RequestItems</span><span class="op">:</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-44" data-line-number="44">      [tableName]<span class="op">:</span> requestItems<span class="op">,</span></a>
+<a class="sourceLine" id="cb1-45" data-line-number="45">    <span class="op">},</span></a>
+<a class="sourceLine" id="cb1-46" data-line-number="46">  <span class="op">};</span></a>
+<a class="sourceLine" id="cb1-47" data-line-number="47"></a>
+<a class="sourceLine" id="cb1-48" data-line-number="48">  <span class="kw">let</span> delay <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></a>
+<a class="sourceLine" id="cb1-49" data-line-number="49"></a>
+<a class="sourceLine" id="cb1-50" data-line-number="50">  <span class="cf">if</span> (attempt <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-51" data-line-number="51">    delay <span class="op">=</span> <span class="dv">50</span> <span class="op">*</span> <span class="va">Math</span>.<span class="at">pow</span>(<span class="dv">2</span><span class="op">,</span> attempt)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-52" data-line-number="52">  <span class="op">}</span></a>
+<a class="sourceLine" id="cb1-53" data-line-number="53"></a>
+<a class="sourceLine" id="cb1-54" data-line-number="54">  <span class="cf">return</span> <span class="kw">new</span> <span class="at">Promise</span>(<span class="kw">function</span>(resolve<span class="op">,</span> reject) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-55" data-line-number="55">    <span class="at">setTimeout</span>(<span class="kw">function</span>() <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-56" data-line-number="56">      <span class="va">dynamoDB</span>.<span class="at">batchWrite</span>(params).<span class="at">promise</span>()</a>
+<a class="sourceLine" id="cb1-57" data-line-number="57">        .<span class="at">then</span>(<span class="kw">function</span>(data) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-58" data-line-number="58">          <span class="cf">if</span> (<span class="va">data</span>.<span class="va">UnprocessedItems</span>.<span class="at">hasOwnProperty</span>(tableName)) <span class="op">{</span></a>
+<a class="sourceLine" id="cb1-59" data-line-number="59">            <span class="cf">return</span> <span class="at">batchWrite</span>(<span class="va">data</span>.<span class="at">UnprocessedItems</span>[tableName]<span class="op">,</span> attempt <span class="op">+</span> <span class="dv">1</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-60" data-line-number="60">          <span class="op">}</span></a>
+<a class="sourceLine" id="cb1-61" data-line-number="61">        <span class="op">}</span>)</a>
+<a class="sourceLine" id="cb1-62" data-line-number="62">        .<span class="at">then</span>(resolve)</a>
+<a class="sourceLine" id="cb1-63" data-line-number="63">        .<span class="at">catch</span>(reject)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-64" data-line-number="64">    <span class="op">},</span> delay)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-65" data-line-number="65">  <span class="op">}</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb1-66" data-line-number="66"><span class="op">}</span></a></code></pre></div>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button>
+<p><img src="./images/stream-processing-lambda-code.png" /></p></li>
+<li><p>In the <strong>Environment variables</strong> section, enter an environment variable with <strong>Key</strong> <code>TABLE_NAME</code> and <strong>Value</strong> <code>UnicornSensorData</code>.</p>
+<p><img src="./images/stream-processing-lambda-environment-variables.png" /></p></li>
+<li><p>In the <strong>Basic settings</strong> section. Set the <strong>Timeout</strong> to <strong>1</strong> minute.</p>
+<p><img src="./images/stream-processing-lambda-basic-settings.png" /></p></li>
+<li><p>Scroll up and select <strong>Kinesis</strong> from the <strong>Designer</strong> section.</p>
+<p><img src="./images/stream-processing-trigger-designer.png" /></p></li>
+<li><p>In the <strong>Configure triggers</strong> section, select <strong>wildrydes-summary</strong> from <strong>Kinesis Stream</strong>.</p></li>
+<li><p>Leave <strong>Batch size</strong> set to 100 and <strong>Starting position</strong> set to <strong>Latest</strong>.</p></li>
+<li><p>Click <strong>Add</strong>.</p></li>
+<li><p>Click <strong>Enabled</strong> to enable the trigger.</p>
+<p><img src="./images/stream-processing-trigger-enabled.png" /></p></li>
+<li><p>Click <strong>Save</strong>.</p></li>
+</ol>
+<h4 id="monitor-the-lambda-function">4. Monitor the Lambda function</h4>
+<p>Verify that the trigger is properly executing the Lambda function. View the metrics emitted by the function and inspect the output from the Lambda function.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Run the producer to start emiting sensor data to the stream with a unique unicorn name.</p>
+<pre class="console"><code>./producer -name Rocinante</code></pre></li>
+<li><p>Click on the <strong>Monitoring</strong> tab and explore the metrics available to monitor the function. Click on <strong>Jump to Logs</strong> to explore the function’s log output.</p></li>
+</ol>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button>
+<h4 id="query-the-dynamodb-table">5. Query the DynamoDB table</h4>
+<p>Using the AWS Management Console, query the DynamoDB table for data for a specific unicorn. Use the producer to create data from a distinct unicorn name and verify those records are persisted.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>DynamoDB</strong> in the Database section.</p></li>
+<li><p>Click <strong>Tables</strong> from the left-hand navigation</p></li>
+<li><p>Click on <strong>UnicornSensorData</strong>.</p></li>
+<li><p>Click on the <strong>Items</strong> tab. Here you should see each per-minute data point for each Unicorn for which you’re running a producer.</p>
+<p><img src="images/stream-processing-dynamodb-items.png" /></p></li>
+</ol>
+<h3 id="recap">⭐️ Recap</h3>
+<p>🔑 You can subscribe Lambda functions to automatically read batches of records off your Kinesis stream and process them if records are detected on the stream.</p>
+<p>🔧 In this module, you’ve created a Lambda function that reads from the Kinesis stream of summary unicorn data and saves each row to DynamoDB.</p>
+<h3 id="next">Next</h3>
+<p>✅ Proceed to the next module, <a href="data-lake.html">Data Lake</a>, wherein you’ll deliver the raw stream data from the Kinesis stream to Kinesis Data Firehose for delivery to Amazon S3 and use Amazon Athena to query that raw data.</p>
+
+</div>
+<div class='col-3 d-none d-lg-block d-xl-block'>
+<div class='toc'>
+<strong>Contents</strong>
+<ul>
+<li>
+<a href='index.html'>Welcome</a>
+</li>
+<li>
+<a href='setup.html'>Setup</a>
+</li>
+<li>
+<a href='index.html#modules'>Modules</a>
+<ol>
+<li>
+<a href='streaming-data.html'>Real-time Data Streaming</a>
+</li>
+<li>
+<a href='streaming-aggregation.html'>Stream Aggregation</a>
+</li>
+<li>
+<a href='stream-processing.html'>Stream Processing</a>
+</li>
+<li>
+<a href='data-lake.html'>Data Lake</a>
+</li>
+</ol>
+</li>
+<li>
+<a href='extra-credit.html'>Extra Credit</a>
+</li>
+<li>
+<a href='cleanup.html'>Clean Up</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+<textarea id='buffer'></textarea>
+<footer></footer>
+<script crossorigin='anonymous' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
+<script src='js/guide.js'></script>
+</body>

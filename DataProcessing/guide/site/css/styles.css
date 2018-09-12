@@ -1,0 +1,123 @@
+h2, h4, h5 {
+  margin: 20px 0;
+}
+
+h2, h3 {
+  border-bottom: solid 1px #999;
+  padding: 10px 0;
+}
+
+div.sourceCode {
+  background-color: #eee;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+}
+
+ol {
+  padding: 0 30px;
+}
+
+textarea#buffer {
+  display: none;
+  height: 1px;
+  width: 1px;
+}
+
+footer {
+  min-height: 50px;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+td, th {
+  padding: 15px;
+  border: 1px solid #ccc;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.scrolling {
+  height: 350px;
+  overflow: scroll;
+}
+
+.navbar {
+  margin-bottom: 1em;
+}
+
+.navbar-brand img {
+  height: 30px;
+}
+
+.title {
+  margin: 1em 0;
+}
+
+.toc {
+  position: sticky;
+  top: 1em;
+  background-color: #eee;
+  padding: 10px;
+}
+
+.toc a {
+  color: #99979c;
+  font-size: 13px;
+}
+
+.toc li {
+  color: #99979c;
+  font-size: 13px;
+  padding: 3px 0;
+}
+
+.toc strong {
+  font-size: 14px;
+}
+
+.toc ul {
+  list-style: none outside none;
+  padding-left: 10px;
+  margin: 0;
+}
+
+#guide img {
+    max-width: 100%;
+    border: 2px solid #eee;
+    padding: 5px;
+}
+
+#guide summary {
+  cursor: pointer;
+}
+
+#guide details {
+  margin: 0;
+  padding: 0;
+}
+
+#guide a:hover {
+  text-decoration: underline;
+}
+
+#guide ul {
+  padding-left: 20px;
+}
+
+button.copy {
+  font-size: 13px;
+  margin-bottom: 15px;
+  width: 140px;
+}
+
+pre.console + div.sourceCode {
+  margin-top: -20px;
+}

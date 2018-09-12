@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<head>
+<title>Lab Guide :: Serverless Data Processing on AWS</title>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+<link href='https://a0.awsstatic.com/main/images/site/fav/favicon.ico' rel='icon' type='image/ico'>
+<link crossorigin='anonymous' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' rel='stylesheet'>
+<link href='css/styles.css' rel='stylesheet'>
+<link href='css/syntax.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container'>
+<nav class='navbar navbar-dark bg-dark'>
+<a class='navbar-brand' href='/'>
+<img src='images/aws.png'>
+</a>
+<div class='navbar-expand'>
+<div class='navbar-nav'>
+<a class='nav-item nav-link active' href='index.html'>Lab Guide</a>
+<a class='nav-item nav-link' href='dashboard.html' target='_blank'>Unicorn Dashboard</a>
+</div>
+</div>
+</nav>
+<div class='row'>
+<div class='col-12 col-xl-9 col-lg-9' id='guide'>
+<h1>Serverless Data Processing on AWS</h1>
+<h2 id="streaming-aggregation">Streaming Aggregation</h2>
+<p>In this module, you’ll create an Amazon Kinesis Data Analytics application to aggregate sensor data from the unicorn fleet in real-time. The application will read from the Amazon Kinesis stream, calculate the total distance traveled and minimum and maximum health and magic points for each unicorn currently on a Wild Ryde and output these aggregated statistics to an Amazon Kinesis stream every minute.</p>
+<h3 id="overview">Overview</h3>
+<p>The architecture for this module involves an Amazon Kinesis Data Analytics application, source and destination Amazon Kinesis streams, and the producer and consumer command-line clients.</p>
+<p>The Amazon Kinesis Data Analytics application processes data from the source Amazon Kinesis stream that we created in the previous module and aggregates it on a per-minute basis. Each minute, the application will emit data including the total distance traveled in the last minute as well as the minimum and maximum readings from health and magic points for each unicorn in our fleet. These data points will be sent to a destination Amazon Kinesis stream for processing by other components in our system.</p>
+<h3 id="implementation">Implementation</h3>
+<h4 id="create-an-amazon-kinesis-stream">1. Create an Amazon Kinesis stream</h4>
+<p>Use the Amazon Kinesis Data Streams console to create a new stream named <strong>wildrydes-summary</strong> with <strong>1</strong> shard.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Go to the AWS Management Console, click <strong>Services</strong> then select <strong>Kinesis</strong> under Analytics.</p></li>
+<li><p>Click <strong>Get started</strong> if prompted with an introductory screen.</p></li>
+<li><p>Click <strong>Create data stream</strong>.</p></li>
+<li><p>Enter <code>wildrydes-summary</code> into <strong>Kinesis stream name</strong> and <code>1</code> into <strong>Number of shards</strong>, then click <strong>Create Kinesis stream</strong>.</p></li>
+<li><p>Within 60 seconds, your Kinesis stream will be <strong>ACTIVE</strong> and ready to store real-time streaming data.</p></li>
+</ol>
+<h4 id="create-an-amazon-kinesis-data-analytics-application">2. Create an Amazon Kinesis Data Analytics application</h4>
+<p>Build an Amazon Kinesis Data Analytics application which reads from the <strong>wildrydes</strong> stream built in the previous module and emits a JSON object with the following attributes each minute:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td><strong>Name</strong></td>
+<td>Unicorn name</td>
+</tr>
+<tr class="even">
+<td><strong>StatusTime</strong></td>
+<td>ROWTIME provided by Amazon Kinesis Data Analytics</td>
+</tr>
+<tr class="odd">
+<td><strong>Distance</strong></td>
+<td>The sum of distance traveled by the unicorn</td>
+</tr>
+<tr class="even">
+<td><strong>MinMagicPoints</strong></td>
+<td>The minimum data point of the <em>MagicPoints</em> attribute</td>
+</tr>
+<tr class="odd">
+<td><strong>MaxMagicPoints</strong></td>
+<td>The maximum data point of the <em>MagicPoints</em> attribute</td>
+</tr>
+<tr class="even">
+<td><strong>MinHealthPoints</strong></td>
+<td>The minimum data point of the <em>HealthPoints</em> attribute</td>
+</tr>
+<tr class="odd">
+<td><strong>MaxHealthPoints</strong></td>
+<td>The maximum data point of the <em>HealthPoints</em> attribute</td>
+</tr>
+</tbody>
+</table>
+<p>Set the destination stream of the application to <strong>wildrydes-summary</strong>.</p>
+<p><strong>✅ Step-by-step directions</strong></p>
+<ol type="1">
+<li><p>Switch to the tab where you have your Cloud9 environment opened.</p></li>
+<li><p>Run the producer to start emiting sensor data to the stream.</p>
+<pre class="console"><code>./producer</code></pre>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button>
+<p>Activately producing sensor data while we’re building our application will allow Amazon Kinesis Data Analytics to auto-detect our schema.</p></li>
+<li><p>Go to the AWS Management Console, click <strong>Services</strong> then select <strong>Kinesis</strong> under Analytics.</p></li>
+<li><p>Click <strong>Create analytics application</strong>.</p></li>
+<li><p>Enter <code>wildrydes</code> into <strong>Application name</strong> and then click <strong>Create application</strong>.</p></li>
+<li><p>Click <strong>Connect streaming data</strong>.</p></li>
+<li><p>Select <code>wildrydes</code> from <strong>Kinesis stream</strong>.</p></li>
+<li><p>Scroll down and click <strong>Discover schema</strong>, wait a moment, and ensure the schema was properly auto-discovered.</p>
+<p><img src="./images/streaming-aggregation-schema-discovery.png" /></p>
+<p>Ensure that the auto-discovered schema includes:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Distance</td>
+<td><code>DOUBLE</code></td>
+</tr>
+<tr class="even">
+<td>HealthPoints</td>
+<td><code>INTEGER</code></td>
+</tr>
+<tr class="odd">
+<td>Latitude</td>
+<td><code>DOUBLE</code></td>
+</tr>
+<tr class="even">
+<td>Longitude</td>
+<td><code>DOUBLE</code></td>
+</tr>
+<tr class="odd">
+<td>MagicPoints</td>
+<td><code>INTEGER</code></td>
+</tr>
+<tr class="even">
+<td>Name</td>
+<td><code>VARCHAR(16)</code></td>
+</tr>
+<tr class="odd">
+<td>StatusTime</td>
+<td><code>TIMESTAMP</code></td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Click <strong>Save and continue</strong>.</p></li>
+<li><p>Click <strong>Go to SQL editor</strong>. This will open up an interactive query session where we can build a query on top of our real-time Amazon Kinesis stream.</p></li>
+<li><p>Click <strong>Yes, start application</strong>. It will take 30 - 90 seconds for your application to start.</p></li>
+<li><p>Copy and paste the following SQL query into the SQL editor:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> STREAM <span class="ot">&quot;DESTINATION_SQL_STREAM&quot;</span> (</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="ot">&quot;Name&quot;</span>                <span class="dt">VARCHAR</span>(<span class="dv">16</span>),</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="ot">&quot;StatusTime&quot;</span>          <span class="dt">TIMESTAMP</span>,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="ot">&quot;Distance&quot;</span>            <span class="dt">SMALLINT</span>,</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="ot">&quot;MinMagicPoints&quot;</span>      <span class="dt">SMALLINT</span>,</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="ot">&quot;MaxMagicPoints&quot;</span>      <span class="dt">SMALLINT</span>,</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">  <span class="ot">&quot;MinHealthPoints&quot;</span>     <span class="dt">SMALLINT</span>,</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">  <span class="ot">&quot;MaxHealthPoints&quot;</span>     <span class="dt">SMALLINT</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">);</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> PUMP <span class="ot">&quot;STREAM_PUMP&quot;</span> <span class="kw">AS</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">  <span class="kw">INSERT</span> <span class="kw">INTO</span> <span class="ot">&quot;DESTINATION_SQL_STREAM&quot;</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">    <span class="kw">SELECT</span> STREAM <span class="ot">&quot;Name&quot;</span>, <span class="ot">&quot;ROWTIME&quot;</span>, <span class="fu">SUM</span>(<span class="ot">&quot;Distance&quot;</span>), <span class="fu">MIN</span>(<span class="ot">&quot;MagicPoints&quot;</span>),</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">                  <span class="fu">MAX</span>(<span class="ot">&quot;MagicPoints&quot;</span>), <span class="fu">MIN</span>(<span class="ot">&quot;HealthPoints&quot;</span>), <span class="fu">MAX</span>(<span class="ot">&quot;HealthPoints&quot;</span>)</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">    <span class="kw">FROM</span> <span class="ot">&quot;SOURCE_SQL_STREAM_001&quot;</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="fu">FLOOR</span>(<span class="ot">&quot;SOURCE_SQL_STREAM_001&quot;</span>.<span class="ot">&quot;ROWTIME&quot;</span> <span class="kw">TO</span> <span class="kw">MINUTE</span>), <span class="ot">&quot;Name&quot;</span>;</a></code></pre></div>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button></li>
+<li><p>Click <strong>Save and run SQL</strong>. Each minute, you will see rows arrive containing the aggregated data. Wait for the rows to arrive.</p>
+<p><img src="./images/streaming-aggregation-rows-preview.png" /></p></li>
+<li><p>Click the <strong>Close</strong> link.</p></li>
+<li><p>Click <strong>Connect to a destination</strong>.</p></li>
+<li><p>Select <strong>wildrydes-summary</strong> from <strong>Kinesis stream</strong>.</p></li>
+<li><p>Select <strong>DESTINATION_SQL_STREAM</strong> from <strong>In-application stream name</strong>.</p></li>
+<li><p>Click <strong>Save and continue</strong>.</p></li>
+</ol>
+<h4 id="read-messages-from-the-stream">3. Read messages from the stream</h4>
+<p>Use the command line consumer to view messages from the Kinesis stream to see the aggregated data being sent every minute.</p>
+<p><strong>✅ Step-by-step directions</strong></p>
+<ol type="1">
+<li><p>Switch to the tab where you have your Cloud9 environment opened.</p></li>
+<li><p>Run the consumer to start reading sensor data from the stream.</p>
+<pre class="console"><code>./consumer -stream wildrydes-summary</code></pre>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button>
+<p>The consumer will print the messages being sent by the Kinesis Data Analytics application every minute:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="dt">&quot;Name&quot;</span><span class="fu">:</span> <span class="st">&quot;Shadowfax&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="dt">&quot;StatusTime&quot;</span><span class="fu">:</span> <span class="st">&quot;2018-03-18 03:20:00.000&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">  <span class="dt">&quot;Distance&quot;</span><span class="fu">:</span> <span class="dv">362</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">  <span class="dt">&quot;MinMagicPoints&quot;</span><span class="fu">:</span> <span class="dv">170</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="dt">&quot;MaxMagicPoints&quot;</span><span class="fu">:</span> <span class="dv">172</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">  <span class="dt">&quot;MinHealthPoints&quot;</span><span class="fu">:</span> <span class="dv">146</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">  <span class="dt">&quot;MaxHealthPoints&quot;</span><span class="fu">:</span> <span class="dv">149</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="fu">}</span></a></code></pre></div></li>
+</ol>
+<h4 id="experiment-with-the-producer">4. Experiment with the producer</h4>
+<p>Stop and start the producer while watching the dashboard and the consumer. Start multiple producers with different unicorn names.</p>
+<p><strong>✅ Step-by-step directions</strong></p>
+<ol type="1">
+<li><p>Switch to the tab where you have your Cloud9 environment opened.</p></li>
+<li><p>Stop the producer by pressing Control + C and notice the messages stop.</p></li>
+<li><p>Start the producer again and notice the messages resume.</p></li>
+<li><p>Hit the (+) button and click <strong>New Terminal</strong> to open a new terminal tab.</p></li>
+<li><p>Start another instance of the producer in the new tab. Provide a specific unicorn name and notice data points for both unicorns in consumer’s output:</p>
+<pre class="console"><code>./producer -name Bucephalus</code></pre>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button></li>
+<li><p>Verify you see multiple unicorns in the output:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">    <span class="dt">&quot;Name&quot;</span><span class="fu">:</span> <span class="st">&quot;Shadowfax&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">    <span class="dt">&quot;StatusTime&quot;</span><span class="fu">:</span> <span class="st">&quot;2018-03-18 03:20:00.000&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">    <span class="dt">&quot;Distance&quot;</span><span class="fu">:</span> <span class="dv">362</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">    <span class="dt">&quot;MinMagicPoints&quot;</span><span class="fu">:</span> <span class="dv">170</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">    <span class="dt">&quot;MaxMagicPoints&quot;</span><span class="fu">:</span> <span class="dv">172</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="dt">&quot;MinHealthPoints&quot;</span><span class="fu">:</span> <span class="dv">146</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="dt">&quot;MaxHealthPoints&quot;</span><span class="fu">:</span> <span class="dv">149</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="fu">}</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">    <span class="dt">&quot;Name&quot;</span><span class="fu">:</span> <span class="st">&quot;Bucephalus&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">    <span class="dt">&quot;StatusTime&quot;</span><span class="fu">:</span> <span class="st">&quot;2018-03-18 03:20:00.000&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">    <span class="dt">&quot;Distance&quot;</span><span class="fu">:</span> <span class="dv">1773</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14">    <span class="dt">&quot;MinMagicPoints&quot;</span><span class="fu">:</span> <span class="dv">140</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">    <span class="dt">&quot;MaxMagicPoints&quot;</span><span class="fu">:</span> <span class="dv">148</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">    <span class="dt">&quot;MinHealthPoints&quot;</span><span class="fu">:</span> <span class="dv">132</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17">    <span class="dt">&quot;MaxHealthPoints&quot;</span><span class="fu">:</span> <span class="dv">138</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="fu">}</span></a></code></pre></div></li>
+</ol>
+<h3 id="recap">⭐️ Recap</h3>
+<p>🔑 Amazon Kinesis Data Analytics enables you to query streaming data or build entire streaming applications using SQL, so that you can gain actionable insights and respond to your business and customer needs promptly.</p>
+<p>🔧 In this module, you’ve created a Kinesis Data Analytics application that reads from the Kinesis stream of unicorn data and emits a summary row each minute.</p>
+<h3 id="next">Next</h3>
+<p>✅ Proceed to the next module, <a href="stream-processing.html">Stream Processing</a>, wherein you’ll store the summary data from the Kinesis Data Analytics application in an Amazon DynamoDB table.</p>
+
+</div>
+<div class='col-3 d-none d-lg-block d-xl-block'>
+<div class='toc'>
+<strong>Contents</strong>
+<ul>
+<li>
+<a href='index.html'>Welcome</a>
+</li>
+<li>
+<a href='setup.html'>Setup</a>
+</li>
+<li>
+<a href='index.html#modules'>Modules</a>
+<ol>
+<li>
+<a href='streaming-data.html'>Real-time Data Streaming</a>
+</li>
+<li>
+<a href='streaming-aggregation.html'>Stream Aggregation</a>
+</li>
+<li>
+<a href='stream-processing.html'>Stream Processing</a>
+</li>
+<li>
+<a href='data-lake.html'>Data Lake</a>
+</li>
+</ol>
+</li>
+<li>
+<a href='extra-credit.html'>Extra Credit</a>
+</li>
+<li>
+<a href='cleanup.html'>Clean Up</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+<textarea id='buffer'></textarea>
+<footer></footer>
+<script crossorigin='anonymous' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
+<script src='js/guide.js'></script>
+</body>

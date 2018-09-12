@@ -8,11 +8,13 @@ Parameters:
   BucketName:
     Type: String
     Description: The name for the bucket hosting your website, e.g. 'wildrydes-yourname'
+    AllowedPattern: ^[a-z0-9][a-z0-9-.]{1,61}[a-z0-9]$
 
   CodeBucket:
     Type: String
     Default: wildrydes-us-east-1
     Description: S3 bucket containing the code deployed by this template
+    AllowedPattern: ^[a-z0-9][a-z0-9-.]{1,61}[a-z0-9]$
 
   CodeKeyPrefix:
     Type: String

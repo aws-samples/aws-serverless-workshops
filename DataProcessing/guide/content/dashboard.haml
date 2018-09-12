@@ -1,0 +1,34 @@
+!!! 5
+
+%head
+  %title Unicorn Dashboard :: Serverless Data Processing on AWS
+  %meta{charset: "utf-8"}
+  %meta{name: "viewport", content: "width=device-width, initial-scale=1, shrink-to-fit=no"}
+  %link{rel: "icon", type: "image/ico", href: "https://a0.awsstatic.com/main/images/site/fav/favicon.ico"}
+  %link{rel: "stylesheet", href: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css", integrity: "sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M", crossorigin: "anonymous"}
+  %link{rel: "stylesheet", href: "https://unpkg.com/leaflet@1.2.0/dist/leaflet.css", integrity: "sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==", crossorigin: ""}
+  %link{rel: "stylesheet", href: "css/dashboard.css"}
+
+%body
+  #map
+    #modal.modal.fade{"data-keyboard": false, "data-backdrop": "static"}
+      .modal-dialog
+        .modal-content
+          %form
+            .modal-header
+              %h6.modal-title Configure Dashboard
+            .modal-body
+              #error.alert.alert-danger.notice
+              .form-group
+                %label{for: "cognitoIdentityPoolId"} Cognito Identity Pool ID
+                %input.form-control{type: "text", id: "cognitoIdentityPoolId", spellcheck: "false", autocomplete: "off" }
+            .modal-footer
+              %button.btn.btn-primary#start Start
+
+  %script{src: "https://code.jquery.com/jquery-3.2.1.slim.min.js", integrity: "sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN", crossorigin: "anonymous"}
+  %script{src: "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js", integrity: "sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4", crossorigin: "anonymous"}
+  %script{src: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js", integrity: "sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1", crossorigin: "anonymous"}
+  %script{src: "https://unpkg.com/leaflet@1.2.0/dist/leaflet.js", integrity: "sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==", crossorigin: ""}
+  %script{src: "https://sdk.amazonaws.com/js/aws-sdk-2.115.0.min.js"}
+  %script{src: "js/cookies.js"}
+  %script{src: "js/dashboard.js"}

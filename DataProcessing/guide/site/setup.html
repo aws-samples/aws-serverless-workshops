@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<head>
+<title>Lab Guide :: Serverless Data Processing on AWS</title>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+<link href='https://a0.awsstatic.com/main/images/site/fav/favicon.ico' rel='icon' type='image/ico'>
+<link crossorigin='anonymous' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' rel='stylesheet'>
+<link href='css/styles.css' rel='stylesheet'>
+<link href='css/syntax.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container'>
+<nav class='navbar navbar-dark bg-dark'>
+<a class='navbar-brand' href='/'>
+<img src='images/aws.png'>
+</a>
+<div class='navbar-expand'>
+<div class='navbar-nav'>
+<a class='nav-item nav-link active' href='index.html'>Lab Guide</a>
+<a class='nav-item nav-link' href='dashboard.html' target='_blank'>Unicorn Dashboard</a>
+</div>
+</div>
+</nav>
+<div class='row'>
+<div class='col-12 col-xl-9 col-lg-9' id='guide'>
+<h1>Serverless Data Processing on AWS</h1>
+<h2 id="setup">Setup</h2>
+<h3 id="aws-account">AWS Account</h3>
+<p>In order to complete this workshop, you’ll need an AWS account and access to create AWS Identity and Access Management (IAM), Amazon Cognito, Amazon Kinesis, Amazon S3, Amazon Athena, Amazon DynamoDB, and AWS Cloud9 resources within that account.</p>
+<p>The code and instructions in this workshop assume only one participant is using a given AWS account at a time. If you attempt sharing an account with another participant, you will encounter naming conflicts for certain resources. You can work around this by either using a suffix in your resource names or using distinct Regions, but the instructions do not provide details on the changes required to make this work.</p>
+<p>Use a personal account or create a new AWS account for this workshop rather than using an organization’s account to ensure you have full access to the necessary services and to ensure you do not leave behind any resources from the workshop.</p>
+<h3 id="region">Region</h3>
+<p>Use <strong>US East (N. Virginia)</strong>, <strong>US West (Oregon)</strong>, or <strong>EU (Ireland)</strong> for this workshop. Each supports the complete set of services covered in the material. Consult the <a href="https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/">Region Table</a> to determine which services are available in a Region.</p>
+<h3 id="aws-cloud9-ide">AWS Cloud9 IDE</h3>
+<p>AWS Cloud9 is a cloud-based integrated development environment (IDE) that lets you write, run, and debug your code with just a browser. It includes a code editor, debugger, and terminal. Cloud9 comes pre-packaged with essential tools for popular programming languages and the AWS Command Line Interface (CLI) pre-installed so you don’t need to install files or configure your laptop for this workshop. Your Cloud9 environment will have access to the same AWS resources as the user with which you logged into the AWS Management Console.</p>
+<p>Take a moment now and setup your Cloud9 development environment.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Go to the AWS Management Console, click <strong>Services</strong> then select <strong>Cloud9</strong> under Developer Tools.</p></li>
+<li><p>Click <strong>Create environment</strong>.</p></li>
+<li><p>Enter <code>Development</code> into <strong>Name</strong> and optionally provide a <strong>Description</strong>.</p></li>
+<li><p>Click <strong>Next step</strong>.</p></li>
+<li><p>You may leave <strong>Environment settings</strong> at their defaults of launching a new <strong>t2.micro</strong> EC2 instance which will be paused after <strong>30 minutes</strong> of inactivity.</p></li>
+<li><p>Click <strong>Next step</strong>.</p></li>
+<li><p>Review the environment settings and click <strong>Create environment</strong>. It will take several minutes for your environment to be provisioned and prepared.</p></li>
+<li><p>Once ready, your IDE will open to a welcome screen. Below that, you should see a terminal prompt similar to:</p>
+<p><img src="images/setup-cloud9-terminal.png" /></p>
+<p>You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running <code>aws sts get-caller-identity</code>.</p>
+<pre class="console"><code>aws sts get-caller-identity</code></pre>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button>
+<p>You’ll see output indicating your account and user information:</p>
+<pre class="console"><code>Admin:~/environment $ aws sts get-caller-identity</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="dt">&quot;Account&quot;</span><span class="fu">:</span> <span class="st">&quot;123456789012&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    <span class="dt">&quot;UserId&quot;</span><span class="fu">:</span> <span class="st">&quot;AKIAI44QH8DHBEXAMPLE&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="dt">&quot;Arn&quot;</span><span class="fu">:</span> <span class="st">&quot;arn:aws:iam::123456789012:user/Alice&quot;</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="fu">}</span></a></code></pre></div></li>
+</ol>
+<p>Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you’ll use it for activities like building and running a sample app in a Docker container and using the AWS CLI.</p>
+<h3 id="command-line-clients">Command Line Clients</h3>
+<p>The modules utilize two command-line clients to simulate and display sensor data from the unicorns in the fleet. These are small programs written in the <a href="https://golang.org">Go Programming Language</a>. The below instructions in the <a href="#installation">Installation</a> section walks through downloading pre-built binaries, but you can also download the source and build it manually:</p>
+<ul>
+<li><a href="https://dataprocessing.wildrydes.com/client/producer.go">producer.go</a></li>
+<li><a href="https://dataprocessing.wildrydes.com/client/consumer.go">consumer.go</a></li>
+</ul>
+<h4 id="producer">Producer</h4>
+<p>The producer generates sensor data from a unicorn taking a passenger on a Wild Ryde. Each second, it emits the location of the unicorn as a latitude and longitude point, the distance traveled in meters in the previous second, and the unicorn’s current level of magic and health points.</p>
+<h4 id="consumer">Consumer</h4>
+<p>The consumer reads and displays formatted JSON messages from an Amazon Kinesis stream which allow us to monitor in real-time what’s being sent to the stream. Using the consumer, you can monitor the data the producer and your applications are sending.</p>
+<h4 id="installation">Installation</h4>
+<ol type="1">
+<li><p>Switch to the tab where you have your Cloud9 environment opened.</p></li>
+<li><p>Download and unpack the command line clients by running the following command in the Cloud9 terminal:</p>
+<pre class="console"><code>curl -s https://dataprocessing.wildrydes.com/client/client.tar | tar -xv</code></pre>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button></li>
+</ol>
+<p>This will unpack the <code>consumer</code> and <code>producer</code> files to your Cloud9 environment.</p>
+<h3 id="tips">⭐️ Tips</h3>
+<p>💡 Keep an open scratch pad in Cloud9 or a text editor on your local computer for notes. When the step-by-step directions tell you to note something such as an ID or Amazon Resource Name (ARN), copy and paste that into the scratch pad.</p>
+<h3 id="recap">⭐️ Recap</h3>
+<p>🔑 Use a unique personal or development <a href="#aws-account">AWS account</a></p>
+<p>🔑 Use one of the <strong>US East (N. Virginia)</strong>, <strong>US West (Oregon)</strong>, or <strong>EU (Ireland)</strong> <a href="#region">Regions</a></p>
+<p>🔑 Keep your <a href="#aws-cloud9-ide">AWS Cloud9 IDE</a> opened in a tab</p>
+<h3 id="next">Next</h3>
+<p>✅ Proceed to the first module, <a href="streaming-data.html">Streaming Data</a>, wherein you’ll create a Kinesis stream, send unicorn data to that stream, and visualize unicorn positions on a live map.</p>
+
+</div>
+<div class='col-3 d-none d-lg-block d-xl-block'>
+<div class='toc'>
+<strong>Contents</strong>
+<ul>
+<li>
+<a href='index.html'>Welcome</a>
+</li>
+<li>
+<a href='setup.html'>Setup</a>
+</li>
+<li>
+<a href='index.html#modules'>Modules</a>
+<ol>
+<li>
+<a href='streaming-data.html'>Real-time Data Streaming</a>
+</li>
+<li>
+<a href='streaming-aggregation.html'>Stream Aggregation</a>
+</li>
+<li>
+<a href='stream-processing.html'>Stream Processing</a>
+</li>
+<li>
+<a href='data-lake.html'>Data Lake</a>
+</li>
+</ol>
+</li>
+<li>
+<a href='extra-credit.html'>Extra Credit</a>
+</li>
+<li>
+<a href='cleanup.html'>Clean Up</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+<textarea id='buffer'></textarea>
+<footer></footer>
+<script crossorigin='anonymous' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
+<script src='js/guide.js'></script>
+</body>

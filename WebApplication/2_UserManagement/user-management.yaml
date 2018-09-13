@@ -96,7 +96,7 @@ Resources:
 
   UpdateConfigFunction:
     Properties:
-      Description: Copies objects from a source S3 bucket to a destination
+      Description: Updates object on S3 for client-side configuration
       Handler: index.handler
       Runtime: python2.7
       Role: !GetAtt CognitoConfigRole.Arn
@@ -124,7 +124,7 @@ Resources:
                   region: '%s', // e.g. us-east-2
               },
               api: {
-                  invokeUrl: 'Base URL of your API including the stage', // e.g. https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod'
+                  invokeUrl: '', // Base URL of your API including the stage, e.g. 'https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod'
               }
           };
               """

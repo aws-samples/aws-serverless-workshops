@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<head>
+<title>Lab Guide :: Serverless Data Processing on AWS</title>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+<link href='https://a0.awsstatic.com/main/images/site/fav/favicon.ico' rel='icon' type='image/ico'>
+<link crossorigin='anonymous' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' rel='stylesheet'>
+<link href='css/styles.css' rel='stylesheet'>
+<link href='css/syntax.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container'>
+<nav class='navbar navbar-dark bg-dark'>
+<a class='navbar-brand' href='/'>
+<img src='images/aws.png'>
+</a>
+<div class='navbar-expand'>
+<div class='navbar-nav'>
+<a class='nav-item nav-link active' href='index.html'>Lab Guide</a>
+<a class='nav-item nav-link' href='dashboard.html' target='_blank'>Unicorn Dashboard</a>
+</div>
+</div>
+</nav>
+<div class='row'>
+<div class='col-12 col-xl-9 col-lg-9' id='guide'>
+<h1>Serverless Data Processing on AWS</h1>
+<h2 id="clean-up">Clean Up</h2>
+<h3 id="resources">Resources</h3>
+<p>Below is a list of resources created in this workshop. Delete each one to clean up your account after executing the modules.</p>
+<h4 id="amazon-athena">Amazon Athena</h4>
+<p><strong><em>wildrydes</em> table</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>Athena</strong> in the Analytics section.</p></li>
+<li><p>Click on the overflow (three vertical dots) icon next to the <strong>wildrydes</strong> table and click on <strong>Delete table</strong>.</p></li>
+<li><p>Click <strong>Yes</strong> to confirm the deletion.</p></li>
+</ol>
+<h4 id="amazon-kinesis-data-firehose">Amazon Kinesis Data Firehose</h4>
+<p><strong><em>wildrydes</em> delivery stream</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>Kinesis</strong> in the Analytics section.</p></li>
+<li><p>Click <strong>View all</strong> in <strong>Kinesis delivery streams</strong>..</p></li>
+<li><p>Click <strong>wildrydes</strong> to select the radio button.</p></li>
+<li><p>Click <strong>Actions</strong> and <strong>Delete</strong>.</p></li>
+<li><p>Type the name of the stream (<strong>wildrydes</strong>) and click <strong>Delete</strong> to confirm the deletion.</p></li>
+</ol>
+<h4 id="amazon-s3">Amazon S3</h4>
+<p><strong>Data bucket (e.g. <em>wildrydes-data-yourname</em>)</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>S3</strong> in the Storage section.</p></li>
+<li><p>Click your bucket’s row (e.g. <em>wildydes-data-yourname</em>) to highlight it.</p></li>
+<li><p>Click <strong>Delete bucket</strong>.</p></li>
+<li><p>Type the name of the bucket (e.g. <em>wildrydes-data-yourname</em>) and click <strong>Confirm</strong> to confirm the deletion.</p></li>
+</ol>
+<h4 id="aws-lambda">AWS Lambda</h4>
+<p><strong><em>WildRydesStreamProcessor</em> function</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>Lambda</strong> in the Compute section.</p></li>
+<li><p>Click the radio button next to <strong>WildRydesStreamProcessor</strong>.</p></li>
+<li><p>Click <strong>Actions</strong> and <strong>Delete</strong>. Click the <strong>Delete</strong> button to confirm the deletion.</p></li>
+</ol>
+<h4 id="amazon-dynamodb">Amazon DynamoDB</h4>
+<p><strong><em>UnicornSensorData</em> table</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>DynamoDB</strong> in the Database section.</p></li>
+<li><p>Click <strong>Tables</strong> from the left-hand navigation</p></li>
+<li><p>Click the radio button next to <strong>UnicornSensorData</strong>.</p></li>
+<li><p>Click <strong>Delete table</strong> and click <strong>Delete</strong> to confirm the deletion.</p></li>
+</ol>
+<h4 id="aws-iam">AWS IAM</h4>
+<p><strong><em>WildRydesDynamoDBWritePolicy</em> policy</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>IAM</strong> in the Security, Identity &amp; Compliance section.</p></li>
+<li><p>Click <strong>Policies</strong> from the left-hand navigation.</p></li>
+<li><p>Select <strong>Customer managed</strong> from <strong>Filter</strong>.</p></li>
+<li><p>Click the checkbox next to <strong>WildRydesDynamoDBWritePolicy</strong>.</p></li>
+<li><p>Click <strong>Policy actions</strong> and <strong>Delete</strong>. Click the <strong>Delete</strong> button to confirm the deletion.</p></li>
+</ol>
+<p><strong><em>WildRydesStreamProcessor</em> role</strong></p>
+<ol type="1">
+<li><p>Click <strong>Roles</strong> from the left-hand navigation.</p></li>
+<li><p>Click the checkbox next to <strong>WildRydesStreamProcessor</strong>.</p></li>
+<li><p>Click <strong>Delete role</strong> and click <strong>Yes, delete</strong> to confirm the deletion.</p></li>
+</ol>
+<h4 id="amazon-kinesis-data-analytics">Amazon Kinesis Data Analytics</h4>
+<p><strong><em>wildrydes</em> application</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>Kinesis</strong> in the Analytics section.</p></li>
+<li><p>Click <strong>View all</strong> in <strong>Kinesis analytics applications</strong>.</p></li>
+<li><p>Click <strong>wildrydes</strong> to select the radio button.</p></li>
+<li><p>Click <strong>Actions</strong> and <strong>Delete application</strong>. Click <strong>Delete application</strong> to confirm the deletion.</p></li>
+</ol>
+<h4 id="amazon-kinesis-data-streams">Amazon Kinesis Data Streams</h4>
+<p><strong><em>wildrydes</em> and <em>wildrydes-summary</em> streams</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>Kinesis</strong> in the Analytics section.</p></li>
+<li><p>Click <strong>View all</strong> in <strong>Kinesis data streams</strong>.</p></li>
+<li><p>Click the checkboxes next to <strong>wildrydes</strong> and <strong>wildrydes-summary</strong>.</p></li>
+<li><p>Click <strong>Actions</strong> and <strong>Delete</strong>. Click <strong>Delete</strong> to confirm the deletions.</p></li>
+</ol>
+
+</div>
+<div class='col-3 d-none d-lg-block d-xl-block'>
+<div class='toc'>
+<strong>Contents</strong>
+<ul>
+<li>
+<a href='index.html'>Welcome</a>
+</li>
+<li>
+<a href='setup.html'>Setup</a>
+</li>
+<li>
+<a href='index.html#modules'>Modules</a>
+<ol>
+<li>
+<a href='streaming-data.html'>Real-time Data Streaming</a>
+</li>
+<li>
+<a href='streaming-aggregation.html'>Stream Aggregation</a>
+</li>
+<li>
+<a href='stream-processing.html'>Stream Processing</a>
+</li>
+<li>
+<a href='data-lake.html'>Data Lake</a>
+</li>
+</ol>
+</li>
+<li>
+<a href='extra-credit.html'>Extra Credit</a>
+</li>
+<li>
+<a href='cleanup.html'>Clean Up</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+<textarea id='buffer'></textarea>
+<footer></footer>
+<script crossorigin='anonymous' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
+<script src='js/guide.js'></script>
+</body>

@@ -1,0 +1,58 @@
+require "haml"
+require "listen"
+require "pandoc-ruby"
+require "time"
+require "gemoji-parser"
+
+require "./helpers"
+
+LAYOUT = "content/layout.haml"
+
+task default: :build
+
+task :build do
+  build
+end
+
+task :listen do
+  listener = Listen.to(".", "content/", only: /\.md|\.haml/) do |modified, added, removed|
+    paths = [modified, added, removed].flatten.map { |path|
+      ContentFile.new(path).basename
+    }.join(",")
+
+    puts "Building site -- ts=#{Time.now.iso8601} modified=#{paths}"
+
+    begin
+      build
+    rescue Exception => ex
+      puts ex
+      puts ex.backtrace
+    end
+  end
+
+  trap("SIGINT") do
+    puts
+    exit(0)
+  end
+
+  puts "Listening for changes -- ts=#{Time.now.iso8601}"
+  listener.start
+  sleep
+end
+
+def build
+  Dir["content/*"].each do |path|
+    next if path == LAYOUT
+
+    content_file = ContentFile.new(path)
+    next if content_file.partial?
+
+    File.open(File.join("site", content_file.stem + ".html"), "w") do |file|
+      if content_file.fullpage?
+        file.write(render(path))
+      else
+        file.write(render(LAYOUT) { render(path) })
+      end
+    end
+  end
+end

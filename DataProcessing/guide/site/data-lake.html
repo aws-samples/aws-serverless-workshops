@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<head>
+<title>Lab Guide :: Serverless Data Processing on AWS</title>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+<link href='https://a0.awsstatic.com/main/images/site/fav/favicon.ico' rel='icon' type='image/ico'>
+<link crossorigin='anonymous' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' rel='stylesheet'>
+<link href='css/styles.css' rel='stylesheet'>
+<link href='css/syntax.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container'>
+<nav class='navbar navbar-dark bg-dark'>
+<a class='navbar-brand' href='/'>
+<img src='images/aws.png'>
+</a>
+<div class='navbar-expand'>
+<div class='navbar-nav'>
+<a class='nav-item nav-link active' href='index.html'>Lab Guide</a>
+<a class='nav-item nav-link' href='dashboard.html' target='_blank'>Unicorn Dashboard</a>
+</div>
+</div>
+</nav>
+<div class='row'>
+<div class='col-12 col-xl-9 col-lg-9' id='guide'>
+<h1>Serverless Data Processing on AWS</h1>
+<h2 id="data-lake">Data Lake</h2>
+<p>In this module, you’ll create an <a href="https://aws.amazon.com/kinesis/firehose/">Amazon Kinesis Data Firehose</a> to deliver data from the Amazon Kinesis stream created in the first module to <a href="https://aws.amazon.com/s3">Amazon Simple Storage Service (Amazon S3)</a> in batches. You’ll then use <a href="https://aws.amazon.com/athena">Amazon Athena</a> to run queries against our raw data in place.</p>
+<h3 id="overview">Overview</h3>
+<p>The architecture for this module builds on the Amazon Kinesis stream you created in the first module. You’ll use Amazon Kinesis Data Firehose to batch the data and deliver it to Amazon S3 to archive it. Using Amazon Athena, you’ll run ad-hoc queries against the raw data in the Amazon S3 bucket.</p>
+<h3 id="implementation">Implementation</h3>
+<h4 id="create-an-amazon-s3-bucket">1. Create an Amazon S3 bucket</h4>
+<p>Use the console or CLI to create an S3 bucket. Keep in mind, your bucket’s name must be globally unique. We recommend using a name such as <code>wildrydes-data-yourname</code>.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>From the AWS Console click <strong>Services</strong> then select <strong>S3</strong> under Storage.</p></li>
+<li><p>Click <strong>+ Create bucket</strong></p></li>
+<li><p>Provide a globally unique name for your bucket such as <code>wildrydes-data-yourname</code>.</p></li>
+<li><p>Select the region you’ve been using for your bucket.</p>
+<p><img src="images/data-lake-create-bucket.png" /></kbd></p></li>
+<li><p>Click <strong>Next</strong> twice, and then click <strong>Create bucket</strong>.</p></li>
+</ol>
+<h4 id="create-an-amazon-kinesis-data-firehose-delivery-stream">2. Create an Amazon Kinesis Data Firehose delivery stream</h4>
+<p>Create an Amazon Kinesis Data Firehose delivery stream named <strong>wildrydes</strong> that is configured to source data from the <strong>wildrydes</strong> stream and deliver its contents in batches to the S3 bucket created in the previous section.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>From the AWS Console click <strong>Services</strong> then select <strong>Kinesis</strong> under Analytics.</p></li>
+<li><p>Click <strong>Create delivery stream</strong>.</p></li>
+<li><p>Enter <code>wildrydes</code> into <strong>Delivery stream name</strong>.</p></li>
+<li><p>Select <strong>Kinesis stream</strong> as <strong>Source</strong> and select <strong>wildrydes</strong> as the source stream.</p></li>
+<li><p>Click <strong>Next</strong>.</p></li>
+<li><p>Leave <strong>Record transformation</strong> and <strong>Record format conversation</strong> disabled and click <strong>Next</strong>.</p></li>
+<li><p>Select <strong>Amazon S3</strong> from <strong>Destination</strong>.</p></li>
+<li><p>Choose the bucket you created in the previous section (i.e. <strong>wildrydes-data-johndoe</strong>) from <strong>S3 bucket</strong>.</p></li>
+<li><p>Click <strong>Next</strong>.</p></li>
+<li><p>Enter <code>60</code> into <strong>Buffer interval</strong> under <strong>S3 Buffer</strong> to set the frequency of S3 deliveries to once per minute.</p></li>
+<li><p>Scroll down to the bottom of the page and click <strong>Create new or Choose</strong> from <strong>IAM role</strong>. In the new tab, click <strong>Allow</strong>.</p></li>
+<li><p>Click <strong>Next</strong>. Review the delivery stream details and click <strong>Create delivery stream</strong>.</p>
+<p><img src="images/data-lake-delivery-stream-details.png" /></kbd></p></li>
+</ol>
+<h4 id="create-an-amazon-athena-table">3. Create an Amazon Athena table</h4>
+<p>Create an Amazon Athena table to query the raw data in place on Amazon S3 using a JSON SerDe. Name the table <strong>wildrydes</strong> and include the attributes in the raw data:</p>
+<ul>
+<li><em>Name</em> (string)</li>
+<li><em>StatusTime</em> (timestamp)</li>
+<li><em>Latitude</em> (float)</li>
+<li><em>Longitude</em> (float)</li>
+<li><em>Distance</em> (float)</li>
+<li><em>MagicPoints</em> (int)</li>
+<li><em>HealthPoints</em> (int)</li>
+</ul>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>Athena</strong> in the Analytics section.</p></li>
+<li><p>If prompted, click <strong>Get Started</strong> and exit the first-run tutorial by hitting the <strong>x</strong> in the upper right hand corner of the modal dialog.</p></li>
+<li><p>Copy and paste the following SQL statement to create the table. Replace the <strong>YOUR_BUCKET_NAME_HERE</strong> placeholder with your bucket name ( e.g. wildrydes-data-johndoe) in the LOCATION clause:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">CREATE</span> EXTERNAL <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> wildrydes (</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">       Name string,</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">       StatusTime <span class="dt">timestamp</span>,</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">       Latitude <span class="dt">float</span>,</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">       Longitude <span class="dt">float</span>,</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">       Distance <span class="dt">float</span>,</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">       HealthPoints <span class="dt">int</span>,</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">       MagicPoints <span class="dt">int</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">     )</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">     <span class="kw">ROW</span> FORMAT SERDE <span class="st">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">     LOCATION <span class="st">&#39;s3://YOUR_BUCKET_NAME_HERE/&#39;</span>;</a></code></pre></div>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button></li>
+<li><p>Click <strong>Run Query</strong>.</p></li>
+<li><p>Verify the table <strong>wildrydes</strong> was created by ensuring it has been added to the list of tables in the left navigation.</p></li>
+</ol>
+<h4 id="explore-the-batched-data-files">4. Explore the batched data files</h4>
+<p>Using the AWS Management Console, navigate to the S3 bucket that you used as your Kinesis Data Firehose delivery target. Verify that Firehose is delivering batched data files to the bucket. Download one of the files and open it in a text editor to see the contents.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>S3</strong> in the Storage section.</p></li>
+<li><p>Enter the bucket name you create in the first section in the <strong>Search for buckets</strong> text input.</p></li>
+<li><p>Click on the bucket name and navigate through the year, month, day, and hour folders to ensure that files are being populated in your bucket.</p>
+<p><img src="images/data-lake-object-list.png" /></p></li>
+<li><p>Click on one of the files and click <strong>Download</strong>. Open the file with a text editor and explore its contents.</p></li>
+</ol>
+<h4 id="query-the-data-files">5. Query the data files</h4>
+<p>Query the Amazon Athena table to see all records that have been delivered via Kinesis Data Firehose to S3.</p>
+<p><strong>✅ Step-by-step Instructions</strong></p>
+<ol type="1">
+<li><p>Click on <strong>Services</strong> then select <strong>Athena</strong> in the Analytics section.</p></li>
+<li><p>Copy and paste the following SQL query:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">SELECT</span> * <span class="kw">FROM</span> wildrydes</a></code></pre></div>
+<button class="btn btn-outline-primary copy">
+Copy to Clipboard
+</button></li>
+<li><p>Click <strong>Run Query</strong>.</p>
+<p><img src="images/data-lake-query-results.png" /></p></li>
+</ol>
+<h2 id="recap">⭐️ Recap</h2>
+<p>🔑 Amazon Kinesis Data Firehose is a fully managed service for delivering real-time streaming data to destinations such as Amazon S3. Amazon Athena allows us to run ad-hoc queries against the raw data using standard SQL.</p>
+<p>🔧 In this module, you’ve created a Kinesis Data Firehose deliery stream to deliver data from the Kinesis stream to an Amazon S3 bucket. Using Athena, you ran queries against this data on S3.</p>
+<h2 id="next">Next</h2>
+<p>🎉 You’re finished! You’ve completed the workshop. <strong>Thanks so much for participating!</strong> Please remember to give us feedback either in person, via GitHub, or through the survey mailed after an event so we can improve the materials.</p>
+<p>✅ Have some time? Take a whack at some <a href="extra-credit.html">extra credit</a> tasks.</p>
+<p>✅ Be sure to <a href="cleanup.html">clean up</a> the resources from this workshop to ensure you do not incur any additional costs.</p>
+
+</div>
+<div class='col-3 d-none d-lg-block d-xl-block'>
+<div class='toc'>
+<strong>Contents</strong>
+<ul>
+<li>
+<a href='index.html'>Welcome</a>
+</li>
+<li>
+<a href='setup.html'>Setup</a>
+</li>
+<li>
+<a href='index.html#modules'>Modules</a>
+<ol>
+<li>
+<a href='streaming-data.html'>Real-time Data Streaming</a>
+</li>
+<li>
+<a href='streaming-aggregation.html'>Stream Aggregation</a>
+</li>
+<li>
+<a href='stream-processing.html'>Stream Processing</a>
+</li>
+<li>
+<a href='data-lake.html'>Data Lake</a>
+</li>
+</ol>
+</li>
+<li>
+<a href='extra-credit.html'>Extra Credit</a>
+</li>
+<li>
+<a href='cleanup.html'>Clean Up</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+<textarea id='buffer'></textarea>
+<footer></footer>
+<script crossorigin='anonymous' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
+<script src='js/guide.js'></script>
+</body>

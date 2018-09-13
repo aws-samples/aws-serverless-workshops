@@ -132,7 +132,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Click on **Create function**.
 
-1. Scroll down to the **Function code** section and replace the exiting code in the **index.js** code editor with the contents of [requestUnicorn.js](requestUnicorn.js).
+1. Scroll down to the **Function code** section and replace the existing code in the **index.js** code editor with the contents of [requestUnicorn.js](requestUnicorn.js).
     ![Create Lambda function screenshot](../images/create-lambda-function-code.png)
 
 1. Click **"Save"** in the upper right corner of the page.

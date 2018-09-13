@@ -53,7 +53,7 @@ Asia Pacific (Mumbai) | [![Launch Module 4 in ap-south-1](http://docs.aws.amazon
 
 ## Implementation Instructions
 
-Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
@@ -63,7 +63,7 @@ Use the Amazon API Gateway console to create a new API.
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
+1. In the AWS Management Console, click **Services** then select **API Gateway** under Networking & Content Delivery.
 
 1. Choose **Create API**.
 

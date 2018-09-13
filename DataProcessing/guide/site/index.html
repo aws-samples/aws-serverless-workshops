@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+<title>Lab Guide :: Serverless Data Processing on AWS</title>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+<link href='https://a0.awsstatic.com/main/images/site/fav/favicon.ico' rel='icon' type='image/ico'>
+<link crossorigin='anonymous' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css' integrity='sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M' rel='stylesheet'>
+<link href='css/styles.css' rel='stylesheet'>
+<link href='css/syntax.css' rel='stylesheet'>
+</head>
+<body>
+<div class='container'>
+<nav class='navbar navbar-dark bg-dark'>
+<a class='navbar-brand' href='/'>
+<img src='images/aws.png'>
+</a>
+<div class='navbar-expand'>
+<div class='navbar-nav'>
+<a class='nav-item nav-link active' href='index.html'>Lab Guide</a>
+<a class='nav-item nav-link' href='dashboard.html' target='_blank'>Unicorn Dashboard</a>
+</div>
+</div>
+</nav>
+<div class='row'>
+<div class='col-12 col-xl-9 col-lg-9' id='guide'>
+<h1>Serverless Data Processing on AWS</h1>
+<h2 id="welcome">Welcome!</h2>
+<p>Welcome to the <em>Serverless Data Processing on AWS</em> workshop!</p>
+<p>This is a 200-level workshop designed to illustrate how to use AWS services to process real-time data streams without managing servers. In this workshop, we’ll build infrastructure to enable operations personnel at <a href="http://wildrydes.com/">Wild Rydes</a> headquarters to monitor the health and status of their <a href="http://www.wildrydes.com/unicorns.html">unicorn fleet</a>. Each unicorn is equipped with a sensor that reports its location and vital signs. During this workshop we’ll use AWS to build applications to process and visualize this data in real-time.</p>
+<p>We will use a variety of AWS services including: <a href="https://aws.amazon.com/kinesis/">Amazon Kinesis</a>, <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>, <a href="https://aws.amazon.com/s3/">Amazon Simple Storage Service (Amazon S3)</a>, <a href="https://aws.amazon.com/dynamodb/">Amazon DynamoDB</a>, <a href="https://aws.amazon.com/cognito/">Amazon Cognito</a>, and <a href="https://aws.amazon.com/athena/">Amazon Athena</a>. We’ll use Lambda to process real-time streams, DynamoDB to persist unicorn vitals, Amazon Kinesis Data Analytics to build a serverless application to aggregate data, Amazon Kinesis Data Firehose to archive the raw data to Amazon S3, and Athena to run ad-hoc queries against the raw data.</p>
+<h3 id="modules">Modules</h3>
+<p>This workshop is divided into four modules. Each module describes a scenario of what we’re going to build and step-by-step directions to help you implement the architecture and verify your work.</p>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="streaming-data.html">Real-time Streaming Data</a></td>
+<td>Create a stream in Kinesis and write to and read from the stream to track Wild Rydes unicorns on a live map. In this module you’ll also create an Amazon Cognito identity pool to grant the live map access to your stream.</td>
+</tr>
+<tr class="even">
+<td><a href="streaming-aggregation.html">Streaming Aggregation</a></td>
+<td>Build an Kinesis Data Analytics application to read from the stream and aggregate metrics like unicorn health and distance traveled each minute.</td>
+</tr>
+<tr class="odd">
+<td><a href="stream-processing.html">Stream Processing</a></td>
+<td>Persist aggregate data from the application to a backend database stored in DynamoDB and run queries against those data.</td>
+</tr>
+<tr class="even">
+<td><a href="data-lake.html">Data Lake</a></td>
+<td>Use Kinesis Data Firehose to flush the raw sensor data to an S3 bucket for archival purposes. Using Athena, you’ll run SQL queries against the raw data for ad-hoc analysis.</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ These modules are intended to be executed linearly.</p>
+<h3 id="issues-comments-feedback">Issues, Comments, Feedback?</h3>
+<p>I’m <a href="https://github.com/awslabs/aws-serverless-workshops">open source</a>! If you see an issue, want to contribute content, or have overall feedback please open an <a href="https://github.com/awslabs/aws-serverless-workshops/issues">issue</a> or <a href="https://github.com/awslabs/aws-serverless-workshops/pulls">pull request</a>.</p>
+<h3 id="next">Next</h3>
+<p>✅ Review and follow the directions in the <a href="setup.html">setup guide</a>, wherein you’ll configure your AWS Cloud9 IDE and setup pre-requisites like an AWS Account.</p>
+
+</div>
+<div class='col-3 d-none d-lg-block d-xl-block'>
+<div class='toc'>
+<strong>Contents</strong>
+<ul>
+<li>
+<a href='index.html'>Welcome</a>
+</li>
+<li>
+<a href='setup.html'>Setup</a>
+</li>
+<li>
+<a href='index.html#modules'>Modules</a>
+<ol>
+<li>
+<a href='streaming-data.html'>Real-time Data Streaming</a>
+</li>
+<li>
+<a href='streaming-aggregation.html'>Stream Aggregation</a>
+</li>
+<li>
+<a href='stream-processing.html'>Stream Processing</a>
+</li>
+<li>
+<a href='data-lake.html'>Data Lake</a>
+</li>
+</ol>
+</li>
+<li>
+<a href='extra-credit.html'>Extra Credit</a>
+</li>
+<li>
+<a href='cleanup.html'>Clean Up</a>
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+<textarea id='buffer'></textarea>
+<footer></footer>
+<script crossorigin='anonymous' integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN' src='https://code.jquery.com/jquery-3.2.1.slim.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4' src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js'></script>
+<script crossorigin='anonymous' integrity='sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js'></script>
+<script src='js/guide.js'></script>
+</body>

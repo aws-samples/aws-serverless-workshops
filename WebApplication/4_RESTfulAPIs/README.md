@@ -175,6 +175,12 @@ Create a new resource called /ride within your API. Then create a POST method fo
 1. Select the WildRydes Cognito user pool authorizer from the drop-down list, and click the checkmark icon.
 
     ![API authorizer configuration screenshot](../images/api-authorizer.png)
+    
+1. Select `POST` under Resources.
+
+1. In the **Actions** drop-down list select **Enable CORS**.
+
+1. Accepting the defaults, click **Enable CORS and replace existing CORS headers**.
 
 </p></details>
 

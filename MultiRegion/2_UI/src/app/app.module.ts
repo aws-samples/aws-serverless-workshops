@@ -38,6 +38,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     AuthGuard,
     ConfigGuard
   ],
+  exports: [BrowserModule, ToastaModule],
   bootstrap: [AppComponent]
 })
 

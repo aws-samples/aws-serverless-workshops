@@ -22,6 +22,8 @@
     "@angular/platform-browser-dynamic": "^6.1.7",
     "@angular/router": "^6.1.7",
     "@swimlane/ngx-datatable": "^13.1.0",
+    "aws-amplify": "^1.0.11",
+    "aws-amplify-angular": "^2.0.3",
     "core-js": "*",
     "eslint": "^5.5.0",
     "ng-bootstrap": "*",

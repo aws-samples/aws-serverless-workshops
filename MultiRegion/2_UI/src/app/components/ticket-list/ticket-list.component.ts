@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ITicket} from '../../model/ticket';
 import {FormGroup} from '@angular/forms';
 import {TicketService} from '../../services/ticket.service';
@@ -35,7 +35,7 @@ export class TicketListComponent implements OnInit {
               private toastaService: ToastaService, private toastaConfig: ToastaConfig,
               public ticketService: TicketService) {
 
-    this.toastaConfig.theme = 'material';
+    this.toastaConfig.theme = 'default';
 
     this.refresh();
 
@@ -89,7 +89,6 @@ export class TicketListComponent implements OnInit {
                  'template. Here is the url you have configured: ' + environment.ticketAPI,
             showClose: true,
             timeout: 5000,
-            theme: 'default',
             onAdd: (toast: ToastData) => {
               console.log('Toast ' + toast.id + ' has been added!');
             },
@@ -98,7 +97,7 @@ export class TicketListComponent implements OnInit {
             }
           };
           // Add see all possible types in one shot
-          this.toastaService.info(toastOptions);
+          this.toastaService.error(toastOptions);
 
         }
       );

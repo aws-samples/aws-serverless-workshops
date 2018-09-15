@@ -5,7 +5,8 @@ import {TicketListComponent} from '../../components/ticket-list/ticket-list.comp
   imports: [
   ],
   declarations: [
-    TicketListComponent]
+    TicketListComponent
+  ]
 })
 
 export class TicketModule { }

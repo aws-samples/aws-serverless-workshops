@@ -81,7 +81,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 1. Seed the `uni-api` CodeCommit Git repository
 
-1. Each module has corresponding source code used to seed the CodeCommit Git repository for the CodeStart project.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
+1. Each module has corresponding source code used to seed the CodeCommit Git repository for the CodeStar project.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
     Region| Launch
     ------|-----

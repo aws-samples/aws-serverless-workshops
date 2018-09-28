@@ -15,6 +15,7 @@ import {AuthGuard} from './shared/guard/auth.guard';
 import {ConfigGuard} from './shared/guard/config.guard';
 import {ToastaModule} from 'ngx-toasta';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { AmplifyAngularModule, AmplifyService } from 'aws-amplify-angular';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     FacebookModule.forRoot(),
     AppRoutingModule,
     BrowserAnimationsModule,
-    ToastaModule.forRoot()
+    ToastaModule.forRoot(),
+    AmplifyAngularModule
   ],
   providers: [
     AWSService,
@@ -36,7 +38,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     CognitoLoginService,
     TicketService,
     AuthGuard,
-    ConfigGuard
+    ConfigGuard,
+    AmplifyService
   ],
   exports: [BrowserModule, ToastaModule],
   bootstrap: [AppComponent]

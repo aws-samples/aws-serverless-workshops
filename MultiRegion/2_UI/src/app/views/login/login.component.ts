@@ -5,7 +5,7 @@ import {
 } from '../../services/cognito.service';
 import {Router} from '@angular/router';
 import {ToastaService, ToastaConfig, ToastOptions, ToastData} from 'ngx-toasta';
-import {environment} from '../../../environments/environment';
+import { AmplifyService } from 'aws-amplify-angular';
 
 declare var AWS: any;
 
@@ -19,7 +19,8 @@ export class LoginComponent implements OnInit, FacebookCallback {
 
   constructor(private toastaService: ToastaService, private toastaConfig: ToastaConfig,
               public router: Router,
-              public cognitoLoginService: CognitoLoginService) {
+              public cognitoLoginService: CognitoLoginService,
+              private amplifyService: AmplifyService) {
 
     this.toastaConfig.theme = 'default';
 
@@ -30,7 +31,8 @@ export class LoginComponent implements OnInit, FacebookCallback {
   }
 
   loginWithFacebook() {
-    this.cognitoLoginService.authenticateWithFacebook(this);
+    // this.cognitoLoginService.authenticateWithFacebook(this);
+    this.amplifyService.auth();
   }
 
   fbCallback(message: string, result: any) {

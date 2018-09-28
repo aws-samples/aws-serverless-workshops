@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: ServerlessXR
+Description: SXR UI Stack - static website bucket, cognito identity pool, roles, etc.
 Resources:
   CognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"

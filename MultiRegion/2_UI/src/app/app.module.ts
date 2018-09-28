@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {AWSService} from './services/aws.service';
 import {CognitoLoginService, CognitoService} from './services/cognito.service';
 import {TicketService} from './services/ticket.service';
 
@@ -33,7 +32,6 @@ import { AmplifyAngularModule, AmplifyService } from 'aws-amplify-angular';
     AmplifyAngularModule
   ],
   providers: [
-    AWSService,
     CognitoService,
     CognitoLoginService,
     TicketService,

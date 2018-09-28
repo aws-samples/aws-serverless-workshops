@@ -6,6 +6,7 @@ import {
 import {Router} from '@angular/router';
 import {ToastaService, ToastaConfig, ToastOptions, ToastData} from 'ngx-toasta';
 import { AmplifyService } from 'aws-amplify-angular';
+import { Auth } from 'aws-amplify';
 
 declare var AWS: any;
 
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit, FacebookCallback {
   constructor(private toastaService: ToastaService, private toastaConfig: ToastaConfig,
               public router: Router,
               public cognitoLoginService: CognitoLoginService,
+              public cognitoService: CognitoService,
               private amplifyService: AmplifyService) {
 
     this.toastaConfig.theme = 'default';
@@ -31,17 +33,31 @@ export class LoginComponent implements OnInit, FacebookCallback {
   }
 
   loginWithFacebook() {
-    // this.cognitoLoginService.authenticateWithFacebook(this);
-    this.amplifyService.auth();
+    this.cognitoLoginService.authenticateWithFacebook(this);
   }
 
-  fbCallback(message: string, result: any) {
+  fbCallback(message: string, reponse: any) {
 
-    console.log('LoginComponent: fbCallback --> result ' + JSON.stringify(result));
+    console.log('LoginComponent: fbCallback --> result ' + JSON.stringify(reponse));
+
+    const that = this;
 
     if (message === null) {
-      this.router.navigate(['/ticket']);
+      Auth.federatedSignIn(
+        'facebook',
+        {
+          token: reponse.accessToken,
+          expires_at: reponse.expiresIn
+        },
+        reponse.userID
+      ).then(credentials => {
+          console.log('Auth.federatedSignIn FULFILLED  credentials --> ' + JSON.stringify(credentials));
 
+          that.router.navigate(['/ticket']);
+        }
+      ).catch(err => {
+          console.log('Auth.federatedSignIn REJECTED-->' + err);
+      });
     } else {
 
       const toastOptions: ToastOptions = {

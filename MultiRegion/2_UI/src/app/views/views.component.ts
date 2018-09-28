@@ -9,11 +9,11 @@ import {TicketService} from '../services/ticket.service';
 })
 export class ViewsComponent implements OnInit {
 
-  public region:string =  "";
+  public region =  '';
 
   constructor(public router: Router,
               public ticketService: TicketService,
-              public cognitoService: CognitoService, //used in UI
+              public cognitoService: CognitoService, // used in UI
               public cognitoLoginService: CognitoLoginService) { }
 
   ngOnInit() {
@@ -24,11 +24,11 @@ export class ViewsComponent implements OnInit {
     this.ticketService.getHealth()
       .subscribe(
         data => {
-          console.log("DATA: " + data);
+          console.log('DATA: ' + data);
           this.region = data.region;
         },
         error => {
-          console.log("ERROR: " + error);
+          console.log('ERROR: ' + error);
 
         }
       );

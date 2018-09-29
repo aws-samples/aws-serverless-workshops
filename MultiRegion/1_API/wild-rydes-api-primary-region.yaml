@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+Description: SXR API Stack for failover region.
+
 Resources:
+  
   TicketServiceAPI:
     Type: AWS::Serverless::Api
     Properties:
@@ -92,6 +95,7 @@ Resources:
                 passthroughBehavior: "when_no_match"
                 type: "mock"
         swagger: '2.0'
+  
   TicketGetFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -117,6 +121,7 @@ Resources:
             Path: /ticket
             Method: get
             RestApiId: !Ref TicketServiceAPI
+  
   TicketPostFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -141,35 +146,7 @@ Resources:
             Path: /ticket
             Method: post
             RestApiId: !Ref TicketServiceAPI
-  TicketReplicateFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: tickets-replicate.handler
-      Runtime: nodejs6.10
-      FunctionName: TicketReplicateFunction
-      Policies:
-        - AWSLambdaDynamoDBExecutionRole #managedpolicy
-        - AmazonKinesisFullAccess #managed policy
-        - Version: '2012-10-17' # Policy Document
-          Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:PutItem
-                - dynamodb:GetItem
-                - dynamodb:GetRecords
-                - dynamodb:GetShardIterator
-                - dynamodb:DescribeStream
-                - dynamodb:ListStreams
-                - dynamodb:DeleteItem
-                - kinesis:*
-                - logs:CreateLogGroup
-                - logs:CreateLogStream
-                - logs:PutLogEvents
-              Resource: arn:aws:dynamodb:*:*:table/SXRTickets
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref DynamoDBTicketTable
-          TARGET_REGION: ap-southeast-1
+  
   HealthFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -195,6 +172,7 @@ Resources:
             Path: /health
             Method: get
             RestApiId: !Ref TicketServiceAPI
+  
   DynamoDBTicketTable:
    Type: AWS::DynamoDB::Table
    Properties:
@@ -208,6 +186,7 @@ Resources:
      ProvisionedThroughput:
        ReadCapacityUnits: 5
        WriteCapacityUnits: 5
+
 Outputs:
   ApiUrl:
     Description: URL of your API endpoint

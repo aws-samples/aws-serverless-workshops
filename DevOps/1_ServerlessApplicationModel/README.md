@@ -191,7 +191,7 @@ SAM Local can start an HTTP server locally on EC2 instance on port 3000.  In ord
 On your workstation, open a new terminal and run the following command.  In the command, replace ***~/mykeypair.pem*** with the location and file name of your .pem file and replace ***ec2-###-##-##-###.compute-1.amazonaws.com*** with the public DNS name of your EC2 developer instance:
 
    ```
-   ssh -i ~/mykeypair.pem -N -L 3000:ec2-###-##-##-###.compute-1.amazonaws.com:3000 ec2-user@ec2-###-##-##-###.compute-1.amazonaws.com
+   ssh -i ~/mykeypair.pem -N -L 3000:localhost:3000 ec2-user@ec2-###-##-##-###.compute-1.amazonaws.com
    ```
 
 ###### Port Forwarding with Putty on Windows

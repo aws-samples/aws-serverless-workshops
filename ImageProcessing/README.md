@@ -204,7 +204,7 @@ Now you can create an AWS Step Functions state machine with the initial face det
 
 1. Click **Create State Machine** to create the state machine.
 
-1. Click the **New execution** button to start a new execution.
+1. Click the **Start execution** button to start a new execution.
 
 1. Here you specify the input data passed into the AWS Step Functions state machine to process.
 

@@ -430,7 +430,7 @@ The `test_list_unicorns` integration test has failed!  Next, let's locate and fi
 
 ### 1. Fix Code Bug
 
-1.  On your workstation, open the `uni-api/app/list.js` file and naviagte to line 17, which should look like the following code snippet:
+1.  On your workstation, open the `uni-api/app/list.js` file and naviagte to line 16, which should look like the following code snippet:
 
    ```
    docClient.scan(params, function(error, data) {
@@ -438,7 +438,7 @@ The `test_list_unicorns` integration test has failed!  Next, let's locate and fi
      error = Error("something is wrong");
    ```
 
-1. Comment or delete Line 17 to fix the code bug
+1. Comment or delete Line 16 to fix the code bug
 
 1. Save the `uni-api/app/list.js` file.
 

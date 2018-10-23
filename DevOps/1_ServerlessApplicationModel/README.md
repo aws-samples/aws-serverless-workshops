@@ -138,17 +138,10 @@ For macOS and Windows users: SAM local requires that the project directory (or a
 Verify that docker is working, and that you can run docker commands from the CLI (e.g. `docker ps`). You do not need to install/fetch/pull any containers - SAM Local will do it automatically as required.
 
 
-#### Windows, Linux, macOS with NPM [Recommended]
+#### Windows, Linux, macOS
+1. [Install SAM](https://github.com/awslabs/aws-sam-cli/blob/develop/docs/installation.rst)
 
-The easiest way to install **`sam`** is to use [NPM](https://www.npmjs.com).
-
-```bash
-npm install -g aws-sam-local
-```
-
-If you get a permission error when using npm (such as `EACCES: permission denied`), please see the instructions on this page of the NPM documentation: [https://docs.npmjs.com/getting-started/fixing-npm-permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
-
-Verify the installation worked:
+1. Verify the installation worked:
 ```bash
 sam --version
 ```

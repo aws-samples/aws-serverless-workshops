@@ -1,8 +1,6 @@
 # Module 1: Serverless Application Model
 
-In this module you'll learn about the [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model) and how you can use it to define a serverless RESTful API.  You will also use [SAM Local](http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html) to locally develop and rapidly test an API.
-
-
+In this module you'll learn about the [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model) and how you can use it to define a serverless RESTful API.  You will also use [SAM CLI](http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html) to locally develop and rapidly test an API.
 
 ## Serverless Application Model (SAM) Overview
 
@@ -17,7 +15,6 @@ AWS SAM defines a set of resources that describe common components of serverless
 The Unicorn API includes Amazon API Gateway HTTP endpoints that trigger AWS Lambda functions that read and write data to an Amazon DynamoDB database.  The SAM template for the Unicorn API describes a DynamoDB table with a hash key and Lambda functions to list, view and update Unicorns in the Wild Rydes stable.
 
 In this module, you will be working with a Lambda function that simply displays a welcome message.  The Unicorn API components are defined in the [template.yml](uni-api/template.yml) SAM template.  Next we'll review the Lambda function component in more detail.
-
 
 ### AWS::Serverless::Function
 
@@ -116,51 +113,50 @@ git fetch --all
 git reset --hard origin/master
 ```
 
+## AWS SAM CLI
 
-## SAM Local
-
-[SAM Local](http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html) is the AWS CLI tool for managing Serverless applications written with [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model).  SAM Local can be used to test functions locally, start a local API Gateway from a SAM template, validate a SAM template, and generate sample payloads for various event sources.  
+[AWS SAM CLI](https://docs.aws.amazon.com/lambda/latest/dg/test-sam-cli.html) is the AWS CLI tool for managing Serverless applications written with [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model).  SAM CLI can be used to test functions locally, start a local API Gateway from a SAM template, validate a SAM template, and generate sample payloads for various event sources.  
 
 ### Installation
 
-To complete this module, you will need to install SAM Local.  If you already have SAM Local installed, you can skip this section.
+To complete this module, you will need to install SAM CLI.  If you already have SAM CLI installed, you can skip this section.
 
 #### Prerequisites
 
-Running Serverless projects and functions locally with SAM Local requires Docker to be installed and running. SAM Local will use the `DOCKER_HOST` environment variable to contact the docker daemon.
+Running Serverless projects and functions locally with SAM CLI requires Docker to be installed and running. SAM CLI will use the `DOCKER_HOST` environment variable to contact the docker daemon.
 
- - macOS: [Docker for Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac)
- - Windows: [Docker Toolbox](https://download.docker.com/win/stable/DockerToolbox.exe)
- - Linux: Check your distro's package manager (e.g. yum install docker)
+* macOS: [Docker for Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac)
+* Windows: [Docker Toolbox](https://download.docker.com/win/stable/DockerToolbox.exe)
+* Linux: Check your distro's package manager (e.g. yum install docker)
 
-For macOS and Windows users: SAM local requires that the project directory (or any parent directory) is listed in Docker file sharing options.
+For macOS and Windows users: SAM CLI requires that the project directory (or any parent directory) is listed in Docker file sharing options.
 
-Verify that docker is working, and that you can run docker commands from the CLI (e.g. `docker ps`). You do not need to install/fetch/pull any containers - SAM Local will do it automatically as required.
+Verify that docker is working, and that you can run docker commands from the CLI (e.g. `docker ps`). You do not need to install/fetch/pull any containers - SAM CLI will do it automatically as required.
 
 
-#### Windows, Linux, macOS with NPM [Recommended]
+#### Windows, Linux, macOS with pip [Recommended]
 
-The easiest way to install **`sam`** is to use [NPM](https://www.npmjs.com).
+The easiest way to install **`sam`** is to use [pip](https://pypi.org/project/pip/).
+
+To use pip, you must have [Python](https://www.python.org/) installed and added to your system's Environment path.
 
 ```bash
-npm install -g aws-sam-local
+pip install aws-sam-cli
 ```
 
-If you get a permission error when using npm (such as `EACCES: permission denied`), please see the instructions on this page of the NPM documentation: [https://docs.npmjs.com/getting-started/fixing-npm-permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
-
 Verify the installation worked:
+
 ```bash
 sam --version
 ```
 
 #### Binary release
 
-We also release the CLI as binaries that you can download and instantly use. You can find them under [Releases](https://github.com/awslabs/aws-sam-local/releases) in the SAM Local repo.
-
+We also release the CLI as binaries that you can download and instantly use. You can find them under [Releases](https://github.com/awslabs/aws-sam-cli/releases) in the SAM CLI repo.
 
 #### Alternative Installation: Amazon Linux (EC2)
 
-If you're unable to install SAM Local on your workstation, you may find it easier to use SAM Local on an Amazon Linux EC2 instance.   In this case, you will not be performing work locally on your laptop, instead you will connect remotely into an EC2 instance to perform editing and testing.
+If you're unable to install SAM CLI on your workstation, you may find it easier to use SAM CLI on an Amazon Linux EC2 instance.   In this case, you will not be performing work locally on your laptop, instead you will connect remotely into an EC2 instance to perform editing and testing.
 
 1. [Create a keypair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html), if you do not have one already.
 
@@ -182,11 +178,11 @@ If you're unable to install SAM Local on your workstation, you may find it easie
 
 1. The Git repository has been cloned to the home directory on launch, `/home/ec2-user/uni-api`.
 
-###### Setup Port Forwarding Configuration
+##### Setup Port Forwarding Configuration
 
-SAM Local can start an HTTP server locally on EC2 instance on port 3000.  In order to view content on that HTTP server through the browser on your laptop, you need to configure port forwarding.
+SAM CLI can start an HTTP server locally on EC2 instance on port 3000.  In order to view content on that HTTP server through the browser on your laptop, you need to configure port forwarding.
 
-###### Port Forwarding on MacOS
+##### Port Forwarding on MacOS
 
 On your workstation, open a new terminal and run the following command.  In the command, replace ***~/mykeypair.pem*** with the location and file name of your .pem file and replace ***ec2-###-##-##-###.compute-1.amazonaws.com*** with the public DNS name of your EC2 developer instance:
 
@@ -194,7 +190,7 @@ On your workstation, open a new terminal and run the following command.  In the 
    ssh -i ~/mykeypair.pem -N -L 3000:localhost:3000 ec2-user@ec2-###-##-##-###.compute-1.amazonaws.com
    ```
 
-###### Port Forwarding with Putty on Windows
+##### Port Forwarding with Putty on Windows
 
 1. In your putty configuration, select **Connection** , **SSH** , **Tunnels** and add a mapping:
 
@@ -208,8 +204,7 @@ On your workstation, open a new terminal and run the following command.  In the 
 
    ![Putty Tunnel Config](images/putty-tunnel-config.png)
 
-
-###### Port Forwarding with Bitvise SSH Client on Windows
+##### Port Forwarding with Bitvise SSH Client on Windows
 
 1. In **Profile** window, select **C2S** tab, create an entry with this configuration:
 
@@ -227,10 +222,9 @@ On your workstation, open a new terminal and run the following command.  In the 
 
    ![Bitvise Tunnel Config](images/bitvise-tunnel-config.png)
 
+## SAM CLI Development
 
-## SAM Local Development
-
-In this section, you will use SAM Local on your workstation to run the Unicorn API and test changes to it without having to deploy to AWS.
+In this section, you will use SAM CLI on your workstation to run the Unicorn API and test changes to it without having to deploy to AWS.
 
 ### Run API Gateway locally
 
@@ -248,7 +242,7 @@ In this section, you will use SAM Local on your workstation to run the Unicorn A
 
    This will spawn a local API Gateway to test HTTP request/response functionality. Features hot-reloading to allow you to quickly develop, and iterate over your functions.  **`sam`** will automatically find any functions within your SAM template that have `Api` event sources defined, and mount them at the defined HTTP paths.
 
-   If this is your first time running SAM Local, there will be a delay as the Docker images are downloaded.  Once successful, you should see output similar to the screenshot below:
+   If this is your first time running SAM CLI, there will be a delay as the Docker images are downloaded.  Once successful, you should see output similar to the screenshot below:
 
    ![start-api output](images/start-api-output.png)
 
@@ -256,9 +250,9 @@ In this section, you will use SAM Local on your workstation to run the Unicorn A
 
    ![Hello World in Browser](images/browser-hello-world.png)
 
-Congratulations!  You have successfully used SAM Local to start a local development environment.  Keep the window open that is running the `sam local start-api` command until this module is complete.
+Congratulations!  You have successfully used SAM CLI to start a local development environment.  Keep the window open that is running the `sam local start-api` command until this module is complete.
 
-Next, let's look at how you can use SAM Local to test changes to your API.
+Next, let's look at how you can use SAM CLI to test changes to your API.
 
 ### Test code changes locally
 
@@ -279,9 +273,9 @@ HOW TO update code and verify results (expand for details)
 </details>
 <p>
 
-Congratulations!  You've successfully test changes to a Lambda function in a local development environment.  You may now kill the SAM Local running process.
+Congratulations!  You've successfully test changes to a Lambda function in a local development environment.  You may now kill the SAM CLI running process.
 
-To learn more about development with SAM Local, check out [AWS Documentation](http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html) and SAM Local [GitHub repository](https://github.com/awslabs/aws-sam-local).  
+To learn more about development with SAM CLI, check out [AWS Documentation](http://docs.aws.amazon.com/lambda/latest/dg/test-sam-local.html) and SAM CLI [GitHub repository](https://github.com/awslabs/aws-sam-local).  
 
 ## Completion
 

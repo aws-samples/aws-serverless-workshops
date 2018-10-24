@@ -6,7 +6,7 @@ In this module, you'll use [AWS CodePipeline](https://aws.amazon.com/codepipelin
 
 CodePipeline orchestrates the steps to build, test, and deploy your code changes.  Below is a screenshot of the CodePipeline created by the CodeStar project.
 
-![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
+![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final-new.png)
 
 ## CodeBuild Overview
 

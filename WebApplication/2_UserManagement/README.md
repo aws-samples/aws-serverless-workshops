@@ -72,7 +72,7 @@ Use the Amazon Cognito console to create a new user pool using the default setti
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. From the AWS Console click **Services** then select **Cognito** under "Security, Identity & Compliance".
+1. From the AWS Console click **Services** then select **Cognito** under Security, Identity & Compliance.
 
 1. Choose **Manage your User Pools**.
 

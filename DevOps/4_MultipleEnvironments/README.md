@@ -63,7 +63,7 @@ Following the Test stage, you will add a Beta stage that includes two actions th
 
 Below is an image depicting the CodePipeline upon completion:
 
-![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
+![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final-new.png)
 
 ## Environment Setup
 
@@ -200,7 +200,7 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Choose **+Stage** below the Build stage of the pipeline.
 
-   ![CodePipeline Edit](images/codepipeline-edit.png)
+   ![CodePipeline Edit](images/codepipeline-edit-new.png)
 
 1. Enter `Test` for the **Stage Name**.
 
@@ -208,13 +208,9 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Choose `+Action` below `Test`.
 
-1. In the **Add action** dialog, select `Deploy` for the **Action category**.
+1. In the **Add action** dialog, enter `GenerateChangeSet` for the **Action name**.
 
-1. Enter `GenerateChangeSet` for the **Action name**.
-
-1. Select `AWS CloudFormation` for the **Deployment provider**.
-
-   ![CodePipeline Add Action](images/codepipeline-add-1.png)
+1. Select `AWS CloudFormation` for the **Action provider**.
 
 1. Select `Create or replace a change set` for **Action mode**
 
@@ -232,23 +228,21 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Enter `uni-api-BuildArtifact` for **Input artifacts #1**
 
-   ![CodePipeline Add Action CloudFormation](images/codepipeline-add-2.png)
+1. Choose **Save**
 
-1. Choose **Add Action**
+   ![CodePipeline Add Action](images/codepipeline-add-1-new.png)
 
 #### 4d. Add ExecuteChangeSet Action to Test Stage
 
 1. Choose `+Action` below `GenerateChangeSet`.
 
-   ![CodePipeline Add Action](images/codepipeline-add2-1.png)
+   ![CodePipeline Add Action](images/codepipeline-add2-1-new.png)
 
-1. In the **Add action** dialog, select `Deploy` for the **Action category**.
+1. In the **Add action** dialog, select `AWS CloudFormation` for the **Action provider**.
 
 1. Enter `ExecuteChangeSet` for the **Action name**.
 
-1. Select `AWS CloudFormation` for the **Deployment provider**.
-
-   ![CodePipeline Add Action](images/codepipeline-add2-2.png)
+1. Select `AWS CloudFormation` for the **Action provider**.
 
 1. Select `Execute a change set` for **Action mode**
 
@@ -256,15 +250,15 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Enter `pipeline-changeset` for **Change set name**
 
-   ![CodePipeline Add Action](images/codepipeline-add2-3.png)
+   ![CodePipeline Add Action](images/codepipeline-add2-3-new.png)
 
-1. Choose **Add Action**
+1. Choose **Save**
 
 #### 4e. Save CodePipeline Changes
 
 The pipeline should look like the following screenshot after adding the new Test stage.
 
-![CodePipeline Deploy Stage Complete](images/codepipeline-add2-complete.png)
+![CodePipeline Deploy Stage Complete](images/codepipeline-add2-complete-new.png)
 
 1. Scroll to the top of the pipeline and choose `Save pipeline changes`
 
@@ -288,7 +282,7 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Observe that each stage's color will turn blue during execution and green on completion.  Following the successful execution of all stages, the pipeline should look like the following screenshot.
 
-![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final-test.png)
+![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final-test-new.png)
 
 ## Beta Stage Addition
 
@@ -312,7 +306,7 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Choose `+Stage` below the Test stage of the pipeline.
 
-   ![CodePipeline Edit](images/codepipeline-edit-beta.png)
+   ![CodePipeline Edit](images/codepipeline-edit-beta-new.png)
 
 1. Enter `Beta` for the **Stage Name**.
 
@@ -320,13 +314,11 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Choose `+Action` below `Beta`.
 
-1. In the **Add action** dialog, select `Deploy` for the **Action category**.
+1. In the **Add action** dialog, select `AWS CloudFormation` for the **Action provider**.
 
 1. Enter `GenerateChangeSet` for the **Action name**.
 
-1. Select `AWS CloudFormation` for the **Deployment provider**.
-
-   ![CodePipeline Add Action](images/codepipeline-add-1.png)
+1. Select `AWS CloudFormation` for the **Action provider**.
 
 1. Select `Create or replace a change set` for **Action mode**
 
@@ -344,23 +336,21 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Enter `uni-api-BuildArtifact` for **Input artifacts #1**
 
-   ![CodePipeline Add Action Artifacts](images/codepipeline-add-3.png)
+1. Choose **Add**
 
-1. Choose **Add Action**
+   ![CodePipeline Add Action Artifacts](images/codepipeline-add-3-new.png)
 
 #### 1d. Add ExecuteChangeSet to Beta Stage
 
 1. Choose `+Action` below `GenerateChangeSet`.
 
-   ![CodePipeline Add Action](images/codepipeline-add4-1.png)
+   ![CodePipeline Add Action](images/codepipeline-add4-1-new.png)
 
-1. In the **Add action** dialog, select `Deploy` for the **Action category**.
+1. In the **Add action** dialog, select `AWS CloudFormation` for the **Action provider**.
 
 1. Enter `ExecuteChangeSet` for the **Action name**.
 
-1. Select `AWS CloudFormation` for the **Deployment provider**.
-
-   ![CodePipeline Add Action](images/codepipeline-add2-2.png)
+1. Select `AWS CloudFormation` for the **Action provider**.
 
 1. Select `Execute a change set` for **Action mode**
 
@@ -368,21 +358,21 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Enter `pipeline-changeset` for **Change set name**
 
-   ![CodePipeline Add Action](images/codepipeline-add4-3.png)
+1. Choose **Save**
 
-1. Choose **Add Action**
+   ![CodePipeline Add Action](images/codepipeline-add4-3-new.png)
 
 #### 1e. Add Invoke to Beta Stage
 
 1. Choose `+Action` below `ExecuteChangeSet`.
 
-   ![CodePipeline Add Action](images/codepipeline-add4-2.png)
+   ![CodePipeline Add Action](images/codepipeline-add4-2-new.png)
 
 1. In the **Add action** dialog, select `Invoke` for the **Action category**.
 
 1. Enter `InvokeLambdaTestFunction` for the **Action name**.
 
-1. Select `AWS Lambda` for the **Deployment provider**.
+1. Select `AWS Lambda` for the **Action provider**.
 
 1. Enter `uni-api-test-setup` for **Function name**.
 
@@ -390,11 +380,13 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Choose **Add Action**
 
+   ![CodePipeline Add Action](images/codepipeline-add4-4-new.png)
+
 #### 1f. Save CodePipeline Changes
 
 The pipeline should look like the following screenshot after adding the new Test stage.
 
-![CodePipeline Deploy Stage Complete](images/codepipeline-add3-complete.png)
+![CodePipeline Deploy Stage Complete](images/codepipeline-add3-complete-new.png)
 
 1. Scroll to the top of the pipeline and choose `Save pipeline changes`
 
@@ -418,11 +410,11 @@ The addition of the Beta stage is complete.  You will now validate the Beta stag
 
 1. Observe that each stage's color will turn blue during execution and green on completion.  You should see that the `InvokeLambdaTestFunction` action in the `Beta` stage fails, causing the stage to turn red, like the following image.
 
-   ![CodePipeline Beta Stage Fail](images/codepipeline-test-fail.png)
+   ![CodePipeline Beta Stage Fail](images/codepipeline-test-fail-new.png)
 
 1. Choose the **Details** link in the failed action to see the details of the failed job.
 
-   ![CodePipeline Beta Stage Fail Details](images/codepipeline-test-fail-details.png)
+   ![CodePipeline Beta Stage Fail Details](images/codepipeline-test-fail-details-new.png)
 
 The `test_list_unicorns` integration test has failed!  Next, let's locate and fix the bug.
 
@@ -465,11 +457,11 @@ The `test_list_unicorns` integration test has failed!  Next, let's locate and fi
 
 1. Observe that each stage's color will turn blue during execution and green on completion.  You should see that the `InvokeLambdaTestFunction` in the `Beta` stage passes, causing the stage to turn green, like the following image.
 
-   ![CodePipeline Beta Stage Pass](images/codepipeline-test-pass.png)
+   ![CodePipeline Beta Stage Pass](images/codepipeline-test-pass-new.png)
 
 Following the successful execution of all stages, the pipeline should look like the following screenshot.
 
-   ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
+   ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final-new.png)
 
 ## Completion
 

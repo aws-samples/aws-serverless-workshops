@@ -168,7 +168,7 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
 
 1. Choose the **Permissions** tab, then choose **Bucket Policy**.
 
-1. Enter the following policy document into the bucket policy editor replacing `YOUR_BUCKET_NAME` with the name of the bucket you created in section 1:
+1. Enter the following policy document into the bucket policy editor replacing `YOUR_BUCKET_NAME` with the name of the bucket you created in section 1 and xx.xx.xx.xx with your external IP address:
 
     ```json
     {
@@ -178,7 +178,10 @@ See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket
                 "Effect": "Allow",
                 "Principal": "*",
                 "Action": "s3:GetObject",
-                "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+                "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*",
+                "Condition": {
+                    "IpAddress": {"aws:SourceIp": "xx.xx.xx.xx/32"} 
+                } 
             }
         ]
     }

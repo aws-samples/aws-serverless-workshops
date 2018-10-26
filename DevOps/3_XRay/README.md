@@ -64,7 +64,7 @@ As you can see, the basic X-Ray integration into Lambda requires only two change
 
 ## Environment Setup
 
-In order to tacke [Problem 1: Error Discovery Using X-Ray](#problem-1-error-discovery-using-x-ray) and [Problem 2: Performance Discovery Using-X-Ray](#problem-2-performance-discovery-using-x-ray), you must make a few IAM Policy changes and clone a seed the project repository using the steps below.
+In order to tackle [Problem 1: Error Discovery Using X-Ray](#problem-1-error-discovery-using-x-ray) and [Problem 2: Performance Discovery Using-X-Ray](#problem-2-performance-discovery-using-x-ray), you must make a few IAM Policy changes and clone a seed the project repository using the steps below.
 
 
 

@@ -15,17 +15,17 @@ Parameters:
 Mappings:
   RegionMap:
     us-east-1:
-      amiId: "ami-8a3458f0"
+      amiId: "ami-03dc31b0f22821f8c"
     us-west-1:
-      amiId: "ami-f6313496"
+      amiId: "ami-0ff8c4798953556de"
     us-west-2:
-      amiId: "ami-8a35edf2"
+      amiId: "ami-08bfdb849100ac837"
     eu-west-1:
-      amiId: "ami-9aa313e3"
+      amiId: "ami-0d3371009430efa17"
     eu-central-1:
-      amiId: "ami-822ba2ed"
+      amiId: "ami-051d8e46efa0d6cae"
     ap-southeast-2:
-      amiId: "ami-8c5db7ee"
+      amiId: "ami-089476d59f7b1b806"
 
 Resources:
   DeveloperInstance:

@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Outputs:
+  LogGroup:
+    Value:
+      Fn::Sub: /aws/lambda/${SeederFunction}
+Parameters:
+  sourceUrl:
+    Description: Enter the URL to source for seeding.
+    Type: String
+  targetProjectId:
+    Description: Enter the CodeStar project id to target for seeding.
+    Type: String
+  targetProjectRegion:
+    Description: Enter the CodeStar project region to target for seeding.
+    Type: String
+Resources:
+  ProjectSeeder:
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+        - SeederFunction
+        - Arn
+      sourceUrl:
+        Ref: sourceUrl
+      targetProjectId:
+        Ref: targetProjectId
+      targetProjectRegion:
+        Ref: targetProjectRegion
+    Type: Custom::ProjectSeeder
+  SeederFunction:
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: "wildrydes-${AWS::Region}"
+        S3Key: aws-serverless-codecommit-seeder.zip
+      Description: CodeStar Repository Seeder
+      Handler: seeder.CodeStarRepositoryHandler
+      MemorySize: 1028
+      Role:
+        Fn::GetAtt:
+        - SeederRole
+        - Arn
+      Runtime: java8
+      Timeout: 300
+    Type: AWS::Lambda::Function
+  SeederRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - codecommit:GetRepository
+            - codecommit:GitPush
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - codestar:ListResources
+            Effect: Allow
+            Resource:
+              Fn::Sub: arn:aws:codestar:${targetProjectRegion}:${AWS::AccountId}:project/${targetProjectId}
+          - Action:
+            - codepipeline:StartPipelineExecution
+            Effect: Allow
+            Resource: '*'
+          Version: '2012-10-17'
+        PolicyName: SeederRolePolicy
+    Type: AWS::IAM::Role

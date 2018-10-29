@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Outputs:
+  LogGroup:
+    Value:
+      Fn::Sub: /aws/lambda/${SeederFunction}
+Parameters:
+  sourceUrl:
+    Description: Enter the URL to source for seeding.
+    Type: String
+  targetRepositoryName:
+    Description: Enter the CodeCommit repository name to target for seeding.
+    Type: String
+  targetRepositoryRegion:
+    Description: Enter the CodeCommit repository region to target for seeding.
+    Type: String
+Resources:
+  RepositorySeeder:
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+        - SeederFunction
+        - Arn
+      sourceUrl:
+        Ref: sourceUrl
+      targetRepositoryName:
+        Ref: targetRepositoryName
+      targetRepositoryRegion:
+        Ref: targetRepositoryRegion
+    Type: Custom::RepositorySeeder
+  SeederFunction:
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: "wildrydes-${AWS::Region}"
+        S3Key: DevOps/CloudFormation/Code/aws-serverless-codecommit-seeder.zip
+      Description: CodeCommit Repository Seeder
+      Handler: seeder.SeedRepositoryHandler
+      MemorySize: 1028
+      Role:
+        Fn::GetAtt:
+        - SeederRole
+        - Arn
+      Runtime: java8
+      Timeout: 300
+    Type: AWS::Lambda::Function
+  SeederRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - codecommit:GetRepository
+            - codecommit:GitPush
+            Effect: Allow
+            Resource:
+              Fn::Sub: arn:aws:codecommit:${targetRepositoryRegion}:${AWS::AccountId}:${targetRepositoryName}
+          Version: '2012-10-17'
+        PolicyName: SeederRolePolicy
+    Type: AWS::IAM::Role

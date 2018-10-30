@@ -82,11 +82,11 @@ CodeStar generates IAM Roles and Policies that control access to AWS resources. 
 1. Select Role in the left navigation, type `CodeStarWorker-uni-api-Lambda` in the filter text box, and click the Role name link in the Role table.
 
     ![Select Role](images/role1-1.png)
- 
+
 1. On the Role Summary page, click the **Attach Policy** button in the **Managed Policies** section of the **Permissions** tab.
 
     ![Role Details](images/role1-2.png)
- 
+
 1. Type `AWSCodePipelineCustomActionAccess` in the filter text box, select the checkbox next to the **AWSCodePipelineCustomActionAccess** Managed Policy.
 
     ![Attach Policy](images/role1-3.png)
@@ -114,7 +114,7 @@ CodeStar generates IAM Roles and Policies that control access to AWS resources. 
 1. Select Role in the left navigation, type `CodeStarWorker-uni-api-CodePipeline` in the filter text box, and click the Role name link in the Role table.
 
     ![Select Role](images/role2-1.png)
- 
+
 1. On the Role Summary page, click the **Attach Policy** button in the **Managed Policies** section of the **Permissions** tab.
 
     ![Role Details](images/role2-2.png)
@@ -131,16 +131,16 @@ CodeStar generates IAM Roles and Policies that control access to AWS resources. 
 
     ![Policy Attached](images/role2-6.png)
 
-#### 1c. Update `CodeStarWorkerCodePipelineRolePolicy` IAM Policy 
-      
-1. Click **Edit Policy** for the `CodeStarWorkerCodePipelineRolePolicy` in the **Inline Policies** section.
+#### 1c. Update `CodeStarWorkerCodePipelineRolePolicy` IAM Policy
+
+1. Whilst still viewing the `CodeStarWorker-uni-api-CodePipeline` IAM Role, click **Edit Policy** for the `CodeStarWorkerCodePipelineRolePolicy` in the **Inline Policies** section.
 
     ![Policy Attached](images/role2-7.png)
-    
+
 1. Update the allowed CloudFormation Resource pattern in the policy (substitute your AWS Region and AccountId) a click **Save**.
-        
+
     Before: `arn:aws:cloudformation:{region}:{accountId}:stack/awscodestar-uni-api-lambda/*`
-    
+
     After: `arn:aws:cloudformation:{region}:{accountId}:stack/awscodestar-uni-api-lambda*`
 
     ![Policy Attached](images/role2-8.png)
@@ -193,7 +193,7 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 1. Click on the **AWS CodePipeline details** link at the bottom of the **Continuous deployment** tile on the right of the browser window.
 
     ![CodeStar App Endpoint](images/codestar-codepipeline-endpoint.png)
-    
+
 1. On the CodePipeline page, click **Edit**.
 
 #### 4b. Add Test Stage
@@ -299,7 +299,7 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 1. Click on the **AWS CodePipeline details** link at the bottom of the **Continuous deployment** tile on the right of the browser window.
 
     ![CodeStar App Endpoint](images/codestar-codepipeline-endpoint.png)
-    
+
 1. On the CodePipeline page, click **Edit**.
 
 #### 1b. Add Beta Stage

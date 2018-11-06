@@ -1,0 +1,304 @@
+/*
+ *   Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+ *  Licensed under the Apache License, Version 2.0 (the "License").
+ *  You may not use this file except in compliance with the License.
+ *  A copy of the License is located at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  or in the "license" file accompanying this file. This file is distributed
+ *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ *  express or implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ */
+ .app {
+  width: 100vw;
+  height: 100vh;
+
+  background-image: url("https://s3.amazonaws.com/aws-mobile-hub-images/wild-rydes/background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+
+  font-family: "fairplex-wide";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Logo */
+.app header {
+  width: 100vw;
+  padding: 30px 0 100px;
+}
+
+.app header img {
+  margin: 0 auto;
+  display: block;
+}
+
+@media screen and (max-width: 600px) {
+  .app header {
+    padding: 30px 0 0;
+  }
+
+  .app header img {
+    width: 35%;
+  }
+}
+
+/* Forms */
+.app .form-wrap {
+    width: 35%;
+    margin: 0 auto;
+}
+
+.app .left-form {
+  width: 47.5%;
+  float: left;
+}
+
+.app .right-form {
+  width: 47.5%;
+  float: right;
+}
+
+@media screen and (max-width: 1200px) {
+  .app .form-wrap {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .app .form-wrap {
+    width: 90%;
+  }
+
+  .app .left-form {
+    width: 100%;
+  }
+
+  .app .right-form {
+    width: 100%;
+  }
+}
+
+.app input[type=text],
+.app input[type=password],
+.app input[type=email],
+.app input[type=phone] {
+    width: 100%;
+    padding: 12px 0;
+    margin: 10px 0 30px;
+    display: inline-block;
+    border: none;
+    border-bottom: 2px solid white;
+    box-sizing: border-box;
+    background: transparent;
+    outline: none;
+
+    font-family: "fairplex-wide";
+    font-size: 24px;
+    opacity: 1;
+    color: white;
+    font-weight: 400;
+
+    -webkit-transition: border-bottom 0.4s ease-in-out;
+    transition: border-bottom 0.4s ease-in-out;
+}
+
+/* We have two states for each entry -
+ * a valid entry and an invalid entry */
+.app input.valid {
+    border-bottom: 2px solid white;
+}
+
+.app input.invalid {
+    border-bottom: 2px solid red;
+}
+
+.app input[type=submit] {
+    width: 200px;
+    background-color: white;
+    color: #f50856;
+    padding: 14px 20px;
+    margin: 8px auto 30px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    display: block;
+
+    font-family: "fairplex-wide";
+    font-size: 24px;
+    opacity: 1;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    -webkit-transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.app input[type=submit]:hover {
+    background-color: #dddddd;
+    color: #bb0642;
+}
+
+
+.app ::-webkit-input-placeholder { /* Chrome */
+  color: white;
+  font-style: italic;
+  opacity: .4;
+
+  font-family: "fairplex-wide";
+  color: white;
+  font-weight: 400;
+}
+.app :-ms-input-placeholder { /* IE 10+ */
+  color: white;
+  font-style: italic;
+  opacity: .4;
+}
+.app ::-moz-placeholder { /* Firefox 19+ */
+  color: white;
+  opacity: .4;
+  font-style: italic;
+}
+.app :-moz-placeholder { /* Firefox 4 - 18 */
+  color: white;
+  opacity: .4;
+  font-style: italic;
+}
+
+/* Typography */
+.app h1 {
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 10px 0;
+}
+
+
+@media screen and (max-width: 1200px) {
+  .app h1 {
+    margin: 60px 0 0;
+    font-size: 35px;
+  }
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/*
+ * Image replacement
+ */
+.app .ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    /* IE 6/7 fallback */
+    *text-indent: -9999px;
+}
+
+.app .ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 150%;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+.app .hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+.app .visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+
+.app .visuallyhidden.focusable:active,
+.app .visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+.app .invisible {
+    visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   Theses examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+

@@ -104,6 +104,13 @@ Resources:
       FunctionName: TicketGetFunction
       Policies:
         - AWSLambdaDynamoDBExecutionRole #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:GetItem
+              Resource: "*"
       Environment:
         Variables:
           TABLE_NAME: SXRTickets
@@ -123,6 +130,12 @@ Resources:
       FunctionName: TicketPostFunction
       Policies:
         - AWSLambdaDynamoDBExecutionRole #managed policy
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource: "*"
       Environment:
         Variables:
           TABLE_NAME: SXRTickets

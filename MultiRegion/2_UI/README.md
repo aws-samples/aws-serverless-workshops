@@ -46,6 +46,9 @@ TODO: instructions to point CloudFront to S3 (UI) origin (Note: UI code not yet 
 
 ## 2. Configure Federated Identities with Cognito
 
+TODO: Facebook UI has changed; Screenshots need updating.
+TODO: Instructions/SCreenshots pointing to S3 static website URL need to be updated to a CloudFront URL.
+
 Now we'll set up our login with Facebook capability. You will need to set up a
 Facebook Web Application so that your riders can log in
 to the UI and submit their Unicorn issues.

@@ -386,8 +386,8 @@ convenience.
 
     aws cloudformation deploy \
     --region ap-southeast-1 \
-    --template-file wild-rydes-api-output.yaml \
-    --stack-name wild-rydes-api \
+    --template-file wild-rydes-api-failover-region-output.yaml \
+    --stack-name wild-rydes-api-failover \
     --capabilities CAPABILITY_IAM
 
 

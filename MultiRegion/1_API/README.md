@@ -341,9 +341,9 @@ You can do this using the following CLI command. Note that you must replace
 
     aws cloudformation package \
     --region eu-west-1 \
-    --template-file wild-rydes-api.yaml \
-    --output-template-file wild-rydes-api-output.yaml \
-    --s3-bucket [bucket_name_you_created_above]
+    --template-file wild-rydes-api-primary-region.yaml \
+    --output-template-file wild-rydes-api-primary-region-output.yaml \
+    --s3-bucket [eu_west_bucket_name_you_created_above]
 
 **IMPORTANT** DO NOT deploy any resources to Singapore during your initial pass
 on Module 1. You will come back in Module 3 and then deploy the same components
@@ -354,9 +354,9 @@ convenience.
 
     aws cloudformation package \
     --region ap-southeast-1 \
-    --template-file wild-rydes-api.yaml \
-    --output-template-file wild-rydes-api-output.yaml \
-    --s3-bucket [bucket_name_you_created_above]
+    --template-file wild-rydes-api-failover-region.yaml \
+    --output-template-file wild-rydes-api-failover-region-output.yaml \
+    --s3-bucket [ap_southeast_bucket_name_you_created_above]
 
 If all went well, you should get a success message and instructions to deploy your new template.
 
@@ -373,8 +373,8 @@ Go ahead and run the following CLI command:
 
     aws cloudformation deploy \
     --region eu-west-1 \
-    --template-file wild-rydes-api-output.yaml \
-    --stack-name wild-rydes-api \
+    --template-file wild-rydes-api-primary-region-output.yaml \
+    --stack-name wild-rydes-api-primary \
     --capabilities CAPABILITY_IAM
 
 **IMPORTANT** DO NOT deploy any resources to Singapore during your initial pass
@@ -407,6 +407,9 @@ and the API Gateway. Note how the gateway was configured with the `GET` method c
 our `TicketGetFunction` Lambda function and the `POST` method calling our `TicketPostFunction`
 Lambda function. You can also see that an empty DynamoDB table was set up as well as IAM
 roles to allow our functions to speak to DynamoDB.
+
+TODO: Instructions for setting up DynamoDB global table. MUST DO THIS BEFORE NEXT STEP. CANT HAVE DATA IN TABLE BEFORE SETTING UP GLOBAL REPLOICATION
+
 
 You can confirm that your API is working by copying your API URL and appending `/ticket`
 to it before navigating to it into your browser. It should return the following:

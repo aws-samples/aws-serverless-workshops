@@ -9,13 +9,13 @@ Since Wild Rydes is a ride sharing application, a key requirement is that all us
 
 The architecture for this module is very straightforward. All of your static web content including HTML, CSS, JavaScript, images and other files will be served locally from your Cloud9 workspace. As you made changes to the website application code, all changes will be automatically updated and shown in your browser via live reload capabilities.
 
-For this module, we will be configuring our application to use the AWS Amplify library to easily integrate Amazon Cognito into our application.
+For this module, we will be creating a Cognito User Pool as our secure user directory then configuring our application to use the AWS Amplify library to easily integrate Amazon Cognito into our application.
 
 ![Website architecture](../images/wildrydes-module1-architecture.png)
 
 ## Implementation Overview
 
-### Running the website locally
+### 1. Running the website locally
 
 1. From your Cloud9 workspace, select the terminal window and when you are within your website directory, run the following command to start the local web server 
 
@@ -38,7 +38,7 @@ For this module, we will be configuring our application to use the AWS Amplify l
 
    Though the Wild Rydes website may look function, there is currently no integration for sign-up or sign-in requests to go anywhere.
 
-### Creating a Cognito User Pool
+### 2. Creating a Cognito User Pool
 
 Amazon Cognito lets you add user sign-up, sign-in, and access control to your web and mobile apps quickly and easily. In this step, we'll create a Cognito user pool for use with our Wild Rydes app.
 
@@ -110,5 +110,187 @@ Use the AWS console to create an Amazon Cognito User Pool adding a custom attrib
 1. Choose **Next step**.
 
 1. Review summary of all provided settings for accuracy then choose **Create pool**.
+
+1. Create a new editor tab within Cloud9 and copy/paste your new User pool's Pool Id and Pool ARN to the scratchpad tab. You will be using these values later on.
+
+1. Click **App clients** in the left-hand nav menu under *General Settings*
+
+1. Copy/paste your app client's ID to the scratchpad editor tab within Cloud9 for later reference.
+
+</p></details>
+
+### 3. Creating a Cognito Identity Pool
+
+Cognito Identity Pools are used to provide AWS credentials via IAM roles to end-user applications. Since we'll be using IAM integration to integrate our Cognito deployment and users with other AWS services, we'll go ahead and create this identity pool now.
+
+#### High-Level Instructions
+
+You will need to create a Cognito Identity Pool linked to the Cognito User Pool and app client ID you just created. Your application will not require un-authenticated users to access any AWS resources, so you do not need to enable access to unauthenticated identities. 
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. In the Cognito console, choose **Federated Identities** in the header bar to switch to the console for Cognito Federated Identities.
+
+1. Choose **Create new Identity pool**.
+
+1. Input `wildrydes_identity_pool` as the Identity pool name.
+
+1. Under Authentication providers, within the Cognito tab, input the User Pool ID and App client Id you copied previously to the scratchpad.
+
+![Identity Pool Setup Step 1](../images/cognito-identitypool-setup-step1.png)
+
+1. Choose **Create Pool**.
+
+1. Choose **Allow** to allow Cognito Identity Pools to setup IAM roles for your application's users. Permissions and settings of these roles can be customized later.
+
+1. Copy/paste the **Identity Pool ID** from the code sample within the Get AWS Credentials section into your Cloud9 scatchpad editor tab.
+
+</p></details>
+
+### 4. Integrating your application with Amazon Cognito using AWS Amplify
+
+Now that you've created and configured your Cognito User Pool and Identity Pool, you need to configure your application to integrate to Amazon Cognito so it can store user profiles and enable sign-up and sign-in.
+
+#### High-Level Instructions
+
+You will import the AWS Amplify library into the project then add sign-up and sign-in utility classes to integrate with our existing UI and front-end components.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating `src/aws-exports.js`.
+
+1. After opening this file in your Cloud9 IDE editor, find an replace the following parameters with values from your previous scratchpad:
+- `aws_cognito_identity_pool_id`
+- `aws_cognito_region`
+- `aws_user_pools_id`
+- `aws_user_pools_web_client_id`
+
+1. Before using any AWS Amplify modules, we first need to configure Amplify to use our AWS environment configuration stored in `src/aws-exports.js`.
+
+    Edit the `src/index.js` file to add the following lines to the top of the file (below all the other imports) to configure Amplify then save your changes:
+
+    ```
+    import Amplify from 'aws-amplify';
+    import awsConfig from './aws-exports';
+
+    Amplify.configure(awsConfig);
+    ```
+
+1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the `src/auth/SignUp.js` file with the code below then save your changes.
+
+    ```
+    async onSubmitForm(e) {
+        e.preventDefault();
+        try {
+        const params = {
+            username: this.state.email.replace(/[@.]/g, '|'),
+            password: this.state.password,
+            attributes: {
+            email: this.state.email,
+            phone_number: this.state.phone
+            },
+            validationData: []
+        };
+        const data = await Auth.signUp(params);
+        console.log(data);
+        this.setState({ stage: 1 });
+        } catch (err) {
+        alert(err.message);
+        console.error("Exception from Auth.signUp: ", err);
+        this.setState({ stage: 0, email: '', password: '', confirm: '' });
+        }
+    }
+
+    async onSubmitVerification(e) {
+        e.preventDefault();
+        try {
+        const data = await Auth.confirmSignUp(
+            this.state.email.replace(/[@.]/g, '|'),
+            this.state.code
+        );
+        console.log(data);
+        // Go to the sign in page
+        this.props.history.replace('/signin');
+        } catch (err) {
+        alert(err.message);
+        console.error("Exception from Auth.confirmSignUp: ", err);
+        this.setState({ stage: 0, email: '', password: '', confirm: '', code: '' });
+        }
+    }
+    ```
+
+1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the `src/auth/SignIn.js` file with the code below then save your changes.
+
+    ```
+    async onSubmitForm(e) {
+        e.preventDefault();
+        try {
+            const userObject = await Auth.signIn(
+                this.state.email.replace(/[@.]/g, '|'),
+                this.state.password
+            );
+            console.log('userObject = ', userObject);
+            this.setState({ userObject, stage: 1 });
+        } catch (err) {
+            alert(err.message);
+            console.error('Auth.signIn(): ', err);
+        }
+    }
+
+    async onSubmitVerification(e) {
+        e.preventDefault();
+        try {
+            const data = await Auth.confirmSignIn(
+                this.state.userObject,
+                this.state.code
+            );
+            console.log('data = ', data);
+            this.setState({ stage: 0, email: '', password: '', code: '' });
+            this.props.history.replace('/app');
+        } catch (err) {
+            alert(err.message);
+            console.error('Auth.confirmSignIn(): ', err);
+        }
+    }
+    ```
+
+1. Finally, we need to ensure our application evaluates the user's authenticated state. You will need to make a final edit to the route configuration in `src/index.js` so that the current authentication is read from local storage, then adjust the routing based on authentication.
+
+    Open `src/index.js` in your Cloud9 IDE and find and replace the following code to evaluate whether a user is authenticated via Amplify.
+
+    ```
+    const isAuthenticated = () => Amplify.Auth.user !== null;
+    ```
+
+</p></details>
+
+### 5. Validate sign-up and sign-in are now working with Amazon Cognito
+
+Now that you have integrated our Amplify code into our application, you need to test the site to see that authentication is working end-to-end.
+
+#### High-Level Instructions
+
+Return to your browser tab where you started your Wild Rydes application earlier after popping out from the Cloud9 IDE once in preview mode. This page automatically refreshes after you save any code changes so should now reflect all of your changes and be ready for testing.
+
+Sign-up as a new user then sign-in with that user. Provide a valid phone number with `+country_code` first preceeding the number. For a US-based phone number, an example would be `+14251234567`. You should then see that a SMS message is sent with a one-time code upon login.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. Visit `/register` path of your Cloud9's website to go to the registration page.
+
+1. Input your e-mail address, phone number with `+country_code` first preceeding the number, as well as your password twice. For a US-based phone number, an example would be `+14251234567`.
+
+1. Choose **Let's Ryde** to submit registration.
+
+1. On the verify e-mail screen, enter the SMS one-time code sent to your phone number provided then choose **Verify**.
+
+1. Assuming no errors were encountered, you will be redirected to the Sign-in screen. Now, re-enter the same e-mail address and password you chose at registration.
+
+1. When prompted for an MFA code, check your phone entered previously for an SMS message. Enter your **SMS MFA code** at the verification code prompt then choose **Verify**.
+
+1. If the page then loads a map, sign-in was successful and you may proceed to the next module.
 
 </p></details>

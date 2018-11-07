@@ -133,18 +133,23 @@ have created your dev instance build your project by executing the following:
 
 - navigate to the root folder of the ui project, i.e. 2_UI.
 
-TODO **** UPDATE YOUR C9 envrionment ****
-C9 has node.js installed. We need to use v8.12. Before running "npm install"
-run the following: `nvm use lts/carbon`
-run `node --version` and make sure output is v8.12.0
-******************************************
+TODO: UPDATE YOUR C9 envrionment before running "npm run build" **** 
+- C9 has node.js installed. 
+- We need to use v8.12. Before running "npm install" 
+- run the following: `nvm use lts/carbon` 
+- run `node --version` and make sure output is v8.12.0
+- NOTE: not sure how to persist this update when C9 environment is restarted.
+
+TODO END
 
 - run `npm install` to install project dependencies
 
-TODO: QUIRKY BUG ALERT (not sure why but only happens in C9)
-open "/aws-serverless-workshops/MultiRegion/2_UI/node_modules/@types/node/index.d.ts"
-comment out line 256:
-//declare const module: NodeModule;
+TODO: 
+- QUIRKY BUG ALERT (not sure why but only happens in C9)
+- open "/aws-serverless-workshops/MultiRegion/2_UI/node_modules/@types/node/index.d.ts"
+- comment out line 256: //declare const module: NodeModule;
+
+TODO END
 
 - build your app with by running `npm run build`
 

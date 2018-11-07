@@ -21,6 +21,8 @@ the *outputs* of the CloudFormation template you deployed.
 
 ## 2. Replicating the data
 
+TODO: all this can be ignored as we already created a replicated table in prior step.
+
 So now that you have a separate stack, let's take a look at continuously
 replicating the data in DynamoDB from the primary region (Ireland) to the
 secondary region (Singapore) so that there is always a backup.

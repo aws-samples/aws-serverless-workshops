@@ -40,9 +40,14 @@ the Outputs tab. This time you will see three keys:
 
 Take note of the values for each of these, you will need them in the next steps.
 
+TODO: instructions to point CloudFront to S3 (UI) origin (Note: UI code not yet deployed to S3 ). Facebook now requires https origins when calling hosted auth dialog. You will use CloudFronts https endpoint as input to next step - creating your facebook app.
+
 </details>
 
 ## 2. Configure Federated Identities with Cognito
+
+TODO: Facebook UI has changed; Screenshots need updating.
+TODO: Instructions/SCreenshots pointing to S3 static website URL need to be updated to a CloudFront URL.
 
 Now we'll set up our login with Facebook capability. You will need to set up a
 Facebook Web Application so that your riders can log in
@@ -99,6 +104,8 @@ primary region (EU Ireland).
 
 ## 3. Configure and build the application code
 
+TODO: Cloud9 instructions and screen shots
+
 Our application will need to know the location of the API in order to push and
 pull data from it. In addition, the application will need to know our Facebook
 App ID and Cognito Identity Pool ID so it can authenticate our users. See the
@@ -125,7 +132,20 @@ Setup](../README_InstallDevDependencies.md) to set up a dev instance. Once you
 have created your dev instance build your project by executing the following:
 
 - navigate to the root folder of the ui project, i.e. 2_UI.
+
+TODO **** UPDATE YOUR C9 envrionment ****
+C9 has node.js installed. We need to use v8.12. Before running "npm install"
+run the following: `nvm use lts/carbon`
+run `node --version` and make sure output is v8.12.0
+******************************************
+
 - run `npm install` to install project dependencies
+
+TODO: QUIRKY BUG ALERT (not sure why but only happens in C9)
+open "/aws-serverless-workshops/MultiRegion/2_UI/node_modules/@types/node/index.d.ts"
+comment out line 256:
+//declare const module: NodeModule;
+
 - build your app with by running `npm run build`
 
 If you get an error about NPM command not found, then go back and check the
@@ -139,10 +159,12 @@ custom settings.
 Next, you'll need to upload the UI to the S3 website bucket specified in step 1. You can
 do this with:
 
-    aws s3 sync --acl public-read --delete dist/ s3://[bucket_name]
+    aws s3 sync --acl public-read --delete dist/ s3://[bucket_name_from_cloudformation_ui_stack]
 
 Note that you must replace `[bucket-name]` in this command with the bucket
 name output from the CloudFormation stack in step 1.
+
+TODO: Update with instructions to navigate to CloudFront URL from prior step
 
 To confirm everything went as expected, navigate to your bucket URL (this is
 also one of the CloudFormation outputs from Module 2_UI). You should see our

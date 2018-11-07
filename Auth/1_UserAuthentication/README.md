@@ -1,59 +1,114 @@
-# Module 1: The first example module
+# Module 1: User Authentication
 
-This is an example module. The page title should include the module number and a short but descriptive title.
+In this module, you will create an Amazon Cognito User Pool and Identity Pool for the wild rydes application.
+The Cognito User Pool will store user profile information and provide sign-up and sign-in capabilities, with the Cognito Identity Pool providing the ability to assume an Identity and Access Management (IAM) role from within the application.
 
-You should provide an introductory paragraph that sets some context for the use case to be covered. If possible this should tie into the Wild Rydes theme/company story.
-
-You should also provide instructions here for launching a CloudFormation template that allows students to skip ahead to the next module. You should host your templates in local S3 buckets in each supported region and provide a table with links for launching the templates in each region:
-
-
-Region| Launch
-------|-----
-US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml)
-US West (Oregon) | [![Launch Module 1 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/WorkshopTemplate/1_ExampleTemplate/example.yaml)
-
-<details>
-<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
-
-1. Click the **Launch Stack** link above for the region of your choice.
-
-1. Click **Next** on the Select Template page.
-
-1. Provide a globally unique name for the **Website Bucket Name** such as `wildrydes-yourname` and click **Next**.
-    ![Speficy Details Screenshot](../images/module1-cfn-specify-details.png)
-
-1. On the Options page, leave all the defaults and click **Next**.
-
-1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
-
-    This template uses a custom resource to copy the static website assets from a central S3 bucket into your own dedicated bucket. In order for the custom resource to write to the new bucket in your account, it must create an IAM role it can assume with those permissions.
-
-1. Wait for the `wildrydes-webapp-1` stack to reach a status of `CREATE_COMPLETE`.
-
-1. With the `wildrydes-webapp-1` stack selected, click on the **Outputs** tab and click on the WebsiteURL link.
-
-1. Verify the Wild Rydes home page is loading properly and move on to the next module, [User Management](../2_UserManagement).
-
-</p></details>
-
+Since Wild Rydes is a ride sharing application, a key requirement is that all users must sign-up and sign-in before they're allowed to request a ride. You will configure the application to integrate with [Amazon Cognito](https://aws.amazon.com/cognito/) for these purposes via the [AWS Amplify JavaScript library](https://aws-amplify.github.io/).
 
 ## Solution Architecture
 
-Provide a description and architecture diagram for the solution that the students will build. Consider including a diagram and short description of the components that are created by the baseline CloudFormation template in addition to the final architecture so that students are clear on which components they will be responsible for building.
+The architecture for this module is very straightforward. All of your static web content including HTML, CSS, JavaScript, images and other files will be served locally from your Cloud9 workspace. As you made changes to the website application code, all changes will be automatically updated and shown in your browser via live reload capabilities.
+
+For this module, we will be configuring our application to use the AWS Amplify library to easily integrate Amazon Cognito into our application.
+
+![Website architecture](../images/wildrydes-module1-architecture.png)
 
 ## Implementation Overview
 
-This section should provide students with the high level steps required to complete the solution. It should enumerate all the components and major configuration tasks required, but should not get to the detail of providing step-by-step instructions for which console buttons to click, etc.
+### Running the website locally
 
-Sample:
+1. From your Cloud9 workspace, select the terminal window and when you are within your website directory, run the following command to start the local web server 
 
-The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
+    ```console
+    yarn start
+    ```
 
-*Create an S3 Bucket* - Use the console or CLI to create an S3 bucket. If you'd like to use a custom domain to host the site make sure you name your bucket using the full domain name (e.g. wildrydesdemo.example.com). Read more about custom domain names for S3 buckets here.
+    Wait for the development server to start. You can ignore any message saying *Compiled with warnings* as we will resolve these warnings as we add our functionality to the application.
 
-*Upload content* - Copy the content from the example bucket, xyz. There is also a zip archive available at xyz that you can download locally and extract in order to upload the content via the console.
 
-*Add a bucket policy to allow public reads* - Bucket policies can be updated via the console or CLI. You can use the provided policy document or build your own. See the documentation for more information.
+2. Now that the development server has started, click **Preview** in the top of the screen next to the Run button.
 
-*Enable public web hosting*
+    ![Cloud9 Preview](../images/cloud9-local-preview.png)  
+
+3. The web application will load in a small window next to the terminal at the bottom of the Cloud9 IDE. Click the **re-size button** next to the word **Browser** to open this window in a new tab.
+
+    ![Cloud9 Preview Re-size](../images/cloud9-resize-live-preview.png)   
+
+   As you make changes to the web application, this tab will automatically refresh to reflect your changes. Leave this tab open and return to the Cloud9 IDE tab to continue the workshop.
+
+   Though the Wild Rydes website may look function, there is currently no integration for sign-up or sign-in requests to go anywhere.
+
+### Creating a Cognito User Pool
+
+Amazon Cognito lets you add user sign-up, sign-in, and access control to your web and mobile apps quickly and easily. In this step, we'll create a Cognito user pool for use with our Wild Rydes app.
+
+#### High-Level Instructions
+
+Use the AWS console to create an Amazon Cognito User Pool adding a custom attribute named `profile_picture` and requiring multi-factor authentication via SMS message.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console choose **Services** then select **Cognito** under Security, Identity, and Compliance.
+
+1. Choose your desired **Region** in top-right of the console if not already chosen.
+
+1. Choose **Manage User Pools**.
+
+1. Choose **Create a User Pool** in the top right of the console.
+
+1. Provide a name for your user pool such as `wild-rydes`.
+
+1. Choose **Step through settings** to configure our user pool options.
+
+![User Pool Setup Step 1](../images/cognito-userpool-setup-step1.png)
+
+1. Leave **Username** checked, but additionally select *Also allow sign in with verified email address* and *Also allow sign in with verified phone number*.
+
+1. At the bottom of the screen, choose **Add custom attribute** and add a string attribute named `profile_picture`. Leave the attribute set as mutable with a max length of 256 characters.
+
+![User Pool Setup Step 2](../images/cognito-userpool-setup-step2.png)
+
+1. Choose **Next**.
+
+1. Leave password policies and user sign up settings set to default settings and choose **Next**.
+
+![User Pool Setup Step 3](../images/cognito-userpool-setup-step3.png)
+
+1. Choose to set MFA as **Required** as we want to enforce additional security in our application.
+
+1. Choose to enable SMS text message as the second factor authentication option.
+
+1. Choose to require validation of email and phone numbers both.
+
+![User Pool Setup Step 4](../images/cognito-userpool-setup-step4.png)
+
+1. Choose **Create role** to create an IAM role with the default name to allow Cognito to send SMS messages on your behalf.
+
+1. Choose **Next step**.
+
+1. Leave all message defaults as-is and choose **Next step**.
+
+1. Skip adding any tags and click **Next step**.
+
+1. Choose **No** to not remember your user's devices then click **Next step**.
+
+![User Pool Setup Step 5](../images/cognito-userpool-setup-step5.png)
+
+1. Choose **Add an app client**
+
+1. Input `wild-rydes-web-app` as the app client name
+
+1. Uncheck **Generate client secret**. Client secrets are used for server-side applications authentication and are not needed for JavaScript applications.
+
+![User Pool Setup Step 6](../images/cognito-userpool-setup-step6.png)
+
+1. Choose **Next step**.
+
+1. Leavea all Lambda trigger settings set to **none**. These trigger settings allow you to extend the out-of-the-box sign-up and sign-in flows with your own custom logic, but we will not be using this feature in this workshop.
+
+1. Choose **Next step**.
+
+1. Review summary of all provided settings for accuracy then choose **Create pool**.
+
+</p></details>

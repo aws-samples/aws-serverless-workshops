@@ -1,59 +1,195 @@
-# Module 1: The first example module
+# Module 3: AWS integration with IAM-based authorization
 
-This is an example module. The page title should include the module number and a short but descriptive title.
-
-You should provide an introductory paragraph that sets some context for the use case to be covered. If possible this should tie into the Wild Rydes theme/company story.
-
-You should also provide instructions here for launching a CloudFormation template that allows students to skip ahead to the next module. You should host your templates in local S3 buckets in each supported region and provide a table with links for launching the templates in each region:
-
-
-Region| Launch
-------|-----
-US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml)
-US West (Oregon) | [![Launch Module 1 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/WorkshopTemplate/1_ExampleTemplate/example.yaml)
-
-<details>
-<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
-
-1. Click the **Launch Stack** link above for the region of your choice.
-
-1. Click **Next** on the Select Template page.
-
-1. Provide a globally unique name for the **Website Bucket Name** such as `wildrydes-yourname` and click **Next**.
-    ![Speficy Details Screenshot](../images/module1-cfn-specify-details.png)
-
-1. On the Options page, leave all the defaults and click **Next**.
-
-1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
-
-    This template uses a custom resource to copy the static website assets from a central S3 bucket into your own dedicated bucket. In order for the custom resource to write to the new bucket in your account, it must create an IAM role it can assume with those permissions.
-
-1. Wait for the `wildrydes-webapp-1` stack to reach a status of `CREATE_COMPLETE`.
-
-1. With the `wildrydes-webapp-1` stack selected, click on the **Outputs** tab and click on the WebsiteURL link.
-
-1. Verify the Wild Rydes home page is loading properly and move on to the next module, [User Management](../2_UserManagement).
-
-</p></details>
-
+In this module, you will expand your Wild Rydes application by enabling a profile management and profile photo management capabilities. [Amazon Cognito](https://aws.amazon.com/cognito/) will be used to store your user's profile information and custom attributes whereas [Amazon S3](https://aws.amazon.com/s3/) will store your user's profile pictures, with a link to the photo only being stored in the user's profile directly.
 
 ## Solution Architecture
 
-Provide a description and architecture diagram for the solution that the students will build. Consider including a diagram and short description of the components that are created by the baseline CloudFormation template in addition to the final architecture so that students are clear on which components they will be responsible for building.
+Building on Modules 1 and 2, this module will add photo storage and management via an Amazon S3 bucket. For AWS resource access from a web application, Amazon Cognito will issue not only JWTs as we saw earlier, but then also allow users to assume an IAM role from within the app. This AWS IAM role will then allow their application to securely connect to upload and download photos from S3 (though any other AWS API would also work with this capability). To secure access to the photo storage and bucket, you will leverage IAM policies for fine-grained control.
+
+![Module 3 architecture](../images/wildrydes-module3-architecture.png)
 
 ## Implementation Overview
 
-This section should provide students with the high level steps required to complete the solution. It should enumerate all the components and major configuration tasks required, but should not get to the detail of providing step-by-step instructions for which console buttons to click, etc.
+Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
-Sample:
+If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
-The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
+### 1. Setup S3 bucket for use with AWS Amplify
 
-*Create an S3 Bucket* - Use the console or CLI to create an S3 bucket. If you'd like to use a custom domain to host the site make sure you name your bucket using the full domain name (e.g. wildrydesdemo.example.com). Read more about custom domain names for S3 buckets here.
+You will need for your S3 bucket to be properly associated with Amplify for seamless upload and data of data. To save time, the CloudFormation template that created the serverless backend for this workshop also created an S3 bucket for this purpose with the cross-origin resource sharing (CORS) settings already set. You just need to associate this bucket with your application's code.
 
-*Upload content* - Copy the content from the example bucket, xyz. There is also a zip archive available at xyz that you can download locally and extract in order to upload the content via the console.
+#### High-Level Instructions
 
-*Add a bucket policy to allow public reads* - Bucket policies can be updated via the console or CLI. You can use the provided policy document or build your own. See the documentation for more information.
+Browse to your CloudFormation stack created in the earlier modules and find the name of the S3 bucket under Outputs. Once you have the name, open your amplify-config.js file again and update the storage section with the bucket name and region.
 
-*Enable public web hosting*
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. Go the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
+
+1. In the CloudFormation console, click on your Wild Rydes stack name, such as `WildRydesAPI`.
+
+1. Click on the **Outputs** tab.
+
+1. Copy your bucket name to your clipboard. It is the name shown under `Value` for the key called `WildRydesProfilePicturesBucket`.
+
+1. Next, return to your Cloud9 IDE and open the file `/website/src/amplify-config.js`.
+
+1. Fill in values for both the bucket name, which you just copied, as well as the region where you created the bucket.
+
+1. Your final structure for the storage configuration of `amplify-config.js` should look like the following.
+
+```
+    Storage: {
+        bucket: 'wildrydes-profilepicturesbucket-1rmvuic97osxd',
+        region: 'us-east-1'
+    }
+```
+
+</p></details>
+
+### 2. Configure IAM permissions for your users
+
+Though you could now attempt uploading photos via AWS Amplify, Amplify would use your Cognito Identity Pool roles that were created in module 1 which currently has no policies associated so you would not have access to the S3 bucket created. You need to next update our roles to have policies that grant access to our S3 photo bucket.
+
+#### High-Level Instructions
+
+Browse to the IAM console and find your Cognito Identity Pool's authenticated user role. Create an in-line policy which provides for protected and private level access per-user by leveraging IAM policy variables.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. Go the AWS Management Console, click **Services** then select **IAM** under Security, Identity, and Compliance.
+
+1. Choose **Roles**.
+
+1. Search for `WildRydes` to find the two roles which were created by Cognito Identity Pools when you created the Identity Pool in module one. Should you not be able to find the roles here, you can alternatively go to the **Cognito Federated Identities** console, find the correct identity pool, then click **Edit Identity Pool** in the top-right corner to see the roles listed. Each identity pool has both an Unauthenticated user role and an Authenticated user role.
+
+1. Once you have found the names of the roles, go back to the IAM console and select the `Auth` role for your authenticated users.
+
+1. We want to grant permissions to this role which are only applicable to this role so we will use an inline policy, which would be deleted if this role were ever deleted.
+
+1. Choose **Add inline policy** on the right-hand side to create a new inline policy associated to this IAM role.
+
+1. Choose the **JSON** tab to allow you to free-form edit the new policy.
+
+1. Paste the following IAM policy statements for S3 access. After pasting, you will need to go replace the bucket name listed in all caps with your bucket name (a total of 4 times). Be sure to leave the parts of the resource names before and after the replacement value alone and not accidentally modify them.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/private/${aws:userid}/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/${aws:userid}/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/public/*"
+        }
+    ]
+}
+```
+1. Choose **Review policy**
+
+1. After reviewing for accuracy and any syntax errors, choose **Create policy.**
+
+</p></details>
+
+### 3. Update application to upload photos with AWS Amplify
+
+Now that your IAM policies and Amplify SDK are initialized, you will be able to upload photos and render S3 photos with minimal code using Amplify's built-in UI components. S3 image is the component used to both render image objects for a React application, as well as embeding an image picker to help with uploads.
+
+#### High-Level Instructions
+
+Authenticate in the Wild Rydes app if you're not already, then browse to the /profile path. You will see that your Cognito User Pool attributes are being read dynamically by the system. Next you will add an image picker and rendering UI component to personalize the rider experience so unicorns know who to look for when picking up passengers. Go to the Profile page and implement a functional image picker.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. After logging in to Wild Rydes (if you're not authenticated already), browse to the **/profile** path.
+
+1. You should see that your e-mail address and phone number you registered with are displayed (which are all of your currently populated attributes).
+
+1. Open your Cloud9 IDE environment and open the file at `src/pages/Profile.js`.
+
+1. Uncomment the line that says **S3Image**. This instantiates an Amplify UI component for React apps for image rendering and uploading and only requires this single line of code.
+
+1. Go back to the Wild Rydes app and visit the **/profile** path after logging in. You should now be able to upload photos with the new image picker.
+
+</p></details>
+
+### 4. Store profile picture links in Cognito User Pools profile
+
+With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your profile and your profile picture will be lost. To fix this, you will leverage a custom Cognito User Pools user attribute called `custom:profile_picture` to persist the S3 object key so the same image can be loaded upon each login or to the unicorns when you request a ride. You added this attribute when you first created your User Pool so only need to integrate our application's code to use it.
+
+#### High-Level Instructions
+
+Implement a method to persist the images uploaded to the current user's Cognito profile each time the image is changed.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. Open your Cloud9 IDE environment and open the file at `src/pages/Profile.js`.
+
+1. The S3Image UI component has a built-in method called `onImageLoad` which provides in its invocation the full URL of any image uploaded. We will make use of this built-in function to persist our image URLs out to Cognito.
+
+1. Replace the existing `onImageLoad` function with the following code:
+
+```
+async onImageLoad(url) {
+    if (!this.state.user.getSession) { return };
+    console.log('Profile Picture URL:', url);
+    try {
+        let result = await Auth.updateUserAttributes(this.state.user, {
+            'custom:profile_picture': this.state.image_key
+        });
+        console.log(result);
+    } catch (ex) {
+        console.error('Attribute update error:', ex);
+    }
+}
+```
+
+1. Now with this new method in place, upload a new photo after logging into Wild Rydes then close your browser. Open a new window and try logging in again. Your photo should load as it did previously.
+
+</p></details>
+
+## Conclusion
+
+Congratulations! You've completed the Wild Rydes Auth workshop. We hope that this time and interactive learning has been valuable for you. For further learning on this topic, please see our list of [Serverless Auth Resources](TODO).
+
+Please remember to run through the [Clean up steps](TODO) to ensure you decommission all resources spun up during the workshop today.
+
+Thank you for participating in this workshop!

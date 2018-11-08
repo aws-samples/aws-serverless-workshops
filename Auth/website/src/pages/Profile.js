@@ -13,12 +13,10 @@
  *  permissions and limitations under the License.
  */
 import React from 'react';
-import DynamicImage from '../components/DynamicImage';
 import SiteNav from '../components/SiteNav';
 import SiteFooter from '../components/SiteFooter';
 import { Auth } from 'aws-amplify';
-import {PhotoPicker, S3Image } from 'aws-amplify-react';
-
+import { S3Image } from 'aws-amplify-react';
 import '../css/main.css';
 
 class Profile extends React.Component {
@@ -35,23 +33,28 @@ class Profile extends React.Component {
     }
     componentDidMount() {
         Auth.currentAuthenticatedUser().then(user => {
-            console.log('User', user);
-            this.setState({user, image_key: 'profile-' + user.attributes.sub + '.jpeg'});
+            console.log('Cognito User', user);
+            this.setState({user, image_key: 'profile-' + user.attributes.sub + '.jpg'});
         });;
     }
+
+    async onImageLoad(url) {
+        console.error('onImageLoad is not yet implemented');
+    }
+
     render() {
       return (<div className="page-unicorns">
         <header className="site-header">
           <div>
-          <S3Image imgKey={this.state.image_key} picker />
+          {/* <S3Image imgKey={this.state.image_key} onLoad={(url) => this.onImageLoad(url)} picker/> */}
     		<table align="center">
     		<tbody>
              <tr>
-             <td>Email</td>
+             <td>E-mail:</td>
              <td>{this.state.user.attributes.email}</td>
              </tr>
               <tr>
-             <td>Phone</td>
+             <td>Phone:</td>
              <td>{this.state.user.attributes.phone_number}</td>
              </tr>
              </tbody>

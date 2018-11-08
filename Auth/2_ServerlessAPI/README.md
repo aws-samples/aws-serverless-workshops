@@ -56,8 +56,8 @@ First, you need to enable the hasAPI method by uncommenting its code within Main
 
 ```
 hasApi() {
-// const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');                                                   
-// return (typeof api !== 'undefined');
+  const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');                                                   
+  return (typeof api !== 'undefined');
 }
 ```
 

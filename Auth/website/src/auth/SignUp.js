@@ -13,7 +13,7 @@
  *  permissions and limitations under the License.
  */
 import React from 'react';
-import { Auth, Analytics } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import DynamicImage from '../components/DynamicImage';
 import { withRouter } from 'react-router-dom';
 

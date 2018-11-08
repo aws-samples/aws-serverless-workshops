@@ -1,0 +1,83 @@
+---
+  AWSTemplateFormatVersion: 2010-09-09
+  Description: VPC Infrastructure setup and deployment of Cloud9 IDE for SRV306 AWS Re:Invent Workshop 2018
+  Resources:
+    # Create the Cloud9 Instance in a specified Subnet
+    Cloud9Instance:
+      Type: "AWS::Cloud9::EnvironmentEC2"
+      Properties:
+        Description: "Cloud9 IDE for the SRV306 Serverless Authentication and Authorization Workshop at AWS Re:Invent 2018"
+        AutomaticStopTimeMinutes: 60
+        InstanceType: t2.micro
+        Name: !Sub ${AWS::StackName}-Cloud9Instance
+        SubnetId: !Ref PublicSubnet1
+      DependsOn: GatewayToInternet
+
+    # Create the VPC infrastructure
+    Vpc:
+      Type: AWS::EC2::VPC
+      Properties:
+        CidrBlock: 172.20.0.0/16
+        EnableDnsHostnames: true
+        Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-VPC"
+
+    PublicSubnet1:
+      Type: AWS::EC2::Subnet
+      Properties:
+        VpcId: !Ref Vpc
+        AvailabilityZone: !Select [ 0, !GetAZs '' ]
+        CidrBlock: 172.20.1.0/24
+        Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PublicSubnet1"
+
+    InternetGateway:
+      Type: AWS::EC2::InternetGateway
+      Properties:
+        Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-InternetGateway"
+
+    GatewayToInternet:
+      Type: AWS::EC2::VPCGatewayAttachment
+      Properties:
+        VpcId: !Ref Vpc
+        InternetGatewayId: !Ref InternetGateway
+
+    PublicRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties:
+        VpcId: !Ref Vpc
+        Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-InternetGateway"
+
+    PublicRoute:
+      Properties:
+        RouteTableId: !Ref PublicRouteTable
+        DestinationCidrBlock: 0.0.0.0/0
+        GatewayId: !Ref InternetGateway
+      Type: AWS::EC2::Route
+
+    PubSubnet1RTAssoc:
+      Properties:
+        SubnetId: !Ref PublicSubnet1
+        RouteTableId: !Ref PublicRouteTable
+      Type: AWS::EC2::SubnetRouteTableAssociation
+
+  Outputs:
+    Cloud9IDE:
+      Value:
+        !Join ["",["https://",!Ref "AWS::Region",".console.aws.amazon.com/cloud9/ide/",!Ref Cloud9Instance,"?region=",!Ref "AWS::Region"]]
+    Vpc:
+      Description: Vpc for Cloud9 instance
+      Value: !Ref Vpc
+      Export:
+        Name: !Sub ${AWS::StackName}-Vpc
+    PublicSubnet1:
+      Description: Public Subnet for Cloud9 Instance
+      Value: !Ref PublicSubnet1
+      Export:
+        Name: !Sub ${AWS::StackName}-PublicSubnet1

@@ -87,18 +87,9 @@ Resources:
           ];
 
           exports.handler = (event, context, callback) => {
-              if (!event.requestContext.authorizer) {
-                errorResponse('Authorization not configured', context.awsRequestId, callback);
-                return;
-              }
 
               const rideId = toUrlString(randomBytes(16));
               console.log('Received event (', rideId, '): ', event);
-
-              // Because we're using a Cognito User Pools authorizer, all of the claims
-              // included in the authentication token are provided in the request context.
-              // This includes the username as well as other attributes.
-              const username = event.requestContext.authorizer.claims['cognito:username'];
 
               // The body field of the event in a proxy integration is a raw string.
               // In order to extract meaningful values, we need to first parse this string
@@ -110,7 +101,7 @@ Resources:
 
               const unicorn = findUnicorn(pickupLocation);
 
-              recordRide(rideId, username, unicorn).then(() => {
+              recordRide(rideId, unicorn).then(() => {
                   // You can use the callback function to provide a return value from your Node.js
                   // Lambda functions. The first parameter is used for failed invocations. The
                   // second parameter specifies the result data of the invocation.
@@ -124,7 +115,6 @@ Resources:
                           Unicorn: unicorn,
                           UnicornName: unicorn.Name,
                           Eta: '30 seconds',
-                          Rider: username,
                       }),
                       headers: {
                           'Access-Control-Allow-Origin': '*',
@@ -150,12 +140,11 @@ Resources:
               return fleet[Math.floor(Math.random() * fleet.length)];
           }
 
-          function recordRide(rideId, username, unicorn) {
+          function recordRide(rideId, unicorn) {
               return ddb.put({
                   TableName: 'Rides',
                   Item: {
                       RideId: rideId,
-                      User: username,
                       Unicorn: unicorn,
                       UnicornName: unicorn.Name,
                       RequestTime: new Date().toISOString(),
@@ -245,7 +234,7 @@ Resources:
                     statusCode: "200"
                     responseParameters:
                       method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
-                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
                       method.response.header.Access-Control-Allow-Origin: "'*'"
                 requestTemplates:
                   application/json: "{\"statusCode\": 200}"

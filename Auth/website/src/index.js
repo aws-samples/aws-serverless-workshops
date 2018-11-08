@@ -40,9 +40,9 @@ class App extends React.Component {
           <Route path="/faq" component={FAQ} />
           <Route path="/investors" component={Investors} />
           <Route path="/unicorns" component={Unicorns} />
-          <Route path="/profile" component={Profile} />
           <Route path="/register" component={SignUp} />
 	        <Route path="/signin" component={SignIn} />
+          <PrivateRoute path="/profile" component={Profile} />
           <PrivateRoute path="/app" component={MainApp} />
         </Switch>
       </BrowserRouter>

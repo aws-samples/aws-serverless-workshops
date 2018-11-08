@@ -17,7 +17,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Home, FAQ, Investors, MainApp, Unicorns } from './pages';
 import { SignIn, SignUp } from './auth';
-
 import 'normalize.css';
 
 const isAuthenticated = () => false; 

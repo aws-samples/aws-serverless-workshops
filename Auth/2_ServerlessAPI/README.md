@@ -41,7 +41,49 @@ Create a new CloudFormation stack by uploading the **ServerlessAPI.yaml** file i
 
 </p></details>
 
-## 2. Integrate API into Wild Rydes application
-## 3. Enable authentication via Cognito User Pools
-## 4. Authorize requests with IAM and request signing
-## 5. Update IAM role for Cognito users to be able to invoke API
+### 2. Integrate API into Wild Rydes application
+
+Now that you have created our Serverless backend API, you need to update your Wild Rydes web application to integrate with it. You will leverage the AWS Amplify client library to make API calls and inject security seamlessly to support your authentication and authorization scenarios.
+
+#### High-Level Instructions
+
+Within MainApp.js under pages, enable the hasAPI method by uncommenting its functionality. Additionally, update the getData method to capture the latitude and longitude selected on the map and send to the API as a PickupLocation object.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+First, you need to enable the hasAPI method by uncommenting its code within MainApp.js under the pages folder.
+
+```
+hasApi() {
+// const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');                                                   
+// return (typeof api !== 'undefined');
+}
+```
+
+Next, within the same file, we will implement the API request for a ride as a POST request to our API which sends a body containing the requested latitude and longitude as the pickup location. Update the getData() method to be as follows:
+
+```
+  async getData(pin) {
+    Amplify.Logger.LOG_LEVEL = 'DEBUG';
+    const apiRequest = {
+      body: {
+        PickupLocation: {
+          Longitude: pin.longitude,
+          Latitude: pin.latitude
+        }
+      },
+      headers: {
+        Authorization: ''
+      }
+    };
+    logger.info('API Request:', apiRequest);
+    return await API.post(apiName, apiPath, apiRequest);
+  }
+```
+</p></details>
+
+### 3. Validate API functionality and integration with our Wild Rydes app
+### 3. Enable authentication via Cognito User Pools
+### 4. Authorize requests with IAM and request signing
+### 5. Update IAM role for Cognito users to be able to invoke API

@@ -15,12 +15,14 @@
 import React from 'react';
 import BaseMap from '../components/BaseMap';
 import ESRIMap from '../components/ESRIMap';
-import { Auth, API } from 'aws-amplify';
+import Amplify from 'aws-amplify';
+import { Auth, API, Logger } from 'aws-amplify';
 import awsConfig from '../amplify-config';
 import '../css/ride.css';
 
-const apiName = 'requestUnicorn';
+const apiName = 'WildRydesAPI';
 const apiPath = '/ride';
+const logger = new Logger('MainApp');
 
 class MainApp extends React.Component {
   constructor(props) {
@@ -56,7 +58,7 @@ class MainApp extends React.Component {
    * @return {Boolean} true if API is configured
    */
   hasApi() {
-    // const api = awsConfig.aws_cloud_logic_custom.filter(v => v.name === 'requestUnicorn');
+    // const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');                                                   
     // return (typeof api !== 'undefined');
   }
 
@@ -82,7 +84,7 @@ class MainApp extends React.Component {
 
       // Let's fake the arrival
       setTimeout(() => {
-        console.log('ride complete');
+        console.log('Ride Complete');
         const updateList = this.state.updates;
         updateList.push([ `${data.Unicorn.Name} has arrived` ]);
         this.setState({

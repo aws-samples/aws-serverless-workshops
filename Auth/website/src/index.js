@@ -15,7 +15,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { Home, FAQ, Investors, MainApp, Unicorns } from './pages';
+import { Home, FAQ, Investors, MainApp, Unicorns, Profile } from './pages';
 import { SignIn, SignUp } from './auth';
 import 'normalize.css';
 
@@ -40,6 +40,7 @@ class App extends React.Component {
           <Route path="/faq" component={FAQ} />
           <Route path="/investors" component={Investors} />
           <Route path="/unicorns" component={Unicorns} />
+          <Route path="/profile" component={Profile} />
           <Route path="/register" component={SignUp} />
 	        <Route path="/signin" component={SignIn} />
           <PrivateRoute path="/app" component={MainApp} />

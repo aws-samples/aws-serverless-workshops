@@ -15,6 +15,10 @@ For this module, we will be creating a Cognito User Pool as our secure user dire
 
 ## Implementation Overview
 
+Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
+
+If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+
 ### 1. Running the website locally
 
 1. From your Cloud9 workspace, select the terminal window and when you are within your website directory, run the following command to start the local web server 

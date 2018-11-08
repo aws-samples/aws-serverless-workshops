@@ -1,59 +1,47 @@
-# Module 1: The first example module
+# Module 2: Serverless API Authentication and Authorization
 
-This is an example module. The page title should include the module number and a short but descriptive title.
-
-You should provide an introductory paragraph that sets some context for the use case to be covered. If possible this should tie into the Wild Rydes theme/company story.
-
-You should also provide instructions here for launching a CloudFormation template that allows students to skip ahead to the next module. You should host your templates in local S3 buckets in each supported region and provide a table with links for launching the templates in each region:
-
-
-Region| Launch
-------|-----
-US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml)
-US West (Oregon) | [![Launch Module 1 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/WorkshopTemplate/1_ExampleTemplate/example.yaml)
-
-<details>
-<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
-
-1. Click the **Launch Stack** link above for the region of your choice.
-
-1. Click **Next** on the Select Template page.
-
-1. Provide a globally unique name for the **Website Bucket Name** such as `wildrydes-yourname` and click **Next**.
-    ![Speficy Details Screenshot](../images/module1-cfn-specify-details.png)
-
-1. On the Options page, leave all the defaults and click **Next**.
-
-1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
-
-    This template uses a custom resource to copy the static website assets from a central S3 bucket into your own dedicated bucket. In order for the custom resource to write to the new bucket in your account, it must create an IAM role it can assume with those permissions.
-
-1. Wait for the `wildrydes-webapp-1` stack to reach a status of `CREATE_COMPLETE`.
-
-1. With the `wildrydes-webapp-1` stack selected, click on the **Outputs** tab and click on the WebsiteURL link.
-
-1. Verify the Wild Rydes home page is loading properly and move on to the next module, [User Management](../2_UserManagement).
-
-</p></details>
-
+In this module, you will add a serverless API backend to our Wild Rydes application leveraging [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/). You will then enable authentication and authorization on your API to secure the backend to only accept valid, authorized requests.
 
 ## Solution Architecture
 
-Provide a description and architecture diagram for the solution that the students will build. Consider including a diagram and short description of the components that are created by the baseline CloudFormation template in addition to the final architecture so that students are clear on which components they will be responsible for building.
+Building on Module 1, this module will add a Serverless backend API built using Amazon API Gateway and AWS Lambda. For persistence, we will use Amazon DynamoDB as a NoSQL data store. All of the above services are serverless so you can seamlessly scale your application as your demands grow. After creating the API, we will integrate our client application to call it via the AWS Amplify library.
+
+![Module 2 architecture](../images/wildrydes-module2-architecture.png)
 
 ## Implementation Overview
 
-This section should provide students with the high level steps required to complete the solution. It should enumerate all the components and major configuration tasks required, but should not get to the detail of providing step-by-step instructions for which console buttons to click, etc.
+Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
-Sample:
+If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
-The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
+### 1. Creating Serverless API backend stack from CloudFormation template
 
-*Create an S3 Bucket* - Use the console or CLI to create an S3 bucket. If you'd like to use a custom domain to host the site make sure you name your bucket using the full domain name (e.g. wildrydesdemo.example.com). Read more about custom domain names for S3 buckets here.
+You will be creating your Serverless API built with Amazon API Gateway, AWS Lambda, and Amazon DynamoDB via a CloudFormation template. Since this workshop is focused on authentication and authorization, this template will create the backend infrastructure, but not enable any security settings and the rest of the module will enable and configure such settings.
 
-*Upload content* - Copy the content from the example bucket, xyz. There is also a zip archive available at xyz that you can download locally and extract in order to upload the content via the console.
+#### High-Level Instructions
 
-*Add a bucket policy to allow public reads* - Bucket policies can be updated via the console or CLI. You can use the provided policy document or build your own. See the documentation for more information.
+Create a new CloudFormation stack by uploading the **ServerlessAPI.yaml** file in the module 2 folder. Name the stack `WildRydesAPI`.
 
-*Enable public web hosting*
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. Go the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
+
+1. In the CloudFormation console, click **Create stack** and in Step 1, choose **Upload a template file**. Upload the **ServerlessAPI.yaml** CloudFormation template found in the module 2 folder within the Auth workshop folder and click **Next**.
+
+1. On the next screen, Step 2, enter a Stack such as `WildRydesAPI` and click **Next**.
+
+1. On the Configure Stack Options page, accept all the defaults and click **Next**.
+
+1. Choose to **Acknwledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
+
+1. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
+
+1. With the `WildRydesAPI` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to the clipboard.
+
+</p></details>
+
+## 2. Integrate API into Wild Rydes application
+## 3. Enable authentication via Cognito User Pools
+## 4. Authorize requests with IAM and request signing
+## 5. Update IAM role for Cognito users to be able to invoke API

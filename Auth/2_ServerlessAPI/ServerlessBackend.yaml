@@ -265,6 +265,17 @@ Resources:
             - !Ref WildRydesApi
             - "/*"
 
+  ProfilePicturesBucket:
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders: ["*"]
+          AllowedMethods: ["GET","HEAD","PUT","POST","DELETE"]
+          AllowedOrigins: ["*"]
+          ExposedHeaders: ["x-amz-server-side-encryption","x-amz-request-id","x-amz-id-2","ETag"]
+          MaxAge: '3600'
+    Type: "AWS::S3::Bucket"
+
 Outputs:
   WildRydesApiInvokeUrl:
     Description: URL for the deployed wild rydes API
@@ -278,3 +289,6 @@ Outputs:
           - ".amazonaws.com/prod"
     Export:
       Name: WildRydesApiUrl
+  WildRydesProfilePicturesBucket:
+    Description: S3 bucket to store user uploaded profile pictures
+    Value: !Ref "ProfilePicturesBucket"

@@ -41,15 +41,13 @@ In this section you will launch a CloudFormation stack that will create a a new 
 
 **Step-by-step Instructions**
 
-TODO: INCLUDE A CREATE STACK BUTTON/LINK THAT OPENS THE CLOUDFORMATION TEMPLATE DIRECTLY INTO THE CONSOLE FOR SIMPLICITY.
-
 1. Go the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
 
 2. In the CloudFormation console, click **Create stack** and in Step 1, choose **Upload a template file**. Upload the **Cloud9WithNewVPC.yaml** CloudFormation template that was provided with this workshop and click **Next**.
 
-	![CloudForamtion Deployment](images/cloud9_cfn_deploy.png)
+	![CloudForamtion Deployment](images/Cloud9WithNewVPC-CloudFormationSelection.png)
 
-3. On the next screen, Step 2, enter a Stack such as `srv306-cloud9-<YOUR INITIALS>` and click **Next**
+3. On the next screen, Step 2, enter a Stack such as `WildRydes-Cloud9-<YOUR INITIALS>` and click **Next**
 
 4. On the Configure Stack Options page, accept all the defaults and click **Next**. Finally on the Review page, click **Create stack**.
 
@@ -65,17 +63,16 @@ TODO: INCLUDE A CREATE STACK BUTTON/LINK THAT OPENS THE CLOUDFORMATION TEMPLATE 
 	
 	You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running `aws sts get-caller-identity`.
 
-    ```console
+    ```
     aws sts get-caller-identity
     ```
-<button class="btn btn-outline-primary copy">Copy to Clipboard</button>
 
     You'll see output indicating your account and user information:
 
-    ```console
+    ```
     Admin:~/environment $ aws sts get-caller-identity
     ```
-    ```json
+    ```
     {
         "Account": "123456789012",
         "UserId": "AKIAI44QH8DHBEXAMPLE",
@@ -92,7 +89,7 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 1. Clone the workshop repository to your IDE environmen by running the following command in the Cloud9 terminal window:
 
     ```console
-    git clone https://github.com/aws-samples/aws-serverless-workshops.git
+    git clone https://github.com/justonian/aws-serverless-workshops.git
     ```
 
 ### Initialize your developer workspace

@@ -74,7 +74,8 @@ Next, within the same file, we will implement the API request for a ride as a PO
         }
       },
       headers: {
-        Authorization: ''
+        'Authorization': '', // To be updated
+        'Content-Type': 'application/json'
       }
     };
     logger.info('API Request:', apiRequest);
@@ -84,6 +85,22 @@ Next, within the same file, we will implement the API request for a ride as a PO
 </p></details>
 
 ### 3. Validate API functionality and integration with our Wild Rydes app
+
+Now that you've integrated code changes to call your new Serverless API, you should test the end-to-end user experience to ensure the application is working correctly. The backend API currently requires no authentication so any request will currently be accepted until we enable required authentication.
+
+#### High-Level Instructions
+
+Go back to your browser tab with Wild Rydes running and sign-in again at **/signin**. Once signed in, click anywhere on the map to indicate a pickup location, then select the **Request** button to call your ride.
+
+You should be informed of your unicorn's arrival momentarily.
+
 ### 3. Enable authentication via Cognito User Pools
+
+1. Create authorizer
+2. Enable auth
+3. Test requesting a ride again (should fail)
+4. Update headers in request to send identity token from Cognito
+5. Test again
+
 ### 4. Authorize requests with IAM and request signing
 ### 5. Update IAM role for Cognito users to be able to invoke API

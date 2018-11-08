@@ -14,9 +14,13 @@ const awsConfig = {
         endpoints: [
             {
                 name: 'WildRydesAPI',
-                endpoint: '' // https://tnp677qpl3.execute-api.us-east-1.amazonaws.com/prod
+                endpoint: '' // https://1ngrgqjt6c.execute-api.us-east-1.amazonaws.com/prod
             }
         ]
+    },
+    Storage: {
+        bucket: '', //Amazon S3 bucket 'wildrydes-profile-images'
+        region: '', // 'us-east-1'
     }
 }
 

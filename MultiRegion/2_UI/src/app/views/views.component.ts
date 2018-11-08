@@ -21,6 +21,10 @@ export class ViewsComponent implements OnInit {
       this.router.navigate(['/home']);
     }
 
+    this.callHealth();
+  }
+
+  callHealth() {
     this.ticketService.getHealth()
       .subscribe(
         data => {
@@ -32,8 +36,6 @@ export class ViewsComponent implements OnInit {
 
         }
       );
-
-
   }
 
   onLoggedout() {

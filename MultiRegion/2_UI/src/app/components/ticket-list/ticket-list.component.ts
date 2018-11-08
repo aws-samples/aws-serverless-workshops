@@ -67,6 +67,7 @@ export class TicketListComponent implements OnInit {
           self.ticketForm.reset();
           console.log(ticket);
           self.rows.push(ticket);
+          self.refresh();
         },
         error => this.errorMessage = <any>error);
 

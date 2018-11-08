@@ -13,8 +13,8 @@ const awsConfig = {
     API: {
         endpoints: [
             {
-                name: "WildRydesAPI",
-                endpoint: "https://1234567890-abcdefgh.amazonaws.com"
+                name: 'WildRydesAPI',
+                endpoint: '' // https://tnp677qpl3.execute-api.us-east-1.amazonaws.com/prod
             }
         ]
     }

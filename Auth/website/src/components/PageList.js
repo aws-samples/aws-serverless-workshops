@@ -21,6 +21,7 @@ const PageList = () => {
         { url: '/unicorns', title: 'Meet the Unicorns' },
         { url: '/investors', title: 'Investors & Board of Directors' },
         { url: '/faq', title: 'FAQ' },
+        { url: '/profile', title: 'Profile' },
         { url: '/register', title: 'Apply' }
     ];
 

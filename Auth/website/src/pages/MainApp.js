@@ -29,6 +29,7 @@ class MainApp extends React.Component {
     super(props);
     this.state = {
       authToken: null,
+      idToken: null,
       requestRideEnabled: false,
       updates: [
         'Welcome! Click the map to set your pickup location.'
@@ -38,8 +39,8 @@ class MainApp extends React.Component {
 
   async componentDidMount() {
     const session = await Auth.currentSession();
-    console.log(`session = ${session.accessToken.jwtToken}`);
     this.setState({ authToken: session.accessToken.jwtToken });
+    this.setState({ idToken: session.idToken.jwtToken });
   }
 
   /**

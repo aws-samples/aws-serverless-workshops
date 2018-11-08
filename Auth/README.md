@@ -126,4 +126,4 @@ an ID or Amazon Resource Name (ARN), copy and paste that into the scratch pad.
 
 ### Next
 
-Proceed to the first module. Insert instructions here for first module.
+Once you have your Cloud9 workspace fully working, proceed to the first module, [User Authentication](../1_UserAuthentication).

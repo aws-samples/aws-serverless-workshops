@@ -104,3 +104,5 @@ You should be informed of your unicorn's arrival momentarily.
 
 ### 4. Authorize requests with IAM and request signing
 ### 5. Update IAM role for Cognito users to be able to invoke API
+
+If the API now invokes correctly and application funcions as expected again, you can move on to the next module, [IAM-based Authorization](../3_IAMAuthorization).

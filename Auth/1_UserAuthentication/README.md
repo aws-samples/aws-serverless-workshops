@@ -295,6 +295,6 @@ Sign-up as a new user then sign-in with that user. Provide a valid phone number 
 
 1. When prompted for an MFA code, check your phone entered previously for an SMS message. Enter your **SMS MFA code** at the verification code prompt then choose **Verify**.
 
-1. If the page then loads a map, sign-in was successful and you may proceed to the next module.
+1. If the page then loads a map, sign-in was successful and you may proceed to the next module, [Serverless API Auth](../2_ServerlessAPI).
 
 </p></details>

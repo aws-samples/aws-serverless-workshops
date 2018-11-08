@@ -235,7 +235,7 @@ You will import the AWS Amplify library into the project then add sign-up and si
                 this.state.email.replace(/[@.]/g, '|'),
                 this.state.password
             );
-            console.log('userObject = ', userObject);
+            // console.log('Cognito User Object:', userObject);
             this.setState({ userObject, stage: 1 });
         } catch (err) {
             alert(err.message);
@@ -250,7 +250,11 @@ You will import the AWS Amplify library into the project then add sign-up and si
                 this.state.userObject,
                 this.state.code
             );
-            console.log('data = ', data);
+            console.log('Cognito User Data:', data);
+            const session = await Auth.currentSession();
+            // console.log('Cognito User Access Token:', session.getAccessToken().getJwtToken());
+            console.log('Cognito User Identity Token:', session.getIdToken().getJwtToken());
+            // console.log('Cognito User Refresh Token', session.getRefreshToken().getToken());
             this.setState({ stage: 0, email: '', password: '', code: '' });
             this.props.history.replace('/app');
         } catch (err) {

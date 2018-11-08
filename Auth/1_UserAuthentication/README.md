@@ -159,21 +159,21 @@ You will import the AWS Amplify library into the project then add sign-up and si
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating `src/aws-exports.js`.
+1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating `src/amplify-config.js`.
 
 1. After opening this file in your Cloud9 IDE editor, find an replace the following parameters with values from your previous scratchpad:
-- `aws_cognito_identity_pool_id`
-- `aws_cognito_region`
-- `aws_user_pools_id`
-- `aws_user_pools_web_client_id`
+- `identityPoolId`
+- `region`
+- `userPoolId`
+- `userPoolWebClientId`
 
-1. Before using any AWS Amplify modules, we first need to configure Amplify to use our AWS environment configuration stored in `src/aws-exports.js`.
+1. Before using any AWS Amplify modules, we first need to configure Amplify to use our AWS environment configuration stored in `src/amplify-config.js`.
 
     Edit the `src/index.js` file to add the following lines to the top of the file (below all the other imports) to configure Amplify then save your changes:
 
     ```
     import Amplify from 'aws-amplify';
-    import awsConfig from './aws-exports';
+    import awsConfig from './amplify-config';
 
     Amplify.configure(awsConfig);
     ```

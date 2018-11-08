@@ -16,7 +16,7 @@ import React from 'react';
 import BaseMap from '../components/BaseMap';
 import ESRIMap from '../components/ESRIMap';
 import { Auth, API } from 'aws-amplify';
-import awsConfig from '../aws-exports';
+import awsConfig from '../amplify-config';
 import '../css/ride.css';
 
 const apiName = 'requestUnicorn';

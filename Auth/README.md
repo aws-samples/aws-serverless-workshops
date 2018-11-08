@@ -43,7 +43,7 @@ In this section you will launch a CloudFormation stack that will create a a new 
 
 1. Go the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
 
-2. In the CloudFormation console, click **Create stack** and in Step 1, choose **Upload a template file**. Upload the **Cloud9WithNewVPC.yaml** CloudFormation template that was provided with this workshop and click **Next**.
+2. In the CloudFormation console, click **Create stack** and in Step 1, choose **Upload a template file**. Upload the `Cloud9WithNewVPC.yaml` CloudFormation template within the `0_GettingStarted` folder that was provided with this workshop and click **Next**.
 
 	![CloudForamtion Deployment](images/Cloud9WithNewVPC-CloudFormationSelection.png)
 

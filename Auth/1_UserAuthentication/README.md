@@ -163,7 +163,7 @@ You will import the AWS Amplify library into the project then add sign-up and si
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating `src/amplify-config.js`.
+1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating `/website/src/amplify-config.js`.
 
 1. After opening this file in your Cloud9 IDE editor, find an replace the following parameters with values from your previous scratchpad:
 - `identityPoolId`
@@ -171,7 +171,7 @@ You will import the AWS Amplify library into the project then add sign-up and si
 - `userPoolId`
 - `userPoolWebClientId`
 
-1. Before using any AWS Amplify modules, we first need to configure Amplify to use our AWS environment configuration stored in `src/amplify-config.js`.
+1. Before using any AWS Amplify modules, we first need to configure Amplify to use our AWS environment configuration stored in `/website/src/amplify-config.js`.
 
     Edit the `src/index.js` file to add the following lines to the top of the file (below all the other imports) to configure Amplify then save your changes:
 
@@ -182,7 +182,7 @@ You will import the AWS Amplify library into the project then add sign-up and si
     Amplify.configure(awsConfig);
     ```
 
-1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the `src/auth/SignUp.js` file with the code below then save your changes.
+1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the `/website/src/auth/SignUp.js` file with the code below then save your changes.
 
     ```
     async onSubmitForm(e) {
@@ -225,7 +225,7 @@ You will import the AWS Amplify library into the project then add sign-up and si
     }
     ```
 
-1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the `src/auth/SignIn.js` file with the code below then save your changes.
+1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the `/website/src/auth/SignIn.js` file with the code below then save your changes.
 
     ```
     async onSubmitForm(e) {
@@ -264,9 +264,9 @@ You will import the AWS Amplify library into the project then add sign-up and si
     }
     ```
 
-1. Finally, we need to ensure our application evaluates the user's authenticated state. You will need to make a final edit to the route configuration in `src/index.js` so that the current authentication is read from local storage, then adjust the routing based on authentication.
+1. Finally, we need to ensure our application evaluates the user's authenticated state. You will need to make a final edit to the route configuration in `/website/src/index.js` so that the current authentication is read from local storage, then adjust the routing based on authentication.
 
-    Open `src/index.js` in your Cloud9 IDE and find and replace the following code to evaluate whether a user is authenticated via Amplify.
+    Open `/website/src/index.js` in your Cloud9 IDE and find and replace the following code to evaluate whether a user is authenticated via Amplify.
 
     ```
     const isAuthenticated = () => Amplify.Auth.user !== null;

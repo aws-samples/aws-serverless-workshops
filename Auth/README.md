@@ -21,8 +21,7 @@ Please make sure not to use a production AWS environment/account for this worksh
 
 ### Region Selection
 
-Use **US East (N. Virginia)**, **US West (Oregon)**, or **EU (Ireland)** or **Asia Pacific (Sydney)** for this workshop. Each supports the complete set of services covered in the material. Consult the [Region Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) to determine which services
-are available in a Region.
+Use a single region for the entirety of this workshop. This workshop supports three regions in North America, three regions in Europe, and three in Asia Pacific. Choose one region from the launch stack links below and continue to use that region for all of the Auth workshop activities.
 
 ### AWS Cloud9 IDE
 
@@ -35,7 +34,7 @@ this workshop.
 
 In this workshop, you will use a Cloud9 environment which will have access to the same AWS resources as the user with which you logged into the AWS Management Console.
 
-## Setup
+## Cloud9 IDE Setup
 
 In this section you will launch a CloudFormation stack that will create a a new [Amazon VPC](https://aws.amazon.com/vpc/) environment and a [Cloud9 IDE](https://aws.amazon.com/cloud9/) Instance that you will use in the rest of the workshop.
 
@@ -131,7 +130,7 @@ an ID or Amazon Resource Name (ARN), copy and paste that into the scratch pad.
 ### Recap
 
 * Use a unique personal or development AWS Account
-* Use one of the **US East (N. Virginia)**, **US West (Oregon)**, or **EU (Ireland)** or **Asia Pacific (Sydney)**  [Regions](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/)
+* Use a single, consistent region throughout all modules of this Auth workshop
 * Keep your [AWS Cloud9 IDE](#aws-cloud9-ide) opened in a tab at all times
 
 ### Next

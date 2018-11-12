@@ -62,7 +62,7 @@ First, expand your amplify-config.js file to store your new API Gateway endpoint
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-First, you need to update the `amplify-config.js` file under the src directory to include your new API Gateway endpoint. Store the endpoint including the /prod at the end in the endpoint property under the `WildRydesAPI` setting.
+First, you need to update the `/website/src/amplify-config.js` file under the src directory to include your new API Gateway endpoint. Store the endpoint including the /prod at the end in the endpoint property under the `WildRydesAPI` setting.
 
 Note: Do not change the name `WildRydesAPI` in this file or later functionality in the workshop will not work. An example of the API configuration portion of the amplify-config file after updating the configuration properly is shown below:
 
@@ -200,7 +200,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. You should receive an "Error finding unicorn." If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
 
-1. Go back to Cloud9 and open the `src/pages/MainApp.js` files.
+1. Go back to Cloud9 and open the `/website/src/pages/MainApp.js` files.
 
 1. Browse down to the `getData` method you previously updated. You will notice that the headers for the request currently include a blank `Authorization` header.
 

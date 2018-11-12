@@ -142,7 +142,7 @@ Authenticate in the Wild Rydes app if you're not already, then browse to the /pr
 
 1. You should see that your e-mail address and phone number you registered with are displayed (which are all of your currently populated attributes).
 
-1. Open your Cloud9 IDE environment and open the file at `src/pages/Profile.js`.
+1. Open your Cloud9 IDE environment and open the file at `/website/src/pages/Profile.js`.
 
 1. Uncomment the line that says **S3Image**. This instantiates an Amplify UI component for React apps for image rendering and uploading and only requires this single line of code.
 
@@ -161,7 +161,7 @@ Implement a method to persist the images uploaded to the current user's Cognito 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Open your Cloud9 IDE environment and open the file at `src/pages/Profile.js`.
+1. Open your Cloud9 IDE environment and open the file at `/website/src/pages/Profile.js`.
 
 1. The S3Image UI component has a built-in method called `onImageLoad` which provides in its invocation the full URL of any image uploaded. We will make use of this built-in function to persist our image URLs out to Cognito.
 

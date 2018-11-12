@@ -265,6 +265,28 @@ Resources:
             - !Ref WildRydesApi
             - "/*"
 
+  CognitoIdentityPoolAuthStandardPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: WildRydesAPI-StandardUserPolicy
+      Description: "Managed IAM policy to provide API invocation permissions to Wild Rydes API"
+      Path: "/wildrydes/"
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: execute-api:Invoke
+          Resource:
+            Fn::Join:
+              - ""
+              - - "arn:aws:execute-api:"
+                - !Ref "AWS::Region"
+                - ":"
+                - !Ref "AWS::AccountId"
+                - ":"
+                - !Ref "WildRydesApi"
+                - "/*/*/ride/*"
+
   ProfilePicturesBucket:
     Properties:
       CorsConfiguration:

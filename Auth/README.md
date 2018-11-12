@@ -37,7 +37,7 @@ In this workshop, you will use a Cloud9 environment which will have access to th
 
 ## Setup
 
-In this section you will launch a CloudFormation stack that will create a a new [Amazon VPC](https://aws.amazon.com/vpc/) environment and a Cloud9 IDE Instance that you will use in the rest of the workshop.
+In this section you will launch a CloudFormation stack that will create a a new [Amazon VPC](https://aws.amazon.com/vpc/) environment and a [Cloud9 IDE](https://aws.amazon.com/cloud9/) Instance that you will use in the rest of the workshop.
 
 Region| Launch
 ------|-----
@@ -51,46 +51,47 @@ Asia Pacific (Mumbai) | [![Launch Cloud9 in ap-south-1](http://docs.aws.amazon.c
 Asia Pacific (Singapore) | [![Launch Cloud9 in ap-southeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
 Asia Pacific (Sydney) | [![Launch Cloud9 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
 
-**Step-by-step Instructions**
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Go the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
+1. Launch the CloudFormation stack from the links above, choosing the link appropriate for the region you selected for this workshop.
 
-2. In the CloudFormation console, click **Create stack** and in Step 1, choose **Upload a template file**. Upload the `Cloud9WithNewVPC.yaml` CloudFormation template within the `0_GettingStarted` folder that was provided with this workshop and click **Next**.
+1. On the next screen, Step 2, confirm the stack name is  `WildRydes-Cloud9` and click **Next**.
 
-	![CloudForamtion Deployment](images/Cloud9WithNewVPC-CloudFormationSelection.png)
+1. On the Configure Stack Options page, accept all the defaults and click **Next**.
 
-3. On the next screen, Step 2, enter a Stack such as `WildRydes-Cloud9-<YOUR INITIALS>` and click **Next**
+1. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
 
-4. On the Configure Stack Options page, accept all the defaults and click **Next**. Finally on the Review page, click **Create stack**.
+1. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
 
-5. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
+1. With the `WildRydes-Cloud9` stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Open that URL in a new browswer tab to load your IDE environment.
 
-6. When the stack creation is complete, click the **Outputs** tab for the stack and select the value for **Cloud9IDE**. Open that URL in a new browswer tab to load your IDE environment.
+![CloudFormation Outputs open Cloud9](images/cloud9_cfn_outputs.png)
 
-	![CloudFormation Outputs open Cloud9](images/cloud9_cfn_outputs.png)
+</p></details>
 
-	Once you have navigated to the Cloud9 URL, you should have an IDE environment as shown below:
+Once you have launched and navigated to your Cloud9 workspace URL shown in your CloudFormation stack outputs, you should have an IDE environment as shown below:
 
-	![Cloud9 Initial Welcome Screen](images/cloud9_initial_screen.png)
-	
-	You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running `aws sts get-caller-identity`.
+![Cloud9 Initial Welcome Screen](images/cloud9_initial_screen.png)
 
-    ```
-    aws sts get-caller-identity
-    ```
+You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running `aws sts get-caller-identity`.
 
-    You'll see output indicating your account and user information:
+```
+aws sts get-caller-identity
+```
 
-    ```
-    Admin:~/environment $ aws sts get-caller-identity
-    ```
-    ```
-    {
-        "Account": "123456789012",
-        "UserId": "AKIAI44QH8DHBEXAMPLE",
-        "Arn": "arn:aws:iam::123456789012:user/Alice"
-    }
-    ```
+You'll see output indicating your account and user information:
+
+```
+Admin:~/environment $ aws sts get-caller-identity
+```
+```
+{
+    "Account": "123456789012",
+    "UserId": "AKIAI44QH8DHBEXAMPLE",
+    "Arn": "arn:aws:iam::123456789012:user/Alice"
+}
+```
 
 Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be using it for most all activities.
 

@@ -14,26 +14,36 @@ Each of the following sections provides an implementation overview and detailed,
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
-### 1. Create Serverless API backend stack from CloudFormation template
+### 1. Create Serverless API backend stack from a CloudFormation template
 
 You will be creating your Serverless API built with Amazon API Gateway, AWS Lambda, and Amazon DynamoDB via a CloudFormation template. Since this workshop is focused on authentication and authorization, this template will create the backend infrastructure, but not enable any security settings and the rest of the module will enable and configure such settings.
 
 #### High-Level Instructions
 
-Create a new CloudFormation stack by uploading the **ServerlessAPI.yaml** file in the module 2 folder. Name the stack `WildRydesAPI`.
+Create a new WildRydes Serverless Backend stack by launching a CloudFormation stack based on the **ServerlessAPI.yaml** file in the module 2 folder. Name the stack `WildRydesAPI`.
+
+Region| Launch
+------|-----
+US East (N. Virginia) | [![Launch Serverless Backend in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+US East (Ohio) | [![Launch Serverless Backend in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+US West (Oregon) | [![Launch Serverless Backend in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+EU (Frankfurt) | [![Launch Serverless Backend in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-eu-central-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+EU (Ireland) | [![Launch Serverless Backend in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+EU (London) | [![Launch Serverless Backend in eu-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+Asia Pacific (Mumbai) | [![Launch Serverless Backend in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+Asia Pacific (Singapore) | [![Launch Serverless Backend in ap-southeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Go the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
+1. Launch the CloudFormation stack from the links above, choosing the link appropriate for the region you selected for this workshop.
 
-1. In the CloudFormation console, click **Create stack** and in Step 1, choose **Upload a template file**. Upload the **ServerlessAPI.yaml** CloudFormation template found in the module 2 folder within the Auth workshop folder and click **Next**.
-
-1. On the next screen, Step 2, enter a Stack such as `WildRydesAPI` and click **Next**.
+1. On the next screen, Step 2, confirm the stack name is  `WildRydesAPI` and click **Next**.
 
 1. On the Configure Stack Options page, accept all the defaults and click **Next**.
 
-1. Choose to **Acknwledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
+1. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
 
 1. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
 

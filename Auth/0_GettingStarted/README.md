@@ -1,59 +1,132 @@
-# Module 1: The first example module
+# Getting Started: Workshop Prerequisites and Setup
 
-This is an example module. The page title should include the module number and a short but descriptive title.
+This section outlines the prerequisites to complete the workshop and instructions for launching a Cloud9 IDE environment that you will use throughout the workshop.
 
-You should provide an introductory paragraph that sets some context for the use case to be covered. If possible this should tie into the Wild Rydes theme/company story.
+## Prerequisites
 
-You should also provide instructions here for launching a CloudFormation template that allows students to skip ahead to the next module. You should host your templates in local S3 buckets in each supported region and provide a table with links for launching the templates in each region:
+### AWS Account
 
+In order to complete this workshop, you'll need an AWS account and access to
+create and manage the AWS services that are used in this workshop, including Cloud9, Cognito, API Gateway, Lambda, and DynamoDB.
+
+The code and instructions in this workshop assume only one participant is using a given AWS account at a time. If you attempt sharing an account with another participant, you will encounter naming conflicts for certain resources. You can work around this by using distinct Regions, but the instructions do not provide details on the changes required to make this work.
+
+Please make sure not to use a production AWS environment/account for this workshop. It is recommended to instead use a development account which provides full access to the necessary services so that you do not run into permissions issues.
+
+### Region Selection
+
+Use a single region for the entirety of this workshop. This workshop supports three regions in North America, three regions in Europe, and three in Asia Pacific. Choose one region from the launch stack links below and continue to use that region for all of the Auth workshop activities.
+
+### AWS Cloud9 IDE
+
+[AWS Cloud9](https://aws.amazon.com/cloud9/) is a cloud-based integrated development environment (IDE) that lets
+you write, run, and debug your code with just a browser. It includes a code
+editor, debugger, and terminal. Cloud9 comes pre-packaged with essential tools
+for popular programming languages and the AWS Command Line Interface (CLI)
+pre-installed so you don’t need to install files or configure your laptop for
+this workshop. 
+
+In this workshop, you will use a Cloud9 environment which will have access to the same AWS resources as the user with which you logged into the AWS Management Console.
+
+## Cloud9 IDE Setup
+
+In this section you will launch a CloudFormation stack that will create a a new [Amazon VPC](https://aws.amazon.com/vpc/) environment and a [Cloud9 IDE](https://aws.amazon.com/cloud9/) Instance that you will use in the rest of the workshop.
 
 Region| Launch
 ------|-----
-US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml)
-US West (Oregon) | [![Launch Module 1 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=your-stack-name&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/WorkshopTemplate/1_ExampleTemplate/example.yaml)
+US East (N. Virginia) | [![Launch Cloud9 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+US East (Ohio) | [![Launch Cloud9 in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+US West (Oregon) | [![Launch Cloud9 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+EU (Frankfurt) | [![Launch Cloud9 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-eu-central-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+EU (Ireland) | [![Launch Cloud9 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-west-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+EU (London) | [![Launch Cloud9 in eu-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+Asia Pacific (Mumbai) | [![Launch Cloud9 in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+Asia Pacific (Singapore) | [![Launch Cloud9 in ap-southeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+Asia Pacific (Sydney) | [![Launch Cloud9 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
 
 <details>
-<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Click the **Launch Stack** link above for the region of your choice.
+1. Launch the CloudFormation stack from the links above, choosing the link appropriate for the region you selected for this workshop.
 
-1. Click **Next** on the Select Template page.
+1. On the next screen, Step 2, confirm the stack name is  `WildRydes-Cloud9` and click **Next**.
 
-1. Provide a globally unique name for the **Website Bucket Name** such as `wildrydes-yourname` and click **Next**.
-    ![Speficy Details Screenshot](../images/module1-cfn-specify-details.png)
+1. On the Configure Stack Options page, accept all the defaults and click **Next**.
 
-1. On the Options page, leave all the defaults and click **Next**.
+1. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
 
-1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
+1. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
 
-    This template uses a custom resource to copy the static website assets from a central S3 bucket into your own dedicated bucket. In order for the custom resource to write to the new bucket in your account, it must create an IAM role it can assume with those permissions.
+1. With the `WildRydes-Cloud9` stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Open that URL in a new browswer tab to load your IDE environment.
 
-1. Wait for the `wildrydes-webapp-1` stack to reach a status of `CREATE_COMPLETE`.
-
-1. With the `wildrydes-webapp-1` stack selected, click on the **Outputs** tab and click on the WebsiteURL link.
-
-1. Verify the Wild Rydes home page is loading properly and move on to the next module, [User Management](../2_UserManagement).
+![CloudFormation Outputs open Cloud9](../images/cloud9_cfn_outputs.png)
 
 </p></details>
 
+Once you have launched and navigated to your Cloud9 workspace URL shown in your CloudFormation stack outputs, you should have an IDE environment as shown below:
 
-## Solution Architecture
+![Cloud9 Initial Welcome Screen](../images/cloud9_initial_screen.png)
 
-Provide a description and architecture diagram for the solution that the students will build. Consider including a diagram and short description of the components that are created by the baseline CloudFormation template in addition to the final architecture so that students are clear on which components they will be responsible for building.
+You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running `aws sts get-caller-identity`.
 
-## Implementation Overview
+```
+aws sts get-caller-identity
+```
 
-This section should provide students with the high level steps required to complete the solution. It should enumerate all the components and major configuration tasks required, but should not get to the detail of providing step-by-step instructions for which console buttons to click, etc.
+You'll see output indicating your account and user information:
 
-Sample:
+```
+Admin:~/environment $ aws sts get-caller-identity
+```
+```
+{
+    "Account": "123456789012",
+    "UserId": "AKIAI44QH8DHBEXAMPLE",
+    "Arn": "arn:aws:iam::123456789012:user/Alice"
+}
+```
 
-The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
+Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be using it for most all activities.
 
-*Create an S3 Bucket* - Use the console or CLI to create an S3 bucket. If you'd like to use a custom domain to host the site make sure you name your bucket using the full domain name (e.g. wildrydesdemo.example.com). Read more about custom domain names for S3 buckets here.
+### Download Workshop Code
 
-*Upload content* - Copy the content from the example bucket, xyz. There is also a zip archive available at xyz that you can download locally and extract in order to upload the content via the console.
+1. Switch to the tab where you have your Cloud9 environment opened.
 
-*Add a bucket policy to allow public reads* - Bucket policies can be updated via the console or CLI. You can use the provided policy document or build your own. See the documentation for more information.
+1. Clone the workshop repository to your IDE environmen by running the following command in the Cloud9 terminal window:
 
-*Enable public web hosting*
+    ```console
+    git clone https://github.com/justonian/aws-serverless-workshops.git
+    ```
+
+### Initialize your developer workspace
+
+1. Run the following commands to upgrade your Node.js version to v10
+
+    ```console
+    nvm i 10
+    nvm alias default 10
+    ```
+
+2. Install the yarn package manager and website dependencies by running the following commands
+
+    ```console
+    npm install -g yarn
+    cd aws-serverless-workshops/Auth/website
+    yarn install
+    ```
+
+### Tips
+
+:bulb: Keep an open scratch pad in Cloud9 or a text editor on your local computer
+for notes.  When the step-by-step directions tell you to note something such as
+an ID or Amazon Resource Name (ARN), copy and paste that into the scratch pad.
+
+### Recap
+
+* Use a unique personal or development AWS Account
+* Use a single, consistent region throughout all modules of this Auth workshop
+* Keep your [AWS Cloud9 IDE](#aws-cloud9-ide) opened in a tab at all times
+
+### Next
+
+Once you have your Cloud9 workspace fully working, proceed to the first module, [User Authentication](../1_UserAuthentication).

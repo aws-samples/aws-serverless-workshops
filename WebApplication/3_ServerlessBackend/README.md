@@ -186,7 +186,7 @@ For this module you will test the function that you built using the AWS Lambda c
 ```JSON
 {
     "statusCode": 201,
-    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Rocinante\",\"Color\":\"Yellow\",\"Gender\":\"Female\"},\"Eta\":\"30 seconds\"}",
+    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Rocinante\",\"Color\":\"Yellow\",\"Gender\":\"Female\"},\"UnicornName\":\"Rocinante\",\"Eta\":\"30 seconds\",\"Rider\":\"the_username\"}",
     "headers": {
         "Access-Control-Allow-Origin": "*"
     }

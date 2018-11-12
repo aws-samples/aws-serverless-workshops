@@ -1,8 +1,7 @@
 # Module: Build a Multi-Region Serverless Application for Resilience and High Availability
 
-In this workshop you will use Amazon API Gateway, AWS Lambda and Amazon
-DynamoDB to build a Customer Ticketing application so we can provide a great
-experience to Wild Rydes users.
+In this workshop you will use Amazon API Gateway, AWS Lambda, Amazon
+DynamoDB and a variety of other AWS services to build a Customer Ticketing application so we can provide a great experience to Wild Rydes users.
 
 The Wild Rydes team wants this application to meet the following requirements:
 
@@ -27,7 +26,7 @@ The application will utilize three layers:
    Amazon API Gateway.
 3. A data layer storing customer tickets in DynamoDB.
 
-![Architecture diagram](images/architecture.png)
+![Architecture diagram](images/architecture_new.png)
 
 For the purposes of this workshop, our failover is focused on the path from
 our application (in this case, a web application) through API Gateway,
@@ -38,8 +37,7 @@ Replication](http://docs.aws.amazon.com/AmazonS3/latest/dev/crr.html).
 
 The backend components will be replicated to the second region so that we can
 failover in the event of a disaster. In addition, all data in DynamoDB will be
-replicated from the primary region to the secondary region ensuring that our
-application data will be available when we failover.
+replicated from the primary region to the secondary region using DynamoDB Global Tables ensuring that our application data will be available when we failover.
 
 A few additional components will be utilized to assist us including AWS
 Cognito to allow the application to authenticate users and authorize access to
@@ -61,9 +59,7 @@ region:
 * Primary: `eu-west-1` (Ireland)
 * Secondary: `ap-southeast-1` (Singapore)
 
-Using the two regions above for this workshop is mandatory.  We will start with
-`eu-west-1` (Ireland).  You will not deploy anything in `ap-southeast-1` (Singapore)
-until Module 3.
+Using the two regions above for this workshop is mandatory.  We will start with `eu-west-1` (Ireland).  You will not deploy anything in `ap-southeast-1` (Singapore) until Module 3.
 
 ### Modules
 
@@ -92,7 +88,7 @@ there may be unpredictable results or difficult to identify configuration issues
 You will also need to either purchase a domain, or repurpose an existing
 unused domain you already own.  You will need to delegate DNS to Route53 if
 the domain is not already acquired through AWS.  You may also need access to
-the email account associated with the domain name registration.
+the email account associated with the domain name registration  or to the DNS server assigend to the domain in order to prove you own the domain when creating SSL certiticates in Amazon Certificate Manager.
 
 ### Facebook Developer Account and App ID
 
@@ -104,32 +100,16 @@ do not start configuring anything else yet.
 You can sign up using [this link](https://developers.facebook.com/docs/apps/register/).
 
 Note that you will create the App ID later on in this guide using the
-website URL you will set up in Module 2.
+website URL you will set up in Module 2.  You may delete the Facebook account once you have completed the workshop.
 
 
-### AWS Command Line Interface
+### Amazon Cloud9
 
-To complete parts of this workshop you'll need the AWS Command Line Interface
-(CLI) installed on your local machine. Make sure you have the latest version
-installed.
+In order to remove as many dependencies as possible and not rely on the specific configuration of a workshop participant's Windows, Mac, or Linux workstation, we will be utilizing the Amazon Cloud 9 IDE.  This will ensure that you have everything you need in one place as you work your way through each module.
 
-If you are using the supplied EC2 AMI, this will already be done for you and
-there is no need to do anything else.  The rest of this section is only needed
-if you choose to use your own computer for the workshop modules.
+* Included in the Cloud9 IDE:  AWS CLI, Git, VI/VIM, Node.js, NPM, Python and anything else you might need to complete the workshop.
 
-Follow the [AWS CLI Getting Started
-guide](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) to
-install and configure the CLI on your machine.
 
-Please also configure an IAM user on the AWS account you intend to use with
-Programatic Access and run **aws configure** and supply the need Access Key
-and Secret Access Key.  We recommend that this user have Administrator Access
-to the account for the duration of the workshop.
-
-### A local environment with Git, Node.js and NPM
-
-Again, if you use the supplied EC2 AMI, you don't need to set any of this up - it
-has been done for you.
 
 [README_InstallDevDependencies](README_InstallDevDependencies.md).  Using the
 AMI is strongly suggested, but if you are an advanced user you may manually set

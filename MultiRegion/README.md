@@ -111,10 +111,7 @@ In order to remove as many dependencies as possible and not rely on the specific
 
 
 
-[README_InstallDevDependencies](README_InstallDevDependencies.md).  Using the
-AMI is strongly suggested, but if you are an advanced user you may manually set
-these up on your workstation - see README_InstallDevDependencies for more info.
-
+[README_InstallDevDependencies](README_InstallDevDependencies.md)  
 ### Browser
 
 We recommend you use the latest version of Chrome or Firefox when testing the

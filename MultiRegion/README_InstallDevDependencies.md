@@ -21,15 +21,19 @@ Make sure you are in `eu-west-1` region.
 
 ## Connect to the instance via the web console
 
-
+![Connect to Cloud9 IDE](images/cloud9_connect.png)
 
 ## Install the correct version of nvm  
 
 nvm install 8.12.0
 
+![Install NVM](images/install_nvm.png)
+
 ## Clone the workshop project
 
-git clone https://github.com/awslabs/aws-serverless-workshops.git  
+git clone https://github.com/awslabs/aws-serverless-workshops.git
+
+![Clone Repo](images/git_clone.png)
 
 (for workshop testers -  git clone https://github.com/juan4aws/aws-serverless-workshops)
 TODO: Remove before final commit

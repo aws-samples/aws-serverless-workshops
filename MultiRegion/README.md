@@ -1,7 +1,6 @@
 # Module: Build a Multi-Region Serverless Application for Resilience and High Availability
 
-In this workshop you will use Amazon API Gateway, AWS Lambda, Amazon
-DynamoDB and a variety of other AWS services to build a Customer Ticketing application so we can provide a great experience to Wild Rydes users.
+In this workshop you will use Amazon API Gateway, AWS Lambda, Amazon DynamoDB and a variety of other AWS services to build a Customer Ticketing application so we can provide a great experience to Wild Rydes users.
 
 The Wild Rydes team wants this application to meet the following requirements:
 
@@ -32,12 +31,12 @@ For the purposes of this workshop, our failover is focused on the path from
 our application (in this case, a web application) through API Gateway,
 Lambda and DynamoDB.  We do not address replication of the website UI layer
 itself to a second region, although this could be achieved using something
-like S3 [Cross Region
-Replication](http://docs.aws.amazon.com/AmazonS3/latest/dev/crr.html).
+like S3 [Cross Region Replication](http://docs.aws.amazon.com/AmazonS3/latest/dev/crr.html).
 
 The backend components will be replicated to the second region so that we can
 failover in the event of a disaster. In addition, all data in DynamoDB will be
-replicated from the primary region to the secondary region using DynamoDB Global Tables ensuring that our application data will be available when we failover.
+replicated from the primary region to the secondary region using DynamoDB Global
+Tables ensuring that our application data will be available when we failover.
 
 A few additional components will be utilized to assist us including AWS
 Cognito to allow the application to authenticate users and authorize access to
@@ -77,18 +76,24 @@ unless specifically called out)
 ### AWS Account
 
 In order to complete this workshop you'll need an AWS Account with access to
-create AWS IAM, S3, DynamoDB, Lambda and API Gateway. The code and
-instructions in this workshop assume only one student is using a given AWS
-account at a time. If you try sharing an account with another student, you'll
-run into naming conflicts for certain resources - we do not recommend this as
-there may be unpredictable results or difficult to identify configuration issues.
+create AWS IAM, EC2, Cognito, CloudFront, Cloud9, S3, DynamoDB, Lambda, and
+API Gateway.  The code and instructions in this workshop assume only one student
+is using a given AWS account at a time. If you try sharing an account with
+another student, you'll run into naming conflicts for certain resources - we
+do not recommend this as there may be unpredictable results or difficult to
+identify configuration issues.
 
-### Domain Name (this is covered in Module 3 - do not purchase one yet)
+### Domain Name (this is covered in Module 3)
 
 You will also need to either purchase a domain, or repurpose an existing
 unused domain you already own.  You will need to delegate DNS to Route53 if
 the domain is not already acquired through AWS.  You may also need access to
-the email account associated with the domain name registration  or to the DNS server assigend to the domain in order to prove you own the domain when creating SSL certiticates in Amazon Certificate Manager.
+the email account associated with the domain name registration or to the
+DNS server assigend to the domain in order to prove you own the domain when
+creating SSL certiticates in Amazon Certificate Manager.  
+  
+(re:Invent participants - please see the workshop team if you need to "borrow"
+a domain in order to complete the workshop)
 
 ### Facebook Developer Account and App ID
 
@@ -99,15 +104,20 @@ do not start configuring anything else yet.
 
 You can sign up using [this link](https://developers.facebook.com/docs/apps/register/).
 
-Note that you will create the App ID later on in this guide using the
-website URL you will set up in Module 2.  You may delete the Facebook account once you have completed the workshop.
+Note that you will create the App ID later on in this guide using the website
+URL you will set up in Module 2.  You may delete the Facebook account once you
+have completed the workshop.
 
 
 ### Amazon Cloud9
 
-In order to remove as many dependencies as possible and not rely on the specific configuration of a workshop participant's Windows, Mac, or Linux workstation, we will be utilizing the Amazon Cloud 9 IDE.  This will ensure that you have everything you need in one place as you work your way through each module.
+In order to remove as many dependencies as possible and not rely on the specific
+configuration of a workshop participant's Windows, Mac, or Linux workstation, we
+will be utilizing the Amazon Cloud 9 IDE.  This will ensure that you have everything
+you need in one place as you work your way through each module.
 
-* Included in the Cloud9 IDE:  AWS CLI, Git, VI/VIM, Node.js, NPM, Python and anything else you might need to complete the workshop.
+* Included in the Cloud9 IDE:  AWS CLI, Git, VI/VIM, Node.js, NPM, Python and
+anything else you might need to complete the workshop.
 
 
 

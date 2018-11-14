@@ -1,10 +1,10 @@
 # Module 2: Serverless API Authentication and Authorization
 
-In this module, you will add a serverless API backend to our Wild Rydes application leveraging [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/). You will then enable authentication and authorization on your API to secure the backend to only accept valid, authorized requests.
+In this module, you will add a serverless backend to our Wild Rydes application leveraging [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/). You will then enable authentication and authorization on your API to secure the backend to only accept valid, authorized requests.
 
 ## Solution Architecture
 
-Building on Module 1, this module will add a Serverless backend API built using Amazon API Gateway and AWS Lambda. For persistence, we will use Amazon DynamoDB as a NoSQL data store. All of the above services are serverless so you can seamlessly scale your application as your demands grow. After creating the API, we will integrate our client application to call it via the AWS Amplify library.
+Building on Module 1, this module will add a Serverless backend built using Amazon API Gateway and AWS Lambda. For persistence, we will use Amazon DynamoDB as a NoSQL data store. All of the above services are serverless so you can seamlessly scale your application as your demands grow. After creating the API, we will integrate our client application to call it via the AWS Amplify library.
 
 ![Module 2 architecture](../images/wildrydes-module2-architecture.png)
 
@@ -47,13 +47,13 @@ Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://d
 
 1. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
 
-1. With the `WildRydesAPI` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to the clipboard.
+1. With the `WildRydesAPI` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to your Cloud9 scratchpad editor tab.
 
 </p></details>
 
 ### 2. Integrate API into Wild Rydes application
 
-Now that you have created our Serverless backend API, you need to update your Wild Rydes web application to integrate with it. You will leverage the AWS Amplify client library to make API calls and inject security seamlessly to support your authentication and authorization scenarios.
+Now that you have created our Serverless API, you need to update your Wild Rydes web application to integrate with it. You will leverage the AWS Amplify client library to make API calls and inject security seamlessly to support your authentication and authorization scenarios.
 
 #### High-Level Instructions
 
@@ -62,9 +62,9 @@ First, expand your amplify-config.js file to store your new API Gateway endpoint
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-First, you need to update the `/website/src/amplify-config.js` file under the src directory to include your new API Gateway endpoint. Store the endpoint including the /prod at the end in the endpoint property under the `WildRydesAPI` setting.
+First, you need to update the `/website/src/amplify-config.js` file to include your new API Gateway endpoint. Store the endpoint including the /prod at the end in the endpoint property under the `WildRydesAPI` section.
 
-Note: Do not change the name `WildRydesAPI` in this file or later functionality in the workshop will not work. An example of the API configuration portion of the amplify-config file after updating the configuration properly is shown below:
+**Warning**: Do not change the name `WildRydesAPI` in this configuration file or later functionality in the workshop will not work. An example of the API configuration portion of the amplify-config file after updating the configuration properly is shown below:
 
 ```
   API: {
@@ -77,11 +77,11 @@ Note: Do not change the name `WildRydesAPI` in this file or later functionality 
     },
 ```
 
-Next, you need to enable the hasAPI method by uncommenting its code within MainApp.js under the pages folder.
+Next, you need to enable the hasAPI method by uncommenting its code within `/website/src/pages/MainApp.js`.
 
 ```
   hasApi() {
-    const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');                                                   
+    const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');
     return (typeof api !== 'undefined');
   }
 ```
@@ -107,11 +107,12 @@ Finally, within the same file, we will implement the API request for a ride as a
     return await API.post(apiName, apiPath, apiRequest);
   }
 ```
+
 </p></details>
 
 ### 3. Validate API functionality and integration with our Wild Rydes app
 
-Now that you've integrated code changes to call your new Serverless API, you should test the end-to-end user experience to ensure the application is working correctly. The backend API currently requires no authentication so any request will currently be accepted until we enable required authentication.
+Now that you've integrated code changes to call your new Serverless API, you should test the end-to-end user experience to ensure the application is working correctly. The API currently requires no authentication so any request will currently be accepted until we enable required authentication.
 
 #### High-Level Instructions
 
@@ -168,7 +169,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
     ![Test Authorizer screenshot](../images/apigateway-test-authorizer.png)
 
-1. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed.
+1. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed. Since this is the identity token, the user's attributes are encoded within the JWT as claims which can be read parsed programatically.
 
 #### Require Cognito authentication for API Gateway
 
@@ -180,7 +181,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Choose the pencil icon next to `Authorization` to edit the setting.
 
-1. Select your new Cognito Authorizer from the list of options presented.
+1. Select your new Cognito Authorizer from the list of options presented. **Note** If you don't see this option listed, click **Refresh** in the browser to force a reload of the API Gateway console then this authorizer option should appear.
 
 1. **Save** your selection by clicking the checkmark icon next to the drop down.
 

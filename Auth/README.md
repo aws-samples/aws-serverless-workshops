@@ -8,6 +8,14 @@ See the diagram below for a depiction of the complete architecture.
 
 ![Wild Rydes Web Application Architecture](images/wildrydes-complete-architecture.png)
 
-### Get Started
+## Modules
 
-Proceed to the Getting Started Module to begin the workshop. [Click here to get started](./0_GettingStarted).
+This workshop is broken up into multiple modules. Each module builds upon the previous module as you expand the Wild Rydes application. You must complete each module before proceeding to the next.
+
+1. [User Authentication](1_UserAuthentication)
+2. [Serverless Backend](2_ServerlessAPI)
+3. [IAM Authorization](3_IAMAuthorization)
+
+## Getting Started
+
+Proceed to the Getting Started module to begin the workshop. [Click here to get started](./0_GettingStarted).

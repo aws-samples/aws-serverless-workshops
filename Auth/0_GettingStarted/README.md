@@ -76,9 +76,6 @@ aws sts get-caller-identity
 You'll see output indicating your account and user information:
 
 ```
-Admin:~/environment $ aws sts get-caller-identity
-```
-```
 {
     "Account": "123456789012",
     "UserId": "AKIAI44QH8DHBEXAMPLE",
@@ -111,7 +108,7 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 
     ```console
     npm install -g yarn
-    cd aws-serverless-workshops/Auth/website
+    cd ~/environment/aws-serverless-workshops/Auth/website/
     yarn install
     ```
 

@@ -80,7 +80,7 @@ class MainApp extends React.Component {
       });
       const data = await this.getData(this.state.pin);
       console.log(data);
-      updates.push([ `Your unicorn, ${data.Unicorn.Name} will be with you in ${data.Eta} seconds` ]);
+      updates.push([ `Your unicorn, ${data.Unicorn.Name} will be with you in ${data.Eta}` ]);
       this.setState({ updates });
 
       // Let's fake the arrival

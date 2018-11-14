@@ -119,7 +119,7 @@ you need in one place as you work your way through each module.
 * Included in the Cloud9 IDE:  AWS CLI, Git, VI/VIM, Node.js, NPM, Python and
 anything else you might need to complete the workshop.
 
-
+### Get Set Up! Follow this link to get things going....  
 
 [README_InstallDevDependencies](README_InstallDevDependencies.md)  
 ### Browser
@@ -132,4 +132,3 @@ web application UI.
 You will need a local text editor for making minor updates to configuration
 files.  Good options are Atom, Sublime, VI/VIM, TextEdit or NotePad
 
-We have already installed vi/vim on the provided EC2 AMI.

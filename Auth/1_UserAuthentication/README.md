@@ -117,7 +117,7 @@ Use the AWS console to create an Amazon Cognito User Pool requiring e-mail verif
 
 ![Cloud9 Create Scratchpad Tab](../images/cloud9-createscratchpadtab.png)
 
-1. Back in the AWS Cognito console, copy your new User pool's Pool Id into the scratchpad tab.
+1. Back in the AWS Cognito console, copy your new **User Pool Id** into the scratchpad tab.
 
 1. Choose **App clients** heading under **General settings** within the Cognito navigation panel.
 
@@ -190,51 +190,51 @@ const isAuthenticated = () => Amplify.Auth.user !== null;
 
 1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the `/website/src/auth/SignUp.js` file with the code below then save your changes.
 
-    ```
-        async onSubmitForm(e) {
-            e.preventDefault();
-        try {
-        const params = {
-            username: this.state.email.replace(/[@.]/g, '|'),
-            password: this.state.password,
-            attributes: {
-            email: this.state.email,
-            phone_number: this.state.phone
-            },
-            validationData: []
-        };
-        const data = await Auth.signUp(params);
-        console.log(data);
+```
+async onSubmitForm(e) {
+e.preventDefault();
+try {
+    const params = {
+        username: this.state.email.replace(/[@.]/g, '|'),
+        password: this.state.password,
+        attributes: {
+        email: this.state.email,
+        phone_number: this.state.phone
+        },
+        validationData: []
+    };
+    const data = await Auth.signUp(params);
+    console.log(data);
+    this.setState({ stage: 1 });
+} catch (err) {
+    if (err.message === "User already exists") {
+        // Setting state to allow user to proceed to enter verification code
         this.setState({ stage: 1 });
-        } catch (err) {
-        if (err.message === "User already exists") {
-            // Setting state to allow user to proceed to enter verification code
-            this.setState({ stage: 1 });
-        } else {
-            if (err.message.indexOf("phone number format") >= 0) {err.message = "Invalid phone number format. Must include country code. Example: +14252345678"}
-            alert(err.message);
-            console.error("Exception from Auth.signUp: ", err);
-            this.setState({ stage: 0, email: '', password: '', confirm: '' });
-        }
-        }
-    }
-
-    async onSubmitVerification(e) {
-        e.preventDefault();
-        try {
-        const data = await Auth.confirmSignUp(
-            this.state.email.replace(/[@.]/g, '|'),
-            this.state.code
-        );
-        console.log(data);
-        // Go to the sign in page
-        this.props.history.replace('/signin');
-        } catch (err) {
+    } else {
+        if (err.message.indexOf("phone number format") >= 0) {err.message = "Invalid phone number format. Must include country code. Example: +14252345678"}
         alert(err.message);
-        console.error("Exception from Auth.confirmSignUp: ", err);
-        }
+        console.error("Exception from Auth.signUp: ", err);
+        this.setState({ stage: 0, email: '', password: '', confirm: '' });
     }
-    ```
+}
+}
+
+async onSubmitVerification(e) {
+    e.preventDefault();
+    try {
+    const data = await Auth.confirmSignUp(
+        this.state.email.replace(/[@.]/g, '|'),
+        this.state.code
+    );
+    console.log(data);
+    // Go to the sign in page
+    this.props.history.replace('/signin');
+    } catch (err) {
+    alert(err.message);
+    console.error("Exception from Auth.confirmSignUp: ", err);
+    }
+}
+```
 
 1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the `/website/src/auth/SignIn.js` file with the code below then save your changes.
 

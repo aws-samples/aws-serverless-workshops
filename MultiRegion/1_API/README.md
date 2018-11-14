@@ -22,9 +22,6 @@ The following objects will be used as you create the resources in the console fo
   from DynamoDB using the `tickets-get.js` and `health-check.js` Lambda functions
 * `wild-rydes-dynamodb-post.json` - This is the policy needed in order to write
   to DynamoDB using the `tickets-post.js` Lambda function
-* `wild-rydes-dynamodb-replication.json` - This is the policy needed in order
-  to use DynambDB Streams to replicate to a second region using the `tickets-replicate.js`
-  Lambda function
 * `health-check.js` - Lambda function for checking the status of our application health
 * `tickets-get.js` - Lambda function triggered by API Gateway to put application data
   into DynamoDB
@@ -70,7 +67,6 @@ following two additional polices that will be needed during the workshop.
 
 **Download policy**: [TicketPostPolicy](wild-rydes-dynamodb-post.json)
 
-**Download policy**: [TicketReplicatePolicy](wild-rydes-dynamodb-replication.json)
 
 Next you will create the three roles that correspond to the three polices that
 were just created. Each of these roles will be used by a different Lambda

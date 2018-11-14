@@ -25,8 +25,6 @@ The following objects will be used as you create the resources in the console fo
 * `wild-rydes-dynamodb-replication.json` - This is the policy needed in order
   to use DynambDB Streams to replicate to a second region using the `tickets-replicate.js`
   Lambda function
-* `tickets-replicate.js` Lambda function to replicate new DynamoDB records to our
-  failover region
 * `health-check.js` - Lambda function for checking the status of our application health
 * `tickets-get.js` - Lambda function triggered by API Gateway to put application data
   into DynamoDB
@@ -122,9 +120,9 @@ That’s all that is required for now to set up the table.
 
 ![DymamoDB Create SXRTickets](images/dynamodb-create-sxrtickets.png)
 
-## 3. Create Four Lambda functions
+## 3. Create Three Lambda functions
 
-Next, you will create four Lambda functions. First, navigate to **Lambda** in
+Next, you will create three Lambda functions. First, navigate to **Lambda** in
 the console (again ensuring you are still in the correct region) and click
 **Create a function**
 
@@ -137,7 +135,7 @@ Next select “Author from scratch”
 Name your first function `TicketGetFunction` and assign the role with the **matching**
 name you created previously to it and click **Create function**
 
-On the next screen, ensure the runtime is `Node.js 6.10`.  If it isn’t, simply
+On the next screen, ensure the runtime is `Node.js 8.10`.  If it isn’t, simply
 select it.
 
 For the Handler, enter `tickets-get.handler` and then paste the following code into the
@@ -162,8 +160,6 @@ information needed for all four functions.  Note that you have already done the 
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
 | [TicketGetFunction](tickets-get.js)  | tickets-get.handler   | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 | [TicketPostFunction](tickets-post.js)  | tickets-post.handler   | TicketPostRole           | TABLE_NAME    | SXRTickets     |
-| [TicketReplicateFunction](tickets-replicate.js)         | tickets-replicate.handler          | TicketReplicateRole | TABLE_NAME    | SXRTickets     |
-| TicketReplicateFunction |                       |                                 | TARGET_REGION | ap-southeast-1 |
 | [SXRHealthCheckFunction](health-check.js) | health-check.handler  | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 
 Note that `TicketReplicateFunction` has two variables - make sure you enter both.

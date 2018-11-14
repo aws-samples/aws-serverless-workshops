@@ -19,7 +19,11 @@ The Cloud9 service allows you to complete the entire workshop using just your we
 
 Make sure you are in `eu-west-1` region.
 
-## Instal corect version of nvm  
+## Connect to the instance via the web console
+
+
+
+## Install the correct version of nvm  
 
 nvm install 8.12.0
 

@@ -110,7 +110,7 @@ body{
   background-repeat: no-repeat;
   background-position: center bottom;
 
-  font-family: "fairplex-wide";
+  font-family: serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -199,7 +199,7 @@ input[type=text], input[type=password], input[type=email] {
     background: transparent;
     outline: none;
 
-    font-family: "fairplex-wide";
+    font-family: serif;
     font-size: 24px;
     opacity: 1;
     color: white;
@@ -229,7 +229,7 @@ input[type=submit] {
     cursor: pointer;
     display: block;
 
-    font-family: "fairplex-wide";
+    font-family: serif;
     font-size: 24px;
     opacity: 1;
     font-weight: 700;
@@ -250,7 +250,7 @@ input[type=submit]:hover {
   font-style: italic;
   opacity: .4;
 
-  font-family: "fairplex-wide";
+  font-family: serif;
   color: white;
   font-weight: 400;
 }

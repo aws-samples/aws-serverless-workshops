@@ -173,6 +173,8 @@ You will import the AWS Amplify library into the project then add sign-up and si
 - `userPoolId`
 - `userPoolWebClientId`
 
+1. Be sure to **save your changes** to the config file so your new Amplify  settings take effect. Any unsaved changes to a file are indicated by a dot icon in the tab of the editor so if you see a gray dot next to the file name, you may have forgotten to save.
+
 1. Next, edit the `website/src/index.js` file to add the following lines to the **top of the file (but below all the other imports)** to configure Amplify then save your changes:
 
 ```
@@ -311,7 +313,7 @@ Sign-up as a new user then sign-in with that user. Provide a valid phone number 
 
 1. Assuming no errors were encountered, you will be redirected to the Sign-in screen. Now, re-enter the same e-mail address and password you chose at registration.
 
-1. If prompted for an MFA code, check your phone entered previously for an SMS message. Enter your **SMS MFA code** at the verification code prompt then choose **Verify**. If not prompted for an MFA code, you may skip this step.
+1. If prompted for an MFA code, check your phone entered previously for an SMS message. Enter your **SMS MFA code** at the verification code prompt then choose **Verify**. If not prompted for an MFA code, skip this step.
 
 1. If the page then loads a map, sign-in was successful and you have successfully integrated Cognito for app authentication. 
 

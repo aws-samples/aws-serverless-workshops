@@ -47,7 +47,7 @@ You should now be able to build the UI when you get to that step in the second
 module, as well as deploy CloudFormation templates, and do any other workshop
 activities that require command line activities.
 
-One you have the instance up and running and you have connected to it, go aheadand start the workshop.
+One you have the instance up and running and you have connected to it, you can move forward.
 
 ## Completion
 

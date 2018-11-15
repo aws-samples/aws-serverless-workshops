@@ -20,26 +20,26 @@ You will be creating your Serverless API built with Amazon API Gateway, AWS Lamb
 
 #### High-Level Instructions
 
-Create a new WildRydes Serverless Backend stack by launching a CloudFormation stack based on the **ServerlessBackend.yaml** file in the module 2 folder. Name the stack `WildRydesAPI`.
+Create a new WildRydes Serverless Backend stack by launching a CloudFormation stack based on the **ServerlessBackend.yaml** file in the module 2 folder. Name the stack `WildRydesBackend`.
 
 Region| Launch
 ------|-----
-US East (N. Virginia) | [![Launch Serverless Backend in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-US East (Ohio) | [![Launch Serverless Backend in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-US West (Oregon) | [![Launch Serverless Backend in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-EU (Frankfurt) | [![Launch Serverless Backend in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-eu-central-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-EU (Ireland) | [![Launch Serverless Backend in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-EU (London) | [![Launch Serverless Backend in eu-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-Asia Pacific (Mumbai) | [![Launch Serverless Backend in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-Asia Pacific (Singapore) | [![Launch Serverless Backend in ap-southeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
-Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=WildRydesAPI&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+US East (N. Virginia) | [![Launch Serverless Backend in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+US East (Ohio) | [![Launch Serverless Backend in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+US West (Oregon) | [![Launch Serverless Backend in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+EU (Frankfurt) | [![Launch Serverless Backend in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-eu-central-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+EU (Ireland) | [![Launch Serverless Backend in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+EU (London) | [![Launch Serverless Backend in eu-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+Asia Pacific (Mumbai) | [![Launch Serverless Backend in ap-south-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-ap-south-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+Asia Pacific (Singapore) | [![Launch Serverless Backend in ap-southeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
+Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-2/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
 1. Launch the CloudFormation stack from the links above, choosing the link appropriate for the region you selected for this workshop. **Be sure to select the same region as you were using previously in this workshop to launch this CloudFormation stack**
 
-1. On the next screen, Step 2, confirm the stack name is  `WildRydesAPI` and click **Next**.
+1. On the next screen, Step 2, confirm the stack name is  `WildRydesBackend` and click **Next**.
 
 1. On the Configure Stack Options page, accept all the defaults and click **Next**.
 
@@ -47,7 +47,7 @@ Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://d
 
 1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon to see progress updates.
 
-1. With the `WildRydesAPI` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to your Cloud9 scratchpad editor tab.
+1. With the `WildRydesBackend` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to your Cloud9 scratchpad editor tab.
 
 </p></details>
 
@@ -137,6 +137,8 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Under your newly created API, choose **Authorizers**.
 
+    ![API Authorizer Settings](../images/apigateway-authorizer-settings.png)
+
 1. Chose **Create New Authorizer**.
 
 1. Enter `WildRydes` for the Authorizer name.
@@ -175,6 +177,8 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed. Since this is the identity token, the user's attributes are encoded within the JWT as claims which can be read parsed programatically.
 
+
+
 #### Require Cognito authentication for API Gateway
 
 1. Browse to `Resources` while within your Wild Rydes API in the API Gateway console.
@@ -183,11 +187,17 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Choose `Method Request`
 
+    ![Method Request Selection](../images/apigateway-method-request-settings.png)
+
 1. Choose the pencil icon next to `Authorization` to edit the setting.
 
 1. Select your new Cognito Authorizer from the list of options presented. **Note** If you don't see this option listed, **Reload** the browser page then this authorizer option should appear in the drop-down list.
 
+  ![API Gateway Authorizer Selection](../images/apigateway-authorizer-selection.png)
+
 1. **Save** your selection by clicking the checkmark icon next to the drop down.
+
+  ![API Gateway Authorizer Confirmation](../images/apigateway-authorizer-confirmation.png)
 
 1. Next, choose the **Actions** button at the top of the resources list.
 

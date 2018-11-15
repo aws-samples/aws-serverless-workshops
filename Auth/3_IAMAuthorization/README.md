@@ -73,7 +73,7 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 
 1. Choose the **JSON** tab to allow you to free-form edit the new policy.
 
-1. Paste the following IAM policy statements for S3 access. After pasting, you will need to go replace the bucket name listed in all caps with your bucket name (a total of 4 times). Be sure to leave the parts of the resource names before and after the replacement value alone and not accidentally modify them.
+1. Paste the following IAM policy statements for S3 access. After pasting, you will need to go **replace the bucket name** listed in all caps with your bucket name (a total of 4 times). Be sure to leave the parts of the resource names before and after the replacement value alone and not accidentally modify them.
 
 ```
 {
@@ -121,9 +121,11 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
     ]
 }
 ```
-1. Choose **Review policy**
+1. Choose **Review policy**.
 
-1. After reviewing for accuracy and any syntax errors, choose **Create policy.**
+1. Name the policy `WildRydes-S3Access`.
+
+1. After reviewing for accuracy and any syntax errors, choose **Create policy**.
 
 </p></details>
 
@@ -133,7 +135,7 @@ Now that your IAM policies and Amplify SDK are initialized, you will be able to 
 
 #### High-Level Instructions
 
-Authenticate in the Wild Rydes app if you're not already, then browse to the /profile path. You will see that your Cognito User Pool attributes are being read dynamically by the system. Next you will add an image picker and rendering UI component to personalize the rider experience so unicorns know who to look for when picking up passengers. Go to the Profile page and implement a functional image picker.
+Authenticate in the Wild Rydes app if you're not already logged in, then browse to the /profile path. You will see that your Cognito User Pool attributes are being read dynamically by the system. Next you will add an image picker and rendering UI component to personalize the rider experience so unicorns know who to look for when picking up passengers. Go to the Profile page and implement a functional image picker.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -152,7 +154,7 @@ Authenticate in the Wild Rydes app if you're not already, then browse to the /pr
 
 ### 4. Store profile picture links in Cognito User Pools profile
 
-With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your profile and your profile picture will be lost. To fix this, you will leverage a custom Cognito User Pools user attribute called `custom:profile_picture` to persist the S3 object key so the same image can be loaded upon each login or to the unicorns when you request a ride. You added this attribute when you first created your User Pool so only need to integrate our application's code to use it.
+With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your profile and your profile picture will be lost. To fix this, you will leverage a Cognito User Pools user attribute called `picture` to persist the S3 object key so the same image can be loaded upon each login or to the unicorns when you request a ride.
 
 #### High-Level Instructions
 
@@ -173,7 +175,7 @@ async onImageLoad(url) {
     console.log('Profile Picture URL:', url);
     try {
         let result = await Auth.updateUserAttributes(this.state.user, {
-            'custom:profile_picture': this.state.image_key
+            'picture': this.state.image_key
         });
         console.log(result);
     } catch (ex) {

@@ -130,8 +130,8 @@ Next select “Author from scratch”
 Name your first function `TicketGetFunction` and assign the role with the **matching**
 name you created previously to it and click **Create function**
 
-On the next screen, ensure the runtime is `Node.js 8.10`.  If it isn’t, simply
-select it.
+On the next screen, change the runtime to `Node.js 6.10`.  ('Node.js 8.10' should work but it
+has not been tested extensively)
 
 For the Handler, enter `tickets-get.handler` and then paste the following code into the
 editor you see on your screen:
@@ -147,7 +147,7 @@ your function will not work - case matters*
 
 Once everything is set correctly, click **Save** near the top center of the screen.
 
-We still need to create two more lambda functions.  All of them use `Node.js 8.10`
+We still need to create two more lambda functions.  All of them use `Node.js 6.10`
 as the runtime.  Repeat the same steps you used above.  The table below provides the
 information needed for all three functions.  Note that you have already done the first one.
 

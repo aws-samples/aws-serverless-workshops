@@ -70,10 +70,14 @@ And then set *index.html* as your root document
 
 Once done, go ahead and create the distribution and move on to the next step.  We are creating the distribution now in order to give CloudFront time to fully deploy while you continue on with with the workshop.
 
+Make note of your CloudFront domain name - you will need it to set up your FaceBook application
+
+![CloudFront Domain](images/cloudfront-domain.png)
+
 ## 3. Configure Federated Identities with Cognito
 
 TODO: Facebook UI has changed; Screenshots need updating.
-TODO: Instructions/SCreenshots pointing to S3 static website URL need to be updated to a CloudFront URL.
+
 
 Now we'll set up our login with Facebook capability. You will need to set up a
 Facebook Web Application so that your riders can log in
@@ -88,7 +92,7 @@ Click on **Add a New App** in the upper right corner
 
 Name your App anything you would like, and then click **Create App ID**
 
-Once you have created your App, you will need to select *Settings* from the left menu
+Once you have created your App, you will need to select *Settings* and *Basic* from the left menu
 
 ![FB Select Settings](images/facebook-select-settings.png)
 

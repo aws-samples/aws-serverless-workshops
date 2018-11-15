@@ -127,8 +127,4 @@ anything else you might need to complete the workshop.
 We recommend you use the latest version of Chrome or Firefox when testing the
 web application UI.
 
-### Text Editor
-
-You will need a local text editor for making minor updates to configuration
-files.  Good options are Atom, Sublime, VI/VIM, TextEdit or NotePad
 

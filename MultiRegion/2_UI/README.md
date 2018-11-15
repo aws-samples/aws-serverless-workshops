@@ -109,11 +109,6 @@ and then select **Save Changes** from the lower right
 
 ![FB enter URL and save](images/facebook-website-url.png)
 
-Finally, again on the left side menu, choose **App Review** and make your Facebook
-application public and select a category (Education might be a good choice)
-
-![FB Make Public](images/facebook-make-public.png)
-
 Once you are done with this, make note of the Facebook App ID - you will need this
 in the next step as well as when you build the website code in the next section.
 

@@ -52,7 +52,7 @@ Navidate to CloudFront in the AWS Console and click on ***Create Distribution***
 
 ![Create Distribution](images/create-distribution.png)  
 
-Select ***Web*** as your content distribution method and click *Getting Started*
+Select ***Web*** as your content distribution method and click *Get Started*
 
 ![Choose Web Distribuion](images/choose-web-distribution.png)
 

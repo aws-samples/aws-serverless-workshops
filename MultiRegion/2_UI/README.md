@@ -138,44 +138,26 @@ App ID and Cognito Identity Pool ID so it can authenticate our users. See the
 Prerequisites section at the beginning of this guide if you have not already
 setup your Facebook Developer account and App ID.
 
-All of these attributes must be configured in
-`2_UI/src/environments/environment.ts`. Open up your favorite text editor and edit
-this file before moving on. Please be sure to address all of the parameters the file
-requires or you will fail.  If you used the console instructions to deploy Module 1,
-then you can obtain the API Gateway Endpoint using the same method you used when you
-tested at the end of the previous module.  Ensure you do *NOT* append `ticket` to
-the end of the URL but make sure you do have a `/` at the end like the comments in
-the file request.
+All of these attributes must be configured in `2_UI/src/environments/environment.ts`.
+Use the file editor built into Cloud9 (you will see it on the left side of the web console).
+Please be sure to address all of the parameters the file requires or things wil fail.
+If you used the console instructions to deploy Module 1, then you can obtain the API 
+Gateway Endpoint using the same method you used when youtested at the end of the previous
+module.  Ensure you do *NOT* append `ticket` to the end of the URL but make sure you do
+have a `/` at the end like the comments in the file request.
 
 You can obtain the Cognito Identity Pool ID from the *Outputs* of the CloudfFormation
 template you deployed in Module 2_UI.  Ensure that you copy the entire string,
 including the AWS region (in this case, it should be `eu-west-1`)
 
-You will need Node Package Manager (NPM) installed on your local machine
-(check out the [workshop prerequisites](../README.md#prerequisites)) in order
-to build the application. You can follow instructions [Dev Instance
-Setup](../README_InstallDevDependencies.md) to set up a dev instance. Once you
-have created your dev instance build your project by executing the following:
+Since you are using Cloud9 for your IDE, node.js is instaled.  Ensrue you followed all
+of the setup instructions in the pre-requisites and updated nvm to 8.12.0 using***nvm install 8.12.0***  
 
-- navigate to the root folder of the ui project, i.e. 2_UI.
+- navigate to the root folder of the ui project, i.e. 2_UI.  
 
-TODO: UPDATE YOUR C9 envrionment before running "npm run build" **** 
-- C9 has node.js installed. 
-- We need to use v8.12. Before running "npm install" 
-- run the following: `nvm use lts/carbon` 
 - run `node --version` and make sure output is v8.12.0
-- NOTE: not sure how to persist this update when C9 environment is restarted.
-
-TODO END
 
 - run `npm install` to install project dependencies
-
-TODO: 
-- QUIRKY BUG ALERT (not sure why but only happens in C9)
-- open "/aws-serverless-workshops/MultiRegion/2_UI/node_modules/@types/node/index.d.ts"
-- comment out line 256: //declare const module: NodeModule;
-
-TODO END
 
 - build your app with by running `npm run build`
 

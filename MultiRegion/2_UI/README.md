@@ -151,7 +151,7 @@ template you deployed in Module 2_UI.  Ensure that you copy the entire string,
 including the AWS region (in this case, it should be `eu-west-1`)
 
 Since you are using Cloud9 for your IDE, node.js is instaled.  Ensrue you followed all
-of the setup instructions in the pre-requisites and updated nvm to 8.12.0 using***nvm install 8.12.0***  
+of the setup instructions in the pre-requisites and updated nvm to 8.12.0 using ***nvm install 8.12.0***  
 
 - navigate to the root folder of the ui project, i.e. 2_UI.  
 

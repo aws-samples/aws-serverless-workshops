@@ -12,9 +12,9 @@ See the diagram below for a depiction of the complete architecture.
 
 This workshop is broken up into multiple modules. Each module builds upon the previous module as you expand the Wild Rydes application. You must complete each module before proceeding to the next.
 
-1. [User Authentication](1_UserAuthentication)
-2. [Serverless Backend](2_ServerlessAPI)
-3. [IAM Authorization](3_IAMAuthorization)
+1. User Authentication
+2. Serverless Backend
+3. IAM Authorization
 
 ## Getting Started
 

@@ -37,7 +37,7 @@ Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://d
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Launch the CloudFormation stack from the links above, choosing the link appropriate for the region you selected for this workshop.
+1. Launch the CloudFormation stack from the links above, choosing the link appropriate for the region you selected for this workshop. **Be sure to select the same region as you were using previously in this workshop to launch this CloudFormation stack**
 
 1. On the next screen, Step 2, confirm the stack name is  `WildRydesAPI` and click **Next**.
 
@@ -45,7 +45,7 @@ Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://d
 
 1. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
 
-1. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
+1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon to see progress updates.
 
 1. With the `WildRydesAPI` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to your Cloud9 scratchpad editor tab.
 
@@ -131,6 +131,10 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
+1. In the AWS Management Console choose **Services** then select **API Gateway** under Security, Identity, and Compliance.
+
+1. Choose the API named `WildRydes`.
+
 1. Under your newly created API, choose **Authorizers**.
 
 1. Chose **Create New Authorizer**.
@@ -155,11 +159,11 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. In a different browser tab, return to your Wild Rydes application and  sign-in if you're not already signed in. After signing in, you should be redirected to `/app`
 
-1. Open your browser's developer console and browse to the console log output section.
+1. Open your [browser's developer console](https://support.airtable.com/hc/en-us/articles/232313848-How-to-open-the-developer-console) and browse to the console log output section.
 
 1. Look for the console log to say `Cognito User Identity Token:` and a long string beneath the message.
 
-1. Copy the long string to your clipboard without the intro message.
+1. Copy the long string to your clipboard without the intro message. You will need to copy across multiple lines to fully copy the token in its entirety.
 
 1. Go back to previous tab where you have just finished creating the Authorizer.
 
@@ -181,7 +185,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Choose the pencil icon next to `Authorization` to edit the setting.
 
-1. Select your new Cognito Authorizer from the list of options presented. **Note** If you don't see this option listed, click **Refresh** in the browser to force a reload of the API Gateway console then this authorizer option should appear.
+1. Select your new Cognito Authorizer from the list of options presented. **Note** If you don't see this option listed, **Reload** the browser page then this authorizer option should appear in the drop-down list.
 
 1. **Save** your selection by clicking the checkmark icon next to the drop down.
 
@@ -199,7 +203,9 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Return to your Wild Rydes app, sign in if necessary, and attempt to request a ride.
 
-1. You should receive an "Error finding unicorn." If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
+1. You should receive an "Error finding unicorn". If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
+
+  **Note** If you at first still that you requests go through without any errors, try requesting a ride again in 30-60 seconds to allow the API Gateway changes to fully propagate.
 
 1. Go back to Cloud9 and open the `/website/src/pages/MainApp.js` files.
 
@@ -209,7 +215,6 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 ```
   async getData(pin) {
-    Amplify.Logger.LOG_LEVEL = 'DEBUG';
     const apiRequest = {
       body: {
         PickupLocation: {
@@ -232,5 +237,5 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 1. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an INFO message which includes the API Request details once expanded, including the full headers and body of the request.
 
 </p></details>
-
+<br>
 If the API now invokes correctly and application funcions as expected again, you can move on to the next module, [IAM-based Authorization](../3_IAMAuthorization).

@@ -55,7 +55,7 @@ Asia Pacific (Sydney) | [![Launch Cloud9 in ap-southeast-2](http://docs.aws.amaz
 
 1. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
 
-1. It will take a few minutes for the Stack to create. Wait until the stack is fully launched and shows a Status of **CREATE_COMPLETE**.
+1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon to see progress updates.
 
 1. With the `WildRydes-Cloud9` stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Open that URL in a new browswer tab to load your IDE environment.
 

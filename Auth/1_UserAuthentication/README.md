@@ -313,7 +313,7 @@ Sign-up as a new user then sign-in with that user. Provide a valid phone number 
 
 1. Assuming no errors were encountered, you will be redirected to the Sign-in screen. Now, re-enter the same e-mail address and password you chose at registration.
 
-1. If prompted for an MFA code, check your phone entered previously for an SMS message. Enter your **SMS MFA code** at the verification code prompt then choose **Verify**. If not prompted for an MFA code, skip this step.
+1. **If prompted for an MFA code**, check your phone entered previously for an SMS message. Enter your **SMS MFA code** at the verification code prompt then choose **Verify**. If not prompted for an MFA code, skip this step.
 
 1. If the page then loads a map, sign-in was successful and you have successfully integrated Cognito for app authentication. 
 

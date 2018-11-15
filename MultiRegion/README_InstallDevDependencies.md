@@ -38,7 +38,6 @@ git clone https://github.com/awslabs/aws-serverless-workshops.git
 (for workshop testers -  git clone https://github.com/juan4aws/aws-serverless-workshops)
 TODO: Remove before final commit
 
-
 This will pull down all of the files and directories you will need to complete
 the workshop and keep them on the local file system.
 

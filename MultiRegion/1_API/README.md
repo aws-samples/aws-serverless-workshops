@@ -1,7 +1,7 @@
 # Building the Wild Rydes Backend Components Layer
 
 In this module, you will deploy backend application components to AWS. These
-backend components include several AWS Lambda functions, two API Gateway Endpoints and two
+backend components include several AWS Lambda functions, two API Gateway Endpoints and 
 DynamoDB tables. You will also create the IAM polices and roles required by
 these components.
 
@@ -22,11 +22,6 @@ The following objects will be used as you create the resources in the console fo
   from DynamoDB using the `tickets-get.js` and `health-check.js` Lambda functions
 * `wild-rydes-dynamodb-post.json` - This is the policy needed in order to write
   to DynamoDB using the `tickets-post.js` Lambda function
-* `wild-rydes-dynamodb-replication.json` - This is the policy needed in order
-  to use DynambDB Streams to replicate to a second region using the `tickets-replicate.js`
-  Lambda function
-* `tickets-replicate.js` Lambda function to replicate new DynamoDB records to our
-  failover region
 * `health-check.js` - Lambda function for checking the status of our application health
 * `tickets-get.js` - Lambda function triggered by API Gateway to put application data
   into DynamoDB
@@ -67,12 +62,11 @@ Name your policy `TicketGetPolicy` and click **Create policy**
 
 ![Create Policy Editor](images/create-policy-2.png)
 
-Now repeat these exact same steps two more times in order to create the
-following two additional polices that will be needed during the workshop.
+Now repeat these exact same steps one more times in order to create the
+following additional policy that will be needed during the workshop.
 
 **Download policy**: [TicketPostPolicy](wild-rydes-dynamodb-post.json)
 
-**Download policy**: [TicketReplicatePolicy](wild-rydes-dynamodb-replication.json)
 
 Next you will create the three roles that correspond to the three polices that
 were just created. Each of these roles will be used by a different Lambda
@@ -98,9 +92,8 @@ On the next screen, enter `TicketGetRole` for the Role Name and select **Create 
 
 ![Choose Role Final](images/create-role-final.png)
 
-Repeat the same steps two more times, this time creating the role for
-`TicketPostRole` and `TicketReplicateRole` and attaching
-the corresponding policy you created earlier.
+Repeat the same steps one more time, this time creating the role for
+`TicketPostRole` and attaching the corresponding policy you created earlier.
 
 ## 2. Create the DynamoDB Table
 
@@ -122,9 +115,9 @@ That’s all that is required for now to set up the table.
 
 ![DymamoDB Create SXRTickets](images/dynamodb-create-sxrtickets.png)
 
-## 3. Create Four Lambda functions
+## 3. Create Three Lambda functions
 
-Next, you will create four Lambda functions. First, navigate to **Lambda** in
+Next, you will create three Lambda functions. First, navigate to **Lambda** in
 the console (again ensuring you are still in the correct region) and click
 **Create a function**
 
@@ -137,8 +130,8 @@ Next select “Author from scratch”
 Name your first function `TicketGetFunction` and assign the role with the **matching**
 name you created previously to it and click **Create function**
 
-On the next screen, ensure the runtime is `Node.js 6.10`.  If it isn’t, simply
-select it.
+On the next screen, change the runtime to `Node.js 6.10`.  ('Node.js 8.10' should work but it
+has not been tested extensively)
 
 For the Handler, enter `tickets-get.handler` and then paste the following code into the
 editor you see on your screen:
@@ -154,21 +147,16 @@ your function will not work - case matters*
 
 Once everything is set correctly, click **Save** near the top center of the screen.
 
-We still need to create three more lambda functions.  All of them use `Node.js 6.10`
+We still need to create two more lambda functions.  All of them use `Node.js 6.10`
 as the runtime.  Repeat the same steps you used above.  The table below provides the
-information needed for all four functions.  Note that you have already done the first one.
+information needed for all three functions.  Note that you have already done the first one.
 
 | Function Name          | Handler Name          | Execution Role                  | Env Var Key   | Env Var Value  |
 | ---------------------  | --------------------- | ------------------------------- | ------------- | -------------- |
 | [TicketGetFunction](tickets-get.js)  | tickets-get.handler   | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 | [TicketPostFunction](tickets-post.js)  | tickets-post.handler   | TicketPostRole           | TABLE_NAME    | SXRTickets     |
-| [TicketReplicateFunction](tickets-replicate.js)         | tickets-replicate.handler          | TicketReplicateRole | TABLE_NAME    | SXRTickets     |
-| TicketReplicateFunction |                       |                                 | TARGET_REGION | ap-southeast-1 |
 | [SXRHealthCheckFunction](health-check.js) | health-check.handler  | TicketGetRole           | TABLE_NAME    | SXRTickets     |
 
-Note that `TicketReplicateFunction` has two variables - make sure you enter both.
-Also note that proper capitalization matters with `Environment Variables`.  Improper
-case will cause issues later in the workshop.
 
 ## 4. Create API Gateway Endpoint
 
@@ -287,8 +275,6 @@ files within. You will see several files - here are descriptions of each:
   to retrieve tickets from DynamoDB
 * `tickets-post.js` – This is the Node.js code required by our second Lambda function
   to create new tickets in DynamoDB
-* `tickets-replicate.js` – This is the Node.js code that replicates dynamodb data to
-  another region.
 * `health-check.js` - Lambda function for checking the status of our application health
 
 

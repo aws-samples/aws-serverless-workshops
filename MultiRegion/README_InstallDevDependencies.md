@@ -38,7 +38,6 @@ git clone https://github.com/awslabs/aws-serverless-workshops.git
 (for workshop testers -  git clone https://github.com/juan4aws/aws-serverless-workshops)
 TODO: Remove before final commit
 
-
 This will pull down all of the files and directories you will need to complete
 the workshop and keep them on the local file system.
 
@@ -48,7 +47,7 @@ You should now be able to build the UI when you get to that step in the second
 module, as well as deploy CloudFormation templates, and do any other workshop
 activities that require command line activities.
 
-One you have the instance up and running and you have connected to it, go aheadand start the workshop.
+One you have the instance up and running and you have connected to it, you can move forward.
 
 ## Completion
 

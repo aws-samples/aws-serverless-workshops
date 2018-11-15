@@ -46,7 +46,7 @@ TODO: instructions to point CloudFront to S3 (UI) origin (Note: UI code not yet 
 
 ## 2. Set Up A CloudFront Distribution and Point at the S3 Bucket
 
-We need to set up a CloudFront distribution and point it at your S3 bucket which will host your website's static UI.  We need to use a CloudFront distribution due to some restrictions that FaceBook has put in place with when in developer mode.
+We need to set up a CloudFront distribution and point it at your S3 bucket (this is one of the outputs from the CloudFormation you just ran) which will host your website's static UI.  We need to use a CloudFront distribution due to some restrictions that FaceBook has put in place with when in developer mode.
 
 Navidate to CloudFront in the AWS Console and click on ***Create Distribution***
 

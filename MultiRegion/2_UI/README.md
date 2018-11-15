@@ -6,7 +6,7 @@ region.  We don't attempt to address failing over a full web application in this
 workshop.  Our failover efforts are focused on the backend API components deployed
 in the first module.
 
-Navigate to the `2_UI/cfn` folder in your local Git repository.
+Navigate to the `2_UI/cfn` folder in your local Git repository using your ***Cloud9 IDE***
 
 ## 1. Create the AWS Cognito Identity Pool and S3 hosting bucket
 

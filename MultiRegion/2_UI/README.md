@@ -68,7 +68,7 @@ And then set *index.html* as your root document
 
 ![Set Cloudfront Root](images/set-cloudfront-root.png)
 
-Once done, go ahead and create the distrivution and move on to the next step.  We are creating the distribution now in order to give CloudFront time to fully deploy while you continue on with with the workshop.
+Once done, go ahead and create the distribution and move on to the next step.  We are creating the distribution now in order to give CloudFront time to fully deploy while you continue on with with the workshop.
 
 ## 3. Configure Federated Identities with Cognito
 

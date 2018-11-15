@@ -20,7 +20,7 @@ You will be creating your Serverless API built with Amazon API Gateway, AWS Lamb
 
 #### High-Level Instructions
 
-Create a new WildRydes Serverless Backend stack by launching a CloudFormation stack based on the **ServerlessAPI.yaml** file in the module 2 folder. Name the stack `WildRydesAPI`.
+Create a new WildRydes Serverless Backend stack by launching a CloudFormation stack based on the **ServerlessBackend.yaml** file in the module 2 folder. Name the stack `WildRydesAPI`.
 
 Region| Launch
 ------|-----

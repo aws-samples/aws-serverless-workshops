@@ -52,6 +52,8 @@ Navidate to CloudFront in the AWS Console and click on ***Create Distribution***
 
 ![Create Distribution](images/create-distribution.png)  
 
+Select ***Web*** as your content distribution method and click *Getting Started*
+
 ![Choose Web Distribuion](images/choose-web-distribution.png)
 
 Select the S3 Static Website Bucket as your ***Origin Domain Name*** - it should automatically be in the list of possible origins

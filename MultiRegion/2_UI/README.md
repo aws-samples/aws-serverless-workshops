@@ -96,7 +96,7 @@ Once you have created your App, you will need to select *Settings* and *Basic* f
 
 ![FB Select Settings](images/facebook-select-settings.png)
 
-Next choose **Add Platform** from the bottom of the Settings screenshot
+Paste the CloudFront Domain name into the *App Domain* field, nand then choose **Add Platform** from the bottom of the Settings screen (this is very far down the screen).
 
 ![FB Select Add Platform](images/facebook-add-platform.png)
 
@@ -104,16 +104,10 @@ Choose **Website** from the list of choices that comes up
 
 ![FB Select Website](images/facebook-select-website.png)
 
-Then enter the S3 website URL (this is one of the CloudFormation outputs from the
-template you deployed in earlier steps in this module) into the *Site URL* dialog
+Then enter the CloudFront Domain again into the *Site URL* dialog
 and then select **Save Changes** from the lower right
 
 ![FB enter URL and save](images/facebook-website-url.png)
-
-Finally, again on the left side menu, choose **App Review** and make your Facebook
-application public and select a category (Education might be a good choice)
-
-![FB Make Public](images/facebook-make-public.png)
 
 Once you are done with this, make note of the Facebook App ID - you will need this
 in the next step as well as when you build the website code in the next section.

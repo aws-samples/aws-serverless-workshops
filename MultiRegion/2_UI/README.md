@@ -19,8 +19,8 @@ no package step is needed.
 For time reasons we are not proving console instructions for this section.  Do
 feel free to review the CloudFormation template to see what is being created.
 
-You can go ahead and deploy this template in the primary region using the `aws
-cloudformation deploy` CLI command as before.
+*From your Cloud9 CLI* go ahead and deploy this template in the primary region using the `aws
+cloudformation deploy` CLI command as before.  
 
 For the Ireland region, the full command will look like:
 
@@ -44,7 +44,29 @@ TODO: instructions to point CloudFront to S3 (UI) origin (Note: UI code not yet 
 
 </details>
 
-## 2. Configure Federated Identities with Cognito
+## 2. Set Up A CloudFront Distribution and Point at the S3 Bucket
+
+We need to set up a CloudFront distribution and point it at your S3 bucket which will host your website's static UI.  We need to use a CloudFront distribution due to some restrictions that FaceBook has put in place with when in developer mode.
+
+Navidate to CloudFront in the AWS Console and click on ***Create Distribution***
+
+![Create Distribution](images/create-distribution.png)
+
+Select the S3 Static Website Bucket as your ***Origin Domain Name*** - it should automatically be in the list of possible origins
+
+![Configure Origin](images/configure-origin.png)
+
+Set Defult and Max TTLs to 120 Seconds
+
+![Set TTLs](images/set-cloudfront-ttl.png)
+
+And then set *index.html* as your root document
+
+![Set Cloudfront Root](images/set-cloudfront-root.png)
+
+Once done, go ahead and create the distrivution and move on to the next step.  We are creating the distribution now in order to give CloudFront time to fully deploy while you continue on with with the workshop.
+
+## 3. Configure Federated Identities with Cognito
 
 TODO: Facebook UI has changed; Screenshots need updating.
 TODO: Instructions/SCreenshots pointing to S3 static website URL need to be updated to a CloudFront URL.

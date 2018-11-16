@@ -55,73 +55,73 @@ Use the AWS console to create an Amazon Cognito User Pool requiring e-mail verif
 
 1. In the AWS Management Console choose **Services** then select **Cognito** under Security, Identity, and Compliance.
 
-1. Choose your desired **Region** in top-right of the console if not already chosen.
+2. Choose your desired **Region** in top-right of the console if not already chosen.
 
-1. Choose **Manage User Pools**.
+3. Choose **Manage User Pools**.
 
-1. Choose **Create a User Pool** in the top right of the console.
+4. Choose **Create a User Pool** in the top right of the console.
 
-1. Provide a name for your user pool such as `WildRydes`.
+5. Provide a name for your user pool such as `WildRydes`.
 
-1. Choose **Step through settings** to configure our user pool options.
+6. Choose **Step through settings** to configure our user pool options.
 
-![User Pool Setup Step 1](../images/cognito-userpool-setup-step1.png)
+	![User Pool Setup Step 1](../images/cognito-userpool-setup-step1.png)
 
-1. Leave **Username** selected, but additionally select *Also allow sign in with verified email address* and *Also allow sign in with verified phone number*.
+7. Leave **Username** selected, but additionally select *Also allow sign in with verified email address* and *Also allow sign in with verified phone number*.
 
-1. Leave all other attribute defaults as-is.
+8. Leave all other attribute defaults as-is.
 
-1. Choose **Next**.
+9. Choose **Next**.
 
-![User Pool Setup Step 2](../images/cognito-userpool-setup-step2.png)
+	![User Pool Setup Step 2](../images/cognito-userpool-setup-step2.png)
 
-1. Leave password policies and user sign up settings set to default settings and choose **Next**.
+10. Leave password policies and user sign up settings set to default settings and choose **Next**.
 
-![User Pool Setup Step 3](../images/cognito-userpool-setup-step3.png)
+	![User Pool Setup Step 3](../images/cognito-userpool-setup-step3.png)
 
-1. Leave MFA set to Off for this workshop.
+11. Leave MFA set to Off for this workshop.
 
-1. Leave the default setting selected of requiring e-mail verification.
+12. Leave the default setting selected of requiring e-mail verification.
 
-1. Choose **Save changes**.
+13. Choose **Save changes**.
 
-![User Pool Setup Step 4](../images/cognito-userpool-setup-step4.png)
+	![User Pool Setup Step 4](../images/cognito-userpool-setup-step4.png)
 
-1. Leave all message defaults as-is and choose **Next step**.
+14. Leave all message defaults as-is and choose **Next step**.
 
-1. Skip adding any tags and click **Next step**.
+15. Skip adding any tags and click **Next step**.
 
-1. Choose **No** to not remember your user's devices then click **Next step**.
+16. Choose **No** to not remember your user's devices then click **Next step**.
 
-![User Pool Setup Step 5](../images/cognito-userpool-setup-step5.png)
+	![User Pool Setup Step 5](../images/cognito-userpool-setup-step5.png)
 
-1. Choose **Add an app client**.
+17. Choose **Add an app client**.
 
-1. Input `wildrydes-web-app` as the app client name.
+18. Input `wildrydes-web-app` as the app client name.
 
-1. **Uncheck** `Generate client secret`. Client secrets are used for server-side applications authentication and are not needed for JavaScript applications.
+19. **Uncheck** `Generate client secret`. Client secrets are used for server-side applications authentication and are not needed for JavaScript applications.
 
-1. Choose **Create app client**.
+20. Choose **Create app client**.
 
-1. Choose **Next step**.
+21. Choose **Next step**.
 
-![User Pool Setup Step 6](../images/cognito-userpool-setup-step6.png)
+	![User Pool Setup Step 6](../images/cognito-userpool-setup-step6.png)
 
-1. Leave all Lambda trigger settings set to **none**. These trigger settings allow you to extend the out-of-the-box sign-up and sign-in flows with your own custom logic, but we will not be using this feature in this workshop.
+22. Leave all Lambda trigger settings set to **none**. These trigger settings allow you to extend the out-of-the-box sign-up and sign-in flows with your own custom logic, but we will not be using this feature in this workshop.
 
-1. Choose **Next step**.
+23. Choose **Next step**.
 
-1. Review summary of all provided settings for accuracy then choose **Create pool**.
+24. Review summary of all provided settings for accuracy then choose **Create pool**.
 
-1. Within Cloud9, click the **+** symbol and choose to create **New File**. You will use this new blank editor tab as a scratchpad for various resource names and variables.
+25. Within Cloud9, click the **+** symbol and choose to create **New File**. You will use this new blank editor tab as a scratchpad for various resource names and variables.
 
-![Cloud9 Create Scratchpad Tab](../images/cloud9-createscratchpadtab.png)
+	![Cloud9 Create Scratchpad Tab](../images/cloud9-createscratchpadtab.png)
 
-1. Back in the AWS Cognito console, copy your new **User Pool Id** into the scratchpad tab.
+26. Back in the AWS Cognito console, copy your new **User Pool Id** into the scratchpad tab.
 
-1. Choose **App clients** heading under **General settings** within the Cognito navigation panel.
+27. Choose **App clients** heading under **General settings** within the Cognito navigation panel.
 
-1. Copy the **App client ID** over to your scrathpad. You will be using both of these values later on.
+28. Copy the **App client ID** over to your scrathpad. You will be using both of these values later on.
 
 </p></details>
 
@@ -144,13 +144,15 @@ You will need to create a Cognito Identity Pool linked to the Cognito User Pool 
 
 1. Under Authentication providers, within the Cognito tab, input the User Pool ID and App client Id you copied previously to the scratchpad tab.
 
-![Identity Pool Setup Step 1](../images/cognito-identitypool-setup-step1.png)
+	![Identity Pool Setup Step 1](../images/cognito-identitypool-setup-step1.png)
 
 1. Choose **Create Pool**.
 
 1. Choose **Allow** to allow Cognito Identity Pools to setup IAM roles for your application's users. Permissions and settings of these roles can be customized later.
 
-1. Copy/paste the **Identity Pool ID**, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab.
+1. Copy/paste the **Identity Pool ID**, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab. Make sure not to copy the quotation marks!
+
+	![Copy Identity Pool Id to Cloud9 scratchpad](../images/cognito-identitypool-copyId.png)
 
 </p></details>
 
@@ -168,75 +170,75 @@ You will import the AWS Amplify library into the project then add sign-up and si
 1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating `/website/src/amplify-config.js`.
 
 1. After opening this file in your Cloud9 IDE editor, find an replace the following parameters with values from your previous scratchpad:
-- `identityPoolId`
-- `region`
-- `userPoolId`
-- `userPoolWebClientId`
+	- `identityPoolId`
+	- `region`
+	- `userPoolId`
+	- `userPoolWebClientId`
 
 1. Be sure to **save your changes** to the config file so your new Amplify  settings take effect. Any unsaved changes to a file are indicated by a dot icon in the tab of the editor so if you see a gray dot next to the file name, you may have forgotten to save.
 
 1. Next, edit the `website/src/index.js` file to add the following lines to the **top of the file (but below all the other imports)** to configure Amplify then save your changes:
 
-```
-import Amplify from 'aws-amplify';
-import awsConfig from './amplify-config';
-
-Amplify.configure(awsConfig);
-```
+	```
+	import Amplify from 'aws-amplify';
+	import awsConfig from './amplify-config';
+	
+	Amplify.configure(awsConfig);
+	```
 
 1. Next, we need to ensure our application evaluates the user's authenticated state. In the same `/website/src/index.js` file, find and replace the **isAuthenticated method** with the code below to use our Amplify library's built-in user session to check this status.
 
-```
-const isAuthenticated = () => Amplify.Auth.user !== null;
-```
+	```
+	const isAuthenticated = () => Amplify.Auth.user !== null;
+	```
 
 1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the `/website/src/auth/SignUp.js` file with the code below then save your changes.
 
-```
-async onSubmitForm(e) {
-e.preventDefault();
-try {
-    const params = {
-        username: this.state.email.replace(/[@.]/g, '|'),
-        password: this.state.password,
-        attributes: {
-        email: this.state.email,
-        phone_number: this.state.phone
-        },
-        validationData: []
-    };
-    const data = await Auth.signUp(params);
-    console.log(data);
-    this.setState({ stage: 1 });
-} catch (err) {
-    if (err.message === "User already exists") {
-        // Setting state to allow user to proceed to enter verification code
-        this.setState({ stage: 1 });
-    } else {
-        if (err.message.indexOf("phone number format") >= 0) {err.message = "Invalid phone number format. Must include country code. Example: +14252345678"}
-        alert(err.message);
-        console.error("Exception from Auth.signUp: ", err);
-        this.setState({ stage: 0, email: '', password: '', confirm: '' });
-    }
-}
-}
-
-async onSubmitVerification(e) {
-    e.preventDefault();
-    try {
-    const data = await Auth.confirmSignUp(
-        this.state.email.replace(/[@.]/g, '|'),
-        this.state.code
-    );
-    console.log(data);
-    // Go to the sign in page
-    this.props.history.replace('/signin');
-    } catch (err) {
-    alert(err.message);
-    console.error("Exception from Auth.confirmSignUp: ", err);
-    }
-}
-```
+	```
+	async onSubmitForm(e) {
+	e.preventDefault();
+	try {
+	    const params = {
+	        username: this.state.email.replace(/[@.]/g, '|'),
+	        password: this.state.password,
+	        attributes: {
+	        email: this.state.email,
+	        phone_number: this.state.phone
+	        },
+	        validationData: []
+	    };
+	    const data = await Auth.signUp(params);
+	    console.log(data);
+	    this.setState({ stage: 1 });
+	} catch (err) {
+	    if (err.message === "User already exists") {
+	        // Setting state to allow user to proceed to enter verification code
+	        this.setState({ stage: 1 });
+	    } else {
+	        if (err.message.indexOf("phone number format") >= 0) {err.message = "Invalid phone number format. Must include country code. Example: +14252345678"}
+	        alert(err.message);
+	        console.error("Exception from Auth.signUp: ", err);
+	        this.setState({ stage: 0, email: '', password: '', confirm: '' });
+	    }
+	}
+	}
+	
+	async onSubmitVerification(e) {
+	    e.preventDefault();
+	    try {
+	    const data = await Auth.confirmSignUp(
+	        this.state.email.replace(/[@.]/g, '|'),
+	        this.state.code
+	    );
+	    console.log(data);
+	    // Go to the sign in page
+	    this.props.history.replace('/signin');
+	    } catch (err) {
+	    alert(err.message);
+	    console.error("Exception from Auth.confirmSignUp: ", err);
+	    }
+	}
+	```
 
 1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the `/website/src/auth/SignIn.js` file with the code below then save your changes.
 

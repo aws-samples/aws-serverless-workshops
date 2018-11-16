@@ -20,18 +20,17 @@ This workshop is broken up into multiple modules. Each module builds upon the pr
 
 ### Estimated Workshop Costs
 
-This workshop depends on several AWS services listed below. The usage of these services in the workshop should incur very minimal (<$1) to no cost, as usage should remain within free-tier limits.
+This workshop leverages several Serverless AWS services. The usage of these services in the workshop should remain within the free tier limits.
 
 * Lambda 
 * API Gateway 
 * Cognito User Pools
 * DynamoDB
-* [Cloud9 IDE](https://aws.amazon.com/cloud9/pricing/)
 
-As of Nov 2018, pricing for a a t2.small Cloud9 instances is $0.0232/hour. The workshop should not take more than 2 hours to complete. Total costs for the duration of this 2-3 workshop this workshop will likely not exceed $3.00 USD
+This workshop also makes use of a [Cloud9 IDE](https://aws.amazon.com/cloud9/pricing/). While Cloud9 is free, you will incur usage costs for the EC2 Instance that Cloud9 is deployed onto. As of November 2018, pricing for a a t2.micro Cloud9 instances is $0.0116 per Hour in the US East N. Virginia (us-east-1) region. The workshop should not take more than 2 hours to complete. Total costs for the duration of this workshop will likely not exceed $1.00 USD.
 
 ## Getting Started
 
-Before you begin, make sure you have already completed the steps in the [Getting Started Module](./0_GettingStarted).
+Before you begin, make sure you have completed the steps in the [Getting Started Module](./0_GettingStarted).
 
 Once you have completed those steps, you may proceed to [Module 1 - User Authentication](./1_UserAuthentication).

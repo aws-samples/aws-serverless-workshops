@@ -10,24 +10,24 @@ See the diagram below for a depiction of the complete architecture.
 
 ## Modules
 
-This workshop is broken up into multiple modules. Each module builds upon the previous module as you expand the Wild Rydes application. You must complete each module before proceeding to the next.
+This workshop is split into multiple modules. Each module builds upon the previous module as you expand the Wild Rydes application. You must complete each module before proceeding to the next.
 
-1. **User Authentication** - In this module you will create a Cognito User Pool for user authentication, and you will integrate it with a pre-existing WildRydes React JS Web Application. You will also configure Cognito Identity Pools, which provides the ability to assume an Identity and Access Management (IAM) role from within the application.
+1. **User Authentication** - In this module, you will create a Cognito User Pool for identity managementa nd user authentication and will integrate it with a pre-existing WildRydes React JS Web Application. You will also configure Cognito Identity Pools, which provides the ability to assume an Identity and Access Management (IAM) role from within an application.
 
 2. **Serverless Backend** - In this module, you will add a serverless backend to our Wild Rydes application leveraging API Gateway and Lambda. You will then enable authentication and authorization on your API to secure the backend to only accept valid, authorized requests.
 
-3. **IAM Authorization** - In this module, you will expand your Wild Rydes application by enabling profile management and profile photo management capabilities. Amazon Cognito will be used to store your user's profile information and custom attributes whereas Amazon S3 will store your user's profile pictures, with a link to the photo only being stored in the user's profile directly.
+3. **IAM Authorization** - In this module, you will expand your Wild Rydes application by enabling profile management and profile photo management capabilities. Amazon Cognito will be used to store your user's profile information and attributes whereas Amazon S3 will store your user's profile pictures, with a link to the photo stored in the user's profile information.
 
 ### Estimated Workshop Costs
 
 This workshop leverages several Serverless AWS services. The usage of these services in the workshop should remain within the free tier limits.
 
-* Lambda 
-* API Gateway 
-* Cognito User Pools
-* DynamoDB
+- [Amazon Cognito](https://aws.amazon.com/cognito/)
+- [Amazon API Gateway](https://aws.amazon.com/api-gateway/)
+- [Amazon DynamoDB](https://aws.amazon.com/dynamodb/)
+- [AWS Lambda](https://aws.amazon.com/lambda/) 
 
-This workshop also makes use of a [Cloud9 IDE](https://aws.amazon.com/cloud9/pricing/). While Cloud9 is free, you will incur usage costs for the EC2 Instance that Cloud9 is deployed onto. As of November 2018, pricing for a a t2.micro Cloud9 instances is $0.0116 per Hour in the US East N. Virginia (us-east-1) region. The workshop should not take more than 2 hours to complete. Total costs for the duration of this workshop will likely not exceed $1.00 USD.
+This workshop also makes use of a [Cloud9 developer environment](https://aws.amazon.com/cloud9/pricing/). While Cloud9 is a free service, you will incur usage costs for the EC2 instance that Cloud9 is deployed on. As of November 2018, pricing for a a t2.micro Cloud9 instance is $0.0116 per hour in the US East N. Virginia (us-east-1) region. Total costs for the duration of this workshop should not likely exceed $1.00 USD.
 
 ## Getting Started
 

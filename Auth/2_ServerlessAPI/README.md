@@ -244,4 +244,5 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 </p></details>
 <br>
+
 If the API now invokes correctly and application funcions as expected again, you can move on to the next module, [IAM-based Authorization](../3_IAMAuthorization).

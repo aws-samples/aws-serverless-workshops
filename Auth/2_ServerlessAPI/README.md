@@ -39,15 +39,15 @@ Asia Pacific (Sydney) | [![Launch Serverless Backend in ap-southeast-2](http://d
 
 1. Launch the CloudFormation stack from the links above, choosing the link appropriate for the region you selected for this workshop. **Be sure to select the same region as you were using previously in this workshop to launch this CloudFormation stack**
 
-1. On the next screen, Step 2, confirm the stack name is  `WildRydesBackend` and click **Next**.
+2. On the next screen, Step 2, confirm the stack name is  `WildRydesBackend` and click **Next**.
 
-1. On the Configure Stack Options page, accept all the defaults and click **Next**.
+3. On the Configure Stack Options page, accept all the defaults and click **Next**.
 
-1. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
+4. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
 
-1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon to see progress updates.
+5. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon to see progress updates.
 
-1. With the `WildRydesBackend` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to your Cloud9 scratchpad editor tab.
+6. With the `WildRydesBackend` stack selected, click on the **Outputs** tab and copy the value shown for the `WildRydesApiInvokeUrl` to your Cloud9 scratchpad editor tab.
 
 </p></details>
 
@@ -62,51 +62,51 @@ First, expand your amplify-config.js file to store your new API Gateway endpoint
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-First, you need to update the `/website/src/amplify-config.js` file to include your new API Gateway endpoint. Store the endpoint including the /prod at the end in the endpoint property under the `WildRydesAPI` section.
+1. First, you need to update the `/website/src/amplify-config.js` file to include your new API Gateway endpoint. Store the endpoint including the /prod at the end in the endpoint property under the `WildRydesAPI` section.
 
-**Warning**: Do not change the name `WildRydesAPI` in this configuration file or later functionality in the workshop will not work. An example of the API configuration portion of the amplify-config file after updating the configuration properly is shown below:
+	**Warning**: Do not change the name `WildRydesAPI` in this configuration file or later functionality in the workshop will not work. An example of the API configuration portion of the amplify-config file after updating the configuration properly is shown below:
+	
+	```
+	  API: {
+	        endpoints: [
+	            {
+	                name: 'WildRydesAPI',
+	                endpoint: 'https://1ngrgqjt6c.execute-api.us-east-1.amazonaws.com/prod'
+	            }
+	        ]
+	    },
+	```
 
-```
-  API: {
-        endpoints: [
-            {
-                name: 'WildRydesAPI',
-                endpoint: 'https://1ngrgqjt6c.execute-api.us-east-1.amazonaws.com/prod'
-            }
-        ]
-    },
-```
+2. Next, you need to enable the hasAPI method by uncommenting its code within `/website/src/pages/MainApp.js`.
 
-Next, you need to enable the hasAPI method by uncommenting its code within `/website/src/pages/MainApp.js`.
+	```
+	  hasApi() {
+	    const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');
+	    return (typeof api !== 'undefined');
+	  }
+	```
 
-```
-  hasApi() {
-    const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');
-    return (typeof api !== 'undefined');
-  }
-```
+3. Finally, within the same file, we will implement the API request for a ride as a POST request to our API which sends a body containing the requested latitude and longitude as the pickup location. Update the getData() method to be as follows:
 
-Finally, within the same file, we will implement the API request for a ride as a POST request to our API which sends a body containing the requested latitude and longitude as the pickup location. Update the getData() method to be as follows:
-
-```
-  async getData(pin) {
-    Amplify.Logger.LOG_LEVEL = 'DEBUG';
-    const apiRequest = {
-      body: {
-        PickupLocation: {
-          Longitude: pin.longitude,
-          Latitude: pin.latitude
-        }
-      },
-      headers: {
-        'Authorization': '', // To be updated
-        'Content-Type': 'application/json'
-      }
-    };
-    logger.info('API Request:', apiRequest);
-    return await API.post(apiName, apiPath, apiRequest);
-  }
-```
+	```
+	  async getData(pin) {
+	    Amplify.Logger.LOG_LEVEL = 'DEBUG';
+	    const apiRequest = {
+	      body: {
+	        PickupLocation: {
+	          Longitude: pin.longitude,
+	          Latitude: pin.latitude
+	        }
+	      },
+	      headers: {
+	        'Authorization': '', // To be updated
+	        'Content-Type': 'application/json'
+	      }
+	    };
+	    logger.info('API Request:', apiRequest);
+	    return await API.post(apiName, apiPath, apiRequest);
+	  }
+	```
 
 </p></details>
 
@@ -133,118 +133,114 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. In the AWS Management Console choose **Services** then select **API Gateway** under Security, Identity, and Compliance.
 
-1. Choose the API named `WildRydes`.
+2. Choose the API named `WildRydes`.
 
-1. Under your newly created API, choose **Authorizers**.
+3. Under your newly created API, choose **Authorizers**.
 
     ![API Authorizer Settings](../images/apigateway-authorizer-settings.png)
 
-1. Chose **Create New Authorizer**.
+4. Chose **Create New Authorizer**.
 
-1. Enter `WildRydes` for the Authorizer name.
+5. Enter `WildRydes` for the Authorizer name.
 
-1. Select **Cognito** for the type.
+6. Select **Cognito** for the type.
 
-1. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in the last module (by default the current region should be selected).
+7. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in the last module (by default the current region should be selected).
 
-1. Enter `WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
+8. Enter `WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
 
-1. Enter `Authorization` for the **Token Source**.
+9. Enter `Authorization` for the **Token Source**.
 
-1. Leave `Token Validation` **blank** without editing.
+10. Leave `Token Validation` **blank** without editing.
 
-1. Choose **Create**.
+11. Choose **Create**.
 
     ![Create user pool authorizer screenshot](../images/create-user-pool-authorizer.png)
 
-#### Verify your authorizer configuration
+12. **Verify your authorizer configuration**
 
-1. In a different browser tab, return to your Wild Rydes application and  sign-in if you're not already signed in. After signing in, you should be redirected to `/app`
+	In a different browser tab, return to your Wild Rydes application and  sign-in if you're not already signed in. After signing in, you should be redirected to `/app`. Open your [browser's developer console](https://support.airtable.com/hc/en-us/articles/232313848-How-to-open-the-developer-console) and browse to the console log output section.
 
-1. Open your [browser's developer console](https://support.airtable.com/hc/en-us/articles/232313848-How-to-open-the-developer-console) and browse to the console log output section.
+13. Look for the console log to say `Cognito User Identity Token:` and a long string beneath the message.
 
-1. Look for the console log to say `Cognito User Identity Token:` and a long string beneath the message.
+14. Copy the long string to your clipboard without the intro message. You will need to copy across multiple lines to fully copy the token in its entirety.
 
-1. Copy the long string to your clipboard without the intro message. You will need to copy across multiple lines to fully copy the token in its entirety.
+15. Go back to previous tab where you have just finished creating the Authorizer.
 
-1. Go back to previous tab where you have just finished creating the Authorizer.
+16. Click **Test** at the bottom of the card for the authorizer.
 
-1. Click **Test** at the bottom of the card for the authorizer.
-
-1. Paste the auth token into the **Authorization Token** field in the popup dialog.
+17. Paste the auth token into the **Authorization Token** field in the popup dialog.
 
     ![Test Authorizer screenshot](../images/apigateway-test-authorizer.png)
 
-1. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed. Since this is the identity token, the user's attributes are encoded within the JWT as claims which can be read parsed programatically.
+18. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed. Since this is the identity token, the user's attributes are encoded within the JWT as claims which can be read parsed programatically. 
 
+19. **Require Cognito authentication for API Gateway**
 
+	Browse to `Resources` while within your Wild Rydes API in the API Gateway console.
 
-#### Require Cognito authentication for API Gateway
+20. Select the `POST` method under the `/ride` resource path.
 
-1. Browse to `Resources` while within your Wild Rydes API in the API Gateway console.
-
-1. Select the `POST` method under the `/ride` resource path.
-
-1. Choose `Method Request`
+21. Choose `Method Request`
 
     ![Method Request Selection](../images/apigateway-method-request-settings.png)
 
-1. Choose the pencil icon next to `Authorization` to edit the setting.
+22. Choose the pencil icon next to `Authorization` to edit the setting.
 
-1. Select your new Cognito Authorizer from the list of options presented. **Note** If you don't see this option listed, **Reload** the browser page then this authorizer option should appear in the drop-down list.
+23. Select your new Cognito Authorizer from the list of options presented. **Note** If you don't see this option listed, **Reload** the browser page then this authorizer option should appear in the drop-down list.
 
   ![API Gateway Authorizer Selection](../images/apigateway-authorizer-selection.png)
 
-1. **Save** your selection by clicking the checkmark icon next to the drop down.
+24. **Save** your selection by clicking the checkmark icon next to the drop down.
 
   ![API Gateway Authorizer Confirmation](../images/apigateway-authorizer-confirmation.png)
 
-1. Next, choose the **Actions** button at the top of the resources list.
+25. Next, choose the **Actions** button at the top of the resources list.
 
-1. Choose **Deploy API** from the list of options presented.
+26. Choose **Deploy API** from the list of options presented.
 
-1. For deployment stage, select `prod` then click **Deploy**.
+27. For deployment stage, select `prod` then click **Deploy**.
 
-1. You've now successfully deployed your new authentication integration to your API's production environment.
+28. You've now successfully deployed your new authentication integration to your API's production environment.
 
-#### Configure your Wild Rydes web app to authenticate API requests
+29. **Configure your Wild Rydes web app to authenticate API requests**
 
-1. Now that you've deployed the new authorizer configuration to production, all API requests must be authenticated to be processed.
+	Now that you've deployed the new authorizer configuration to production, all API requests must be authenticated to be processed.
 
-1. Return to your Wild Rydes app, sign in if necessary, and attempt to request a ride.
+30. Return to your Wild Rydes app, sign in if necessary, and attempt to request a ride.
 
-1. You should receive an "Error finding unicorn". If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
+31. You should receive an "Error finding unicorn". If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
 
   **Note** If you at first still that you requests go through without any errors, try requesting a ride again in 30-60 seconds to allow the API Gateway changes to fully propagate.
 
-1. Go back to Cloud9 and open the `/website/src/pages/MainApp.js` files.
+32. Go back to Cloud9 and open the `/website/src/pages/MainApp.js` files.
 
-1. Browse down to the `getData` method you previously updated. You will notice that the headers for the request currently include a blank `Authorization` header.
+33. Browse down to the `getData` method you previously updated. You will notice that the headers for the request currently include a blank `Authorization` header.
 
-1. Replace your current `getData` method with the following code which sends your user's Cognito identity token, encoded as a JSON web token, in the `Authorization` header with every request.
+34. Replace your current `getData` method with the following code which sends your user's Cognito identity token, encoded as a JSON web token, in the `Authorization` header with every request.
 
-```
-  async getData(pin) {
-    const apiRequest = {
-      body: {
-        PickupLocation: {
-          Longitude: pin.longitude,
-          Latitude: pin.latitude
-        }
-      },
-      headers: {
-        'Authorization': this.state.idToken,
-        'Content-Type': 'application/json'
-      }
-    };
-    logger.info('API Request:', apiRequest);
-    return await API.post(apiName, apiPath, apiRequest);
-  }
-```
+	```
+	  async getData(pin) {
+	    const apiRequest = {
+	      body: {
+	        PickupLocation: {
+	          Longitude: pin.longitude,
+	          Latitude: pin.latitude
+	        }
+	      },
+	      headers: {
+	        'Authorization': this.state.idToken,
+	        'Content-Type': 'application/json'
+	      }
+	    };
+	    logger.info('API Request:', apiRequest);
+	    return await API.post(apiName, apiPath, apiRequest);
+	  }
+	```
 
-1. Allow the application to refresh, sign-in again, and request a ride.
+35. Allow the application to refresh, sign-in again, and request a ride.
 
-1. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an INFO message which includes the API Request details once expanded, including the full headers and body of the request.
+36. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an INFO message which includes the API Request details once expanded, including the full headers and body of the request.
 
 </p></details>
 <br>

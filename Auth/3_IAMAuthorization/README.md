@@ -39,12 +39,12 @@ Browse to your CloudFormation stack created in the earlier modules and find the 
 
 1. Your final structure for the storage configuration of `amplify-config.js` should look like the following.
 
-```
-    Storage: {
-        bucket: 'wildrydes-profilepicturesbucket-1rmvuic97osxd',
-        region: 'us-east-1'
-    }
-```
+	```
+	    Storage: {
+	        bucket: 'wildrydes-profilepicturesbucket-1rmvuic97osxd',
+	        region: 'us-east-1'
+	    }
+	```
 
 </p></details>
 
@@ -75,52 +75,52 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 
 1. Paste the following IAM policy statements for S3 access. After pasting, you will need to go **replace the bucket name** listed in all caps with your bucket name (a total of 4 times). Be sure to leave the parts of the resource names before and after the replacement value alone and not accidentally modify them.
 
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:DeleteObject",
-                "s3:DeleteObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/private/${aws:userid}/*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:DeleteObject",
-                "s3:DeleteObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/${aws:userid}/*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:DeleteObject",
-                "s3:DeleteObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/public/*"
-        }
-    ]
-}
-```
+	```
+	{
+	    "Version": "2012-10-17",
+	    "Statement": [
+	        {
+	            "Effect": "Allow",
+	            "Action": [
+	                "s3:PutObject",
+	                "s3:GetObject",
+	                "s3:GetObjectVersion",
+	                "s3:DeleteObject",
+	                "s3:DeleteObjectVersion"
+	            ],
+	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/private/${aws:userid}/*"
+	        },
+	        {
+	            "Effect": "Allow",
+	            "Action": [
+	                "s3:GetObject",
+	                "s3:GetObjectVersion"
+	            ],
+	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/*"
+	        },
+	        {
+	            "Effect": "Allow",
+	            "Action": [
+	                "s3:PutObject",
+	                "s3:DeleteObject",
+	                "s3:DeleteObjectVersion"
+	            ],
+	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/${aws:userid}/*"
+	        },
+	        {
+	            "Effect": "Allow",
+	            "Action": [
+	                "s3:PutObject",
+	                "s3:GetObject",
+	                "s3:GetObjectVersion",
+	                "s3:DeleteObject",
+	                "s3:DeleteObjectVersion"
+	            ],
+	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/public/*"
+	        }
+	    ]
+	}
+	```
 1. Choose **Review policy**.
 
 1. Name the policy `WildRydes-S3Access`.
@@ -169,20 +169,20 @@ Implement a method to persist the images uploaded to the current user's Cognito 
 
 1. Replace the existing `onImageLoad` function with the following code:
 
-```
-async onImageLoad(url) {
-    if (!this.state.user.getSession) { return };
-    console.log('Profile Picture URL:', url);
-    try {
-        let result = await Auth.updateUserAttributes(this.state.user, {
-            'picture': this.state.image_key
-        });
-        console.log(result);
-    } catch (ex) {
-        console.error('Attribute update error:', ex);
-    }
-}
-```
+	```
+	async onImageLoad(url) {
+	    if (!this.state.user.getSession) { return };
+	    console.log('Profile Picture URL:', url);
+	    try {
+	        let result = await Auth.updateUserAttributes(this.state.user, {
+	            'picture': this.state.image_key
+	        });
+	        console.log(result);
+	    } catch (ex) {
+	        console.error('Attribute update error:', ex);
+	    }
+	}
+	```
 
 1. Now with this new method in place, upload a new photo after logging into Wild Rydes then close your browser. Open a new window and try logging in again. Your photo should load as it did previously.
 

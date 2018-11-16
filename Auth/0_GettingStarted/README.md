@@ -59,6 +59,8 @@ Asia Pacific (Sydney) | [![Launch Cloud9 in ap-southeast-2](http://docs.aws.amaz
 
 1. With the `WildRydes-Cloud9` stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Open that URL in a new browswer tab to load your IDE environment.
 
+	> Note: When you launch the stack, CloudFormation deploys a nested CloudFormation stack to launch the Cloud9 resources. You can safely ignore that template which is prefixed with "aws-cloud9-WildRydes-".
+
 ![CloudFormation Outputs open Cloud9](../images/cloud9_cfn_outputs.png)
 
 </p></details>

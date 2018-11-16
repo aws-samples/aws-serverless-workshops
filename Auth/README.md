@@ -18,15 +18,15 @@ This workshop is broken up into multiple modules. Each module builds upon the pr
 
 3. **IAM Authorization** - In this module, you will expand your Wild Rydes application by enabling profile management and profile photo management capabilities. Amazon Cognito will be used to store your user's profile information and custom attributes whereas Amazon S3 will store your user's profile pictures, with a link to the photo only being stored in the user's profile directly.
 
-### Workshop Costs
+### Estimated Workshop Costs
 
-This workshop depends on several AWS services, and their respective pricing is listed below:
+This workshop depends on several AWS services listed below. The usage of these services in the workshop should incur very minimal (<$1) to no cost, as usage should remain within free-tier limits.
 
-* Lambda [Pricing](https://aws.amazon.com/lambda/pricing/)
-* API Gateway [Pricing](https://aws.amazon.com/api-gateway/pricing/)
-* Cognito User Pools [Pricing](https://aws.amazon.com/cognito/pricing/)
-* DynamoDB [Pricing](https://aws.amazon.com/dynamodb/pricing/)
-* Cloud9 [Pricing](https://aws.amazon.com/cloud9/pricing/)
+* Lambda 
+* API Gateway 
+* Cognito User Pools
+* DynamoDB
+* [Cloud9 IDE](https://aws.amazon.com/cloud9/pricing/)
 
 As of Nov 2018, pricing for a a t2.small Cloud9 instances is $0.0232/hour. The workshop should not take more than 2 hours to complete. Total costs for the duration of this 2-3 workshop this workshop will likely not exceed $3.00 USD
 

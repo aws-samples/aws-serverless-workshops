@@ -60,6 +60,10 @@ Select the S3 Static Website Bucket as your ***Origin Domain Name*** - it should
 
 ![Configure Origin](images/configure-origin.png)
 
+Set the default behavior to redirect to HTTPS
+
+![Set TTLs](images/set-cloudfront-https.png)
+
 Set Defult and Max TTLs to 120 Seconds
 
 ![Set TTLs](images/set-cloudfront-ttl.png)

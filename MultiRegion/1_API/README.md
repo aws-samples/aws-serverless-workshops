@@ -345,7 +345,9 @@ convenience.
     --output-template-file wild-rydes-api-failover-region-output.yaml \
     --s3-bucket [ap_southeast_bucket_name_you_created_above]
 
-If all went well, you should get a success message and instructions to deploy your new template.
+If all went well, you should get a success message and instructions to deploy your new template.  
+
+*NOTE: You will need to add '--capabilities CAPABILITY_IAM' to the command in order to deploy*
 
 ## 3. Deploy a stack of resources
 

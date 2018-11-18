@@ -147,6 +147,10 @@ your function will not work - case matters*
 
 Once everything is set correctly, click **Save** near the top center of the screen.
 
+**IMPORTANT NOTE** When editing the Lambda code using the console, it is VERY important that
+your file name match the 'Handler Name' in the table below.  You must rename the file from
+the defaut of index.js or your function will not work!
+
 We still need to create two more lambda functions.  All of them use `Node.js 6.10`
 as the runtime.  Repeat the same steps you used above.  The table below provides the
 information needed for all three functions.  Note that you have already done the first one.

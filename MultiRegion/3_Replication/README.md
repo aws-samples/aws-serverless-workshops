@@ -138,7 +138,11 @@ Make sure to follow this same process for your second region.
    domain. Ensure that you received this email and click the validation link
    before moving on. Now click **Continue** (it is also possible to use DNS
    validation to issue the certificate as well - follow the instructions on
-   the screen if you choose/need to validate this way)
+   the screen if you choose/need to validate this way)  
+   
+   *Note to re:Invent 2018 workshop participants - if you are using the "loaner"*
+   *domain, please choose e-mail as your validation method*  
+   
 7. Once you have confirmed your certificate, it will appear as `Issued` in
    your list of certificates.
 8. Repeat steps 2-7 again in your second region
@@ -305,19 +309,10 @@ created DNS name for our API endpoint.
 
 Edit the *environments.ts* file and use `https://api.example.com/` (substituting your
 own domain) instead of the region specific name you used when setting up and
-testing the UI in the second module.
+testing the UI in the second module.  Remeber that you can edit files directly in your
+web browser using the Cloud9 IDE.
 
 **IMPORTANT** This new API Endpoint URL does NOT have `/prod/` at the end.
-
-
-TODO: UPDATE YOUR C9 envrionment before running "npm run build" **** 
-- C9 has node.js installed. 
-- We need to use v8.12. Before running "npm install" 
-- run the following: `nvm use lts/carbon` 
-- run `node --version` and make sure output is v8.12.0
-- NOTE: not sure how to persist this update when C9 environment is restarted.
-
-TODO END
 
 Ensure you run `npm run build` from the *2_UI* directory, and then upload the */dist*
 contents to the S3 bucket using the same *aws s3* command you used in the second

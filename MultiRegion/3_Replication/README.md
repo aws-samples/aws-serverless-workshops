@@ -138,7 +138,11 @@ Make sure to follow this same process for your second region.
    domain. Ensure that you received this email and click the validation link
    before moving on. Now click **Continue** (it is also possible to use DNS
    validation to issue the certificate as well - follow the instructions on
-   the screen if you choose/need to validate this way)
+   the screen if you choose/need to validate this way)  
+   
+   *Note to re:Invent 2018 workshop participants - if you are using the "loaner"*
+   *domain, please choose e-mail as your validation method*  
+   
 7. Once you have confirmed your certificate, it will appear as `Issued` in
    your list of certificates.
 8. Repeat steps 2-7 again in your second region

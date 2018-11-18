@@ -123,11 +123,11 @@ the console (again ensuring you are still in the correct region) and click
 
 ![Create Lambda function](images/create-lambda-function.png)
 
+Change the runtime to `Node.js 6.10`.  ('Node.js 8.10' should work but it
+has not been tested)
+
 Name your first function `TicketGetFunction` and assign the role with the **matching**
 name you created previously to it and click **Create function**
-
-On the next screen, change the runtime to `Node.js 6.10`.  ('Node.js 8.10' should work but it
-has not been tested extensively)
 
 For the Handler, enter `tickets-get.handler` and then paste the following code into the
 editor you see on your screen:

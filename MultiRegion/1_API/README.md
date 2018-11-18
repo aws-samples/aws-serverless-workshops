@@ -119,13 +119,9 @@ That’s all that is required for now to set up the table.
 
 Next, you will create three Lambda functions. First, navigate to **Lambda** in
 the console (again ensuring you are still in the correct region) and click
-**Create a function**
+**Create a function**  Ensure you choose **Author from scratch**
 
 ![Create Lambda function](images/create-lambda-function.png)
-
-Next select “Author from scratch”
-
-![Lambda author from scratch](images/lambda-author-scratch.png)
 
 Name your first function `TicketGetFunction` and assign the role with the **matching**
 name you created previously to it and click **Create function**

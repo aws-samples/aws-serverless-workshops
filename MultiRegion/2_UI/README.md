@@ -40,8 +40,6 @@ the Outputs tab. This time you will see three keys:
 
 Take note of the values for each of these, you will need them in the next steps.
 
-TODO: instructions to point CloudFront to S3 (UI) origin (Note: UI code not yet deployed to S3 ). Facebook now requires https origins when calling hosted auth dialog. You will use CloudFronts https endpoint as input to next step - creating your facebook app.
-
 </details>
 
 ## 2. Set Up A CloudFront Distribution and Point at the S3 Bucket
@@ -79,9 +77,6 @@ Make note of your CloudFront domain name - you will need it to set up your FaceB
 ![CloudFront Domain](images/cloudfront-domain.png)
 
 ## 3. Configure Federated Identities with Cognito
-
-TODO: Facebook UI has changed; Screenshots need updating.
-
 
 Now we'll set up our login with Facebook capability. You will need to set up a
 Facebook Web Application so that your riders can log in
@@ -131,8 +126,6 @@ primary region (EU Ireland).
 6. Save Changes at the bottom of the page.
 
 ## 3. Configure and build the application code
-
-TODO: Cloud9 instructions and screen shots
 
 Our application will need to know the location of the API in order to push and
 pull data from it. In addition, the application will need to know our Facebook

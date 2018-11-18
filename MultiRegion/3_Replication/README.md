@@ -21,8 +21,6 @@ the *outputs* of the CloudFormation template you deployed.
 
 ## 2. Replicating the data
 
-TODO: all this can be ignored as we already created a replicated table in prior step.
-
 So now that you have a separate stack, we need to set up DynamoDB so that it 
 automatically replicates the data for all of the tickets that have been submitted
 through the UI you created in the previous module.
@@ -42,9 +40,11 @@ first - so we'll clean that out now.
 
 Next, choose the Global Tables tab from the top and go ahead and create your Global
 Table and choose Singapore - just accept any messages to enable anything it needs and
-to create any roles it may need as well
+to create any roles it may need as well.
 
 ![Create DynamoDB Global Tables](images/create-ddb-global-table.png)
+
+![Create DynamoDB Global Tables](images/create-ddb-global-table-region.png)
 
 
 Now that you have created the Singapore Global Table, you can test to see if it is working

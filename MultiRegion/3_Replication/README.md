@@ -23,53 +23,36 @@ the *outputs* of the CloudFormation template you deployed.
 
 TODO: all this can be ignored as we already created a replicated table in prior step.
 
-So now that you have a separate stack, let's take a look at continuously
-replicating the data in DynamoDB from the primary region (Ireland) to the
-secondary region (Singapore) so that there is always a backup.
+So now that you have a separate stack, we need to set up DynamoDB so that it 
+automatically replicates the data for all of the tickets that have been submitted
+through the UI you created in the previous module.
 
-We will be using a feature of DynamoDB called Streams for this. DynamoDB
-Streams provides a time ordered sequence of item level changes in any DynamoDB
-table. This allows us to monitor these changes and push then to our second
-DynamoDB table. We will be using AWS Lambda to do this since we can easily
-connect this to our stream and we don't have to setup any additional
-infrastructure.
-
-During module 1, you actually already deployed a Lambda function that we can
-use to push the data. All we need to do now is hook this up to DynamoDB
-Streams.
+There's an easy way to do this - DynamoDB Global Tables - this will ensure we
+always have a copy of our date in both our primary and failover region.  We'll
+set this up now.
 
 In your *source* region (double check this) DynamoDB, select the SXRTickets table
 
 ![Select SXRTickets DynamoDB Source Region](images/select-ddb-source-table.png)
 
-Then, select *Triggers* from the tabs at the top of the screenshot
-Choose **Create Trigger** and then select *Existing Lambda Function*
+In order to set up DynamoDB Global Tables, we need the table to be completely empty
+first - so we'll clean that out now.
 
-![Select SXRTickets DynamoDB Triggers](images/select-ddb-triggers.png)
+![Delete DynamoDB Items before Global Tables](images/delete-ddb-items.png)
 
-Choose *TicketReplicateFunction* as the Function, reduce the batch size to *1*, ensure
-the *Enable* box is checked and then click **Create**
+Next, choose the Global Tables tab from the top and go ahead and create your Global
+Table and choose Singapore - just accept any messages to enable anything it needs and
+to create any roles it may need as well
 
-**IMPORTANT** Ensure you actually select the correct Lambda function here - it
-will default to *SXRHealthCheckFunction* if you don't.
+![Create DynamoDB Global Tables](images/create-ddb-global-table.png)
 
-![Create Trigger Dialogue](images/ddb-create-trigger.png)
 
-Ensure you have successfully created the trigger - you should see something like this
-in your browser:
-
-![Create Trigger Dialogue](images/ddb-trigger-enabled.png)
-
-Now that you have created the replication trigger, you can test to see if it is working
+Now that you have created the Singapore Global Table, you can test to see if it is working
 by creating a new ticket in the UI you deployed in the second module.  Then, look at
 the DynamoDB table in your *secondary* region, and see if you can see the record
 for the ticket you just created:
 
 ![Show replicated ticket in DDB](images/ddb-show-replicated-ticket.png)
-
-Note that sometimes you need to create two tickets in order for the
-*TicketReplicateFunction* to fully initialize, so if you don't see anything in the
-Singapore DynamoDB table, try creating a second ticket and then check again.
 
 ## 3. Configure Route53 failover
 

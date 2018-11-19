@@ -3,7 +3,7 @@
 In this module, you will create an Amazon Cognito User Pool and Identity Pool for the Wild Rydes application.
 The Cognito User Pool will store user profile information and provide sign-up and sign-in capabilities, with the Cognito Identity Pool providing the ability to assume an Identity and Access Management (IAM) role from within the application.
 
-Since Wild Rydes is a ride sharing application, a key requirement is that all users must sign-up and sign-in before they're allowed to request a ride. You will configure the application to integrate with [Amazon Cognito](https://aws.amazon.com/cognito/) for these purposes via the [AWS Amplify JavaScript library](https://aws-amplify.github.io/).
+Since Wild Rydes is a ride sharing application, a key requirement is that all users must sign-up and sign-in before they're allowed to request a ride. You will configure the application to integrate with [Amazon Cognito](https://aws.amazon.com/cognito/) for these purposes via the [AWS Amplify](https://aws-amplify.github.io/) JavaScript library.
 
 ## Solution Architecture
 
@@ -202,7 +202,7 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	Amplify.configure(awsConfig);
 	```
 
-1. Next, we need to ensure our application evaluates the user's authenticated state. In the same `/website/src/index.js` file, find and replace the **isAuthenticated method** with the code below to use our Amplify library's built-in user session to check this status.
+1. Next, we need to ensure our application evaluates the user's authenticated state. In the same */website/src/index.js* file, find and replace the **isAuthenticated method** with the code below to use our Amplify library's built-in user session to check this status.
 
 	```
 	const isAuthenticated = () => Amplify.Auth.user !== null;

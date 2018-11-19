@@ -6,7 +6,7 @@ This section outlines the prerequisites to complete the workshop and instruction
 
 ### AWS Account
 
-In order to complete this workshop, you'll need an AWS account and access to create and manage the AWS services that are used in this workshop, including Cloud9, Cognito, API Gateway, Lambda, DynamoDB, and IAM policies and roles.
+In order to complete this workshop, you'll need an AWS account and access to create and manage the AWS resources that are used in this workshop, including Cloud9, Cognito, API Gateway, Lambda, DynamoDB, and IAM policies and roles.
 
 The code and instructions in this workshop assume only one participant is using a given AWS account at a time. If you attempt sharing an account with another participant, you may encounter naming conflicts for certain resources. You can work around this by using distinct Regions, but the instructions do not provide details on the changes required to make this work.
 
@@ -54,7 +54,7 @@ Asia Pacific (Sydney) | [![Launch Cloud9 in ap-southeast-2](http://docs.aws.amaz
 
 1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of *CREATE_COMPLETE*. Click the refresh icon periodically to see progress update.
 
-1. With the *WildRydes-Cloud9* stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Browse to that URL in a new browswer tab to load your IDE environment.
+1. With the *WildRydes-Cloud9* stack selected, click on the **Outputs** tab and copy the value shown for the *Cloud9IDE* to the clipboard. Browse to that URL in a new browswer tab to load your IDE environment.
 
 	> Note: When you launch the stack, CloudFormation deploys a nested CloudFormation stack to launch the Cloud9 resources. You can safely ignore that template which is prefixed with "aws-cloud9-WildRydes-".
 

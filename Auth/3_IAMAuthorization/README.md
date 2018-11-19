@@ -63,9 +63,9 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 
 1. Choose **Roles**.
 
-1. Search for `WildRydes` to find the two roles which were created by Cognito Identity Pools when you created the Identity Pool in module one. Should you not be able to find the roles here, you can alternatively go to the **Cognito Federated Identities** console, find the correct identity pool, then click **Edit Identity Pool** in the top-right corner to see the roles listed. Each identity pool has both an Unauthenticated user role and an Authenticated user role.
+1. Search for *WildRydes* to find the two roles which were created by Cognito Identity Pools when you created the Identity Pool in module one. Should you not be able to find the roles here, you can alternatively go to the **Cognito Federated Identities** console, find the correct identity pool, then click **Edit Identity Pool** in the top-right corner to see the roles listed. Each identity pool has both an Unauthenticated user role and an Authenticated user role.
 
-1. Once you have found the names of the roles, go back to the IAM console and select the `Auth` role for your authenticated users.
+1. Once you have found the names of the roles, go back to the IAM console and select the *Auth* role for your authenticated users.
 
 1. We want to grant permissions to this role which are only applicable to this role so we will use an inline policy, which would be deleted if this role were ever deleted.
 
@@ -144,7 +144,7 @@ Authenticate in the Wild Rydes app if you're not already logged in, then browse 
 
 1. After logging in to Wild Rydes (if you're not authenticated already), browse to the **/profile** path.
 
-1. You should see that your e-mail address and phone number you registered with are displayed *which are all of your currently populated attributes*.
+1. You should see that your e-mail address and phone number you registered with are displayed which are all of your currently populated attributes.
 
 1. Open your Cloud9 IDE environment and open the file at */website/src/pages/Profile.js*.
 
@@ -169,7 +169,7 @@ Implement a method to persist the images uploaded to the current user's Cognito 
 
 1. The S3Image UI component has a built-in method called *onImageLoad* which provides in its invocation the full URL of any image uploaded. We will make use of this built-in function to persist our image URLs out to Cognito.
 
-1. Replace the existing `onImageLoad` function with the following code:
+1. Replace the existing *onImageLoad* function with the following code:
 
 	```
 	async onImageLoad(url) {

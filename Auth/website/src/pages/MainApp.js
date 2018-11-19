@@ -44,16 +44,6 @@ class MainApp extends React.Component {
   }
 
   /**
-   * Calls the backend API to retrieve the Unicorn data
-   *
-   * @param {Number} latitude
-   * @param {Number} longitude
-   */
-  async getData(pin) {
-    throw new Error('Request a Ride is not implemented');
-  }
-
-  /**
    * Determines if the API is enabled
    *
    * @return {Boolean} true if API is configured
@@ -61,6 +51,16 @@ class MainApp extends React.Component {
   hasApi() {
     // const api = awsConfig.API.endpoints.filter(v => v.endpoint !== '');                                                   
     // return (typeof api !== 'undefined');
+  }
+
+  /**
+   * Calls the backend API to retrieve the Unicorn data
+   *
+   * @param {Number} latitude
+   * @param {Number} longitude
+   */
+  async getData(pin) {
+    throw new Error('Request a Ride is not implemented');
   }
 
   /**

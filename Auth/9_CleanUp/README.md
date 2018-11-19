@@ -28,17 +28,22 @@ $ aws s3 rb s3://MY-BUCKET-NAME --force
 1.  From your **Cloud9 IDE** run the following:
 
 > Be sure to paste your identity pool id from your scratch pad (ex. us-west-2:b4b755cd-d359-42a1-9b49-f0e73f5b2571)
-
+	
 ```
 aws cognito-identity delete-identity-pool --identity-pool-id MY-IDENTITY-POOL-ID-HERE
 ```
-2.  Next, run the following to delete the User Pool you created:
+> If you lost your scratch pad with you idenity pool id, you can run a list call via CLI and find the proper identiy pool id, then run the abouve delete call.
+``` aws cognito-identity list-identity-pools --max-results 10```
+
+2.Next, run the following to delete the User Pool you created:
 
 > Be sure to paste your user pool id from your scratch pad (ex. us-west-2:us-west-2_srLwFQiEC)
 
 ```
 aws cognito-idp delete-user-pool --user-pool-id MY-USER-POOL-ID-HERE
 ```
+> If you lost your scratch pad with your user pool id, you can run a list call via CLI and find the proper user pool id, then run the abouve delete call.
+```aws cognito-idp list-user-pools --max-results 10```
 
 #### Remove WildRydes Backend
 
@@ -47,7 +52,7 @@ aws cognito-idp delete-user-pool --user-pool-id MY-USER-POOL-ID-HERE
 ```
 aws cloudformation delete-stack --stack-name WildRydesBackend
 ```
-> If you changed the name of your stack from the default, you will need to update the stack name to what you adjusted it to.  If you clicked the quick link in the instructions, no adjustment to the command above is needed.
+> If you changed the name of your stack from the default, you will need to update the stack name to what you adjusted it to.  If you clicked the quick link in the instructions, no adjustment to the command above is needed.  You can run `aws cloudformation describe-stacks` to find your stack name.
 
 #### Remove Cloud9 and VPC Stack
 
@@ -56,4 +61,4 @@ aws cloudformation delete-stack --stack-name WildRydesBackend
 ```
 aws cloudformation delete-stack --stack-name WildRydes-Cloud9
 ```
-> If you changed the name of your stack from the default, you will need to update the stack name to what you adjusted it to.  If you clicked the quick link in the instructions, no adjustment to the command above is needed.
+> If you changed the name of your stack from the default, you will need to update the stack name to what you adjusted it to.  If you clicked the quick link in the instructions, no adjustment to the command above is needed.  You can run `aws cloudformation describe-stacks` to find your stack name.

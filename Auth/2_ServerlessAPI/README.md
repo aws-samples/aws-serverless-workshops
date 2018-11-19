@@ -173,7 +173,11 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
     ![Test Authorizer screenshot](../images/apigateway-test-authorizer.png)
 
-18. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed. Since this is the identity token, the user's attributes are encoded within the JWT as claims which can be read parsed programatically. 
+18. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed. Since this is the identity token, the user's attributes are encoded within the JWT as claims which can be read parsed programatically.
+
+	**Note** If you do not receive successful test results as shown below, do not proceed until you're able to validate the authorizer is configured properly and passes this test.
+
+	![Successful Authorizer test screenshot](../images/apigateway-authorizer-test.png)
 
 19. **Require Cognito authentication for API Gateway**
 

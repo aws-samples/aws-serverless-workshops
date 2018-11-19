@@ -8,9 +8,9 @@ This section outlines the prerequisites to complete the workshop and instruction
 
 In order to complete this workshop, you'll need an AWS account and access to create and manage the AWS services that are used in this workshop, including Cloud9, Cognito, API Gateway, Lambda, DynamoDB, and IAM policies and roles.
 
-The code and instructions in this workshop assume only one participant is using a given AWS account at a time. If you attempt sharing an account with another participant, you will encounter naming conflicts for certain resources. You can work around this by using distinct Regions, but the instructions do not provide details on the changes required to make this work.
+The code and instructions in this workshop assume only one participant is using a given AWS account at a time. If you attempt sharing an account with another participant, you may encounter naming conflicts for certain resources. You can work around this by using distinct Regions, but the instructions do not provide details on the changes required to make this work.
 
-Please make sure not to use a production AWS environment/account for this workshop. It is recommended to instead use a development account which provides full access to the necessary services so that you do not run into permissions issues.
+Please make sure not to use a production AWS environment or account for this workshop. It is recommended to instead use a development account which provides full access to the necessary services so that you do not run into permissions issues.
 
 ### Region Selection
 
@@ -52,13 +52,13 @@ Asia Pacific (Sydney) | [![Launch Cloud9 in ap-southeast-2](http://docs.aws.amaz
 
 1. On the Review page, review the summary details then click **Create stack**.
 
-1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon periodically to see progress update.
+1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of *CREATE_COMPLETE*. Click the refresh icon periodically to see progress update.
 
-1. With the `WildRydes-Cloud9` stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Open that URL in a new browswer tab to load your IDE environment.
+1. With the *WildRydes-Cloud9* stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Browse to that URL in a new browswer tab to load your IDE environment.
 
 	> Note: When you launch the stack, CloudFormation deploys a nested CloudFormation stack to launch the Cloud9 resources. You can safely ignore that template which is prefixed with "aws-cloud9-WildRydes-".
 
-![CloudFormation Outputs open Cloud9](../images/cloud9_cfn_outputs.png)
+	![CloudFormation Outputs open Cloud9](../images/cloud9_cfn_outputs.png)
 
 </p></details>
 
@@ -66,13 +66,13 @@ Once you have launched and navigated to your Cloud9 workspace URL shown in your 
 
 ![Cloud9 Initial Welcome Screen](../images/cloud9_initial_screen.png)
 
-You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running `aws sts get-caller-identity`.
+You can run AWS CLI commands in here just like you would on your local computer. Verify that your user is logged in by running the following:
 
 ```
 aws sts get-caller-identity
 ```
 
-You'll see output indicating your account and user information:
+You should see output indicating your account and user information:
 
 ```
 {
@@ -86,9 +86,9 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 
 ### Download Workshop Code
 
-1. Switch to the tab where you have your Cloud9 environment opened.
+1. Switch to the tab where you have your Cloud9 IDE opened.
 
-1. Clone the workshop repository to your IDE environmen by running the following command in the Cloud9 terminal window:
+1. Clone the workshop repository to your IDE environment by running the following command in the Cloud9 terminal window:
 
     ```console
     git clone https://github.com/aws-samples/aws-serverless-workshops.git
@@ -96,7 +96,7 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 
 ### Initialize your developer workspace
 
-1. Run the following commands to upgrade your Node.js version to v10
+1. Run the following commands to upgrade your Node.js version to the latest version of Node.js 8. The [AWS Amplify](https://aws-amplify.github.io/) JavaScript library which we will be using requires Node.js 8 or higher.
 
     ```console
     nvm i 8
@@ -115,11 +115,11 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 
 :bulb: Keep an open scratch pad in Cloud9 or a text editor on your local computer
 for notes.  When the step-by-step directions tell you to note something such as
-an ID or Amazon Resource Name (ARN), copy and paste that into the scratch pad.
+an ID or Amazon Resource Name (ARN), copy and paste that into the scratch pad tab.
 
 ### Recap
 
-* Use a unique personal or development AWS Account
+* Use a unique personal or development AWS Account where you have permissions to create resources and create IAM policies and roles
 * Use a single, consistent region throughout all modules of this Auth workshop
 * Keep your [AWS Cloud9 IDE](#aws-cloud9-ide) opened in a tab at all times
 

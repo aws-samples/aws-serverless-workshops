@@ -15,13 +15,13 @@ For this module, we will be creating a Cognito User Pool as our secure user dire
 
 ## Implementation Overview
 
-Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide context for you to complete the implementation yourself if you're comfortable with the AWS Management Console and are comfortable exploring the services and documentation yourself without following a walkthrough.
+Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The high-level overview should provide context for you to complete the implementation yourself if you're comfortable with the AWS Management Console and are comfortable exploring the services and documentation yourself without following a walkthrough.
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
 ### 1. Running the website locally
 
-1. From your Cloud9 workspace, select the terminal window and when you are within your `~/environment/aws-serverless-workshops/Auth/website` directory, run the following command to start the local web server 
+1. From your Cloud9 workspace, select the terminal window and when you are within your *~/environment/aws-serverless-workshops/Auth/website* directory, run the following command to start the local web server 
 
     ```console
     yarn start
@@ -50,14 +50,14 @@ Amazon Cognito lets you add user sign-up, sign-in, and access control to your we
 
 Use the AWS console to create an Amazon Cognito User Pool requiring e-mail verification.
 
-**Note**: The console's region will default to the last region you were using previously. Change this to the same region where you launched your CloudFormation pre-requisite stack.
+> The console's region will default to the last region you were using previously. Change this to the same region where you launched your Cloud9 environment previously.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
 1. In the AWS Management Console choose **Services** then select **Cognito** under Security, Identity, and Compliance.
 
-2. Choose your desired **Region** in top-right of the console if not already chosen.
+2. Choose your desired **Region** in top-right of the console if not already selected. This should match the region where you launched your Cloud9 environment previously.
 
 3. Choose **Manage User Pools**.
 
@@ -97,11 +97,11 @@ Use the AWS console to create an Amazon Cognito User Pool requiring e-mail verif
 
 	![User Pool Setup Step 5](../images/cognito-userpool-setup-step5.png)
 
-17. In the next screen, click the **Add an app client** link.
+17. In the next screen, click the **Add an app client** *link*.
 
 18. Input `wildrydes-web-app` as the app client name.
 
-19. **Uncheck** `Generate client secret`. Client secrets are used for server-side applications authentication and are not needed for JavaScript applications.
+19. **Uncheck** *Generate client secret*. Client secrets are used for server-side applications authentication and are not needed for JavaScript applications.
 
 20. Choose **Create app client**.
 
@@ -109,7 +109,7 @@ Use the AWS console to create an Amazon Cognito User Pool requiring e-mail verif
 
 	![User Pool Setup Step 6](../images/cognito-userpool-setup-step6.png)
 
-22. Leave all Lambda trigger settings set to **none**. These trigger settings allow you to extend the out-of-the-box sign-up and sign-in flows with your own custom logic, but we will not be using this feature in this workshop.
+22. Leave all Lambda trigger settings set to *none*. These trigger settings allow you to extend the out-of-the-box sign-up and sign-in flows with your own custom logic, but we will not be using this feature in this workshop.
 
 23. Choose **Next step**.
 
@@ -121,13 +121,13 @@ Use the AWS console to create an Amazon Cognito User Pool requiring e-mail verif
 
 	![Cloud9 Create Scratchpad Tab](../images/cloud9-createscratchpadtab.png)
 
-26. Back in the AWS Cognito console, copy your new **User Pool Id** into the scratchpad tab.
+26. Back in the AWS Cognito console, copy your new *User Pool Id* into the scratchpad tab.
 
 	![Copy User Pool ID](../images/cognito-userpool-copy-userpool-id.png)
 
-27. Choose **App clients** heading under **General settings** within the Cognito navigation panel.
+27. Choose **App clients** heading under *General settings* within the Cognito navigation panel.
 
-28. Copy the **App client ID** over to your scrathpad. You will be using both of these values later on.
+28. Copy the *App client ID* over to your scratchpad. You will be using both of these values later on.
 
 	![Copy User Pool App Client ID](../images/cognito-userpool-copy-appclient-id.png)
 
@@ -150,7 +150,7 @@ You will need to create a Cognito Identity Pool linked to the Cognito User Pool 
 
 1. Input `wildrydes_identity_pool` as the Identity pool name.
 
-1. Expand Authentication providers.
+1. Expand **Authentication providers**.
 
 1. Within the Cognito tab, input the User Pool ID and App client Id you copied previously to the scratchpad tab.
 
@@ -160,9 +160,13 @@ You will need to create a Cognito Identity Pool linked to the Cognito User Pool 
 
 1. Choose **Allow** to allow Cognito Identity Pools to setup IAM roles for your application's users. Permissions and settings of these roles can be customized later.
 
-1. Copy/paste the **Identity Pool ID**, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab. Make sure not to copy the quotation marks!
+1. Copy/paste the *Identity Pool ID*, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab. Make sure not to copy the quotation marks!
 
 	![Copy Identity Pool Id to Cloud9 scratchpad](../images/cognito-identitypool-copyId.png)
+	
+1. Your scratchpad should now have values for the following Cognito resources:
+
+	![Cognito Setup IDs Scratchpad](../images/cognito-setup-scratchpad.png)
 
 </p></details>
 
@@ -174,12 +178,12 @@ Now that you've created and configured your Cognito User Pool and Identity Pool,
 
 You will import the [AWS Amplify](https://aws-amplify.github.io/) JavaScript library into the project then add sign-up and sign-in utility classes to integrate with our existing UI and front-end components.
 
-You'll need to complete the implementation of the onSubmitForm and onSubmitVerification methods within the /Auth/website/src/auth/signIn.js file, as well as the methods of the same name within the /Auth/website/src/auth/signIn.js file. Finally, you'll need to complete the implementation of a method to check whether the user is authenticated within the /Auth/website/src/index.js page.
+You'll need to complete the implementation of the onSubmitForm and onSubmitVerification methods within the */Auth/website/src/auth/signIn.js* file, as well as the methods of the same name within the */Auth/website/src/auth/signIn.js* file. Finally, you'll need to complete the implementation of a method to check whether the user is authenticated within the */Auth/website/src/index.js* page.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating `/Auth/website/src/amplify-config.js`.
+1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating */Auth/website/src/amplify-config.js*.
 
 1. After opening this file in your Cloud9 IDE editor, find an replace the following parameters with values from your previous scratchpad:
 	- `identityPoolId`
@@ -189,7 +193,7 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 
 1. Be sure to **save your changes** to the config file so your new Amplify  settings take effect. Any unsaved changes to a file are indicated by a dot icon in the tab of the editor so if you see a gray dot next to the file name, you may have forgotten to save.
 
-1. Next, edit the `website/src/index.js` file to add the following lines to the **top of the file (but below all the other imports)** to configure Amplify then save your changes:
+1. Next, edit the *website/src/index.js* file to add the following lines to the **top of the file** *(but below all the other imports)* to configure Amplify then save your changes:
 
 	```
 	import Amplify from 'aws-amplify';
@@ -204,9 +208,9 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	const isAuthenticated = () => Amplify.Auth.user !== null;
 	```
 	
-1. **Save your changes** to the `/website/src/index.js` file.
+1. **Save your changes** to the */website/src/index.js* file.
 
-1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the `/website/src/auth/SignUp.js` file with the code below **then save your changes**.
+1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the */website/src/auth/SignUp.js* file with the code below **then save your changes**.
 
 	```
 	async onSubmitForm(e) {
@@ -254,7 +258,7 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	}
 	```
 
-1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the `/website/src/auth/SignIn.js` file with the code below **then save your changes**.
+1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the */website/src/auth/SignIn.js* file with the code below **then save your changes**.
 
     ```
     async onSubmitForm(e) {
@@ -314,9 +318,9 @@ Now that you have integrated our Amplify code into our application, you need to 
 
 Return to your browser tab where you started your Wild Rydes application earlier after popping out from the Cloud9 IDE once in preview mode. This page automatically refreshes after you save any code changes so should now reflect all of your changes and be ready for testing.
 
-Visit the /register path to sign-up as a new user, providing a valid phone number with `+country_code` first preceeding the number. For a US-based phone number, an example would be `+14251234567`. You should then see that a verification message is sent with a one-time code upon registering, which is required before you're able to sign-in.
+Visit the */register* path to sign-up as a new user, providing a valid phone number with `+country_code` first preceeding the number. For a US-based phone number, an example would be `+14251234567`. You should then see that a verification message is sent with a one-time code upon registering, which is required before you're able to sign-in.
 
-After signing up as a new user, sign-in with the same user. If the page loads a map, sign-in was successful and you have successfully integrated Cognito for app authentication.
+After signing up as a new user, sign-in with the same user at the */signin* path. If the page loads a map, sign-in was successful and you have successfully integrated Cognito for app authentication.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -329,15 +333,15 @@ After signing up as a new user, sign-in with the same user. If the page loads a 
 
 1. On the verify e-mail screen, enter the one-time code sent to your e-mail address provided then choose **Verify**.
 
-	**Note**: Be sure to check your spam folder for the e-mail with your verification code if you do not see it in your inbox.
+	> Be sure to check your spam folder for the e-mail with your verification code if you do not see it in your inbox.
 
 1. Assuming no errors were encountered, you will be redirected to the Sign-in screen. Now, re-enter the same e-mail address and password you chose at registration.
 
-1. **If prompted for an MFA code**, check your phone entered previously for an SMS message. Enter your **SMS MFA code** at the verification code prompt then choose **Verify**. If not prompted for an MFA code, skip this step.
+1. *If prompted for an MFA code*, check your phone entered previously for an SMS message. Enter your *SMS MFA code* at the verification code prompt then choose **Verify**. *If not prompted for an MFA code, skip this step*.
 
 1. If the page then loads a map, sign-in was successful and you have successfully integrated Cognito for app authentication.
 
-1. Optionally, you may scroll down beyond the map to copy your user's identity token and decode it by pasting it into the 'encoded' input box at [JWT.io](http://jwt.io). You will see all of your user's attributes are encoded within the token, along with other standard attributes such as the time the token was issued, the time the token expires, the user's unique ID, and more.
+1. *Optionally*, you may scroll down beyond the map to copy your user's identity token and decode it by pasting it into the 'encoded' input box at [JWT.io](http://jwt.io). You will see all of your user's attributes are encoded within the token, along with other standard attributes such as the time the token was issued, the time the token expires, the user's unique ID, and more.
 
 </p></details>
 

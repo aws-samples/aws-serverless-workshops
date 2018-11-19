@@ -4,7 +4,7 @@ In this module, you will expand your Wild Rydes application by enabling a profil
 
 ## Solution Architecture
 
-Building on Modules 1 and 2, this module will add photo storage and management via an Amazon S3 bucket. For AWS resource access from a web application, Amazon Cognito will issue not only JWTs as we saw earlier, but then also allow users to assume an IAM role from within the app. This AWS IAM role will then allow their application to securely connect to upload and download photos from S3 (though any other AWS API would also work with this capability). To secure access to the photo storage and bucket, you will leverage IAM policies for fine-grained control.
+Building on Modules 1 and 2, this module will add photo storage and management via an Amazon S3 bucket. For AWS resource access from a web application, Amazon Cognito will issue not only JWTs as we saw earlier, but then also allow users to assume an IAM role from within the application. This AWS IAM role will then allow their application to securely connect to upload and download photos from S3 (though any other AWS API would also work with this capability). To secure access to the photo storage and bucket, you will leverage IAM policies for fine-grained control.
 
 ![Module 3 architecture](../images/wildrydes-module3-architecture.png)
 
@@ -16,28 +16,28 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 1. Setup S3 bucket for use with AWS Amplify
 
-You will need for your S3 bucket to be properly associated with Amplify for seamless upload and data of data. To save time, the CloudFormation template that created the serverless backend for this workshop also created an S3 bucket for this purpose with the cross-origin resource sharing (CORS) settings already set. You just need to associate this bucket with your application's code.
+You will need for your S3 bucket to be properly associated with Amplify for seamless upload and data of data. To save time, the Serverless Backend CloudFormation template that created the serverless backend for this workshop also created an S3 bucket for this purpose with the cross-origin resource sharing (CORS) settings already set. You just need to associate this bucket with your application's code.
 
 #### High-Level Instructions
 
-Browse to your CloudFormation stack created in the earlier modules and find the name of the S3 bucket under Outputs. Once you have the name, open your amplify-config.js file again and update the storage section with the bucket name and region.
+Browse to your CloudFormation stack created in the earlier modules and find the name of the S3 bucket under Outputs. Once you have the name, open your *amplify-config.js* file again and update the storage section with the bucket's name and region.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
 1. Go the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
 
-1. In the CloudFormation console, click on your Wild Rydes stack name, such as `WildRydesAPI`.
+1. In the CloudFormation console, click on your Wild Rydes stack name, such as **WildRydesBackend**.
 
 1. Click on the **Outputs** tab.
 
-1. Copy your bucket name to your clipboard. It is the name shown under `Value` for the key called `WildRydesProfilePicturesBucket`.
+1. Copy your bucket name to your clipboard. It is the name shown under `Value` for the key called *WildRydesProfilePicturesBucket*.
 
-1. Next, return to your Cloud9 IDE and open the file `/website/src/amplify-config.js`.
+1. Next, return to your Cloud9 IDE and open the file */website/src/amplify-config.js*.
 
 1. Fill in values for both the bucket name, which you just copied, as well as the region where you created the bucket.
 
-1. Your final structure for the storage configuration of `amplify-config.js` should look like the following.
+1. Your final structure for the storage configuration of *amplify-config.js* should look like the following.
 
 	```
 	    Storage: {
@@ -54,7 +54,7 @@ Though you could now attempt uploading photos via AWS Amplify, Amplify would use
 
 #### High-Level Instructions
 
-Browse to the IAM console and find your Cognito Identity Pool's authenticated user role. Create an in-line policy which provides for protected and private level access per-user by leveraging IAM policy variables.
+Browse to the IAM console and find your Cognito Identity Pool's authenticated user role. Create an in-line policy on this role which provides for [S3 bucket protected and private-level access](https://aws-amplify.github.io/docs/js/storage#file-access-levels) per-user by leveraging IAM policy variables. 
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -73,7 +73,9 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 
 1. Choose the **JSON** tab to allow you to free-form edit the new policy.
 
-1. Paste the following IAM policy statements for S3 access. After pasting, you will need to go **replace the bucket name** listed in all caps with your bucket name (a total of 4 times). Be sure to leave the parts of the resource names before and after the replacement value alone and not accidentally modify them.
+1. Paste the following IAM policy statements for S3 access. After pasting, you will need to go **replace the bucket name** listed in all caps with your bucket name (a total of 4 times).
+	
+	> Be sure to leave the parts of the resource names before and after the replacement value alone and not accidentally modify them.
 
 	```
 	{
@@ -135,18 +137,18 @@ Now that your IAM policies and Amplify SDK are initialized, you will be able to 
 
 #### High-Level Instructions
 
-Authenticate in the Wild Rydes app if you're not already logged in, then browse to the /profile path. You will see that your Cognito User Pool attributes are being read dynamically by the system. Next you will add an image picker and rendering UI component to personalize the rider experience so unicorns know who to look for when picking up passengers. Go to the Profile page and implement a functional image picker.
+Authenticate in the Wild Rydes app if you're not already logged in, then browse to the */profile* path. You will see that your Cognito User Pool attributes are being read dynamically by the system. Next, you will add an [image picker](https://aws-amplify.github.io/docs/js/storage#s3image) from AWS Amplify to render a UI component for uploading and displaying photos stored in S3. These profile photos will be used to personalize the rider experience so unicorns know who to look for when picking up passengers.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
 1. After logging in to Wild Rydes (if you're not authenticated already), browse to the **/profile** path.
 
-1. You should see that your e-mail address and phone number you registered with are displayed (which are all of your currently populated attributes).
+1. You should see that your e-mail address and phone number you registered with are displayed *which are all of your currently populated attributes*.
 
-1. Open your Cloud9 IDE environment and open the file at `/website/src/pages/Profile.js`.
+1. Open your Cloud9 IDE environment and open the file at */website/src/pages/Profile.js*.
 
-1. Uncomment the line that says **S3Image**. This instantiates an Amplify UI component for React apps for image rendering and uploading and only requires this single line of code.
+1. **Uncomment** the line that says *S3Image*. This instantiates an Amplify UI component for React apps for image rendering and uploading and only requires this single line of code.
 
 1. Go back to the Wild Rydes app and visit the **/profile** path after logging in. You should now be able to upload photos with the new image picker.
 
@@ -154,18 +156,18 @@ Authenticate in the Wild Rydes app if you're not already logged in, then browse 
 
 ### 4. Store profile picture links in Cognito User Pools profile
 
-With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your profile and your profile picture will be lost. To fix this, you will leverage a Cognito User Pools user attribute called `picture` to persist the S3 object key so the same image can be loaded upon each login or to the unicorns when you request a ride.
+With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your profile and your profile picture will be lost. To fix this, you will leverage a Cognito User Pools user attribute called *picture* to persist the S3 object key so the same image can be loaded upon each login or to the unicorns when you request a ride.
 
 #### High-Level Instructions
 
-Implement a method to persist the images uploaded to the current user's Cognito profile each time the image is changed.
+Implement a method to persist the images uploaded to the current user's Cognito *picture* attribute each time the image is changed.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Open your Cloud9 IDE environment and open the file at `/website/src/pages/Profile.js`.
+1. Open your Cloud9 IDE environment and open the file at */website/src/pages/Profile.js*.
 
-1. The S3Image UI component has a built-in method called `onImageLoad` which provides in its invocation the full URL of any image uploaded. We will make use of this built-in function to persist our image URLs out to Cognito.
+1. The S3Image UI component has a built-in method called *onImageLoad* which provides in its invocation the full URL of any image uploaded. We will make use of this built-in function to persist our image URLs out to Cognito.
 
 1. Replace the existing `onImageLoad` function with the following code:
 

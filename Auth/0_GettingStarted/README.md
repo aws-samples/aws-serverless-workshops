@@ -91,7 +91,7 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 1. Clone the workshop repository to your IDE environment by running the following command in the Cloud9 terminal window:
 
     ```console
-    git clone https://github.com/aws-samples/aws-serverless-workshops.git
+    git clone https://github.com/justonian/aws-serverless-workshops.git
     ```
 
 ### Initialize your developer workspace

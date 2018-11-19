@@ -79,7 +79,7 @@
     z-index: 50;
 }
 
-.authToken {
+.idToken {
     word-wrap: break-word;
     font-family: sans-serif;
     font-size: 8px;

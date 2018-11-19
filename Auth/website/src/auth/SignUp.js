@@ -35,6 +35,24 @@ class SignUp extends React.Component {
     };
   }
 
+  onSubmitForm(e) {
+    e.preventDefault();
+    console.log('Form Submitted');
+    this.setState({ stage: 1 });
+  }
+
+  onSubmitVerification(e) {
+    e.preventDefault();
+    console.log('Verification Submitted');
+    this.setState({ 
+      stage: 0, code: '',
+      email: '', phone: '', 
+      password: '', confirm: ''
+    });
+    // Go back to the home page
+    this.props.history.replace('/');
+  }
+
   onEmailChanged(e) {
     this.setState({ email: e.target.value.toLowerCase() });
   }
@@ -53,24 +71,6 @@ class SignUp extends React.Component {
 
   onCodeChanged(e) {
     this.setState({ code: e.target.value });
-  }
-
-  onSubmitForm(e) {
-    e.preventDefault();
-    console.log('Form Submitted');
-    this.setState({ stage: 1 });
-  }
-
-  onSubmitVerification(e) {
-    e.preventDefault();
-    console.log('Verification Submitted');
-    this.setState({ 
-      stage: 0, code: '',
-      email: '', phone: '', 
-      password: '', confirm: ''
-    });
-    // Go back to the home page
-    this.props.history.replace('/');
   }
 
   isValidEmail(email) {

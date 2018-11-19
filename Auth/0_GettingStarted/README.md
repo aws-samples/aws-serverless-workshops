@@ -6,8 +6,7 @@ This section outlines the prerequisites to complete the workshop and instruction
 
 ### AWS Account
 
-In order to complete this workshop, you'll need an AWS account and access to
-create and manage the AWS services that are used in this workshop, including Cloud9, Cognito, API Gateway, Lambda, and DynamoDB.
+In order to complete this workshop, you'll need an AWS account and access to create and manage the AWS services that are used in this workshop, including Cloud9, Cognito, API Gateway, Lambda, DynamoDB, and IAM policies and roles.
 
 The code and instructions in this workshop assume only one participant is using a given AWS account at a time. If you attempt sharing an account with another participant, you will encounter naming conflicts for certain resources. You can work around this by using distinct Regions, but the instructions do not provide details on the changes required to make this work.
 
@@ -25,8 +24,6 @@ editor, debugger, and terminal. Cloud9 comes pre-packaged with essential tools
 for popular programming languages and the AWS Command Line Interface (CLI)
 pre-installed so you don’t need to install files or configure your laptop for
 this workshop. 
-
-In this workshop, you will use a Cloud9 environment which will have access to the same AWS resources as the user with which you logged into the AWS Management Console.
 
 ## Cloud9 IDE Setup
 
@@ -53,9 +50,9 @@ Asia Pacific (Sydney) | [![Launch Cloud9 in ap-southeast-2](http://docs.aws.amaz
 
 1. On the Configure Stack Options page, accept all the defaults and click **Next**.
 
-1. Choose to **Acknowledge that the CloudFormation template may create IAM resources with custom names**. Finally, click **Create stack**.
+1. On the Review page, review the summary details then click **Create stack**.
 
-1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon to see progress updates.
+1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of **CREATE_COMPLETE**. Click the refresh icon periodically to see progress update.
 
 1. With the `WildRydes-Cloud9` stack selected, click on the **Outputs** tab and copy the value shown for the `Cloud9IDE` to the clipboard. Open that URL in a new browswer tab to load your IDE environment.
 
@@ -102,8 +99,8 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 1. Run the following commands to upgrade your Node.js version to v10
 
     ```console
-    nvm i 10
-    nvm alias default 10
+    nvm i 8
+    nvm alias default 8
     ```
 
 2. Install the yarn package manager and website dependencies by running the following commands

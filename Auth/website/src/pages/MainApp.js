@@ -127,8 +127,8 @@ class MainApp extends React.Component {
               </div>
               <div className="panel-body">
                 <p>This page is not functional yet because there is no API configured.</p>
-                <p>Here is your authentication token:</p>
-                <p className="authToken">{this.state.authToken}</p>
+                <p>Here is your user's identity token:</p>
+                <p className="idToken">{this.state.idToken}</p>
               </div>
             </div>
           </div>

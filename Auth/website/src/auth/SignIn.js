@@ -34,18 +34,6 @@ class SignIn extends React.Component {
     };
   }
 
-  onEmailChanged(e) {
-    this.setState({ email: e.target.value.toLowerCase() });
-  }
-
-  onPasswordChanged(e) {
-    this.setState({ password: e.target.value });
-  }
-
-  onCodeChanged(e) {
-    this.setState({ code: e.target.value });
-  }
-
   onSubmitForm(e) {
     e.preventDefault();
     console.log('Form Submitted');
@@ -58,6 +46,18 @@ class SignIn extends React.Component {
     this.setState({ stage: 0, email: '', password: '', code: '' });
     // Go back home
     this.props.history.replace('/');
+  }
+
+  onEmailChanged(e) {
+    this.setState({ email: e.target.value.toLowerCase() });
+  }
+
+  onPasswordChanged(e) {
+    this.setState({ password: e.target.value });
+  }
+
+  onCodeChanged(e) {
+    this.setState({ code: e.target.value });
   }
 
   isValidEmail(email) {

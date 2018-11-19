@@ -2,11 +2,6 @@
 
 ### *To prevent your account from accruing additional charges, you will want to remove any resources that are no longer needed.*
 
-#### What charges will occur in my account?
-1. **Cloud9 IDE:**  You pay for the compute and storage for the EC2 instance that the CloudFormation template deploys.  Note, that your Cloud9 environment is configured to shut down to reduce compute costs after 60 minutes.  
-2. The remaining services such as Lambda, API Gateway, Cognito and DynamoDB all have a free tier.  You may still want to remove these resources.  You can do this by following the procedure below.  
-
-
 #### Empty S3 Bucket Contents and Remove Bucket
 
 1. First, we will need to empty the ***S3 bucket*** that was created by our CloudFormation template.

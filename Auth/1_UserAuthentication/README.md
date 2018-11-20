@@ -337,8 +337,6 @@ After signing up as a new user, sign-in with the same user at the */signin* path
 
 1. Assuming no errors were encountered, you will be redirected to the Sign-in screen. Now, re-enter the same e-mail address and password you chose at registration.
 
-1. *If prompted for an MFA code*, check your phone entered previously for an SMS message. Enter your *SMS MFA code* at the verification code prompt then choose **Verify**. *If not prompted for an MFA code, skip this step*.
-
 1. If the page then loads a map, sign-in was successful and you have successfully integrated Cognito for app authentication.
 
 1. *Optionally*, you may scroll down beyond the map to copy your user's identity token and decode it by pasting it into the 'encoded' input box at [JWT.io](http://jwt.io). You will see all of your user's attributes are encoded within the token, along with other standard attributes such as the time the token was issued, the time the token expires, the user's unique ID, and more.

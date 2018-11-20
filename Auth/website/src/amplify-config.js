@@ -8,7 +8,7 @@ const awsConfig = {
         identityPoolId: '', // 'us-east-1:5109bd6b-38ab-4429-89f8-e74d93656224'
         region: '', // 'us-east-1'
         userPoolId: '', // 'us-east-1_bgZVERFot'
-        userPoolWebClientId: '', // '4lu058ri9ntkfrv99aa2taeu01'
+        userPoolWebClientId: '' // '4lu058ri9ntkfrv99aa2taeu01'
     },
     API: {
         endpoints: [

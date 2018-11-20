@@ -1,10 +1,10 @@
 # Module 2: Serverless API Authentication and Authorization
 
-In this module, you will add a serverless backend to our Wild Rydes application leveraging [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/). You will then enable authentication and authorization on your API to secure the backend to only accept valid, authorized requests.
+In this module, you will add a serverless backend to your Wild Rydes application leveraging [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/). You will then enable authentication and authorization on your API to secure the backend to only accept valid, authorized requests.
 
 ## Solution Architecture
 
-Building on Module 1, this module will add a Serverless backend built using Amazon API Gateway and AWS Lambda. For persistence, we will use Amazon DynamoDB as a NoSQL data store. All of the above services are serverless so you can seamlessly scale your application as your demands grow. After creating the API, we will integrate our client application to call it via the AWS Amplify library.
+Building on Module 1, this module will add a Serverless backend built using Amazon API Gateway and AWS Lambda. For persistence, you will use Amazon DynamoDB as a NoSQL data store. All of the above services are serverless so you can seamlessly scale your application as your demands grow. After creating the API, we will integrate our client application to call it via the AWS Amplify library.
 
 ![Module 2 architecture](../images/wildrydes-module2-architecture.png)
 
@@ -194,11 +194,11 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 23. Select your new Cognito Authorizer from the list of options presented.
 	> If you don't see this option listed, **Reload** the browser page then this authorizer option should appear in the drop-down list.
 
-  ![API Gateway Authorizer Selection](../images/apigateway-authorizer-selection.png)
+  ![API Gateway Authorizer Selection](../images/apigateway-authorizer-cognito-selection.png)
 
 24. **Save** your selection by clicking the checkmark icon next to the drop down.
 
-  ![API Gateway Authorizer Confirmation](../images/apigateway-authorizer-confirmation.png)
+  ![API Gateway Authorizer Confirmation](../images/apigateway-authorizer-cognito-confirmation.png)
 
 25. Next, choose the **Actions** button at the top of the resources list.
 
@@ -250,4 +250,4 @@ Now that you've deployed the new authorizer configuration to production, all API
 </p></details>
 <br>
 
-If the API now invokes correctly and application funcions as expected again, you can move on to the next module, [IAM-based Authorization](../3_IAMAuthorization).
+If the API now invokes correctly and application funcions as expected again, you can move either try out an **optional module extension** with [Fine-grained IAM-based authorization with API Gateway](./Optional-APIGateway-IAMAuth.md) as an optional extension or move on to the next module, [IAM-based Authorization](../3_IAMAuthorization).

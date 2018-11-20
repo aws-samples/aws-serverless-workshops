@@ -35,7 +35,7 @@ Browse to your CloudFormation stack created in the earlier modules and find the 
 
 1. Next, return to your Cloud9 IDE and open the file */website/src/amplify-config.js*.
 
-1. Fill in values for both the bucket name, which you just copied, as well as the region where you created the bucket.
+1. Fill in values for both the bucket name, which you just copied, as well as the region where the CloudFormation template was launched
 
 1. Your final structure for the storage configuration of *amplify-config.js* should look like the following.
 

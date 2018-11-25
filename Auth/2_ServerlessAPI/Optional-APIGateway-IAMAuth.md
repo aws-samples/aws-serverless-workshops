@@ -112,9 +112,9 @@ Now that you've deployed the new authorizer configuration to production, all API
 
 13. Return to your Wild Rydes app, sign in at */signin* if necessary, and attempt to request a ride.
 
-14. You should receive an *Error finding unicorn*. If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
+14. You should receive an *Error finding unicorn*. If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request.
 
-	> If you at first still that you requests go through without any errors, try requesting a ride again in 30-60 seconds to allow the API Gateway changes to fully propagate.
+	> If at first your requests go through without any errors, try requesting a ride again in 30-60 seconds to allow time for the API Gateway changes to fully propagate.
 
 15. Go back to Cloud9 and open the */website/src/pages/MainApp.js* files.
 

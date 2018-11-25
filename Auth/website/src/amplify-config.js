@@ -5,22 +5,23 @@
 
 const awsConfig = {
     Auth: {
-        identityPoolId: '', // EXAMPLE: 'us-east-1:5109bd6b-38ab-4429-89f8-e74d93656224'
-        region: '', // EXAMPLE: 'us-east-1'
-        userPoolId: '', // EXAMPLE: 'us-east-1_bgZVERFot'
-        userPoolWebClientId: '' // EXAMPLE: '4lu058ri9ntkfrv99aa2taeu01'
+        identityPoolId: '', // example: 'us-east-2:c85f3c18-05fd-4bb5-8fd1-e77e7627a99e'
+        region: '', // example: 'us-east-2'
+        userPoolId: '', // example: 'us-east-2_teEUQbkUh'
+        userPoolWebClientId: '' // example: '3k09ptd8kn8qk2hpk07qopr86'
     },
     API: {
         endpoints: [
             {
                 name: 'WildRydesAPI',
-                endpoint: '' // EXAMPLE: https://1ngrgqjt6c.execute-api.us-east-1.amazonaws.com/prod
+                endpoint: '', // example: 'https://u8swuvl00f.execute-api.us-east-2.amazonaws.com/prod'
+                region: '' // example: 'us-east-2'
             }
         ]
     },
     Storage: {
-        bucket: '', //EXAMPLE: Amazon S3 bucket 'wildrydes-profile-images'
-        region: '', // EXAMPLE: 'us-east-1'
+        bucket: '', //example: 'wildrydesbackend-profilepicturesbucket-1wgssc97ekdph'
+        region: '' // example: 'us-east-2'
     }
 }
 

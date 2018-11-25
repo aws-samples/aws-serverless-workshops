@@ -303,7 +303,7 @@ Resources:
                 - !Ref "AWS::AccountId"
                 - ":"
                 - !Ref "WildRydesApi"
-                - "/*/*/ride/*"
+                - "/*/*/ride"
 
   ProfilePicturesBucket:
     Properties:

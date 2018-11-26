@@ -31,9 +31,9 @@ The following objects will be used as you create the resources in the console fo
 There are several steps needed to deploy the API and Lambda functions via the
 console. The basic steps are:
 
-1. Create the appropriate IAM policies and roles our four AWS Lambda functions
+1. Create the appropriate IAM policies and roles our AWS Lambda functions
 2. Create the required Amazon DynamoDB table
-3. Create the four AWS Lambda functions
+3. Create the needed AWS Lambda functions
 4. Create the Amazon API Gateway for the region you are currently deploying
 5. Testing to ensure our backend components are all working as expected
 
@@ -62,15 +62,15 @@ Name your policy `TicketGetPolicy` and click **Create policy**
 
 ![Create Policy Editor](images/create-policy-2.png)
 
-Now repeat these exact same steps one more times in order to create the
+Now repeat these exact same steps one more time in order to create the
 following additional policy that will be needed during the workshop.
 
 **Download policy**: [TicketPostPolicy](wild-rydes-dynamodb-post.json)
 
 
-Next you will create the three roles that correspond to the three polices that
+Next you will create the three roles that correspond to the polices that
 were just created. Each of these roles will be used by a different Lambda
-function thereby limiting the permissions of each function. This follows an
+function thereby limiting the permissions of each function. This follows the
 AWS Best Practice of granting [least privilege](http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
 
 In the Console, select the **IAM** service and choose **Roles** from the left,
@@ -146,7 +146,8 @@ Once everything is set correctly, click **Save** near the top center of the scre
 
 **IMPORTANT NOTE** When editing the Lambda code using the console, it is VERY important that
 your file name match the 'Handler Name' in the table below.  You must rename the file from
-the defaut of index.js or your function will not work!
+the defaut of index.js or your function will not work!  For example, if your handler name is
+*tickets-get.handler* then your Lambda file name should be *tickets-get.js*
 
 We still need to create two more lambda functions.  All of them use `Node.js 6.10`
 as the runtime.  Repeat the same steps you used above.  The table below provides the

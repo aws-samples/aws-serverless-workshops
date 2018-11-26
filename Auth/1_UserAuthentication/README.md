@@ -215,6 +215,10 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the */website/src/auth/SignUp.js* file with the code below **then save your changes**.
 
 	> You only need to replace these two methods. The rest of the SignUp.js file should not be modified.
+	
+	> The onSubmitForm method handles the event when the registration form is submitted. This calls the Auth.signUp method from the AWS Amplify library which registers the user with your Cognito User Pool.
+	
+	> The onSubmitVerification method handles the event when the verification code entry form is submitted after the initial registration request. This calls the Auth.confirmSignUp method from the AWS Amplify library which confirms the user registration within your Cognito User Pool.
 
 	```
 	async onSubmitForm(e) {
@@ -265,6 +269,10 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the */website/src/auth/SignIn.js* file with the code below **then save your changes**.
 
 	> You only need to replace these two methods. The rest of the SignIn.js file should not be modified.
+	
+	> The onSubmitForm method initiates the signin request with your Cognito User Pool by invoking the Auth.signIn method from AWS Amplify then sets the local state appropriately to indicate the user has signed in successfully.
+	
+	> The onSubmitVerification method is used to submit a verification code whenever multi-factor authentication is required to authenticate. For this workshop, this method will not be invoked since you did not require multi-factor authentication earlier when configuring your Cognito User Pool.  
 
     ```
     async onSubmitForm(e) {

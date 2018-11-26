@@ -246,4 +246,10 @@ Now that you've deployed the new authorizer configuration to production, all API
 </p></details>
 <br>
 
-If the API now invokes correctly and application funcions as expected again, you can move either try out an **optional module extension** with [Fine-grained IAM-based authorization with API Gateway](./Optional-APIGateway-IAMAuth.md) as an optional extension or move on to the next module, [IAM-based Authorization](../3_IAMAuthorization).
+If the API now invokes correctly and application funcions as expected again, you may **proceed to complete either**:
+
+- **Optional module extension** with [Fine-grained IAM-based authorization with API Gateway](./Optional-APIGateway-IAMAuth.md)
+
+	OR
+
+- To proceed to he next module, *without completing the optional module extension*, choose [client-side IAM-based Authorization](../3_IAMAuthorization).

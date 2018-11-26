@@ -7,7 +7,8 @@ templates from any module using the Cloud9 IDE as well!
 
 We strongly recommend you use Cloud9 which will have the necessary
 dependencies, i.e. AWS CLI, git, node/npm, angular cli already installed
-and configured - you'll only need to clone the git repository.
+and configured - you'll only need to clone the git repository and update
+the version of nvm used.
 
 Our Cloud9 instance will be in `eu-west-1` (Ireland)
 

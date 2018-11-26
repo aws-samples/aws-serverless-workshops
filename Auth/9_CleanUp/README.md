@@ -47,7 +47,7 @@
 	```
 	aws cognito-idp list-user-pools --max-results 10
 	```
-
+	
 #### Detach CognitoIdentityPoolAuthStandardPolicy IAM Policy
 
 1. Before you delete the backend stack, you will need to remove the IAM Policy that you manually attached to the **Auth** role.

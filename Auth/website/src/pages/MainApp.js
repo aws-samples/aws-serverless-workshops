@@ -60,7 +60,7 @@ class MainApp extends React.Component {
    * @param {Number} longitude
    */
   async getData(pin) {
-    throw new Error('Request a Ride is not implemented');
+    console.error('Request a Ride is not implemented');
   }
 
   /**

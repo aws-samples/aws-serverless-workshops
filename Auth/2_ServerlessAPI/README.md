@@ -67,7 +67,8 @@ First, expand your *amplify-config.js* file to store your new API Gateway endpoi
 	        endpoints: [
 	            {
 	                name: 'WildRydesAPI',
-	                endpoint: 'https://1ngrgqjt6c.execute-api.us-east-1.amazonaws.com/prod'
+	                endpoint: 'https://1ngrgqjt6c.execute-api.us-east-1.amazonaws.com/prod',
+	                region: 'us-east-1'
 	            }
 	        ]
 	    },
@@ -86,7 +87,6 @@ First, expand your *amplify-config.js* file to store your new API Gateway endpoi
 
 	```
 	  async getData(pin) {
-	    Amplify.Logger.LOG_LEVEL = 'DEBUG';
 	    const apiRequest = {
 	      body: {
 	        PickupLocation: {
@@ -99,7 +99,7 @@ First, expand your *amplify-config.js* file to store your new API Gateway endpoi
 	        'Content-Type': 'application/json'
 	      }
 	    };
-	    logger.info('API Request:', apiRequest);
+	    console.log('API Request:', apiRequest);
 	    return await API.post(apiName, apiPath, apiRequest);
 	  }
 	```
@@ -234,19 +234,19 @@ Now that you've deployed the new authorizer configuration to production, all API
 	        'Content-Type': 'application/json'
 	      }
 	    };
-	    logger.info('API Request:', apiRequest);
+	    console.log('API Request:', apiRequest);
 	    return await API.post(apiName, apiPath, apiRequest);
 	  }
 	```
 
 35. Allow the application to refresh, sign-in again, and request a ride.
 
-36. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an INFO message which includes the API Request details once expanded, including the full headers and body of the request.
+36. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an *API Request* informational message which includes the API Request details once expanded, including the full headers and body of the request.
 
 </p></details>
 <br>
 
-If the API now invokes correctly and application funcions as expected again, you may **proceed to complete either**:
+If the API now invokes correctly and application funcions as expected summoning unicorns, you may **proceed to complete either**:
 
 - **Optional module extension** with [Fine-grained IAM-based authorization with API Gateway](./Optional-APIGateway-IAMAuth.md)
 

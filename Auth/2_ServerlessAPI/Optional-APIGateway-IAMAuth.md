@@ -1,14 +1,16 @@
 # Optional Module 2 Extension: Serverless APIs with IAM-based Authorization
 
-In this **optional extension to module 2**, you will update your serverless backend for your Wild Rydes application leveraging [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/) to use IAM-based authorization as a more secure authentication option which includes request signing.
+In this **optional extension to module 2**, you will update your serverless backend for your Wild Rydes application leveraging [Amazon API Gateway](https://aws.amazon.com/api-gateway/) and [AWS Lambda](https://aws.amazon.com/lambda/) to use request signing with IAM-based authorization as a more secure authentication option.
 
-**If you would like to skip this optional extension**, you are able to proceed to module 3, [IAM-based Authorization](../3_IAMAuthorization).
+**If you would like to skip this optional extension**, you are able to proceed to module 3 directly, [IAM-based Authorization](../3_IAMAuthorization).
 
 ## Solution Architecture
 
 Building on Module 2, this module updates our Serverless backend built earlier using Amazon API Gateway and AWS Lambda to use IAM-based authorization. This extends our authorization capability to offer fine-grained access control authorizing differently per API operation and enhancing security via request signing. By enabling IAM-based authorization, you will use the same type of authentication, authorization, and request signing used by all AWS services and SDKs.
 
 [Request signing](https://docs.aws.amazon.com/general/latest/gr/signing_aws_api_requests.html) is a more secure implementation of API request authentication where each API request made is signed with a signature unique to the request itself. Hence, no static API keys or bearer tokens are directly sent to the backend service and any man-in-the-middle attacks would not be able to use such API keys or bearer tokens to impersonate a valid user with the backend resources. AWS APIs and SDKs use a request signing algorithm nammed [Signature V4 (Sigv4)](https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html) which is what you will enable your API to use in this module.
+
+> For production APIs, you should use either the token-based authorization OR request signing authorization via IAM demonstrated in this module, but not use both for the same API.
 
 ![Module 2 architecture](../images/wildrydes-module2-architecture.png)
 
@@ -42,15 +44,19 @@ In the IAM console, assocate the *WildRydesAPI-StandardUserPolicy* with your Cog
 1. Review the policy which was created by CloudFormation to authorize requests to your API Gateway deployment.
 
 	![WildRydesAPI Policy Details](../images/iam-wildrydesapi-policy-details.png)
-	> This policy allows access to invoke any method within the /rides path on any stage of API Gatweay. For more details about authoring IAM policies for API Gateway, visit the [controlling access to an API with IAM permissions](https://docs.aws.amazon.com/apigateway/latest/developerguide/permissions.html) documentation.
+	> This policy allows access to invoke any method on the /ride path for any API stage of your API gateway backend. For more details about authoring IAM policies for API Gateway, visit the [controlling access to an API with IAM permissions](https://docs.aws.amazon.com/apigateway/latest/developerguide/permissions.html) documentation.
 
 1. Choose **Roles**.
 
 1. Search for *WildRydes* to find the two roles which were created by Cognito Identity Pools when you created the Identity Pool in module one. Should you not be able to find the roles here, you can alternatively go to the **Cognito Federated Identities** console, find the correct identity pool, then click **Edit Identity Pool** in the top-right corner to see the roles listed. Each identity pool has both an Unauthenticated user role and an Authenticated user role.
 
-1. Once you have found the names of the roles, go back to the IAM console and select the *Auth* role for your authenticated users.
+1. Once you have found the names of the roles, go back to the IAM console and **select the *Auth* role** for your authenticated users.
+	
+	> If the full name of the role is hidden from view due to column width, you can hover over the partially visible name of the role to see the full name of the role as a tool tip.
+	
+	![IAM WildRydes Auth Role Selction](../images/iam-wildrydes-role-selection.png)
 
-1. Choose **Attach policies** to attach 
+1. Choose **Attach policies**.
 
 1. Search for `WildRydes` and check the box next to the policy named *WildRydesAPI-StandardUserAccess*.
 
@@ -134,7 +140,7 @@ Now that you've deployed the new authorizer configuration to production, all API
 	        'Content-Type': 'application/json'
 	      }
 	    };
-	    logger.info('API Request:', apiRequest);
+	    console.log('API Request:', apiRequest);
 	    return await API.post(apiName, apiPath, apiRequest);
 	  }
 	```
@@ -143,7 +149,11 @@ Now that you've deployed the new authorizer configuration to production, all API
 
 18. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an message which includes the API Request details, including the full signature and headers of the request.
 
+	> This message starts with POST /prod/ride then shows the headers of the request made.
+	
+	> You may notice that there were both x-amz-date and x-amz-security-token headers sent among other headers. These two headers are part of the overall request signature, along with the Authorization header.
+
 </p></details>
 <br>
 
-If the API now invokes correctly and application funcions as expected again, you can move on to the next module, [IAM-based Authorization](../3_IAMAuthorization).
+If your API now invokes correctly and application funcions as expected summoning unicorns again, you can proceed to the next module, [IAM-based Authorization](../3_IAMAuthorization).

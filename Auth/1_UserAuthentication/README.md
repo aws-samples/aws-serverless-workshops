@@ -160,7 +160,7 @@ You will need to create a Cognito Identity Pool linked to the Cognito User Pool 
 
 1. Choose **Allow** to allow Cognito Identity Pools to setup IAM roles for your application's users. Permissions and settings of these roles can be customized later.
 
-1. Copy/paste the *Identity Pool ID*, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab. Make sure not to copy the quotation marks!
+1. Copy/paste the *Identity Pool ID*, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab. Make sure not to copy the quotation marks, but include the region code and ":" character!
 
 	![Copy Identity Pool Id to Cloud9 scratchpad](../images/cognito-identitypool-copyId.png)
 	
@@ -185,15 +185,17 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 
 1. Before using any AWS Amplify modules, we first need to configure Amplify to use our newly created Cognito resources by updating */Auth/website/src/amplify-config.js*.
 
-1. After opening this file in your Cloud9 IDE editor, find an replace the following parameters with values from your previous scratchpad:
+1. After opening this file in your Cloud9 IDE editor, copy the following parameter values from your previous scratchpad into the config value parameter placeholders:
 	- `identityPoolId`
 	- `region`
 	- `userPoolId`
 	- `userPoolWebClientId`
 
+	> Be sure to fill in the **'' blanks** with your config values. You do not need to modify the example values shown in the comments as they are just for reference and not leveraged by your application.
+
 1. Be sure to **save your changes** to the config file so your new Amplify  settings take effect. Any unsaved changes to a file are indicated by a dot icon in the tab of the editor so if you see a gray dot next to the file name, you may have forgotten to save.
 
-1. Next, edit the *website/src/index.js* file to add the following lines to the **top of the file** *(but below all the other imports)* to configure Amplify then save your changes:
+1. Next, edit the *website/src/index.js* file to add the following lines to the **top of the file** **(but below all the other imports)** to configure Amplify then save your changes:
 
 	```
 	import Amplify from 'aws-amplify';
@@ -211,6 +213,8 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 1. **Save your changes** to the */website/src/index.js* file.
 
 1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the */website/src/auth/SignUp.js* file with the code below **then save your changes**.
+
+	> You only need to replace these two methods. The rest of the SignUp.js file should not be modified.
 
 	```
 	async onSubmitForm(e) {
@@ -259,6 +263,8 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	```
 
 1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the */website/src/auth/SignIn.js* file with the code below **then save your changes**.
+
+	> You only need to replace these two methods. The rest of the SignIn.js file should not be modified.
 
     ```
     async onSubmitForm(e) {
@@ -328,6 +334,8 @@ After signing up as a new user, sign-in with the same user at the */signin* path
 1. Visit `/register` path of your Cloud9's website to go to the registration page.
 
 1. Input your e-mail address, phone number with `+country_code` first preceeding the number, as well as your password twice. For a US-based phone number, an example would be `+14251234567`.
+
+	> Your password must include 8 characters, including uppercase and lowercase characters, and at least 1 number and 1 special character.
 
 1. Choose **Let's Ryde** to submit registration.
 

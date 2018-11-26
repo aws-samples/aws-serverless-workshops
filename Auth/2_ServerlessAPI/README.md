@@ -248,8 +248,8 @@ Now that you've deployed the new authorizer configuration to production, all API
 
 If the API now invokes correctly and application funcions as expected summoning unicorns, you may **proceed to complete either**:
 
-- **Optional module extension** with [Fine-grained IAM-based authorization with API Gateway](./Optional-APIGateway-IAMAuth.md)
+- **Optional module 2 extension** with [Fine-grained IAM-based authorization with API Gateway](./Optional-APIGateway-IAMAuth.md)
 
 	OR
 
-- To proceed to he next module, *without completing the optional module extension*, choose [client-side IAM-based Authorization](../3_IAMAuthorization).
+- To proceed to the module 3 *without completing the optional module extension*, choose [client-side IAM-based Authorization](../3_IAMAuthorization).

@@ -176,6 +176,9 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: WildRydes
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
       Body:
         swagger: 2.0
         info:
@@ -241,7 +244,7 @@ Resources:
                 passthroughBehavior: "when_no_match"
                 type: "mock"
   
-  GatewayResponse:
+  Default4XXGatewayResponse:
     Type: AWS::ApiGateway::GatewayResponse
     Properties:
       ResponseParameters:
@@ -250,7 +253,7 @@ Resources:
       ResponseType: DEFAULT_4XX
       RestApiId: !Ref WildRydesApi
 
-  GatewayResponse:
+  Default5XXGatewayResponse:
     Type: AWS::ApiGateway::GatewayResponse
     Properties:
       ResponseParameters:

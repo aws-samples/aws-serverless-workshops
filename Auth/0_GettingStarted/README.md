@@ -29,13 +29,13 @@ this workshop.
 
 In this section you will launch a CloudFormation stack that will create a a new [Amazon VPC](https://aws.amazon.com/vpc/) environment and a [Cloud9 IDE](https://aws.amazon.com/cloud9/) Instance that you will use in the rest of the workshop.
 
-Region| Launch
-------|-----
-US East (N. Virginia) | [![Launch Cloud9 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
-US East (Ohio) | [![Launch Cloud9 in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
-US West (Oregon) | [![Launch Cloud9 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
-EU (Ireland) | [![Launch Cloud9 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-west-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
-Asia Pacific (Singapore) | [![Launch Cloud9 in ap-southeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+Region Name | Region Code | Launch
+------|-----|-----
+US East (N. Virginia) | us-east-1 | [![Launch Cloud9 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+US East (Ohio) | us-east-2 | [![Launch Cloud9 in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-east-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+US West (Oregon) | us-west-2 | [![Launch Cloud9 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-us-west-2/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+EU (Ireland) | eu-west-1 | [![Launch Cloud9 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-eu-west-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
+Asia Pacific (Singapore) | ap-southeast-1 | [![Launch Cloud9 in ap-southeast-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=WildRydes-Cloud9&templateURL=https://s3.amazonaws.com/wildrydes-ap-southeast-1/Auth/0_GettingStarted/Cloud9WithNewVPC.yaml)
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
@@ -50,7 +50,7 @@ Asia Pacific (Singapore) | [![Launch Cloud9 in ap-southeast-1](http://docs.aws.a
 
 1. It will take a few minutes for the Stack to create. Choose the **Stack Info** tab to go to the overall stack status page and wait until the stack is fully launched and shows a status of *CREATE_COMPLETE*. Click the refresh icon periodically to see progress update.
 
-1. With the *WildRydes-Cloud9* stack selected, click on the **Outputs** tab and copy the value shown for the *Cloud9IDE* to the clipboard. Browse to that URL in a new browswer tab to load your IDE environment.
+1. With the *WildRydes-Cloud9* stack selected, click on the **Outputs** tab and copy the value shown for the *Cloud9IDE* to the clipboard. Browse to that URL in a new browser tab to load your IDE environment.
 
 	> Note: When you launch the stack, CloudFormation deploys a nested CloudFormation stack to launch the Cloud9 resources. You can safely ignore that template which is prefixed with "aws-cloud9-WildRydes-".
 

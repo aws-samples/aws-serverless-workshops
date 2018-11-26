@@ -16,13 +16,12 @@ import React from 'react';
 import BaseMap from '../components/BaseMap';
 import ESRIMap from '../components/ESRIMap';
 import Amplify from 'aws-amplify';
-import { Auth, API, Logger } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import awsConfig from '../amplify-config';
 import '../css/ride.css';
 
 const apiName = 'WildRydesAPI';
 const apiPath = '/ride';
-const logger = new Logger('MainApp');
 
 class MainApp extends React.Component {
   constructor(props) {

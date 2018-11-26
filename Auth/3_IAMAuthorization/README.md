@@ -35,7 +35,7 @@ Browse to your CloudFormation stack created in the earlier modules and find the 
 
 1. Next, return to your Cloud9 IDE and open the file */website/src/amplify-config.js*.
 
-1. Fill in values for both the bucket name, which you just copied, as well as the region where the CloudFormation template was launched
+1. Fill in values for both the bucket name, which you just copied, as well as the region where your CloudFormation template was launched
 
 1. Your final structure for the storage configuration of *amplify-config.js* should look like the following.
 
@@ -65,11 +65,17 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 
 1. Search for *WildRydes* to find the two roles which were created by Cognito Identity Pools when you created the Identity Pool in module one. Should you not be able to find the roles here, you can alternatively go to the **Cognito Federated Identities** console, find the correct identity pool, then click **Edit Identity Pool** in the top-right corner to see the roles listed. Each identity pool has both an Unauthenticated user role and an Authenticated user role.
 
-1. Once you have found the names of the roles, go back to the IAM console and select the *Auth* role for your authenticated users.
-
-1. We want to grant permissions to this role which are only applicable to this role so we will use an inline policy, which would be deleted if this role were ever deleted.
+1. Once you have found the names of the roles, go back to the IAM console and **select the *Auth* role** for your authenticated users.
+	
+	> If the full name of the role is hidden from view due to column width, you can hover over the partially visible name of the role to see the full name of the role as a tool tip.
+	
+	![IAM WildRydes Auth Role Selction](../images/iam-wildrydes-role-selection.png)
+	
+1. We want to grant permissions to this role explicitly so we will use an inline policy, which would be deleted with this role if it were ever to be deleted.
 
 1. Choose **Add inline policy** on the right-hand side to create a new inline policy associated to this IAM role.
+
+	![Add inline policy to WildRydes auth role](../images/iam-wildrydes-auth-role-add-inline-policy.png)
 
 1. Choose the **JSON** tab to allow you to free-form edit the new policy.
 
@@ -90,7 +96,7 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 	                "s3:DeleteObject",
 	                "s3:DeleteObjectVersion"
 	            ],
-	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/private/${aws:userid}/*"
+	            "Resource": "arn:aws:s3:::REPLACE_WITH_YOUR_BUCKET_NAME/private/${aws:userid}/*"
 	        },
 	        {
 	            "Effect": "Allow",
@@ -98,7 +104,7 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 	                "s3:GetObject",
 	                "s3:GetObjectVersion"
 	            ],
-	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/*"
+	            "Resource": "arn:aws:s3:::REPLACE_WITH_YOUR_BUCKET_NAME/protected/*"
 	        },
 	        {
 	            "Effect": "Allow",
@@ -107,7 +113,7 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 	                "s3:DeleteObject",
 	                "s3:DeleteObjectVersion"
 	            ],
-	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/protected/${aws:userid}/*"
+	            "Resource": "arn:aws:s3:::REPLACE_WITH_YOUR_BUCKET_NAME/protected/${aws:userid}/*"
 	        },
 	        {
 	            "Effect": "Allow",
@@ -118,7 +124,7 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 	                "s3:DeleteObject",
 	                "s3:DeleteObjectVersion"
 	            ],
-	            "Resource": "arn:aws:s3:::REPLACE_ME_WITH_YOUR_BUCKET_NAME/public/*"
+	            "Resource": "arn:aws:s3:::REPLACE_WITH_YOUR_BUCKET_NAME/public/*"
 	        }
 	    ]
 	}
@@ -156,7 +162,7 @@ Authenticate in the Wild Rydes app if you're not already logged in, then browse 
 
 ### 4. Store profile picture links in Cognito User Pools profile
 
-With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your profile and your profile picture will be lost. To fix this, you will leverage a Cognito User Pools user attribute called *picture* to persist the S3 object key so the same image can be loaded upon each login or to the unicorns when you request a ride.
+With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your user profile and your profile picture will be lost. To fix this, you will leverage a Cognito User Pools user attribute called *picture* to persist the S3 object key so the same image can be loaded upon each login and persisted to be shown to the unicorns when you request a ride.
 
 #### High-Level Instructions
 

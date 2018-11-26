@@ -309,7 +309,7 @@ created DNS name for our API endpoint.
 
 Edit the *environments.ts* file and use `https://api.example.com/` (substituting your
 own domain) instead of the region specific name you used when setting up and
-testing the UI in the second module.  Remeber that you can edit files directly in your
+testing the UI in the second module.  Remember that you can edit files directly in your
 web browser using the Cloud9 IDE.
 
 **IMPORTANT** This new API Endpoint URL does NOT have `/prod/` at the end.

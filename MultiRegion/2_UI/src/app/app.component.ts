@@ -1,9 +1,7 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
-import {CognitoLoginService, CognitoService, LoggedInCallback} from './services/cognito.service';
-import {AWSService} from './services/aws.service';
+import {LoggedInCallback} from './services/cognito.service';
 import {environment} from '../environments/environment';
 import {Router} from '@angular/router';
-import {ToastsManager} from 'ng2-toastr';
 
 @Component({
   selector: 'app-root',
@@ -12,38 +10,29 @@ import {ToastsManager} from 'ng2-toastr';
 })
 export class AppComponent implements OnInit, LoggedInCallback {
 
-  constructor(public router: Router,
-              public toastr: ToastsManager, vcr: ViewContainerRef,
-              public awsService: AWSService,
-              public cognitoService: CognitoService) {
-
-    this.toastr.setRootViewContainerRef(vcr);
-
-  }
+  constructor(public router: Router) {}
 
   ngOnInit() {
 
-    let errorMessages = [];
+    const errorMessages = [];
 
     console.log('AppComponent: Checking configuration values.');
 
-    if(!environment.cognitoIdentityPoolId) {
-      errorMessages.push("Cognito Identity Pool not configured!\n\t The id is available in cloud formation output section.\n");
+    if (!environment.cognitoIdentityPoolId) {
+      errorMessages.push('Cognito Identity Pool not configured!\n\t The id is available in cloud formation output section.\n');
     }
 
-    if(!environment.facebookAppId) {
-      errorMessages.push("Facebook App Id not configured! \n\t This is the ID from your facebook developer portal.\n");
+    if (!environment.facebookAppId) {
+      errorMessages.push('Facebook App Id not configured! \n\t This is the ID from your facebook developer portal.\n');
     }
 
-    if(!environment.ticketAPI) {
-      errorMessages.push("Ticket API not configured!");
+    if (!environment.ticketAPI) {
+      errorMessages.push('Ticket API not configured!');
     }
 
-    if(errorMessages.length > 0) {
+    if (errorMessages.length > 0) {
       this.router.navigate(['/troubleshooting']);
     }
-
-
 
   }
 

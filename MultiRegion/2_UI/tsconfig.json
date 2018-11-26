@@ -16,8 +16,6 @@
       "es2017",
       "dom"
     ],
-    "files": [
-      "index.d.ts"
-    ]
+    "module": "es2015"
   }
 }

@@ -4,7 +4,9 @@ import {
   FacebookCallback
 } from '../../services/cognito.service';
 import {Router} from '@angular/router';
-import {ToastsManager} from 'ng2-toastr';
+import {ToastaService, ToastaConfig, ToastOptions, ToastData} from 'ngx-toasta';
+import { AmplifyService } from 'aws-amplify-angular';
+import { Auth } from 'aws-amplify';
 
 declare var AWS: any;
 
@@ -16,11 +18,13 @@ declare var AWS: any;
 export class LoginComponent implements OnInit, FacebookCallback {
 
 
-  constructor(private toastr: ToastsManager, vRef: ViewContainerRef,
+  constructor(private toastaService: ToastaService, private toastaConfig: ToastaConfig,
               public router: Router,
-              public cognitoLoginService: CognitoLoginService) {
+              public cognitoLoginService: CognitoLoginService,
+              public cognitoService: CognitoService,
+              private amplifyService: AmplifyService) {
 
-    this.toastr.setRootViewContainerRef(vRef);
+    this.toastaConfig.theme = 'default';
 
   }
 
@@ -32,15 +36,44 @@ export class LoginComponent implements OnInit, FacebookCallback {
     this.cognitoLoginService.authenticateWithFacebook(this);
   }
 
-  fbCallback(message: string, result: any) {
+  fbCallback(message: string, reponse: any) {
 
-    console.log('LoginComponent: fbCallback --> result ' + JSON.stringify(result));
+    console.log('LoginComponent: fbCallback --> result ' + JSON.stringify(reponse));
+
+    const that = this;
 
     if (message === null) {
-      this.router.navigate(['/ticket']);
+      Auth.federatedSignIn(
+        'facebook',
+        {
+          token: reponse.accessToken,
+          expires_at: reponse.expiresIn
+        },
+        reponse.userID
+      ).then(credentials => {
+          console.log('Auth.federatedSignIn FULFILLED  credentials --> ' + JSON.stringify(credentials));
 
+          that.router.navigate(['/ticket']);
+        }
+      ).catch(err => {
+          console.log('Auth.federatedSignIn REJECTED-->' + err);
+      });
     } else {
-      this.toastr.error(message, 'Error!');
+
+      const toastOptions: ToastOptions = {
+        title: 'Error',
+        msg: message,
+        showClose: true,
+        timeout: 15000,
+        onAdd: (toast: ToastData) => {
+          console.log('Toast ' + toast.id + ' has been added!');
+        },
+        onRemove: function(toast: ToastData) {
+          console.log('Toast ' + toast.id + ' has been removed!');
+        }
+      };
+      // Add see all possible types in one shot
+      this.toastaService.error(toastOptions);
     }
   }
 

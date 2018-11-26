@@ -9,13 +9,15 @@ import {FormsModule} from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TroubleshootingComponent } from './troubleshooting/troubleshooting.component';
 import {CommonModule} from '@angular/common';
+import {ToastaModule} from 'ngx-toasta';
 
 @NgModule({
   imports: [
     ViewsRoutingModule,
     FormsModule,
     NgxDatatableModule,
-    CommonModule
+    CommonModule,
+    ToastaModule.forRoot()
   ],
   declarations: [
     ViewsComponent,

@@ -44,7 +44,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 2. Creating a Cognito User Pool
 
-Amazon Cognito lets you add user sign-up, sign-in, and access control to your web and mobile apps quickly and easily. In this step, we'll create a Cognito user pool for our Wild Rydes app.
+Amazon Cognito User Pools lets you add user sign-up and sign-in capabilities to your web and mobile apps quickly and easily. In this step, we'll create a Cognito user pool for our Wild Rydes app.
 
 #### High-Level Instructions
 

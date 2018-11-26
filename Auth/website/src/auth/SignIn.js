@@ -34,13 +34,13 @@ class SignIn extends React.Component {
     };
   }
 
-  onSubmitForm(e) {
+  async onSubmitForm(e) {
     e.preventDefault();
     console.log('Form Submitted');
     this.setState({ stage: 1 });
   }
 
-  onSubmitVerification(e) {
+  async onSubmitVerification(e) {
     e.preventDefault();
     console.log('Verification Submitted');
     this.setState({ stage: 0, email: '', password: '', code: '' });

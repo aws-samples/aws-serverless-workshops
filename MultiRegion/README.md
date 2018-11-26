@@ -73,15 +73,18 @@ Using the two regions above for this workshop is mandatory.  We will start with 
 (please read these carefully and do not jump ahead and start setting things up
 unless specifically called out)
 
+### Get Set Up! Follow this link to get things going....  
+
+[README_InstallDevDependencies](README_InstallDevDependencies.md)  
+
 ### AWS Account
 
 In order to complete this workshop you'll need an AWS Account with access to
 create AWS IAM, EC2, Cognito, CloudFront, Cloud9, S3, DynamoDB, Lambda, and
-API Gateway.  The code and instructions in this workshop assume only one student
-is using a given AWS account at a time. If you try sharing an account with
-another student, you'll run into naming conflicts for certain resources - we
-do not recommend this as there may be unpredictable results or difficult to
-identify configuration issues.
+API Gateway.  The code and instructions in this workshop assume only one participant
+is using a given AWS account at a time. If you try sharing an account, you'll run
+into naming conflicts for certain resources - we do not recommend this as there ma
+be unpredictable results or difficult to identify configuration issues.
 
 ### Domain Name (this is covered in Module 3)
 
@@ -92,7 +95,7 @@ the email account associated with the domain name registration or to the
 DNS server assigend to the domain in order to prove you own the domain when
 creating SSL certiticates in Amazon Certificate Manager.  
   
-(re:Invent participants - please see the workshop team if you need to "borrow"
+(re:Invent 2018 participants - please see the workshop team if you need to "borrow"
 a domain in order to complete the workshop)
 
 ### Facebook Developer Account and App ID
@@ -119,9 +122,6 @@ you need in one place as you work your way through each module.
 * Included in the Cloud9 IDE:  AWS CLI, Git, VI/VIM, Node.js, NPM, Python and
 anything else you might need to complete the workshop.
 
-### Get Set Up! Follow this link to get things going....  
-
-[README_InstallDevDependencies](README_InstallDevDependencies.md)  
 ### Browser
 
 We recommend you use the latest version of Chrome or Firefox when testing the

@@ -1,0 +1,337 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Deploys the Wild Rydes Serverless API
+
+Resources:
+  RidesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Rides
+      AttributeDefinitions:
+        -
+          AttributeName: RideId
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: RideId
+          KeyType: HASH
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  RequestUnicornExecutionRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      RoleName: WildRydesLambda
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - lambda.amazonaws.com
+            Action: 
+              - "sts:AssumeRole"
+      Path: "/wildrydes/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies: 
+        - 
+          PolicyName: PutRidePolicy
+          PolicyDocument: 
+            Version: 2012-10-17
+            Statement: 
+              - 
+                Effect: Allow
+                Action: 
+                  - dynamodb:PutItem
+                  - dynamodb:Scan
+                Resource: !GetAtt RidesTable.Arn
+  
+  RequestUnicornFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: RequestUnicorn
+      Runtime: nodejs6.10
+      Role: !GetAtt RequestUnicornExecutionRole.Arn
+      Timeout: 5
+      MemorySize: 128
+      Handler: index.handler
+      Code:
+        ZipFile: >
+          const randomBytes = require('crypto').randomBytes;
+
+          const AWS = require('aws-sdk');
+
+          const ddb = new AWS.DynamoDB.DocumentClient();
+
+          const fleet = [
+              {
+                  Name: 'Bucephalus',
+                  Color: 'Golden',
+                  Gender: 'Male',
+              },
+              {
+                  Name: 'Shadowfax',
+                  Color: 'White',
+                  Gender: 'Male',
+              },
+              {
+                  Name: 'Rocinante',
+                  Color: 'Yellow',
+                  Gender: 'Female',
+              },
+          ];
+
+          exports.handler = (event, context, callback) => {
+
+              const rideId = toUrlString(randomBytes(16));
+              console.log('Received event (', rideId, '): ', event);
+
+              // The body field of the event in a proxy integration is a raw string.
+              // In order to extract meaningful values, we need to first parse this string
+              // into an object. A more robust implementation might inspect the Content-Type
+              // header first and use a different parsing strategy based on that value.
+              const requestBody = JSON.parse(event.body);
+
+              const pickupLocation = requestBody.PickupLocation;
+
+              const unicorn = findUnicorn(pickupLocation);
+
+              recordRide(rideId, unicorn).then(() => {
+                  // You can use the callback function to provide a return value from your Node.js
+                  // Lambda functions. The first parameter is used for failed invocations. The
+                  // second parameter specifies the result data of the invocation.
+
+                  // Because this Lambda function is called by an API Gateway proxy integration
+                  // the result object must use the following structure.
+                  callback(null, {
+                      statusCode: 201,
+                      body: JSON.stringify({
+                          RideId: rideId,
+                          Unicorn: unicorn,
+                          UnicornName: unicorn.Name,
+                          Eta: '30 seconds',
+                      }),
+                      headers: {
+                          'Access-Control-Allow-Origin': '*',
+                      },
+                  });
+              }).catch((err) => {
+                  console.error(err);
+
+                  // If there is an error during processing, catch it and return
+                  // from the Lambda function successfully. Specify a 500 HTTP status
+                  // code and provide an error message in the body. This will provide a
+                  // more meaningful error response to the end client.
+                  errorResponse(err.message, context.awsRequestId, callback)
+              });
+          };
+
+          // This is where you would implement logic to find the optimal unicorn for
+          // this ride (possibly invoking another Lambda function as a microservice.)
+          // For simplicity, we'll just pick a unicorn at random.
+
+          function findUnicorn(pickupLocation) {
+              console.log('Finding unicorn for ', pickupLocation.Latitude, ', ', pickupLocation.Longitude);
+              return fleet[Math.floor(Math.random() * fleet.length)];
+          }
+
+          function recordRide(rideId, unicorn) {
+              return ddb.put({
+                  TableName: 'Rides',
+                  Item: {
+                      RideId: rideId,
+                      Unicorn: unicorn,
+                      UnicornName: unicorn.Name,
+                      RequestTime: new Date().toISOString(),
+                  },
+              }).promise();
+          }
+
+          function toUrlString(buffer) {
+              return buffer.toString('base64')
+                  .replace(/\+/g, '-')
+                  .replace(/\//g, '_')
+                  .replace(/=/g, '');
+          }
+
+          function errorResponse(errorMessage, awsRequestId, callback) {
+            callback(null, {
+              statusCode: 500,
+              body: JSON.stringify({
+                Error: errorMessage,
+                Reference: awsRequestId,
+              }),
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+              },
+            });
+          }
+
+  WildRydesApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: WildRydes
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Body:
+        swagger: 2.0
+        info:
+          version: 1.0.0
+          title: WildRydes
+        paths:
+          /ride:
+            post:
+              description: Requests a new ride
+              consumes:
+                - application/json
+              produces:
+                - application/json
+              security:
+                - CognitoAuthorizer: []
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: 200
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                uri: 
+                  Fn::Join:
+                    - ""
+                    - - "arn:aws:apigateway:"
+                      - !Ref AWS::Region
+                      - ":lambda:path/2015-03-31/functions/"
+                      - !GetAtt RequestUnicornFunction.Arn
+                      - "/invocations"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+            options:
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: "string"
+                    Access-Control-Allow-Methods:
+                      type: "string"
+                    Access-Control-Allow-Headers:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                requestTemplates:
+                  application/json: "{\"statusCode\": 200}"
+                passthroughBehavior: "when_no_match"
+                type: "mock"
+  
+  Default4XXGatewayResponse:
+    Type: AWS::ApiGateway::GatewayResponse
+    Properties:
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+        gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+      ResponseType: DEFAULT_4XX
+      RestApiId: !Ref WildRydesApi
+
+  Default5XXGatewayResponse:
+    Type: AWS::ApiGateway::GatewayResponse
+    Properties:
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+        gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+      ResponseType: DEFAULT_5XX
+      RestApiId: !Ref WildRydesApi
+
+  WildRydesApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      Description: Prod deployment for wild Rydes API
+      RestApiId: !Ref WildRydesApi
+      StageName: prod         
+
+  WildRydesFunctionPermissions:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref RequestUnicornFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:aws:execute-api:"
+            - !Ref AWS::Region
+            - ":"
+            - !Ref AWS::AccountId
+            - ":"
+            - !Ref WildRydesApi
+            - "/*"
+
+  CognitoIdentityPoolAuthStandardPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: WildRydesAPI-StandardUserPolicy
+      Description: "Managed IAM policy to provide API invocation permissions to Wild Rydes API"
+      Path: "/wildrydes/"
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action: execute-api:Invoke
+          Resource:
+            Fn::Join:
+              - ""
+              - - "arn:aws:execute-api:"
+                - !Ref "AWS::Region"
+                - ":"
+                - !Ref "AWS::AccountId"
+                - ":"
+                - !Ref "WildRydesApi"
+                - "/*/*/ride"
+
+  ProfilePicturesBucket:
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders: ["*"]
+          AllowedMethods: ["GET","HEAD","PUT","POST","DELETE"]
+          AllowedOrigins: ["*"]
+          ExposedHeaders: ["x-amz-server-side-encryption","x-amz-request-id","x-amz-id-2","ETag"]
+          MaxAge: '3600'
+    Type: "AWS::S3::Bucket"
+
+Outputs:
+  WildRydesApiInvokeUrl:
+    Description: URL for the deployed wild rydes API
+    Value:
+      Fn::Join:
+        - ""
+        - - "https://"
+          - !Ref WildRydesApi
+          - ".execute-api."
+          - !Ref AWS::Region
+          - ".amazonaws.com/prod"
+    Export:
+      Name: WildRydesApiUrl
+  WildRydesProfilePicturesBucket:
+    Description: S3 bucket to store user uploaded profile pictures
+    Value: !Ref "ProfilePicturesBucket"

@@ -1,0 +1,63 @@
+.panel-default {
+    border-color: #dddddd;
+}
+.panel {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-default > .panel-heading {
+    background-color: #f5f5f5;
+    border-color: #dddddd;
+    color: #333333;
+}
+.panel-heading {
+    border-bottom: 1px solid rgba(0, 0, 0, 0);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 10px 15px;
+}
+
+.panel-title {
+    color: inherit;
+    font-size: 16px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.configMessage {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: transparent;
+    position: absolute;
+    z-index: 2000;
+}
+
+.configMessage .panel {
+    margin: auto;
+    width: 40%;
+    top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    z-index: 100;
+}
+
+.configMessage .panel-body {
+    text-align: left;
+}
+
+.configMessage .backdrop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: 0.6;
+    z-index: 50;
+}

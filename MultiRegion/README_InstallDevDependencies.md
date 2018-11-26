@@ -3,61 +3,45 @@
 This README provides brief instructions on setting up a dev environment
 that you can use to clone the project, edit project files, build the UI
 and deploy the application.  You can also deploy any of the CloudFormation
-templates from any module using the EC2 instance as well.
+templates from any module using the Cloud9 IDE as well!
 
-We strongly recommend you use this AMI which will have the necessary
+We strongly recommend you use Cloud9 which will have the necessary
 dependencies, i.e. AWS CLI, git, node/npm, angular cli already installed
-and configured - you'll only need to clone the git repository.
+and configured - you'll only need to clone the git repository and update
+the version of nvm used.
 
-Our dev environment instance will be in `eu-west-1` (Ireland)
+Our Cloud9 instance will be in `eu-west-1` (Ireland)
 
-## Create the IAM Role to assign to the EC2 instance
+## Using the Cloud9 IDE Instance
 
-Brief instructions on how to create the policy and role:
+The Cloud9 service allows you to complete the entire workshop using just your web browser - including conneting to the command line on your development instance - its really simple to set up.  We are going to use the EC2 Instance method
 
-1. Open IAM
-2. Select **Role** from the left and then **Create Role**
-3. Under *AWS Service* choose `EC2` and then select the use case of `EC2`
-4. Click **Next: Permissions**
-5. Choose **AdministratorAccess** from the list of Policies
-6. Click **Next: Review**
-7. Give the role a name such as `EC2-admin-role`
+[Cloud9 Setup Documentation](https://docs.aws.amazon.com/cloud9/latest/user-guide/create-environment.html)
 
-Assign this role to the EC2 instance when launching the AMI
+Make sure you are in `eu-west-1` region.
 
-## Using an AMI
+## Connect to the instance via the web console
 
-Before you launch the AMI, if this is your first time launching a Linux EC2
-instance, read through the following documentation on how to access the instance
-using SSH keys:
+![Connect to Cloud9 IDE](images/cloud9_connect.png)
 
-[EC2 Linux SSH Documentation](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html)
+## Install the correct version of nvm  
 
-Make sure you are in `eu-west-1` region. Launch an EC2 instance by navigating
-to the "Community AMI"s in step 1 of EC2 launch wizard. In the "Search
-community AMIs" text box enter "sxr-dev-instance". For this instance a
-t2.micro will suffice. Launch the instance in a public subnet with a
-security group allowing ssh from anywhere.  Choose the role you created above and
-assign it to the instance before launching.  Assign an existing SSH key you
-already have access to, or create and download a new one.
+nvm install 8.12.0
 
-Once the instance is up and running, you can connect to it using SSH.  Here is
-a sample of how to use the SSH command on MacOS and Linux:
-
-`ssh -i yourkey.pem ec2-user@x.x.x.x` (where x.x.x.x is the public IP of the EC2
-instance)
-
-If you are using Windows and Putty, you will need to convert the .pem file to a
-.ppk file.  There are instructions available on how to do this by searching the
-internet.
+![Install NVM](images/install_nvm.png)
 
 ## Clone the workshop project
 
-Once you get logged in to the instance,
-run `git clone https://github.com/awslabs/aws-serverless-workshops.git`
+git clone https://github.com/awslabs/aws-serverless-workshops.git
+
+![Clone Repo](images/git_clone.png)
 
 This will pull down all of the files and directories you will need to complete
 the workshop and keep them on the local file system.
+
+**Note** If you decide to open a second tab or command line in your Cloud9 environment,  or
+the instance is not used for a long perioud of time, you will need to re-install the correct version
+of nvm again.
 
 ## Building the UI
 
@@ -65,63 +49,7 @@ You should now be able to build the UI when you get to that step in the second
 module, as well as deploy CloudFormation templates, and do any other workshop
 activities that require command line activities.
 
-One you have the instance up and running and you have connected to it, go ahead
-and start the workshop.
-
-## EC2 Dev Instance Configuration (manually installing - not needed if using the AMI)
-
-If you would really like to set up your own instance from scratch you can execute
-the following instructions.
-
-For this dev instance
-- a t2.micro will be fine.
-- use the AWS Linux AMI already configured with the AWS CLI.
-- deploy to the default VPC
-
-Your EC2 instance should have:
-- A role assigned that allows full access (see sample policy below).
-- A security group that allows SSH from your IP address.
-
-Once launched, SSH in to your dev EC2 instance.
-
-#### Update to latest packages
-`sudo yum update -y`
-
-#### Install git
-`sudo yum install git -y`
-
-#### Create a dev directory
-- create a dev directory: `mkdir sxrdev`
-- cd into this directory: `cd sxrdev`
-
-##### Install Node & NPM
-
-We will use NVM (Node Version Manager) to install Node and NPM (Node Package
-Manager).
-
-Execute the following commands to install Node & NPM:
-
-- Install NVM: `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash`
-- Activate NVM: - `. ~/.nvm/nvm.sh`
-- Install Node and NPM: `nvm install 8.9.1`
-
-Confirm installation by typing the following:
-- `npm -v` should output '5.5.1'
-- `node -v` should output 'v8.9.1'
-
-#### Clone the workshop project
-
-`git clone https://github.com/awslabs/aws-serverless-workshops.git`
-
-#### Angular CLI installation
-
-Now that you have Node and NPM we can install the Angular CLI to build our
-project.
-
-Install Angular cli: `npm install -g @angular/cli`
-
-This will take about a minute and when done you will see a message like
-"added 968 packages in 31.494s"
+One you have the instance up and running and you have connected to it, you can move forward.
 
 ## Completion
 

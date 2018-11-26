@@ -6,11 +6,12 @@ import {CognitoService} from '../../services/cognito.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              public cognitoService: CognitoService) { }
 
-  canActivate() {
+  async canActivate() {
 
-    if (CognitoService.isLoggedin()) {
+    if ( this.cognitoService.isLoggedin()) {
       return true;
     }
 

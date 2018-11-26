@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
   templateUrl: './troubleshooting.component.html',
   styleUrls: ['./troubleshooting.component.css']
 })
-export class TroubleshootingComponent implements OnInit {
+export class TroubleshootingComponent {
 
   public env: any;
 
@@ -17,38 +17,32 @@ export class TroubleshootingComponent implements OnInit {
 
     this.env = environment;
 
-    let errorMessages = [];
+    const errorMessages = [];
 
     console.log('AppComponent: Checking configuration values.');
 
-    if(!environment.cognitoIdentityPoolId) {
-      errorMessages.push("Cognito Identity Pool not configured!\n\t The id is available in cloud formation output section.\n");
+    if (!environment.cognitoIdentityPoolId) {
+      errorMessages.push('Cognito Identity Pool not configured!\n\t The id is available in cloud formation output section.\n');
     }
 
-    if(!environment.facebookAppId) {
-      errorMessages.push("Facebook App Id not configured! \n\t This is the ID from your facebook developer portal.\n");
+    if (!environment.facebookAppId) {
+      errorMessages.push('Facebook App Id not configured! \n\t This is the ID from your facebook developer portal.\n');
     }
 
-    if(!environment.ticketAPI) {
-      errorMessages.push("Ticket API not configured!");
+    if (!environment.ticketAPI) {
+      errorMessages.push('Ticket API not configured!');
     }
     //
-    if(environment.ticketAPI && !(environment.ticketAPI.slice(-1) === "/")) {
-      errorMessages.push("Ticket API URL needs a trailing slash!");
-      this.invalidAPIURL = "Ticket API URL needs a trailing slash!";
+    if (environment.ticketAPI && !(environment.ticketAPI.slice(-1) === "/")) {
+      errorMessages.push('Ticket API URL needs a trailing slash!');
+      this.invalidAPIURL = 'Ticket API URL needs a trailing slash!';
     }
 
-    console.log(errorMessages.join("\n"));
+    console.log(errorMessages.join('\n'));
 
-    if(errorMessages.length <= 0 ){
+    if (errorMessages.length <= 0 ) {
       this.router.navigate(['/home']);
     }
-
-  }
-
-  ngOnInit() {
-
-
 
   }
 

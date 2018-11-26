@@ -3,7 +3,7 @@
   <header class="awsui-util-clearfix">
     <ul class="navigation">
       <li class="awsui-util-f-l">
-        <a href="/" class="home-link">SXR ({{region}})</a>
+        <a href="/" class="home-link">SXR ({{region}})</a><span>&nbsp;<button class="awsui awsui-button" (click)="callHealth()">Refresh Region Location</button></span>
       </li>
       <a  class="awsui-util-f-r" (click)="onLoggedout()" *ngIf="cognitoService.currentEmailID">
         <i class="fa fa-fw fa-power-off"></i> Log Out

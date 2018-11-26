@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ITicket} from '../../model/ticket';
 import {FormGroup} from '@angular/forms';
 import {TicketService} from '../../services/ticket.service';
 import {CognitoService} from '../../services/cognito.service';
 import {Router} from '@angular/router';
-import {ToastsManager} from 'ng2-toastr';
 import {environment} from '../../../environments/environment';
+import {ToastaService, ToastaConfig, ToastOptions, ToastData} from 'ngx-toasta';
 
 @Component({
   selector: 'app-ticket-list',
@@ -30,13 +30,12 @@ export class TicketListComponent implements OnInit {
 
   errorMessage: String;
 
-
   constructor(public router: Router,
               public cognitoService: CognitoService,
-              private toastr: ToastsManager, vRef: ViewContainerRef,
+              private toastaService: ToastaService, private toastaConfig: ToastaConfig,
               public ticketService: TicketService) {
 
-    this.toastr.setRootViewContainerRef(vRef);
+    this.toastaConfig.theme = 'default';
 
     this.refresh();
 
@@ -68,12 +67,13 @@ export class TicketListComponent implements OnInit {
           self.ticketForm.reset();
           console.log(ticket);
           self.rows.push(ticket);
+          self.refresh();
         },
         error => this.errorMessage = <any>error);
 
   }
 
-  refresh(){
+  refresh() {
 
     this.ticketService.getTickets()
       .subscribe(
@@ -81,11 +81,25 @@ export class TicketListComponent implements OnInit {
           this.rows = tickets.Items;
         },
         error => {
-          console.log("ERROR: " + error);
-          this.toastr.error("Please check your api URL configuration " +
-            "and make sure it matches the output from Cloud Formation " +
-            "template. Here is the url you have configured: " + environment.ticketAPI, 'Error!',
-            {dismiss: 'click'});
+          console.log('ERROR: ' + error);
+
+          const toastOptions: ToastOptions = {
+            title: 'Error',
+            msg: 'Please check your api URL configuration ' +
+                 'and make sure it matches the output from Cloud Formation ' +
+                 'template. Here is the url you have configured: ' + environment.ticketAPI,
+            showClose: true,
+            timeout: 5000,
+            onAdd: (toast: ToastData) => {
+              console.log('Toast ' + toast.id + ' has been added!');
+            },
+            onRemove: function(toast: ToastData) {
+              console.log('Toast ' + toast.id + ' has been removed!');
+            }
+          };
+          // Add see all possible types in one shot
+          this.toastaService.error(toastOptions);
+
         }
       );
   }

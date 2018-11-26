@@ -1,11 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: ServerlessXR
+Description: SXR UI Stack - static website bucket, cognito identity pool, roles, etc.
+
 Resources:
+
   CognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"
     Properties:
       IdentityPoolName: SXRIdentityPool
-      AllowUnauthenticatedIdentities: false
+      AllowUnauthenticatedIdentities: true
   SXRAuthenticatedRole:
       Type: AWS::IAM::Role
       Properties:
@@ -26,6 +28,25 @@ Resources:
                 cognito-identity.amazonaws.com:amr:
                 - "authenticated"
         Path: "/"
+        
+  SXRUNAuthenticatedRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Principal:
+              Federated:
+              - cognito-identity.amazonaws.com
+            Action:
+            - sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                cognito-identity.amazonaws.com:aud:
+                - !Ref CognitoIdentityPool
+        Path: "/"
+  
   RolePolicies:
     Type: AWS::IAM::Policy
     Properties:
@@ -45,6 +66,7 @@ Resources:
       IdentityPoolId: !Ref CognitoIdentityPool
       Roles:
         authenticated: !GetAtt SXRAuthenticatedRole.Arn
+        unauthenticated: !GetAtt SXRUNAuthenticatedRole.Arn
 
   WebsiteBucket:
     Type: AWS::S3::Bucket

@@ -35,11 +35,12 @@ git clone https://github.com/awslabs/aws-serverless-workshops.git
 
 ![Clone Repo](images/git_clone.png)
 
-(for workshop testers -  git clone https://github.com/juan4aws/aws-serverless-workshops)
-TODO: Remove before final commit
-
 This will pull down all of the files and directories you will need to complete
 the workshop and keep them on the local file system.
+
+**Note** If you decide to open a second tab or command line in your Cloud9 environment,  or
+the instance is not used for a long perioud of time, you will need to re-install the correct version
+of nvm again.
 
 ## Building the UI
 

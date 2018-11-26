@@ -118,7 +118,7 @@ identity provider. To do this, open up the AWS Console in your browser and
 navigate to Cognito from the menu. Double check that you are still in the
 primary region (EU Ireland).
 
-1. Choose Manage Federated Identities and select the SXRIdentityPool.
+1. Choose **Manage Identity Pools** and then select the SXRIdentityPool.
 2. Click the Edit Identity Pool button in the top right
 3. Take note of the Identity pool ID noted at the top of this page
 4. Navigate to the Authentication Providers section.

@@ -160,7 +160,9 @@ You will need to create a Cognito Identity Pool linked to the Cognito User Pool 
 
 1. Choose **Allow** to allow Cognito Identity Pools to setup IAM roles for your application's users. Permissions and settings of these roles can be customized later.
 
-1. Copy/paste the *Identity Pool ID*, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab. Make sure not to copy the quotation marks, but include the region code and ":" character!
+1. Copy/paste the *Identity Pool ID*, highlighted in red within the code sample in the Get AWS Credentials section, into your Cloud9 scatchpad editor tab.
+
+	> Do not copy the quotation marks, but include the region code and ":" character.
 
 	![Copy Identity Pool Id to Cloud9 scratchpad](../images/cognito-identitypool-copyId.png)
 	
@@ -193,7 +195,7 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 
 	> Be sure to fill in the **'' blanks** with your config values. You do not need to modify the example values shown in the comments as they are just for reference and not leveraged by your application.
 
-1. Be sure to **save your changes** to the config file so your new Amplify  settings take effect. Any unsaved changes to a file are indicated by a dot icon in the tab of the editor so if you see a gray dot next to the file name, you may have forgotten to save.
+1. **Save your changes** to the Amplify config file so your new  settings take effect. Any unsaved changes to a file are indicated by a dot icon in the tab of the editor so if you see a gray dot next to the file name, you may have forgotten to save.
 
 1. Next, edit the *website/src/index.js* file to add the following lines to the **top of the file** **(but below all the other imports)** to configure Amplify then save your changes:
 
@@ -203,6 +205,12 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	
 	Amplify.configure(awsConfig);
 	```
+	
+	> After making this changes, your imports should be in the following order:
+	
+	![Amplify imports order](../images/amplify-imports-order.png)
+	
+1. **Save your changes** to the *website/src/index.js* file.
 
 1. Next, we need to ensure our application evaluates the user's authenticated state. In the same */website/src/index.js* file, find and replace the **isAuthenticated method** with the code below to use our Amplify library's built-in user session to check this status.
 
@@ -212,7 +220,7 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	
 1. **Save your changes** to the */website/src/index.js* file.
 
-1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the */website/src/auth/SignUp.js* file with the code below **then save your changes**.
+1. Now that we've imported the Amplify and configured the Amplify library, we need to update our application's code to sign-up users using Amplify and Cognito User Pools by finding and replacing the following methods within the */website/src/auth/SignUp.js* file with the following code.
 
 	> You only need to replace these two methods. The rest of the SignUp.js file should not be modified.
 	
@@ -222,22 +230,26 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 
 	```
 	async onSubmitForm(e) {
-	e.preventDefault();
-	try {
-	    const params = {
-	        username: this.state.email.replace(/[@.]/g, '|'),
-	        password: this.state.password,
-	        attributes: {
-	        email: this.state.email,
-	        phone_number: this.state.phone
-	        },
-	        validationData: []
-	    };
-	    const data = await Auth.signUp(params);
-	    console.log(data);
-	    this.setState({ stage: 1 });
-	} catch (err) {
-	    if (err.message === "User already exists") {
+	  e.preventDefault();
+	  try {
+	      const params = {
+	          username: this.state.email.replace(/[@.]/g, '|'),
+	          password: this.state.password,
+	          attributes: {
+		          email: this.state.email,
+		          phone_number: this.state.phone
+	          },
+	          validationData: []
+	      };
+	      const data = await Auth.signUp(params);
+	      console.log(data);
+	      this.setState({ stage: 1 });
+	  } catch (err) {
+	    if (err === "No userPool") {
+	      // User pool not defined in Amplify config file
+	      console.error("User Pool not defined");
+	      alert("User Pool not defined. Amplify config must be updated with user pool config");
+	    } else if (err.message === "User already exists") {
 	        // Setting state to allow user to proceed to enter verification code
 	        this.setState({ stage: 1 });
 	    } else {
@@ -246,27 +258,29 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	        console.error("Exception from Auth.signUp: ", err);
 	        this.setState({ stage: 0, email: '', password: '', confirm: '' });
 	    }
-	}
+	  }
 	}
 	
 	async onSubmitVerification(e) {
 	    e.preventDefault();
 	    try {
-	    const data = await Auth.confirmSignUp(
-	        this.state.email.replace(/[@.]/g, '|'),
-	        this.state.code
-	    );
-	    console.log(data);
-	    // Go to the sign in page
-	    this.props.history.replace('/signin');
+	      const data = await Auth.confirmSignUp(
+	          this.state.email.replace(/[@.]/g, '|'),
+	          this.state.code
+	      );
+	      console.log(data);
+	      // Go to the sign in page
+	      this.props.history.replace('/signin');
 	    } catch (err) {
-	    alert(err.message);
-	    console.error("Exception from Auth.confirmSignUp: ", err);
+	      alert(err.message);
+	      console.error("Exception from Auth.confirmSignUp: ", err);
 	    }
 	}
 	```
+	
+1. **Save your changes** to the */website/src/auth/SignUp.js* file.
 
-1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the */website/src/auth/SignIn.js* file with the code below **then save your changes**.
+1. You additionally need to integrate the sign-in capability to use AWS Amplify and Cognito by finding and replacing the following methods within the */website/src/auth/SignIn.js* file with the code below.
 
 	> You only need to replace these two methods. The rest of the SignIn.js file should not be modified.
 	
@@ -275,52 +289,53 @@ You'll need to complete the implementation of the onSubmitForm and onSubmitVerif
 	> The onSubmitVerification method is used to submit a verification code whenever multi-factor authentication is required to authenticate. For this workshop, this method will not be invoked since you did not require multi-factor authentication earlier when configuring your Cognito User Pool.  
 
     ```
-    async onSubmitForm(e) {
-        e.preventDefault();
-        try {
-            const userObject = await Auth.signIn(
-                this.state.email.replace(/[@.]/g, '|'),
-                this.state.password
-            );
-            console.log('userObject', userObject);
-            if (userObject.challengeName) {
-            // Auth challenges are pending prior to token issuance
-            this.setState({ userObject, stage: 1 });
-            } else {
-            // No remaining auth challenges need to be satisfied
-            const session = await Auth.currentSession();
-            // console.log('Cognito User Access Token:', session.getAccessToken().getJwtToken());
-            console.log('Cognito User Identity Token:', session.getIdToken().getJwtToken());
-            // console.log('Cognito User Refresh Token', session.getRefreshToken().getToken());
-            this.setState({ stage: 0, email: '', password: '', code: '' });
-            this.props.history.replace('/app');
-            }
-        } catch (err) {
-            alert(err.message);
-            console.error('Auth.signIn(): ', err);
-        }
-    }
+	async onSubmitForm(e) {
+	    e.preventDefault();
+	    try {
+	        const userObject = await Auth.signIn(
+	          this.state.email.replace(/[@.]/g, '|'),
+	          this.state.password
+	        );
+	        console.log('userObject', userObject);
+	        if (userObject.challengeName) {
+	          // Auth challenges are pending prior to token issuance
+	          this.setState({ userObject, stage: 1 });
+	        } else {
+	          // No remaining auth challenges need to be satisfied
+	          const session = await Auth.currentSession();
+	          // console.log('Cognito User Access Token:', session.getAccessToken().getJwtToken());
+	          console.log('Cognito User Identity Token:', session.getIdToken().getJwtToken());
+	          // console.log('Cognito User Refresh Token', session.getRefreshToken().getToken());
+	          this.setState({ stage: 0, email: '', password: '', code: '' });
+	          this.props.history.replace('/app');
+	        }
+	    } catch (err) {
+	        alert(err.message);
+	        console.error('Auth.signIn(): ', err);
+	    }
+	}
 
-    async onSubmitVerification(e) {
-        e.preventDefault();
-        try {
-            const data = await Auth.confirmSignIn(
-                this.state.userObject,
-                this.state.code
-        );
-            console.log('Cognito User Data:', data);
-            const session = await Auth.currentSession();
-            // console.log('Cognito User Access Token:', session.getAccessToken().getJwtToken());
-            console.log('Cognito User Identity Token:', session.getIdToken().getJwtToken());
-            // console.log('Cognito User Refresh Token', session.getRefreshToken().getToken());
-            this.setState({ stage: 0, email: '', password: '', code: '' });
-            this.props.history.replace('/app');
-        } catch (err) {
-            alert(err.message);
-            console.error('Auth.confirmSignIn(): ', err);
-        }
-    }
+	async onSubmitVerification(e) {
+	    e.preventDefault();
+	    try {
+	      const data = await Auth.confirmSignIn(
+	        this.state.userObject,
+	        this.state.code
+	      );
+	      console.log('Cognito User Data:', data);
+	      const session = await Auth.currentSession();
+	      // console.log('Cognito User Access Token:', session.getAccessToken().getJwtToken());
+	      console.log('Cognito User Identity Token:', session.getIdToken().getJwtToken());
+	      // console.log('Cognito User Refresh Token', session.getRefreshToken().getToken());
+	      this.setState({ stage: 0, email: '', password: '', code: '' });
+	      this.props.history.replace('/app');
+	    } catch (err) {
+	      alert(err.message);
+	      console.error('Auth.confirmSignIn(): ', err);
+	    }
+	}
     ```
+1. **Save your changes** to the */website/src/auth/SignIn.js* file.
 
 </p></details>
 

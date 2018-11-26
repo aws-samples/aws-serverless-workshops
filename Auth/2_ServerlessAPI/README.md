@@ -22,6 +22,8 @@ You will be creating your Serverless API built with Amazon API Gateway, AWS Lamb
 
 Create a new WildRydes Serverless Backend stack by launching a CloudFormation stack based on the **ServerlessBackend.yaml** file in the module 2 folder. Name the stack `WildRydesBackend`.
 
+This WildRydes backend CloudFormation template will provision your API Gateway deployment with Lambda functions for compute, a DynamoDB database for persistence, and an S3 bucket for photo uploads which will be used in module 3. Additionally, the necessary function invocation permissions and execution role for the Lambda function will also be provisioned.
+
 Region Name | Region Code | Launch
 ------|-----|-----
 US East (N. Virginia) | us-east-1 | [![Launch Serverless Backend in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=WildRydesBackend&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/Auth/2_ServerlessAPI/ServerlessBackend.yaml)
@@ -121,13 +123,15 @@ You should be informed of your unicorn's arrival momentarily.
 #### Background
 Amazon API Gateway can use the JSON Web tokens (JWT) returned by Cognito User Pools to authenticate API calls. In this step, you'll configure an authorizer for your API to use the user pool you created in [module 1](../1_UserAuthentication).
 
+Since Cognito User Pools implements [OpenID Connect](https://en.wikipedia.org/wiki/OpenID_Connect) JSON web tokens, API Gateway is able to compare the signature of an access or identity token against the known public keys of the Cognito User Pool which allows verification and authentication to happen without having to write additional code in your application.
+
 #### High-Level Instructions
-In the Amazon API Gateway console, create a new Cognito user pool authorizer for your API. Configure it to use the user pool that you created in the previous module. You can test the configuration in the console by copying and pasting the identity token presented to you after you log in via the `/signin` path of your current website. Once setup, you will change your application's code to send the proper JSON web token with its API requests to authenticate.
+In the Amazon API Gateway console, create a new Cognito user pool authorizer for your API. Configure it to use the user pool that you created in the previous module. You can test the configuration in the console by copying and pasting the identity token printed to the console after you log in via the `/signin` path of your current website. Once setup, you will change your application's code to send the proper JSON web token with its API requests to authenticate.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console choose **Services** then select **API Gateway** under Security, Identity, and Compliance.
+1. In the AWS Management Console choose **Services** then select **API Gateway** under Networking and Content Delivery.
 
 2. Choose the API named *WildRydes*.
 
@@ -208,17 +212,17 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 Now that you've deployed the new authorizer configuration to production, all API requests must be authenticated to be processed.
 
-30. Return to your Wild Rydes app, sign in at */signin* if necessary, and attempt to request a ride.
+29. Return to your Wild Rydes app, sign in at */signin* if necessary, and attempt to request a ride.
 
-31. You should receive an *Error finding unicorn*. If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
+30. You should receive an *Error finding unicorn*. If you open the developer console, you will see that we received a HTTP 401 error, which means it was an unauthorized request. To authenticate our requests properly, we need to send an Authorization header.
 
 	> If you at first still that you requests go through without any errors, try requesting a ride again in 30-60 seconds to allow the API Gateway changes to fully propagate.
 
-32. Go back to Cloud9 and open the */website/src/pages/MainApp.js* files.
+31. Go back to Cloud9 and open the */website/src/pages/MainApp.js* files.
 
-33. Browse down to the *getData* method you previously updated. You will notice that the headers for the request currently include a blank *Authorization* header.
+32. Browse down to the *getData* method you previously updated. You will notice that the headers for the request currently include a blank *Authorization* header.
 
-34. Replace your current *getData* method with the following code which sends your user's Cognito identity token, encoded as a JSON web token, in the *Authorization* header with every request.
+33. Replace your current *getData* method with the following code which sends your user's Cognito identity token, encoded as a JSON web token, in the *Authorization* header with every request.
 
 	```
 	  async getData(pin) {
@@ -239,9 +243,11 @@ Now that you've deployed the new authorizer configuration to production, all API
 	  }
 	```
 
-35. Allow the application to refresh, sign-in again, and request a ride.
+34. Allow the application to refresh, sign-in again, and request a ride.
 
-36. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an *API Request* informational message which includes the API Request details once expanded, including the full headers and body of the request.
+35. The unicorn ride request should be fulfilled as before now. To see the full request headers which were sent, look at the developer console for an *API Request* informational message which includes the API Request details once expanded, including the full headers and body of the request.
+
+	![Cognito Authorizer Request Console Log](../images/cognito-authorizer-request-console-log.png)
 
 </p></details>
 <br>

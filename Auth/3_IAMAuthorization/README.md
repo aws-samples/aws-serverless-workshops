@@ -16,7 +16,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 1. Setup S3 bucket for use with AWS Amplify
 
-You will need for your S3 bucket to be properly associated with Amplify for seamless upload and data of data. To save time, the Serverless Backend CloudFormation template that created the serverless backend for this workshop also created an S3 bucket for this purpose with the cross-origin resource sharing (CORS) settings already set. You just need to associate this bucket with your application's code.
+You will need to configure AWS Amplify to securely store profile images in an S3 bucket. To save time, the Serverless Backend CloudFormation template that created the serverless backend API for this workshop also created an S3 bucket for this purpose with the cross-origin resource sharing (CORS) settings already set. You just need to associate this bucket with your application's code.
 
 #### High-Level Instructions
 
@@ -82,6 +82,8 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 1. Paste the following IAM policy statements for S3 access. After pasting, you will need to go **replace the bucket name** listed in all caps with your bucket name (a total of 4 times).
 	
 	> Be sure to leave the parts of the resource names before and after the replacement value alone and not accidentally modify them.
+	
+	> The following policy makes use of IAM policy variables where *${aws:userid}* represents the current authenticated user's unique Cognito identity ID. This policy's effective permissions will allow all authenticated users to read objects from the root of the bucket and any /protected path, but only allow users to read their own private sub-path and write to their sub-path within the protected path. These are default paths that are integrated with AWS Amplify to easily set [file access levels](https://aws-amplify.github.io/docs/js/storage#file-access-levels).
 
 	```
 	{
@@ -162,7 +164,7 @@ Authenticate in the Wild Rydes app if you're not already logged in, then browse 
 
 ### 4. Store profile picture links in Cognito User Pools profile
 
-With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your user profile and your profile picture will be lost. To fix this, you will leverage a Cognito User Pools user attribute called *picture* to persist the S3 object key so the same image can be loaded upon each login and persisted to be shown to the unicorns when you request a ride.
+With our image uploads now working, all will work as expected until you close your browser, but at that point the reference between your user profile and your profile picture will be lost. To fix this, you will leverage a Cognito User Pools user attribute called *picture* to persist the S3 object key so the same image can be loaded upon each login and persisted to be shown to the unicorns when you request a ride. You will need to update */website/src/pages/Profile.js* and a method called *onImageLoad* to make this possible.
 
 #### High-Level Instructions
 

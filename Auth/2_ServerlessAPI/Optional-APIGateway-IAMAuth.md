@@ -82,7 +82,7 @@ In the Amazon API Gateway console, update the authorization type to *AWS_IAM* fo
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console choose **Services** then select **API Gateway** under Security, Identity, and Compliance.
+1. In the AWS Management Console choose **Services** then select **API Gateway** under Networking and Content Delivery.
 
 2. Choose the API named *WildRydes*.
 

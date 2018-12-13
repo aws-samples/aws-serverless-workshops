@@ -8,7 +8,7 @@ Resources:
   RidesTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: Rides
+      TableName: !Sub ${AWS::StackName}-Rides
       AttributeDefinitions:
         -
           AttributeName: RideId
@@ -24,7 +24,7 @@ Resources:
   RequestUnicornExecutionRole:
     Type: AWS::IAM::Role
     Properties: 
-      RoleName: WildRydesLambda
+      RoleName: !Sub ${AWS::StackName}-LambdaRole
       AssumeRolePolicyDocument: 
         Version: 2012-10-17
         Statement: 
@@ -54,14 +54,15 @@ Resources:
   RequestUnicornFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: RequestUnicorn
+      FunctionName: !Sub ${AWS::StackName}-RequestUnicorn
       Runtime: nodejs6.10
       Role: !GetAtt RequestUnicornExecutionRole.Arn
       Timeout: 5
       MemorySize: 128
       Handler: index.handler
       Code:
-        ZipFile: >
+        ZipFile: !Sub
+          >
           const randomBytes = require('crypto').randomBytes;
 
           const AWS = require('aws-sdk');
@@ -142,7 +143,7 @@ Resources:
 
           function recordRide(rideId, unicorn) {
               return ddb.put({
-                  TableName: 'Rides',
+                  TableName: '${AWS::StackName}-Rides',
                   Item: {
                       RideId: rideId,
                       Unicorn: unicorn,
@@ -175,7 +176,7 @@ Resources:
   WildRydesApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: WildRydes
+      Name: !Sub ${AWS::StackName}-RestApi
       EndpointConfiguration:
         Types:
           - REGIONAL
@@ -289,7 +290,7 @@ Resources:
   CognitoIdentityPoolAuthStandardPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      ManagedPolicyName: WildRydesAPI-StandardUserPolicy
+      ManagedPolicyName: !Sub ${AWS::StackName}-StandardUserPolicy
       Description: "Managed IAM policy to provide API invocation permissions to Wild Rydes API"
       Path: "/wildrydes/"
       PolicyDocument:
@@ -331,7 +332,7 @@ Outputs:
           - !Ref AWS::Region
           - ".amazonaws.com/prod"
     Export:
-      Name: WildRydesApiUrl
+      Name: !Sub ${AWS::StackName}-ApiUrl
   WildRydesProfilePicturesBucket:
     Description: S3 bucket to store user uploaded profile pictures
     Value: !Ref "ProfilePicturesBucket"

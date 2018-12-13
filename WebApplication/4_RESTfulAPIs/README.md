@@ -92,7 +92,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. Under your newly created API, choose **Authorizers**.
 
-1. Chose **Create New Authorizer**.
+1. Choose **Create New Authorizer**.
 
 1. Enter `WildRydes` for the Authorizer name.
 

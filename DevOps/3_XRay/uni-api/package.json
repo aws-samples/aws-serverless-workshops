@@ -5,9 +5,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {},
+  "scripts": {
+    "postinstall": "cd app && npm install"
+  },
   "devDependencies": {
     "mocha": "^4.0.1",
-    "proxyquire": "^1.8.0",
-    "aws-xray-sdk": "^1.1.6"
+    "proxyquire": "^1.8.0"
   }
 }

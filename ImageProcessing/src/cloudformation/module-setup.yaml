@@ -1,0 +1,321 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Resources for Wild Ryde rider photo processing workflow.
+Transform: 'AWS::Serverless-2016-10-31'
+
+Parameters:
+  RekognitionCollectionID:
+    Description: ID for the Rekognition collection used to index faces
+    Type: String
+    Default: rider-photos
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "[a-zA-Z0-9_.-]+"
+
+  TestImagesBucket:
+    Type: String
+    Default: wild-rydes-sfn-module-us-west-2
+    Description: S3 bucket containing the test images to copy over
+
+  TestImagesPrefix:
+    Type: String
+    Default: test-images/
+    Description: Key prefix for test images to copy over
+
+Resources:
+  RiderPhotoS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+          -
+            AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - PUT
+              - GET
+              - POST
+              - HEAD
+            AllowedOrigins:
+              - "*"
+            ExposedHeaders:
+              - ETag
+
+  ThumbnailS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+          -
+            AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - PUT
+              - GET
+              - POST
+              - HEAD
+            AllowedOrigins:
+              - "*"
+            ExposedHeaders:
+              - ETag
+
+  RiderPhotoDDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: Username
+        AttributeType: S
+      KeySchema:
+      - AttributeName: Username
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: '3'
+        WriteCapacityUnits: '3'
+
+  FaceDetectionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: "Use Amazon Rekognition to detect faces"
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 256
+      Timeout: 60
+      Policies:
+        Statement:
+          -
+            Sid: "ReadFromS3Bucket"
+            Effect: "Allow"
+            Action:
+              - s3:GetObject
+            Resource: "*"
+          -
+            Sid: "RekognitionFace"
+            Effect: Allow
+            Action:
+              - rekognition:DetectFaces
+            Resource: "*"
+      CodeUri:
+        ../lambda-functions/face-detection
+
+  NotificationPlaceholderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: "mock notification sender"
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 256
+      Timeout: 60
+      CodeUri:
+        ../lambda-functions/mock-notification
+
+  FaceSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: "Use Amazon Rekognition to check if the face is already in the collection"
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 256
+      Timeout: 60
+      Policies:
+        Statement:
+          -
+            Sid: "ReadFromS3Bucket"
+            Effect: "Allow"
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${RiderPhotoS3Bucket}/*"
+          -
+            Sid: "SearchFace"
+            Effect: Allow
+            Action:
+              - rekognition:SearchFacesByImage
+            Resource: "*"
+      CodeUri:
+        ../lambda-functions/face-search
+      Environment:
+        Variables:
+          REKOGNITION_COLLECTION_ID: !Ref RekognitionCollectionID
+
+  IndexFaceFunction:
+    Properties:
+      Description: "Index the photo into Rekognition collection"
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 256
+      Timeout: 60
+      Policies:
+        Statement:
+          -
+            Sid: "ReadFromS3Bucket"
+            Effect: "Allow"
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${RiderPhotoS3Bucket}/*"
+          -
+            Sid: "SearchFace"
+            Effect: Allow
+            Action:
+              - rekognition:IndexFaces
+            Resource: "*"
+      CodeUri:
+        ../lambda-functions/index-face
+      Environment:
+        Variables:
+          REKOGNITION_COLLECTION_ID: !Ref RekognitionCollectionID
+    Type: AWS::Serverless::Function
+
+  ThumbnailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 1536
+      Timeout: 300
+      Policies:
+        Statement:
+          -
+            Sid: "WritetoS3ThumbnailBucket"
+            Effect: Allow
+            Action:
+              - s3:PutObject
+            Resource: !Sub "arn:aws:s3:::${ThumbnailS3Bucket}/*"
+          -
+            Sid: "ReadFromS3"
+            Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${RiderPhotoS3Bucket}/*"
+      CodeUri: ../lambda-functions/thumbnail
+      Environment:
+        Variables:
+          THUMBNAIL_BUCKET: !Ref ThumbnailS3Bucket
+          MAX_WIDTH: 300
+          MAX_HEIGHT: 300
+
+  PersistMetadataFunction:
+    Properties:
+      Description: "Save metadata of the photo to DynamoDB table"
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 256
+      Timeout: 60
+      Environment:
+        Variables:
+          RIDER_PHOTOS_DDB_TABLE: !Ref RiderPhotoDDBTable
+      Policies:
+        Statement:
+          -
+            Sid: "WriteToRiderPhotoDDBTable"
+            Effect: Allow
+            Action:
+              -  dynamodb:PutItem
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${RiderPhotoDDBTable}"
+      CodeUri:
+        ../lambda-functions/persist-metadata
+    Type: AWS::Serverless::Function
+
+  PopulateTestImages:
+    Properties:
+      ServiceToken: !GetAtt CopyS3ObjectsFunction.Arn
+      SourceBucket: !Ref TestImagesBucket
+      SourcePrefix: !Sub "${TestImagesPrefix}"
+      Bucket: !Ref RiderPhotoS3Bucket
+    Type: "Custom::S3Objects"
+
+  EmptyThumbnailBucket:
+    Type: "Custom::S3Objects"
+    Properties:
+      ServiceToken: !GetAtt CopyS3ObjectsFunction.Arn
+      Bucket: !Ref ThumbnailS3Bucket
+
+  CopyS3ObjectsFunction:
+    Properties:
+      Description: Copies objects from a source S3 bucket to a destination
+      Handler: index.handler
+      Runtime: python2.7
+      Timeout: 120
+      Policies:
+        Statement:
+              -
+                Sid: SourceBucketReadAccess
+                Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetObject"
+                Resource:
+                  - !Sub "arn:aws:s3:::${TestImagesBucket}"
+                  - !Sub "arn:aws:s3:::${TestImagesBucket}/${TestImagesPrefix}*"
+              -
+                Sid: DestBucketWriteAccess
+                Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:ListBucketVersions"
+                  - "s3:GetBucketVersioning"
+                  - "s3:GetObject"
+                  - "s3:GetObjectVersion"
+                  - "s3:PutObject"
+                  - "s3:PutObjectAcl"
+                  - "s3:PutObjectVersionAcl"
+                  - "s3:DeleteObject"
+                  - "s3:DeleteObjectVersion"
+                  - "s3:CopyObject"
+                Resource:
+                  - !Sub "arn:aws:s3:::${RiderPhotoS3Bucket}"
+                  - !Sub "arn:aws:s3:::${RiderPhotoS3Bucket}/*"
+                  - !Sub "arn:aws:s3:::${ThumbnailS3Bucket}"
+                  - !Sub "arn:aws:s3:::${ThumbnailS3Bucket}/*"
+      CodeUri:
+        ../lambda-functions/copy-s3-object
+    Type: AWS::Serverless::Function
+
+
+
+  StateMachineRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                !Sub states.${AWS::Region}.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: "/WildRydes/"
+      Policies:
+        -
+          PolicyName: "InvokeLambda"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Sid: "InvokeLambda"
+                Effect: "Allow"
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+
+
+Outputs:
+  FaceDetectionFunctionArn:
+    Value: !GetAtt FaceDetectionFunction.Arn
+  NotificationPlaceholderFunctionArn:
+    Value: !GetAtt NotificationPlaceholderFunction.Arn
+  FaceSearchFunctionArn:
+    Value: !GetAtt FaceSearchFunction.Arn
+  IndexFaceFunctionArn:
+    Value: !GetAtt IndexFaceFunction.Arn
+  ThumbnailFunctionArn:
+    Value: !GetAtt ThumbnailFunction.Arn
+  PersistMetadataFunctionArn:
+    Value: !GetAtt PersistMetadataFunction.Arn
+  RiderPhotoS3Bucket:
+    Value: !Ref RiderPhotoS3Bucket
+  ThumbnailS3Bucket:
+    Value: !Ref ThumbnailS3Bucket
+  RiderPhotoDDBTable:
+    Value: !Ref RiderPhotoDDBTable
+  StateMachineRole:
+    Value: !GetAtt StateMachineRole.Arn

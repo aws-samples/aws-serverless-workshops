@@ -114,7 +114,7 @@ Resources:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub 'CodeStar-${ProjectId}-Execution${Stage}'
+      RoleName: !Sub 'CodeStar-${ProjectId}-Execution${Stage}${CustomSuffix}'
       AssumeRolePolicyDocument:
         Statement:
         - Effect: Allow

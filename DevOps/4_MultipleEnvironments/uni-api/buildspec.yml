@@ -20,6 +20,7 @@ phases:
     commands:
       # Use AWS SAM to package the application using AWS CloudFormation
       - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
+      - aws cloudformation package --template test-template.yml --s3-bucket $S3_BUCKET --output-template test-template-export.yml
 
       # Do not remove this statement. This command is required for AWS CodeStar projects.
       # Update the AWS Partition, AWS Region, account ID and project ID in the project ARN on template-configuration.json file so AWS CloudFormation can tag project resources.
@@ -29,4 +30,5 @@ artifacts:
   type: zip
   files:
     - template-export.yml
+    - test-template-export.yml
     - template-configuration.json

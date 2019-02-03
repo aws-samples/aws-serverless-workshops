@@ -36,9 +36,7 @@ Below is a code snippet from the SAM template to list Unicorns:
           Properties:
             Path: /unicorns
             Method: get
-      Role:
-        Fn::ImportValue:
-          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+      Role: !GetAtt LambdaExecutionRole.Arn
 ```
 
 There are several [properties](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties) defined for the [AWS::Serverless::Function](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction) resource, which we'll review in turn.

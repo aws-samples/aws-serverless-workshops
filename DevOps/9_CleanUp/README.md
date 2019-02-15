@@ -4,50 +4,7 @@ This page provides instructions for cleaning up the resources created during the
 
 ## Resource Cleanup Instructions
 
-### 1. Detach IAM Managed Policies from CodeStarWorker Roles
-
-#### 1a. Detach IAM Policies from `CodeStarWorker-uni-api-CloudFormation` Role
-
-1. In the AWS Management Console, click **Services** then select **IAM** under Security, Identity & Compliance.
-
-1. Select **Roles** from the navigation menu.
-
-1. Type `CodeStarWorker-uni-api-CloudFormation` into the filter box and click **CodeStarWorker-uni-api-CloudFormation** in the list of role.
-
-1. For each of the following attached IAM Managed Policies, Click **Detach Policy** next to the policy and click **Detach** in the confirmation dialog box:
-
-    * **AWSLambdaReadOnlyAccess**
-
-#### 1b. Detach IAM Policies from `CodeStarWorker-uni-api-CodePipeline` Role
-
-1. In the AWS Management Console, click **Services** then select **IAM** under Security, Identity & Compliance.
-
-1. Select **Roles** from the navigation menu.
-
-1. Type `CodeStarWorker-uni-api-CodePipeline` into the filter box and click **CodeStarWorker-uni-api-CodePipeline** in the list of role.
-
-1. For each of the following attached IAM Managed Policies, Click **Detach Policy** next to the policy and click **Detach** in the confirmation dialog box:
-
-    * **AWSCodePipelineReadOnlyAccess**
-    * **AWSLambdaRole**
-
-#### 1c. Detach IAM Policies from `CodeStarWorker-uni-api-Lambda` Role
-
-1. In the AWS Management Console, click **Services** then select **IAM** under Security, Identity & Compliance.
-
-1. Select **Roles** from the navigation menu.
-
-1. Type `CodeStarWorker-uni-api-Lambda` into the filter box and click **CodeStarWorker-uni-api-Lambda** in the list of role.
-
-1. For each of the following attached IAM Managed Policies, Click **Detach Policy** next to the policy and click **Detach** in the confirmation dialog box:
-
-    * **AmazonDynamoDBFullAccess**
-    * **AWSCodePipelineCustomActionAccess**
-    * **AWSCloudFormationReadOnlyAccess**
-    * **AWSLambdaRole**
-    * **AWSXrayWriteOnlyAccess**
-
-### 2. Delete CodeStar Project
+### 1. Delete CodeStar Project
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
@@ -59,7 +16,7 @@ This page provides instructions for cleaning up the resources created during the
 
     ![Delete CodeStar Project](images/codestar-2.png)
 
-### 2. Delete CloudFormation CodeCommit Seed Stacks
+### 1. Delete CloudFormation CodeCommit Seed Stacks
 
 1. In the AWS Management Console, click **Services** then select **CloudFormation** under Management Tools.
 
@@ -78,7 +35,7 @@ This page provides instructions for cleaning up the resources created during the
     
     d. Select **Yes, Delete**.
 
-### 3. Delete CodeStar Project S3 Bucket
+### 1. Delete CodeStar Project S3 Bucket
 
 1. In the AWS Management Console, click **Services** then select **S3** under Storage.
 

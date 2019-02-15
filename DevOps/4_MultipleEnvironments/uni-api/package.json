@@ -5,6 +5,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {},
+  "scripts": {
+    "postinstall": "npm run postinstall:app && npm run postinstall:test",
+    "postinstall:app": "cd app && npm install",
+    "postinstall:test": "cd int-test && npm install"
+  },
   "devDependencies": {
     "mocha": "^4.0.1",
     "proxyquire": "^1.8.0",

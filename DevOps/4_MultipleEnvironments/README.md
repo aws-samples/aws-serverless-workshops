@@ -71,92 +71,18 @@ Each of the following sections provide an implementation overview and detailed, 
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
-### 1. Update CodeStar IAM Roles
-
-CodeStar generates IAM Roles and Policies that control access to AWS resources.  In this module, we will add permissions to Roles using IAM Managed Policies to support the customizations we will make to the CodePipeline pipeline by adding additional deployment environments and serverless unit testing.
-
-#### 1a. Update `CodeStarWorker-uni-api-Lambda`IAM  Role
-
-1. In the AWS Management Console choose **Services** then select **IAM** under Security, Identity & Compliance.
-
-1. Select Role in the left navigation, type `CodeStarWorker-uni-api-Lambda` in the filter text box, and click the Role name link in the Role table.
-
-    ![Select Role](images/role1-1.png)
-
-1. On the Role Summary page, click the **Attach Policy** button in the **Managed Policies** section of the **Permissions** tab.
-
-    ![Role Details](images/role1-2.png)
-
-1. Type `AWSCodePipelineCustomActionAccess` in the filter text box, select the checkbox next to the **AWSCodePipelineCustomActionAccess** Managed Policy.
-
-    ![Attach Policy](images/role1-3.png)
-
-1. Type `AWSCloudFormationReadOnlyAccess` in the filter text box, select the checkbox next to the **AWSCloudFormationReadOnlyAccess** Managed Policy.
-
-    ![Attach Policy](images/role1-4.png)
-
-1. Type `AmazonDynamoDBFullAccess` in the filter text box, select the checkbox next to the **AmazonDynamoDBFullAccess** Managed Policy, and click the **Attach Policy** button.
-
-    ![Attach Policy](images/role1-5.png)
-
-1. Type `AWSLambdaRole` in the filter text box, select the checkbox next to the **AWSLambdaRole** Managed Policy, and click the **Attach Policy** button.
-
-    ![Attach Policy](images/role1-6.png)
-
-1. The Role Summary will now include the **AWSCodePipelineCustomActionAccess**, **AWSCloudFormationReadOnlyAccess**, and **AWSLambdaRole** policies in the list of **Managed Policies**.
-
-    ![Policy Attached](images/role1-7.png)
-
-#### 1b. Update `CodeStarWorker-uni-api-CodePipeline` IAM Role
-
-1. In the AWS Management Console choose **Services** then select **IAM** under Security, Identity & Compliance.
-
-1. Select Role in the left navigation, type `CodeStarWorker-uni-api-CodePipeline` in the filter text box, and click the Role name link in the Role table.
-
-    ![Select Role](images/role2-1.png)
-
-1. On the Role Summary page, click the **Attach Policy** button in the **Managed Policies** section of the **Permissions** tab.
-
-    ![Role Details](images/role2-2.png)
-
-1. Type `AWSCodePipelineReadOnlyAccess` in the filter text box, select the checkbox next to the **AWSCodePipelineReadOnlyAccess** Managed Policy.
-
-    ![Attach Policy](images/role2-3.png)
-
-1. Type `AWSLambdaRole` in the filter text box, select the checkbox next to the **AWSLambdaRole** Managed Policy and click the **Attach Policy** button.
-
-    ![Attach Policy](images/role2-5.png)
-
-1. The Role Summary will now include the **AWSCodePipelineReadOnlyAccess** and **AWSLambdaRole** policies in the list of **Managed Policies**.
-
-    ![Policy Attached](images/role2-6.png)
-
-#### 1c. Update `CodeStarWorkerCodePipelineRolePolicy` IAM Policy
-
-1. Whilst still viewing the `CodeStarWorker-uni-api-CodePipeline` IAM Role, click **Edit Policy** for the `CodeStarWorkerCodePipelineRolePolicy` in the **Inline Policies** section.
-
-    ![Policy Attached](images/role2-7.png)
-
-1. Update the allowed CloudFormation Resource pattern in the policy (substitute your AWS Region and AccountId) a click **Save**.
-
-    Before: `arn:aws:cloudformation:{region}:{accountId}:stack/awscodestar-uni-api-lambda/*`
-
-    After: `arn:aws:cloudformation:{region}:{accountId}:stack/awscodestar-uni-api-lambda*`
-
-    ![Policy Attached](images/role2-8.png)
-
-### 2. Seed the `uni-api` CodeCommit Git repository
+### 1. Seed the `uni-api` CodeCommit Git repository
 
 1. Each module has corresponding source code used to seed the CodeStar CodeCommit Git repository to support the workshop.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
     Region| Launch
     ------|-----
-    US East (N. Virginia) | [![Launch Module 4 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codecommit-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-4-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-east-1)
-    US West (N. California) | [![Launch Module 4 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codecommit-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-4-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-1)
-    US West (Oregon) | [![Launch Module 4 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/codecommit-template.yml&param_sourceUrl=https://s3-us-west-2.amazonaws.com/fsd-aws-wildrydes-us-west-2/uni-api-4-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-2)
-    EU (Ireland) | [![Launch Module 4 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-4-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-west-1)
-    EU (Frankfurt) | [![Launch Module 4 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-4-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-central-1)
-    Asia Pacific (Sydney) | [![Launch Module 4 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-4-v2.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=ap-southeast-2)
+    US East (N. Virginia) | [![Launch Module 4 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codecommit-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-4-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-east-1)
+    US West (N. California) | [![Launch Module 4 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codecommit-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-4-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-1)
+    US West (Oregon) | [![Launch Module 4 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/codecommit-template.yml&param_sourceUrl=https://s3-us-west-2.amazonaws.com/fsd-aws-wildrydes-us-west-2/uni-api-4-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-2)
+    EU (Ireland) | [![Launch Module 4 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-4-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-west-1)
+    EU (Frankfurt) | [![Launch Module 4 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-4-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-central-1)
+    Asia Pacific (Sydney) | [![Launch Module 4 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-4-MultipleEnvironments&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-4-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=ap-southeast-2)
 
 
 1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
@@ -171,7 +97,7 @@ CodeStar generates IAM Roles and Policies that control access to AWS resources. 
 
     ![CloudFormation Stack Creation Complete](images/seed-repository-2.png)
 
-### 3. Fetch CodeCommit Git Repository
+### 2. Fetch CodeCommit Git Repository
 
 Now that the CodeCommit Git repository has been seeded with new source code, you will need to fetch the changes locally so that you may modify the code.  Typically, this is accomplished using the `git pull` command, however for the workshop we have replaced the repository with a new history and different Git commands will be used.
 
@@ -180,9 +106,9 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 * `git fetch --all`
 * `git reset --hard origin/master`
 
-### 4. Add Test Stage
+### 3. Add Test Stage
 
-#### 4a. Edit CodePipeline
+#### 3a. Edit CodePipeline
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
@@ -196,7 +122,7 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. On the CodePipeline page, click **Edit**.
 
-#### 4b. Add Test Stage
+#### 3b. Add Test Stage
 
 1. Choose **+Stage** below the Build stage of the pipeline.
 
@@ -204,11 +130,11 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Enter `Test` for the **Stage Name**.
 
-#### 4c. Add GenerateChangeSet Action to Test Stage
+#### 3c. Add GenerateChangeSet Action to Test Stage
 
-1. Choose `+Action` below `Test`.
+1. Choose `+ Add action group` below `Test`.
 
-1. In the **Add action** dialog, enter `GenerateChangeSet` for the **Action name**.
+1. In the **Add action group** dialog, enter `GenerateChangeSet` for the **Action name**.
 
 1. Select `AWS CloudFormation` for the **Action provider**.
 
@@ -220,11 +146,13 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Enter `uni-api-BuildArtifact::test-template-export.yml` for **Template**
 
-1. Select `CAPABILITY_IAM` for **Capabilities**
+1. Enter `uni-api-BuildArtifact::template-configuration.json` for **Template configuration**
+
+1. Select `CAPABILITY_NAMED_IAM` for **Capabilities**
 
 1. Enter `CodeStarWorker-uni-api-CloudFormation` for **Role name**
 
-1. Expand the **Advanced** section and enter `{ "ProjectId": "uni-api" }` for Parameter overrides
+1. Expand the **Advanced** section and enter `{"ProjectId":"uni-api", "CodeDeployRole":"arn:aws:iam::YOUR_ACCOUNT_NUMBER:role/CodeStarWorker-uni-api-CodeDeploy"}` for Parameter overrides, substituting **YOUR_ACCOUNT_NUMBER** with your AWS account number.
 
 1. Enter `uni-api-BuildArtifact` for **Input artifacts #1**
 
@@ -232,15 +160,13 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
    ![CodePipeline Add Action](images/codepipeline-add-1-new.png)
 
-#### 4d. Add ExecuteChangeSet Action to Test Stage
+#### 3d. Add ExecuteChangeSet Action to Test Stage
 
-1. Choose `+Action` below `GenerateChangeSet`.
+1. Choose `+ Add action group` below `GenerateChangeSet`.
 
    ![CodePipeline Add Action](images/codepipeline-add2-1-new.png)
 
-1. In the **Add action** dialog, select `AWS CloudFormation` for the **Action provider**.
-
-1. Enter `ExecuteChangeSet` for the **Action name**.
+1. In the **Add action group** dialog, enter `ExecuteChangeSet` for the **Action name**.
 
 1. Select `AWS CloudFormation` for the **Action provider**.
 
@@ -254,15 +180,17 @@ Using your preferred Git client, run the commands on your local **uni-api** Git 
 
 1. Choose **Save**
 
-#### 4e. Save CodePipeline Changes
+1. Choose **Done** in the top right of the Stage.
+
+#### 3e. Save CodePipeline Changes
 
 The pipeline should look like the following screenshot after adding the new Test stage.
 
 ![CodePipeline Deploy Stage Complete](images/codepipeline-add2-complete-new.png)
 
-1. Scroll to the top of the pipeline and choose `Save pipeline changes`
+1. Scroll to the top of the pipeline and choose `Save`
 
-1. Choose `Save and Continue` when prompted by the Save Pipeline Changes dialog.
+1. Choose `Save` when prompted by the Save Pipeline Changes dialog.
 
 ## Test Stage Validation
 
@@ -312,11 +240,9 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 #### 1c. Add GenerateChangeSet to Beta Stage
 
-1. Choose `+Action` below `Beta`.
+1. Choose `+ Add action group` below `Beta`.
 
-1. In the **Add action** dialog, select `AWS CloudFormation` for the **Action provider**.
-
-1. Enter `GenerateChangeSet` for the **Action name**.
+1. In the **Add action** dialog, enter `GenerateChangeSet` for the **Action name**.
 
 1. Select `AWS CloudFormation` for the **Action provider**.
 
@@ -328,27 +254,27 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Enter `uni-api-BuildArtifact::template-export.yml` for **Template**
 
-1. Select `CAPABILITY_IAM` for **Capabilities**
+1. Enter `uni-api-BuildArtifact::template-configuration.json` for **Template configuration**
+
+1. Select `CAPABILITY_NAMED_IAM` for **Capabilities**
 
 1. Enter `CodeStarWorker-uni-api-CloudFormation` for **Role name**
 
-1. Expand the **Advanced** section and enter `{ "ProjectId": "uni-api", "CustomSuffix": "-beta" }` for **Parameter overrides**
+1. Expand the **Advanced** section and enter `{"ProjectId":"uni-api", "CodeDeployRole":"arn:aws:iam::YOUR_ACCOUNT_NUMBER:role/CodeStarWorker-uni-api-CodeDeploy", "CustomSuffix": "-beta" }` for **Parameter overrides**
 
 1. Enter `uni-api-BuildArtifact` for **Input artifacts #1**
 
-1. Choose **Add**
+1. Choose **Save**
 
    ![CodePipeline Add Action Artifacts](images/codepipeline-add-3-new.png)
 
 #### 1d. Add ExecuteChangeSet to Beta Stage
 
-1. Choose `+Action` below `GenerateChangeSet`.
+1. Choose `+ Add action group` below `GenerateChangeSet`.
 
    ![CodePipeline Add Action](images/codepipeline-add4-1-new.png)
 
-1. In the **Add action** dialog, select `AWS CloudFormation` for the **Action provider**.
-
-1. Enter `ExecuteChangeSet` for the **Action name**.
+1. In the **Add action** dialog, enter `ExecuteChangeSet` for the **Action name**.
 
 1. Select `AWS CloudFormation` for the **Action provider**.
 
@@ -364,13 +290,11 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 #### 1e. Add Invoke to Beta Stage
 
-1. Choose `+Action` below `ExecuteChangeSet`.
+1. Choose `+ Add action group` below `ExecuteChangeSet`.
 
    ![CodePipeline Add Action](images/codepipeline-add4-2-new.png)
 
-1. In the **Add action** dialog, select `Invoke` for the **Action category**.
-
-1. Enter `InvokeLambdaTestFunction` for the **Action name**.
+1. In the **Add action** dialog, enter `InvokeLambdaTestFunction` for the **Action name**.
 
 1. Select `AWS Lambda` for the **Action provider**.
 
@@ -378,8 +302,10 @@ The addition of the Test stage is complete.  You will now validate the Test stag
 
 1. Enter `awscodestar-uni-api-lambda-beta` for **User parameters**.
 
-1. Choose **Add Action**
+1. Choose **Save**
 
+1. Choose **Done** in the upper right corner of the Stage.
+ 
    ![CodePipeline Add Action](images/codepipeline-add4-4-new.png)
 
 #### 1f. Save CodePipeline Changes
@@ -388,9 +314,9 @@ The pipeline should look like the following screenshot after adding the new Test
 
 ![CodePipeline Deploy Stage Complete](images/codepipeline-add3-complete-new.png)
 
-1. Scroll to the top of the pipeline and choose `Save pipeline changes`
+1. Scroll to the top of the pipeline and choose `Save`
 
-1. Choose `Save and Continue` when prompted by the Save Pipeline Changes dialog.
+1. Choose `Save` when prompted by the Save Pipeline Changes dialog.
 
 ## Beta Stage Validation
 

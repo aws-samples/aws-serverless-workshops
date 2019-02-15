@@ -516,4 +516,8 @@ Congratulations!  You've used AWS X-Ray to validate your results.
 
 ## Completion
 
-You have successfully integrated AWS X-Ray and demonstrated how it can be used to identify errors, latencies, and aid in  resolution.  In the next [Multiple Environments Module](../4_MultipleEnvironments), you will enhance the pipeline by adding a Beta stage to the pipeline, and incorporate testing in the Beta stage before deploying to Prod.
+You have successfully integrated AWS X-Ray and demonstrated how it can be used to identify errors, latencies, and aid in resolution.  Next, use the [Cleanup Guide](../9_CleanUp) to cleanup the resources that you've created.
+
+<!--
+  In the next [Multiple Environments Module](../4_MultipleEnvironments), you will enhance the pipeline by adding a Beta stage to the pipeline, and incorporate testing in the Beta stage before deploying to Prod.
+-->

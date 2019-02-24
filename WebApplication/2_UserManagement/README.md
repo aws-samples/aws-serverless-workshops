@@ -181,20 +181,24 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
 1. Confirm your new user using one of the two following methods.
 
   1. If you used an email address you control, you can complete the account verification process by visiting `/verify.html` under your website domain and entering the verification code that is emailed to you. Please note, the verification email may end up in your spam folder. For real deployments we recommend [configuring your user pool to use Amazon Simple Email Service](http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-settings-message-customizations.html#cognito-user-pool-settings-ses-authorization-to-send-email) to send emails from a domain you own.
-
+  
   1. If you used a dummy email address, you must confirm the user manually through the Cognito console.
+        <details>
+        <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-    1. From the AWS console, click Services then select **Cognito** under Security, Identity & Compliance.
-    1. Choose **Manage your User Pools**
-    1. Select the `WildRydes` user pool and click **Users and groups** in the left navigation bar.
-    1. You should see a user corresponding to the email address that you submitted through the registration page. Choose that username to view the user detail page.
-    1. Choose **Confirm user** to finalize the account creation process.
+        1. From the AWS console, click Services then select **Cognito** under Security, Identity & Compliance.
+        1. Choose **Manage your User Pools**
+        1. Select the `WildRydes` user pool and click **Users and groups** in the left navigation bar.
+        1. You should see a user corresponding to the email address that you submitted through the registration page. Choose that username to view the user detail page.
+        1. Choose **Confirm user** to finalize the account creation process.
+            </p>
+        </details>
 
-1. After confirming the new user using either the `/verify.html` page or the Cognito console, visit `/signin.html` and log in using the email address and password you entered during the registration step.
+  1. After confirming the new user using either the `/verify.html` page or the Cognito console, visit `/signin.html` and log in using the email address and password you entered during the registration step.
 
-1. If successful you should be redirected to `/ride.html`. You should see a notification that the API is not configured.
+   1. If successful you should be redirected to `/ride.html`. You should see a notification that the API is not configured.
 
-    ![Successful login screenshot](../images/successful-login.png)
+      ![Successful login screenshot](../images/successful-login.png)
 
 After you have successfully logged into your web application, you can proceed to the next module, [Serverless Backend](../3_ServerlessBackend).
 

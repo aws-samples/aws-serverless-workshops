@@ -22,7 +22,7 @@ Resources:
   ListFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-list'
+      FunctionName: !Sub '${ProjectId}-list'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: list.lambda_handler

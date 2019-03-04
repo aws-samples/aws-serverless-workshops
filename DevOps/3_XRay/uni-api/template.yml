@@ -29,7 +29,7 @@ Resources:
   ReadFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-read'
+      FunctionName: !Sub '${ProjectId}-read'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: read.lambda_handler
@@ -50,7 +50,7 @@ Resources:
   ListFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-list'
+      FunctionName: !Sub '${ProjectId}-list'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: list.lambda_handler
@@ -71,7 +71,7 @@ Resources:
   UpdateFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-update'
+      FunctionName: !Sub '${ProjectId}-update'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: update.lambda_handler
@@ -92,7 +92,7 @@ Resources:
   DeleteFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-delete'
+      FunctionName: !Sub '${ProjectId}-delete'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: delete.lambda_handler
@@ -125,5 +125,5 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
-        -  arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
       PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'

@@ -29,7 +29,7 @@ Resources:
   ReadFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-read'
+      FunctionName: !Sub '${ProjectId}-read'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: read.lambda_handler
@@ -49,7 +49,7 @@ Resources:
   ListFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-list'
+      FunctionName: !Sub '${ProjectId}-list'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: list.lambda_handler

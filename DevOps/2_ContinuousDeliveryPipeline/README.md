@@ -39,21 +39,17 @@ Each of the following sections provide an implementation overview and detailed, 
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
-### 1. Seed the `uni-api` CodeCommit Git repository
+### 1. Seed the CodeCommit Git repository
 
 1. Each module has corresponding source code used to seed the CodeStar CodeCommit Git repository to support the workshop.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
     Region| Launch
     ------|-----
-    US East (N. Virginia) | [![Launch Module 2 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codecommit-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-2-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-east-1)
-    US West (N. California) | [![Launch Module 2 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codecommit-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-2-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-1)
-    US West (Oregon) | [![Launch Module 2 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/codecommit-template.yml&param_sourceUrl=https://s3-us-west-2.amazonaws.com/fsd-aws-wildrydes-us-west-2/uni-api-2-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-2)
-    EU (Ireland) | [![Launch Module 2 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-2-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-west-1)
-    EU (Frankfurt) | [![Launch Module 2 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-2-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-central-1)
-    Asia Pacific (Sydney) | [![Launch Module 2 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-2-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=ap-southeast-2)
+    Asia Pacific (Sydney) | [![Launch Module 2 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-2-ContinuousDelivery&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/jomrgan-aws-wildrydes-ap-southeast-2/2.zip&param_targetRepositoryRegion=ap-southeast-2)
 
+1. Ensure the **Stack name** is unique by appending your unique hash to the end of the pre-populated stack name.
 
-1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
+1. Enter `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) as the targetRepositoryName parameter. All other parameters are pre-populated.
 
 1. Select the **I acknowledge that AWS CloudFormation might create IAM resources.** checkbox to grant CloudFormation permission to create IAM resources on your behalf
 
@@ -85,11 +81,11 @@ Let's enhance the API with the ability to create or update a Unicorn in the Wild
 
 ### 1. Add Update Function to template.yml
 
-**Goal**: Using the `AWS::Serverless::Function` definitions in the `template.yml` file as examples, add a new Serverless Function named **uni-api-update** to the `template.yml` SAM template.  The function should invoke the **lambda_handler** method in the **`app/update.js`** file when triggered by an **Api** event to the URL path **/unicorns/{name}** using the HTTP **put** method.  The function will required an environment variable, named **TABLE_NAME** that has a value referring to the `AWS::Serverless::SimpleTable` defined in the template.
+**Goal**: Using the `AWS::Serverless::Function` definitions in the `template.yml` file as examples, add a new Serverless Function named **${ProjectId}-update** to the `template.yml` SAM template.  The function should invoke the **lambda_handler** method in the **`app/update.js`** file when triggered by an **Api** event to the URL path **/unicorns/{name}** using the HTTP **put** method.  The function will required an environment variable, named **TABLE_NAME** that has a value referring to the `AWS::Serverless::SimpleTable` defined in the template.
 
 <details>
 <summary><strong>
-HOW TO update template.yml with uni-api-update Lambda function (expand for details)
+HOW TO update template.yml with ${ProjectId}-update Lambda function (expand for details)
 </strong></summary>
 <p>
 
@@ -97,7 +93,7 @@ Using a text editor, open the `template.yml` file and append a new **AWS::Server
 
 > Note: whitespace is important in YAML files.  Please verify that the configuration below is added with the same space indentation as the CloudFormation Resources in the template.yml file.
 
-1. **FunctionName** is `uni-api-update`
+1. **FunctionName** is `${ProjectId}-update`
 
 1. **Runtime** is `nodejs6.10`
 
@@ -124,7 +120,7 @@ Using a text editor, open the `template.yml` file and append a new **AWS::Server
      UpdateFunction:
        Type: 'AWS::Serverless::Function'
        Properties:
-         FunctionName: 'uni-api-update'
+         FunctionName: '${ProjectId}-update'
          Runtime: nodejs6.10
          CodeUri: app
          Handler: update.lambda_handler
@@ -218,7 +214,7 @@ HOW TO use the CodeStar Console to monitor CodePipeline (expand for details)
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
-1. Select the `uni-api` project
+1. Select the `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) project
 
     ![CodeStar Project List](images/codestar-1.png)
 
@@ -242,7 +238,7 @@ After the CloudFormation deploy command completes, you will use the AWS API Gate
 
 1. In the AWS Management Console, click **Services** then select **API Gateway** under Application Services.
 
-1. In the left nav, click on `awscodestar-uni-api-lambda`.
+1. In the left nav, click on `awscodestar-uni-api-[Hash]-lambda` (where 'Hash' is your unique hash assigned on the place card).
 
 1. From the list of API resources, click on the `PUT` link under the `/{name}` resource.
 
@@ -275,7 +271,7 @@ Congratulations, you have used the API to successfully add a Unicorn!  Next, use
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
-1. Select the `uni-api` project
+1. Select the `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) project
 
     ![CodeStar Project List](images/codestar-1.png)
 
@@ -368,7 +364,7 @@ Having this testing framework in place ensures that the exact same set of steps 
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
-1. Select the `uni-api` project
+1. Select the `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) project
 
     ![CodeStar Project List](images/codestar-1.png)
 

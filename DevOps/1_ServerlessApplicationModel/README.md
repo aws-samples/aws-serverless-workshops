@@ -24,7 +24,7 @@ Below is a code snippet from the SAM template to list Unicorns:
   ListFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'uni-api-list'
+      FunctionName: '${ProjectId}-list'
       Runtime: nodejs6.10
       CodeUri: app
       Handler: list.lambda_handler
@@ -74,21 +74,17 @@ Each of the following sections provide an implementation overview and detailed, 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
 
-### 1. Seed the `uni-api` CodeCommit Git repository
+### 1. Seed the CodeCommit Git repository
 
 1. Each module has corresponding source code used to seed the CodeCommit Git repository for the CodeStar project.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
     Region| Launch
     ------|-----
-    US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codecommit-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-1-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-east-1)
-    US West (N. California) | [![Launch Module 1 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codecommit-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-1-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-1)
-    US West (Oregon) | [![Launch Module 1 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/codecommit-template.yml&param_sourceUrl=https://s3-us-west-2.amazonaws.com/fsd-aws-wildrydes-us-west-2/uni-api-1-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=us-west-2)
-    EU (Ireland) | [![Launch Module 1 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-1-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-west-1)
-    EU (Frankfurt) | [![Launch Module 1 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codecommit-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-1-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=eu-central-1)
-    Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-1-v3.zip&param_targetRepositoryName=uni-api&param_targetRepositoryRegion=ap-southeast-2)
+    Asia Pacific (Sydney) | [![Launch Module 1 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-1-ServerlessApplicationModel&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codecommit-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/jomrgan-aws-wildrydes-ap-southeast-2/1.zip&param_targetRepositoryRegion=ap-southeast-2)
 
+1. Ensure the **Stack name** is unique by appending your unique hash to the end of the pre-populated stack name.
 
-1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
+1. Enter `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) as the targetRepositoryName parameter. All other parameters are pre-populated.
 
 1. Select the **I acknowledge that AWS CloudFormation might create IAM resources.** checkbox to grant CloudFormation permission to create IAM resources on your behalf
 

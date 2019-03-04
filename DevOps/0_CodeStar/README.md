@@ -37,7 +37,7 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 
 ### 1. Create a CodeStar project
 
-**Goal**: Use the AWS Console to create a CodeStar project called `uni-api` using the **Node.js Lambda Webservice** template.  Use a web browser to confirm that the API Gateway endpoint created by CodeStar returns the message, `{"Output":"Hello World!"}`, in its response.
+**Goal**: Use the AWS Console to create a CodeStar project called `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) using the **Node.js Lambda Webservice** template.  Use a web browser to confirm that the API Gateway endpoint created by CodeStar returns the message, `{"Output":"Hello World!"}`, in its response.
 
 <details>
 <summary><strong>HOW TO create a CodeStar Project (expand for details)</strong></summary><p>
@@ -60,7 +60,7 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 
     ![CodeStar 4](images/codestar-4.png)
 
-1. Type `uni-api` as the **Project name**, select **AWS CodeCommit** as the repository, and click the **Next** button in the lower right corner of the browser window to proceed.
+1. Type `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) as the **Project name**, select **AWS CodeCommit** as the repository, and click the **Next** button in the lower right corner of the browser window to proceed.
 
     ![CodeStar 5](images/codestar-5.png)
 
@@ -101,7 +101,7 @@ Congratulations!  You have successfully create a serverless web service project 
 
 ## Clone CodeCommit Git Repository
 
-**Goal:** From the CodeStar dashboard for the `uni-api` project, find the CodeCommit instructions to clone the Git repository to your local workstation.
+**Goal:** From the CodeStar dashboard for the `uni-api-[Hash]` (where 'Hash' is your unique hash assigned on the place card) project, find the CodeCommit instructions to clone the Git repository to your local workstation.
 
 <details>
 <summary><strong>HOW TO clone the CodeCommit git repository (expand for details)</strong></summary><p>
@@ -121,7 +121,7 @@ Congratulations!  You have successfully create a serverless web service project 
 </p></details>
 <p>
 
-Congratulations!  You have successfully cloned the `uni-api` project to your local workstation.  In future modules, you will use this local version to commit changes to the source code, push them to the project Git repository, and trigger automatic execution of the project's continuous delivery pipeline.
+Congratulations!  You have successfully cloned the CodeStar project to your local workstation.  In future modules, you will use this local version to commit changes to the source code, push them to the project Git repository, and trigger automatic execution of the project's continuous delivery pipeline.
 
 
 

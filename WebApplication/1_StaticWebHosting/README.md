@@ -2,6 +2,8 @@
 
 In this module you'll configure Amazon Simple Storage Service (S3) to host the static resources for your web application. In subsequent modules you'll add dynamic functionality to these pages using JavaScript to call remote RESTful APIs built with AWS Lambda and Amazon API Gateway.
 
+<!--
+
 If you're already comfortable working with Amazon S3, or you just want to skip ahead to working with Lambda and API Gateway, you can launch one of these AWS CloudFormation templates in the Region of your choice to build the necessary resources automatically.
 
 Region| Launch
@@ -44,6 +46,7 @@ Asia Pacific (Mumbai) | [![Launch Module 1 in ap-south-1](http://docs.aws.amazon
 
 </p></details>
 
+-->
 
 ## Architecture Overview
 
@@ -116,6 +119,8 @@ Execute the following command making sure to replace `YOUR_BUCKET_NAME` with the
 If the command was successful, you should see a list of objects that were copied to your bucket.
 </p></details>
 
+<!--
+
 <details>
 <summary><strong>CloudFormation step-by-step instructions (expand for details)</strong></summary><p>
 
@@ -150,6 +155,8 @@ Asia Pacific (Mumbai) | [![Launch Module 1 in ap-south-1](http://docs.aws.amazon
 1. Wait for the `wildrydes-copy-objects` stack to reach a status of `CREATE_COMPLETE`.
 
 </p></details>
+
+-->
 
 ### 3. Add a Bucket Policy to Allow Public Reads
 

@@ -8,8 +8,6 @@ You'll implement a Lambda function that will be invoked each time a user request
 
 The function is invoked from the browser using Amazon API Gateway. You'll implement that connection in the next module. For this module you'll just test your function in isolation.
 
-If you want to skip ahead to the next module, you can **launch the stack from [module 4 (RESTful APIs)](../4_RESTfulAPIs)**.
-
 ## Implementation Instructions
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
@@ -18,7 +16,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 
 ### 1. Create an Amazon DynamoDB Table
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
+Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides-<hash>` (where 'hash' is your assigned unique hash) and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
 
 After you've created the table, note the ARN for use in the next step.
 
@@ -29,7 +27,7 @@ After you've created the table, note the ARN for use in the next step.
 
 1. Choose **Create table**.
 
-1. Enter `Rides` for the **Table name**. This field is case sensitive.
+1. Enter `Rides-<hash>` (where hash is your assigned unique hash) for the **Table name**. This field is case sensitive.
 
 1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
 
@@ -50,7 +48,7 @@ Every Lambda function has an IAM role associated with it. This role defines what
 
 #### High-Level Instructions
 
-Use the IAM console to create a new role. Name it `WildRydesLambda` and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
+Use the IAM console to create a new role. Name it `WildRydesLambda-<hash>` (where 'hash' is your assigned unique hash) and select AWS Lambda for the role type. You'll need to attach policies that grant your function permissions to write to Amazon CloudWatch Logs and put items to your DynamoDB table.
 
 Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to grant the necessary CloudWatch Logs permissions. Also, create a custom inline policy for your role that allows the `ddb:PutItem` action for the table you created in the previous section.
 
@@ -69,11 +67,11 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 
 1. Click **Next: Review**.
 
-1. Enter `WildRydesLambda` for the **Role name**.
+1. Enter `WildRydesLambda-<hash>` (where 'hash' is your assigned unique hash) for the **Role name**.
 
 1. Choose **Create role**.
 
-1. Type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
+1. Type `WildRydesLambda-<hash>` (where 'hash' is your assigned unique hash) into the filter box on the Roles page and choose the role you just created.
 
 1. On the Permissions tab, choose the **Add inline policy** link in the lower right corner to create a new inline policy.
     ![Inline policies screenshot](../images/inline-policies.png)
@@ -121,19 +119,21 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Keep the default **Author from scratch** card selected.
 
-1. Enter `RequestUnicorn` in the **Name** field.
+1. Enter `RequestUnicorn-<hash>` (where 'hash' is your assigned unique hash) in the **Name** field.
 
 1. Select **Node.js 6.10** for the **Runtime**.
 
 1. Ensure `Choose an existing role` is selected from the **Role** dropdown.
 
-1. Select `WildRydesLambda` from the **Existing Role** dropdown.
+1. Select `WildRydesLambda-<hash>` (where 'hash' is your assigned unique hash) from the **Existing Role** dropdown.
     ![Create Lambda function screenshot](../images/create-lambda-function.png)
 
 1. Click on **Create function**.
 
 1. Scroll down to the **Function code** section and replace the existing code in the **index.js** code editor with the contents of [requestUnicorn.js](requestUnicorn.js).
     ![Create Lambda function screenshot](../images/create-lambda-function-code.png)
+
+1. Modify line 90 of the function code to use your DynamoDB table name (that is, `Rides-<hash>` (where 'hash' is your assigned unique hash).
 
 1. Click **"Save"** in the upper right corner of the page.
 

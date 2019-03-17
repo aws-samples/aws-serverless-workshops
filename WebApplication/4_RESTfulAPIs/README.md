@@ -10,6 +10,8 @@ The static website you deployed in the first module already has a page configure
 
 This module will focus on the steps required to build the cloud components of the API, but if you're interested in how the browser code works that calls this API, you can inspect the [ride.js](../1_StaticWebHosting/website/js/ride.js) file of the website. In this case the application uses jQuery's [ajax()](https://api.jquery.com/jQuery.ajax/) method to make the remote request.
 
+<!--
+
 If you want to skip ahead to the next module, you can launch one of these AWS CloudFormation templates in the Region of your choice in order to build the necessary resources automatically.
 
 Region| Launch
@@ -51,6 +53,8 @@ Asia Pacific (Mumbai) | [![Launch Module 4 in ap-south-1](http://docs.aws.amazon
 
 </p></details>
 
+-->
+
 ## Implementation Instructions
 
 Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
@@ -67,7 +71,7 @@ Use the Amazon API Gateway console to create a new API.
 
 1. Choose **Create API**.
 
-1. Select **New API** and enter `WildRydes` for the **API Name**.
+1. Select **New API** and enter `WildRydes-<hash>` (where 'hash' is your assigned unique hash) for the **API Name**.
 
 1. Keep `Edge optimized` selected in the **Endpoint Type** dropdown.
     ***Note***: Edge optimized are best for public services being accessed from the Internet. Regional endpoints are typically used for APIs that are accessed primarily from within the same AWS Region.
@@ -100,7 +104,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 
 1. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in module 2 (by default the current region should be selected).
 
-1. Enter `WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
+1. Enter `WildRydes-<hash>` (where 'hash' is your assigned unique hash) in the **Cognito User Pool** input.
 
 1. Enter `Authorization` for the **Token Source**.
 

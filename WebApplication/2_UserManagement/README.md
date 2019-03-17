@@ -2,6 +2,8 @@
 
 In this module you'll create an Amazon Cognito user pool to manage your users' accounts. You'll deploy pages that enable customers to register as a new user, verify their email address, and sign into the site.
 
+<!--
+
 If you want to skip ahead to the next module, you can launch one of these AWS CloudFormation templates in the Region of your choice in order to build the necessary resources automatically.
 
 Region| Launch
@@ -43,6 +45,8 @@ Asia Pacific (Mumbai) | [![Launch Module 2 in ap-south-1](http://docs.aws.amazon
 
 </p></details>
 
+-->
+
 ## Architecture Overview
 
 When users visit your website they will first register a new user account. For the purposes of this workshop we'll only require them to provide an email address and password to register. However, you can configure Amazon Cognito to require additional attributes in your own applications.
@@ -78,7 +82,7 @@ Use the Amazon Cognito console to create a new user pool using the default setti
 
 1. Choose **Create a User Pool**
 
-1. Provide a name for your user pool such as `WildRydes`, then select **Review Defaults**
+1. Provide a name for your user pool such as `WildRydes-<hash>` (where 'hash' is your assigned unique hash), then select **Review Defaults**
 
     ![Create a user pool screenshot](../images/create-a-user-pool.png)
 
@@ -186,7 +190,7 @@ The [/js/config.js](../1_StaticWebHosting/website/js/config.js) file contains se
 
     1. From the AWS console, click Services then select **Cognito** under Security, Identity & Compliance.
     1. Choose **Manage your User Pools**
-    1. Select the `WildRydes` user pool and click **Users and groups** in the left navigation bar.
+    1. Select the user pool you created earlier and click **Users and groups** in the left navigation bar.
     1. You should see a user corresponding to the email address that you submitted through the registration page. Choose that username to view the user detail page.
     1. Choose **Confirm user** to finalize the account creation process.
 

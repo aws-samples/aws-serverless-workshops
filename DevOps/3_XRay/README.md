@@ -64,44 +64,43 @@ As you can see, the basic X-Ray integration into Lambda requires only two change
 
 ## Environment Setup
 
-In order to tacke [Problem 1: Error Discovery Using X-Ray](#problem-1-error-discovery-using-x-ray) and [Problem 2: Performance Discovery Using-X-Ray](#problem-2-performance-discovery-using-x-ray), you must make a few IAM Policy changes and clone a seed the project repository using the steps below.
+In order to tackle [Problem 1: Error Discovery Using X-Ray](#problem-1-error-discovery-using-x-ray) and [Problem 2: Performance Discovery Using-X-Ray](#problem-2-performance-discovery-using-x-ray), you must clone a seed the project repository using the steps below.
+
+**Note:** For the Lambda Function to access the X-Ray Service, the **LambdaExecutionPolicy** must include the **arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess** Managed Policy.  For simplification, this policy has been added to the **template.yml** file, which will now look like the following:
+
+```
+  LambdaExecutionRole:
+    Description: Creating service role in IAM for AWS Lambda
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'CodeStar-${ProjectId}-Execution${Stage}'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [lambda.amazonaws.com]
+          Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+      PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
+```
 
 
-
-### 1. Add the AWSXrayWriteOnlyAccess Policy to the `CodeStarWorker-uni-api-Lambda` Role
-
-1. In the AWS Management Console choose **Services** then select **IAM** under Security, Identity & Compliance.
-
-1. Select Role in the left navigation, type `CodeStarWorker-uni-api-Lambda` in the filter text box, and click the Role name link in the Role table.
-
-    ![Select Role](images/role-1.png)
- 
-1. On the Role Summary page, click the **Attach Policy** button in the **Managed Policies** section of the **Permissions** tab.
-
-    ![Role Details](images/role-2.png)
- 
-1. Type `AWSXRayWriteOnlyAccess` in the filter text box, select the checkbox next to the **AWSXRayWriteOnlyAccess** Managed Policy, and click the **Attach Policy** button.
-
-    ![Attach Policy](images/role-3.png)
- 
-1. The Role Summary will now include the **AWSXRayWriteOnlyAccess** policy in the list of **Managed Policies**.
-
-    ![Policy Attached](images/role-4.png)
-
-
-
-### 2. Seed the `uni-api` CodeCommit Git repository
+### 1. Seed the `uni-api` CodeCommit Git repository
 
 1. Each module has corresponding source code used to seed the CodeStar CodeCommit Git repository to support the workshop.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
     Region| Launch
     ------|-----
-    US East (N. Virginia) | [![Launch Module 3 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codestar-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-3-v2.zip&param_targetProjectId=uni-api&param_targetProjectRegion=us-east-1)
-    US West (N. California) | [![Launch Module 3 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codestar-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-3-v2.zip&param_targetProjectId=uni-api&param_targetProjectRegion=us-west-1)
-    US West (Oregon) | [![Launch Module 3 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/codestar-template.yml&param_sourceUrl=https://s3-us-west-2.amazonaws.com/fsd-aws-wildrydes-us-west-2/uni-api-3-v2.zip&param_targetProjectId=uni-api&param_targetProjectRegion=us-west-2)
-    EU (Ireland) | [![Launch Module 3 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codestar-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-3-v2.zip&param_targetProjectId=uni-api&param_targetProjectRegion=eu-west-1)
-    EU (Frankfurt) | [![Launch Module 3 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codestar-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-3-v2.zip&param_targetProjectId=uni-api&param_targetProjectRegion=eu-central-1)
-    Asia Pacific (Sydney) | [![Launch Module 3 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codestar-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-3-v2.zip&param_targetProjectId=uni-api&param_targetProjectRegion=ap-southeast-2)
+    US East (N. Virginia) | [![Launch Module 3 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/codestar-template.yml&param_sourceUrl=https://s3.amazonaws.com/fsd-aws-wildrydes-us-east-1/uni-api-3-v3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=us-east-1)
+    US West (N. California) | [![Launch Module 3 in us-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-1/codestar-template.yml&param_sourceUrl=https://s3-us-west-1.amazonaws.com/fsd-aws-wildrydes-us-west-1/uni-api-3-v3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=us-west-1)
+    US West (Oregon) | [![Launch Module 3 in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-us-west-2/codestar-template.yml&param_sourceUrl=https://s3-us-west-2.amazonaws.com/fsd-aws-wildrydes-us-west-2/uni-api-3-v3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=us-west-2)
+    EU (Ireland) | [![Launch Module 3 in eu-west-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-west-1/codestar-template.yml&param_sourceUrl=https://s3-eu-west-1.amazonaws.com/fsd-aws-wildrydes-eu-west-1/uni-api-3-v3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=eu-west-1)
+    EU (Frankfurt) | [![Launch Module 3 in eu-central-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-eu-central-1/codestar-template.yml&param_sourceUrl=https://s3-eu-central-1.amazonaws.com/fsd-aws-wildrydes-eu-central-1/uni-api-3-v3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=eu-central-1)
+    Asia Pacific (Sydney) | [![Launch Module 3 in ap-southeast-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?stackName=Seed-3-XRay&templateURL=https://s3.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/codestar-template.yml&param_sourceUrl=https://s3-ap-southeast-2.amazonaws.com/fsd-aws-wildrydes-ap-southeast-2/uni-api-3-v3.zip&param_targetProjectId=uni-api&param_targetProjectRegion=ap-southeast-2)
 
 
 1. The CloudFormation template has been prepopulated with the necessary fields for this module.  No changes are necessary
@@ -118,7 +117,7 @@ In order to tacke [Problem 1: Error Discovery Using X-Ray](#problem-1-error-disc
 
 
 
-### 3. Fetch CodeCommit Git Repository
+### 2. Fetch CodeCommit Git Repository
 
 Now that the CodeCommit Git repository has been seeded with new source code, you will need to fetch the changes locally so that you may modify the code.  Typically, this is accomplished using the `git pull` command, however for the workshop we have replaced the repository with a new history and different Git commands will be used.
 
@@ -131,7 +130,7 @@ git reset --hard origin/master
 
 
 
-### 4. Validate CodePipeline Unicorn API Deployment
+### 3. Validate CodePipeline Unicorn API Deployment
 
 After the repository has been seeded, it will start a pipeline execution.  Monitor the pipeline until you observe the pipeline completion, indicated by the **Deploy** stage turning green.
 
@@ -140,7 +139,7 @@ After the repository has been seeded, it will start a pipeline execution.  Monit
 
 
 
-### 5. Exercise List Unicorns API Method
+### 4. Exercise List Unicorns API Method
 
 **Goal:** Use the CodeStar Console to find the Application Endpoint, and use your browser to test the "/unicorns" list resource.
 
@@ -517,4 +516,8 @@ Congratulations!  You've used AWS X-Ray to validate your results.
 
 ## Completion
 
-You have successfully integrated AWS X-Ray and demonstrated how it can be used to identify errors, latencies, and aid in  resolution.  In the next [Multiple Environments Module](../4_MultipleEnvironments), you will enhance the pipeline by adding a Beta stage to the pipeline, and incorporate testing in the Beta stage before deploying to Prod.
+You have successfully integrated AWS X-Ray and demonstrated how it can be used to identify errors, latencies, and aid in resolution.  Next, use the [Cleanup Guide](../9_CleanUp) to cleanup the resources that you've created.
+
+<!--
+  In the next [Multiple Environments Module](../4_MultipleEnvironments), you will enhance the pipeline by adding a Beta stage to the pipeline, and incorporate testing in the Beta stage before deploying to Prod.
+-->

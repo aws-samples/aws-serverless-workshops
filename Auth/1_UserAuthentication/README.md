@@ -7,7 +7,7 @@ Since Wild Rydes is a ride sharing application, a key requirement is that all us
 
 ## Solution Architecture
 
-The architecture for this module is very straightforward. All of your static web content including HTML, CSS, JavaScript, images and other files will be served locally from your Cloud9 workspace. As you made changes to the website application code, all changes will be automatically updated and shown in your browser via live reload capabilities.
+The architecture for this module is very straightforward. All of your static web content including HTML, CSS, JavaScript, images and other files will be served locally from your Cloud9 workspace. As you make changes to the website application code, all changes will be automatically updated and shown in your browser via live reload capabilities.
 
 For this module, we will be creating a Cognito User Pool as our secure user directory then configuring our application to use the AWS Amplify library to easily integrate Amazon Cognito into our application.
 

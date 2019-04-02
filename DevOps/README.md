@@ -10,9 +10,11 @@ See the diagram below for a depiction of the API architecture.
 
 The DevOps Continuous Delivery Pipeline uses [AWS CodePipeline](https://aws.amazon.com/codepipeline/), [AWS CodeBuild](https://aws.amazon.com/codebuild/), and [Amazon S3](https://aws.amazon.com/s3/).  CodePipeline orchestrates the steps to build, test, and deploy your code changes.  CodeBuild compiles source code, runs tests, and produces software packages that are ready to deploy to environments.
 
+<!--
 See the screenshot below for a depiction of the continuous delivery pipeline that you will build at the completion of Module 4.
 
 ![Wild Rydes Unicorn API Continuous Delivery Pipeline](images/codepipeline-final.png)
+-->
 
 If you'd like to jump in and get started please visit the [CodeStar Project](0_CodeStar) module page to begin the workshop.
 
@@ -46,7 +48,10 @@ This workshop is broken up into multiple modules. You must complete each module 
 1. [Serverless Application Model (SAM)](1_ServerlessApplicationModel)
 2. [Continuous Delivery Pipeline](2_ContinuousDeliveryPipeline)
 3. [AWS X-Ray Integration](3_XRay)
+
+<!--
 4. [Multiple Environment CI/CD Pipeline](4_MultipleEnvironments)
+-->
 
 
 After you have completed the workshop you can delete all of the resources that were created by following the [cleanup guide](9_CleanUp).

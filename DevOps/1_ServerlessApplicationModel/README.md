@@ -73,8 +73,32 @@ Each of the following sections provide an implementation overview and detailed, 
 
 If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
 
+### 1. Update CodeStarWorker-uni-api-CloudFormation IAM Role
 
-### 1. Seed the `uni-api` CodeCommit Git repository
+1. In the AWS Management Console, click Services then select IAM under Security, Identity, & Compliance.
+
+1. Click the **Search IAM** search box.
+
+    ![Search IAM](images/cloudformation-role-1.png)
+
+1. Type `CodeStarWorker-uni-api-CloudFormation` in the search box and select **CodeStarWorker-uni-api-CloudFormation** in the left navigation.
+
+    ![Search CodeStarWorker-uni-api-CloudFormation](images/cloudformation-role-2.png)
+
+1. In the IAM Role Summary page, click the **Attach policies** button.
+
+    ![Attach policies](images/cloudformation-role-3.png)
+
+1. Type `AWSLambdaFullAccess` in the filter text box, select the checkbox to the left of the **AWSLambdaFullAccess** IAM Role, and click **Attach policy**.
+
+    ![Add AWSLambdaFullAccess policy](images/cloudformation-role-4.png)
+
+1. Upon returning to the IAM Role Summary page, note that the **AWSLambdaFullAccess** policy has been added to the Role.
+
+    ![Confirm policy addition](images/cloudformation-role-5.png)
+
+
+### 2. Seed the `uni-api` CodeCommit Git repository
 
 1. Each module has corresponding source code used to seed the CodeCommit Git repository for the CodeStar project.  To seed the CodeCommit Git repository, click on the **Launch Stack** button for your region below:
 
@@ -171,7 +195,7 @@ If you're unable to install SAM CLI on your workstation, you may find it easier 
 
 
 1. Once the CloudFormation stack creation has completed, find the EC2 instance public DNS name by selecting the checkbox to the left of the **DeveloperInstance** Stack, and clicking the **Outputs** tab below the list of Stacks.  Find the output key labeled `PublicDnsName` and use the corresponding value in order to access the EC2 instance.
- 
+
 1. Use SSH client to connect to the instance.  If you are using Windows, use a client such as Putty or Bitvise (you can find instructions for connecting from Windows using Putty here: [Connecting to Your Linux Instance from Windows Using PuTTY](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html))
 
 1. The Git repository has been cloned to the home directory on launch, `/home/ec2-user/uni-api`.

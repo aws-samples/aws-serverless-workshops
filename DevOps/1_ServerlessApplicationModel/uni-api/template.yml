@@ -23,7 +23,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'uni-api-list'
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       CodeUri: app
       Handler: list.lambda_handler
       Description: List Unicorns

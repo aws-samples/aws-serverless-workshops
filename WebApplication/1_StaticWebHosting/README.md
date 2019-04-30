@@ -77,6 +77,7 @@ Now from your Cloud9 development environment:
 
 #### Populate the git repository
 Once your git repository is created and cloned locally, you'll need to pull in the files for your website and sync them up to the repository. 
+
 **:white_check_mark: Step-by-step directions**
 From your Cloud9 development environment(or local environment)
 1. Change directory into your repository:
@@ -125,6 +126,7 @@ If you click on the link for *Master* you'll see various pieces of information a
 
 ### Modify the website
 The AWS Amplify Console will rebuild and redeploy the app when it detects changes to the connected repository. Make a change to the main page to test out this process.
+
 **:white_check_mark: Step-by-step directions**
 1. From your Cloud9 environment open the ```index.html``` file in the root directory of the repository.
 1. Modify the title line:

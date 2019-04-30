@@ -4,7 +4,7 @@ In this module you'll configure AWS Amplify Console to host the static resources
 
 ## Architecture Overview
 
-The architecture for this module is very straightforward. All of your static web content including HTML, CSS, JavaScript, images and other files will be stored in Amazon S3 served via Amazon Cloudfront as managed by AWS Amplify Console. Your end users will then access your site using the public website URL exposed by AWS Amplify Console. You don't need to run any web servers or use other services in order to make your site available.
+The architecture for this module is very straightforward. All of your static web content including HTML, CSS, JavaScript, images and other files will be managed by AWS Amplify Console and served via Amazon CloudFront. Your end users will then access your site using the public website URL exposed by AWS Amplify Console. You don't need to run any web servers or use other services in order to make your site available.
 
 ![Static website architecture](../images/static-website-architecture.png)
 
@@ -15,16 +15,17 @@ the workshop.
 
 Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
-
 ### Region Selection
 
-This workshop can be deployed in any AWS region that supports the following services:
+This workshop step can be deployed in any AWS region that supports the following services:
 
 - AWS Amplify Console
 - AWS CodeCommit
 
-You can refer to the [region table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are N. Virginia, Ohio, Oregon, Ireland, London, Frankfurt, Tokyo, Seol, Mumbai, and Sydney.
+You can refer to the [AWS region table][region-services] in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are:
+* North America: N. Virginia, Ohio, Oregon
+* Europe: Ireland, London, Frankfurt
+* Asia Pacific: Tokyo, Seoul, Singapore, Sydney, Mumbai
 
 Once you've chosen a region, you should deploy all of the resources for this workshop there. Make sure you select your region from the dropdown in the upper right corner of the AWS Console before getting started.
 
@@ -181,3 +182,4 @@ wherein you'll configure Amazon Cognito User Pools to manage the users for our a
 [amplify-console]: https://aws.amazon.com/amplify/console/
 [amplify-console-console]: https://console.aws.amazon.com/amplify/home
 [user-management]: ../2_UserManagement/
+[region-services]: https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/

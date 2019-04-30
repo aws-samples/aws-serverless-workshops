@@ -101,6 +101,7 @@ The [/js/config.js][configjs] file contains settings for the user pool ID, app c
 
 ## Implementation Validation
 
+**:white_check_mark: Step-by-step directions**
 1. Visit `register.html` under your website domain, or choose the **Giddy Up!** button on the homepage of your site.
 
 1. Complete the registration form and choose **Let's Ryde**. You can use your own email or enter a fake email. Make sure to choose a password that contains at least one upper-case letter, a number, and a special character. Don't forget the password you entered for later. You should see an alert that confirms that your user has been created.

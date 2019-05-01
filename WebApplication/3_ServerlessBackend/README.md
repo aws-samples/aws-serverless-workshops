@@ -133,15 +133,15 @@ For this module you will test the function that you built using the AWS Lambda c
 1. On the main function edit screen click **Test** with `TestRequestEvent` selected in the dropdown.   
 1. Scroll to the top of the page and expand the **Details** section of the **Execution result** section.
 1. Verify that the execution succeeded and that the function result looks like the following:
-```JSON
-{
-    "statusCode": 201,
-    "body": "{\"RideId\":\"SvLnijIAtg6inAFUBRT+Fg==\",\"Unicorn\":{\"Name\":\"Rocinante\",\"Color\":\"Yellow\",\"Gender\":\"Female\"},\"Eta\":\"30 seconds\"}",
-    "headers": {
+    ```JSON
+    {
+      "statusCode": 201,
+      "body": "{\"RideId\":\"1h0zDZ-6KLZaEQCPyqTxeQ\",\"Unicorn\":{\"Name\":\"Shadowfax\",\"Color\":\"White\",\"Gender\":\"Male\"},\"UnicornName\":\"Shadowfax\",\"Eta\":\"30 seconds\",\"Rider\":\"the_username\"}",
+      "headers": {
         "Access-Control-Allow-Origin": "*"
+      }
     }
-}
-```
+    ```
 
 ### :star: Recap
 

@@ -37,11 +37,13 @@ You have two options for this first step which is to either use [AWS CodeCommit]
 **:white_check_mark: Step-by-step directions**
 1. Create an IAM user for CodeCommit access. Go to the [IAM Console][iam-console]
 1. Select Users from the navigation bar and then **Add user**
-1. Name the user *wildrydes-codecommit* and select *Programmatic access*
+1. Name the user `wildrydes-codecommit` and select *Programmatic access*
 1. Select **Next: Permissions**
 1. Select *Attach existing policies directly* and then check "AWSCodeCommitFullAccess"
 1. Select **Next: Tags** and enter any tags you wish to identify this user
 1. Select **Create User** and then **Close** from the final page
+
+    ![IAM user created](../images/iam-add-user.png)
 
 Next you need to get credentials for the user to be able to access repositories in CodeCommit:
 
@@ -116,14 +118,22 @@ Next you'll use the [AWS Amplify Console][amplify-console] to deploy the website
 1. Select the *Repository service provider* used today and select **Next**
     1. If you used GitHub, you'll need to authorize AWS Amplify to your GitHub account
 1. From the dropdown select the *Repository* and *Branch* created today
+    
+    ![Amplify Repository configuration](../images/amplify-console-repository-setup.png)
 1. On the "Configure build settings" page leave all the defaults and select **Next**
 1. On the "Review" page select **Save and deploy**
+    
+    The process takes a couple of minutes for Amplify Console to create the neccesary resources and to deploy your code.
+    
+    ![Amplify Deployment](../images/amplify-deploy-status.png)
 
-The process takes a couple of minutes for Amplify Console to create the neccesary resources and to deploy your code. Once completed, click on the site image to launch your Wild Rydes site.
+Once completed, click on the site image to launch your Wild Rydes site.
 
 ![Wild Rydes homepage screenshot](../images/wildrydes-homepage.png)
 
 If you click on the link for *Master* you'll see various pieces of information about your website deployment, including sample rendorings on various platforms:
+
+![Amplify Client Renderings](../images/amplify-renderings.png)
 
 ### Modify the website
 The AWS Amplify Console will rebuild and redeploy the app when it detects changes to the connected repository. Make a change to the main page to test out this process.
@@ -157,7 +167,11 @@ The AWS Amplify Console will rebuild and redeploy the app when it detects change
     To https://git-codecommit.us-east-1.amazonaws.com/v1/repos/wildrydes-site
        2e9f540..dfec2e5  master -> master
    ```
-Amplify Console will begin to build the site again soon after it notices the update to the repository. It will happen pretty quickly! Head back to the [Amplify Console console page][amplify-console-console] to watch the process. Once completed, re-open the Wild Rydes site and notice the title change.
+    Amplify Console will begin to build the site again soon after it notices the update to the repository. It will happen pretty quickly! Head back to the [Amplify Console console page][amplify-console-console] to watch the process. 
+
+1. Once completed, re-open the Wild Rydes site and notice the title change.
+    
+    ![title updated](../images/title-update.png)
 
 ### :star: Recap
 

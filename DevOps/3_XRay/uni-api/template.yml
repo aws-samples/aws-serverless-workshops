@@ -30,7 +30,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'uni-api-read'
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       CodeUri: app
       Handler: read.lambda_handler
       Description: View Unicorn by name
@@ -51,7 +51,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'uni-api-list'
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       CodeUri: app
       Handler: list.lambda_handler
       Description: List Unicorns
@@ -72,7 +72,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'uni-api-update'
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       CodeUri: app
       Handler: update.lambda_handler
       Description: Update Unicorn
@@ -93,7 +93,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'uni-api-delete'
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       CodeUri: app
       Handler: delete.lambda_handler
       Description: Delete Unicorn

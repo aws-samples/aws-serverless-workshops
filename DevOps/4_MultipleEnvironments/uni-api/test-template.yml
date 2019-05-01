@@ -22,7 +22,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: uni-api-test-setup
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       CodeUri: int-test/
       Handler: setup.lambda_handler
       Description: Setup integration test
@@ -36,7 +36,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: uni-api-test
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       CodeUri: int-test/
       Handler: test.lambda_handler
       Description: Execute integration test

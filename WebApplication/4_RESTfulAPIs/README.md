@@ -21,7 +21,7 @@ Each of the following sections provides an implementation overview and detailed,
 Use the Amazon API Gateway console to create a new API named `WildRydes`.
 
 **:white_check_mark: Step-by-step directions**
-1. Go to the [Amazon API Gateway Console][api-gw]
+1. Go to the [Amazon API Gateway Console][api-gw-console]
 1. Choose **Create API**.
 1. Select **REST**, **New API** and enter `WildRydes` for the **API Name**.
 1. Select `Edge optimized` from the **Endpoint Type** dropdown.

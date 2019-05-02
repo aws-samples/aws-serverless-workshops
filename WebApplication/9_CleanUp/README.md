@@ -50,7 +50,7 @@ Delete the REST API created in module 4. There is a **Delete API** option in the
 
 **:white_check_mark: Step-by-step directions**
 
-1. Go to the [Amazon API Gateway Console][api-gw]
+1. Go to the [Amazon API Gateway Console][api-gw-console]
 1. Select the API you created in module 4.
 1. Expand the **Actions** drop-down and choose **Delete API**.
 1. Enter the name of your API when prompted and choose **Delete API**.
@@ -62,7 +62,7 @@ Delete the AWS Lambda function, IAM role and Amazon DynamoDB table you created i
 
 #### Lambda Function
 
-1. Go to the [AWS Lambda][lambda-console]
+1. Go to the [AWS Lambda console][lambda-console]
 1. Select the `RequestUnicorn` function you created in module 3.
 1. From the **Actions** drop-down, choose **Delete function**.
 1. Choose **Delete** when prompted to confirm.

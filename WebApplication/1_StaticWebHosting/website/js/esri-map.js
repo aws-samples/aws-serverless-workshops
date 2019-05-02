@@ -3,6 +3,29 @@
 var WildRydes = window.WildRydes || {};
 WildRydes.map = WildRydes.map || {};
 
+//Set user locatiobn
+var userLocation = getLocation()
+
+function getLocation(){
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(location) {
+      userLat = location.coords.latitude;
+      userLong = location.coords.longitude;
+      userLocation = [userLong, userLat]
+      console.log(userLocation);
+      return userLocation
+    });
+  }
+  else {
+    //Set defalut getLocation
+    var userLat = 13.3759;
+    var userLong = 52.5096;
+    userLocation = [userLong, userLat]
+    console.log(userLocation);
+    return userLocation
+  }
+}
+
 (function esriMapScopeWrapper($) {
     require([
         'esri/Map',
@@ -23,10 +46,10 @@ WildRydes.map = WildRydes.map || {};
         var map = new Map({ basemap: 'gray-vector' });
 
         var view = new MapView({
-            center: [-122.31, 47.60],
+            center: userLocation,
             container: 'map',
             map: map,
-            zoom: 12
+            zoom: 13
         });
 
         var pinSymbol = new TextSymbol({
@@ -39,7 +62,7 @@ WildRydes.map = WildRydes.map || {};
         });
 
         var unicornSymbol = new PictureMarkerSymbol({
-            url: 'images/unicorn-icon.png',
+            url: '/images/unicorn-icon.png',
             width: '25px',
             height: '25px'
         });

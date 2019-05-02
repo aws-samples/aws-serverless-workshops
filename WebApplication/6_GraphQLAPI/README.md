@@ -232,18 +232,18 @@ You've completed the testing of your AWS AppSync based GraphQL API!
 
 :white_check_mark: After you have successfully tested your new function using the Lambda console, you can move on to the next module, [Building the History page][history-page].
 
+[amplify-console-console]: https://console.aws.amazon.com/amplify/home
 [amplify-console]: https://aws.amazon.com/amplify/console/
-[appsync]: https://aws.amazon.com/appsync/
-[appsync-console]: https://console.aws.amazon.com/appsync/home
-[cognito]: https://aws.amazon.com/cognito/
-[lambda]: https://aws.amazon.com/lambda/
 [api-gw]: https://aws.amazon.com/api-gateway/
+[appsync-console]: https://console.aws.amazon.com/appsync/home
+[appsync]: https://aws.amazon.com/appsync/
+[cognito]: https://aws.amazon.com/cognito/
+[dynamodb-console]: https://console.aws.amazon.com/dynamodb/home
 [dynamodb]: https://aws.amazon.com/dynamodb/
-[dynamodb-console]: https://console.aws.amazon.com/dynamodb/home
-[static-web-hosting]: ../1_StaticWebHosting/
-[user-management]: ../2_UserManagement/
-[restful-apis]: ../4_RESTfulAPIs/
-[dynamodb-console]: https://console.aws.amazon.com/dynamodb/home
+[history-page]: ../7_RideHistoryPage/
 [iam-console]: https://console.aws.amazon.com/iam/home
 [lambda-console]: https://console.aws.amazon.com/lambda/home
-[history-page]: ../7_RideHistoryPage/
+[lambda]: https://aws.amazon.com/lambda/
+[restful-apis]: ../4_RESTfulAPIs/
+[static-web-hosting]: ../1_StaticWebHosting/
+[user-management]: ../2_UserManagement/

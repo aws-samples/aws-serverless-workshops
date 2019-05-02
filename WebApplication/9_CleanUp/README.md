@@ -138,23 +138,21 @@ Delete the Cloud9 Development environment created today.
 1. Complete the application deletion process.
 
 
-[setup]: ../0_Setup/
-[cloud9-console]: https://console.aws.amazon.com/cloud9/home
-[commit]: https://aws.amazon.com/codecommit
-[github]: https://github.com
-[iam-console]: https://console.aws.amazon.com/iam/home
-[codecommit-free]: https://aws.amazon.com/codecommit/pricing/
-[codecommit-console]: https://console.aws.amazon.com/codesuite/codecommit/repositories
-[create-repo]: https://help.github.com/en/articles/create-a-repo
-[github-new-sshkey]: https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-[github-clone]: https://help.github.com/en/articles/cloning-a-repository
-[amplify-console]: https://aws.amazon.com/amplify/console/
 [amplify-console-console]: https://console.aws.amazon.com/amplify/home
-[user-management]: ../2_UserManagement/
-[region-services]: https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
+[amplify-console]: https://aws.amazon.com/amplify/console/
+[api-gw-console]: https://console.aws.amazon.com/apigateway/home
+[cloud9-console]: https://console.aws.amazon.com/cloud9/home
+[codecommit-console]: https://console.aws.amazon.com/codesuite/codecommit/repositories
+[codecommit-free]: https://aws.amazon.com/codecommit/pricing/
 [cognito-console]: https://console.aws.amazon.com/cognito/home
+[commit]: https://aws.amazon.com/codecommit
+[create-repo]: https://help.github.com/en/articles/create-a-repo
 [dynamodb-console]: https://console.aws.amazon.com/dynamodb/home
+[github-clone]: https://help.github.com/en/articles/cloning-a-repository
+[github]: https://github.com
+[github-new-sshkey]: https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 [iam-console]: https://console.aws.amazon.com/iam/home
 [lambda-console]: https://console.aws.amazon.com/lambda/home
-[api-gw-console]: https://console.aws.amazon.com/apigateway/home
-
+[region-services]: https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
+[setup]: ../0_Setup/
+[user-management]: ../2_UserManagement/

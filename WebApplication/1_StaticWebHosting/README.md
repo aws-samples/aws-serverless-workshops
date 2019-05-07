@@ -34,24 +34,11 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 ### Create the git repository
 You have two options for this first step which is to either use [AWS CodeCommit][commit] or [GitHub][github] to host your site's repository. The choice is yours. If you have a GitHub account feel free to use that. Otherwise [CodeCommit is included in the AWS Free Tier][codecommit-free]
 #### Using CodeCommit
-**:white_check_mark: Step-by-step directions**
-1. Create an IAM user for CodeCommit access. Go to the [IAM Console][iam-console]
-1. Select Users from the navigation bar and then **Add user**
-1. Name the user `wildrydes-codecommit` and select *Programmatic access*
-1. Select **Next: Permissions**
-1. Select *Attach existing policies directly* and then check "AWSCodeCommitFullAccess"
-1. Select **Next: Tags** and enter any tags you wish to identify this user
-1. Select **Create User** and then **Close** from the final page
-
-    ![IAM user created](../images/iam-add-user.png)
-
-Next you need to get credentials for the user to be able to access repositories in CodeCommit:
-
-1. Select the User from the Users page in the IAM Console you just created
-1. Click the **Security credentials** tab
-1. Under "HTTPS Git credentials for AWS CodeCommit" click **Generate**
-
-Be sure to save the credentials either locally or to a scratch pad somewhere for later use.
+The AWS Cloud9 development environment comes with AWS managed temporary credentials that are associated with your IAM user. You use these credentials with the AWS CLI credential helper. Enable the credential helper by running the following two commands in the terminal of your Cloud9 environment.
+```bash
+git config --global credential.helper '!aws codecommit credential-helper $@'
+git config --global credential.UseHttpPath true
+```
 
 Next you need to create the repository and clone it to your Cloud9 environment:
 1. Open the [AWS CodeCommit console][codecommit-console]

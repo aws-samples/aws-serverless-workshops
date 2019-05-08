@@ -52,8 +52,6 @@ Now from your Cloud9 development environment:
     ```
     ec2-user:~/environment $ git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/wildrydes-site
     Cloning into 'wildrydes-site'...
-    Username for 'https://git-codecommit.us-east-1.amazonaws.com': wildrydes-codecommit-at-##########
-    Password for 'https://wildrydes-codecommit-at-##########@git-codecommit.us-east-1.amazonaws.com': 
     warning: You appear to have cloned an empty repository.
     ec2-user:~/environment $ 
     ```
@@ -144,8 +142,6 @@ The AWS Amplify Console will rebuild and redeploy the app when it detects change
      1 file changed, 1 insertion(+), 1 deletion(-)
     
     $ git push
-    Username for 'https://git-codecommit.us-east-1.amazonaws.com': wildrydes-codecommit-at-##########
-    Password for 'https://wildrydes-codecommit-at-##########@git-codecommit.us-east-1.amazonaws.com': 
     Counting objects: 3, done.
     Compressing objects: 100% (3/3), done.
     Writing objects: 100% (3/3), 315 bytes | 315.00 KiB/s, done.

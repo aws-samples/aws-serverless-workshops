@@ -321,6 +321,7 @@ Using the Cognito console, add a new client application called **UnicornManager*
 
 #### Background
 Amazon Cognito User Pools lets you declare custom resource servers. Custom resource servers have a unique identifier - normally the server uri - and can declare custom scopes. You can allow custom applications to request scopes in your user pools. When users authenticate with these applications, the Cognito hosted UI takes care of authenticating the user and authorizing the action. Custom claims are automatically added to the JWT access token.
+This step is optional and won't be used further in the lab.
 
 #### High-Level Instructions
 Using the Cognito console, open the **WildRydes** User Pool and create a new custom resource server called **UnicornServer**. The **UnicornServer** should use **UnicornManager** as the **Identifier** and allow the **unicorn** scope.

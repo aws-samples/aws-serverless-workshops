@@ -1,5 +1,9 @@
 # Module 1: The first example module
 
+![Architecture diagram](assets/WildRydesML.png)
+
+Source for [internal Draw.IO](https://drawio.corp.amazon.com): [diagram xml](assets/WildRydesML.xml)
+
 This is an example module. The page title should include the module number and a short but descriptive title.
 
 You should provide an introductory paragraph that sets some context for the use case to be covered. If possible this should tie into the Wild Rydes theme/company story.

@@ -1,0 +1,8 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Wild Rydes machine learning infrastructure
+Resources:
+  RawDataBucket:
+    Type: AWS::S3::Bucket
+Outputs:
+  RawDataBucketName:
+    Value: !Ref RawDataBucket

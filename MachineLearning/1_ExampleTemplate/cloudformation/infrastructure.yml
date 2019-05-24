@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Wild Rydes machine learning infrastructure
+Parameters:
+  RawBucketName:
+    Description: Name of the S3 bucket with raw data
+    Type: String
+Resources:
+  DataProcessingExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  DataProcessingFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: >
+          print('data processing')
+      Description: Wild Rydes data processing function
+      Handler: process.handler
+      MemorySize: 128
+      Role: !GetAtt DataProcessingExecutionRole.Arn
+      Runtime: python3.7
+      Timeout: 3
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+  TransformedDataBucket:
+    Type: AWS::S3::Bucket
+  # SageMaker notebook
+  ModelBucket:
+    Type: AWS::S3::Bucket
+  InferenceFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: >
+          print('inference function')
+      Description: Wild Rydes inference function
+      Handler: process.handler
+      MemorySize: 128
+      Role: !GetAtt DataProcessingExecutionRole.Arn
+      Runtime: python3.7
+      Timeout: 3
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+  #API Gateway
+Outputs:
+  TransformedDataBucketName:
+    Value: !Ref TransformedDataBucket
+  ModelBucketName:
+    Value: !Ref ModelBucket

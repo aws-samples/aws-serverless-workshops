@@ -5,6 +5,48 @@ Parameters:
     Description: Name of the S3 bucket with raw data
     Type: String
 Resources:
+  MyGlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      DatabaseInput:
+        Description: "Glue DB for Wild Rydes ML workshop"
+      CatalogId: !Ref AWS::AccountId
+
+  MyGlueTable:
+    Type: AWS::Glue::Table
+    Properties:
+      DatabaseName: !Ref MyGlueDatabase
+      CatalogId: !Ref AWS::AccountId
+      TableInput:
+        # Name: my-glue-table
+        Parameters: { "classification" : "csv" }
+        TableType: "EXTERNAL_TABLE"
+        StorageDescriptor:
+          Location:
+            Fn::Sub: "s3://noaa-ghcn-pds/csv/"
+          InputFormat: "org.apache.hadoop.mapred.TextInputFormat"
+          OutputFormat: "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+          SerdeInfo:
+            Parameters: { "separatorChar" : "," }
+            SerializationLibrary: "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
+          StoredAsSubDirectories: false
+          Columns:
+            - Name: id
+              Type: string
+            - Name: year_date
+              Type: string
+            - Name: element
+              Type: string
+            - Name: data_value
+              Type: string
+            - Name: m_flag
+              Type: string
+            - Name: q_flag
+              Type: string
+            - Name: s_flag
+              Type: string
+            - Name: obs_time
+              Type: string
   DataProcessingExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -16,24 +58,39 @@ Resources:
               Service:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
-            Policies:
-              -
-                PolicyName: "root"
-                PolicyDocument:
-                  Version: "2012-10-17"
-                  Statement:
-                    - Effect: "Allow"
-                      Action: "*"
-                      Resource: !Ref TransformedDataBucket
-                    - Effect: "Allow"
-                      Action: "*"
-                      Resource: !Sub "arn:aws:s3:::${RawBucketName}"
-                    - Effect: "Allow"
-                      Action: "*"
-                      Resource: !Ref NearestWeatherStationQueue
-                    - Effect: "Allow"
-                      Action: "*"
-                      Resource: !Ref ProcessedUnicornDataQueue
+      Policies:
+        -
+          PolicyName: "AllowTransformedBucket"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: !Ref TransformedDataBucket
+        -
+          PolicyName: "AllowRawBucket"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: !Sub "arn:aws:s3:::${RawBucketName}"
+        -
+          PolicyName: "AllowNearestStationQueue"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: !GetAtt NearestWeatherStationQueue.Arn
+        -
+          PolicyName: "AllowProcessedBucketQueue"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: !GetAtt ProcessedUnicornDataQueue.Arn
   NearestWeatherStationQueue:
     Type: "AWS::SQS::Queue"
     Properties:
@@ -42,7 +99,6 @@ Resources:
       MessageRetentionPeriod: "345600"
       ReceiveMessageWaitTimeSeconds: "0"
       VisibilityTimeout: "30"
-      QueueName: "nearestWeatherStation"
   ProcessedUnicornDataQueue:
     Type: "AWS::SQS::Queue"
     Properties:
@@ -51,53 +107,55 @@ Resources:
       MessageRetentionPeriod: "345600"
       ReceiveMessageWaitTimeSeconds: "0"
       VisibilityTimeout: "30"
-      QueueName: "toDataLakeCombinedDataAndStation"
   ProcessedDataToS3Function:
-    Description: Wild Rydes lambda function to parse unicorn csv data and send downstream to lookup nearest groundstation
-    Handler: index.handler
-    MemorySize: 128
-    Environment:
-      Variables:
-        OUTPUT_BUCKET: !Ref TransformedDataBucket
-    Role: !GetAtt DataProcessingExecutionRole.Arn
-    Runtime: python3.7
-    Timeout: 3
-    Tags:
-      -
-        Key: Workshop
-        Value: Wild Rydes
-      -
-        Key: Module
-        Value: Machine Learning
-    Code:
-      ZipFile: >
-        import boto3
-        import json
-        import os
-        
-        client = boto3.client('s3')
-        bucket = os.environ['OUTPUT_BUCKET']
-        
-        def handler(event, context):
-            print('## EVENT')
-            print(event)
-            for record in event['Records']:
-                json_event = json.loads(record['body'])
-                key = get_key_from_event_json(json_event)
-                body = get_body_from_event_json(json_event)
-                upload_file(body, key)
-            return event
-        
-        def get_key_from_event_json(event):
-            time = event["statustime"].split(' ')[1]
-            date = event["statustime"].split(' ')[0]
-            return 'processed/' + date + '/' + event["name"] + '-' + time + '.json'
-        
-        def get_body_from_event_json(event):
-            return json.dumps(event).encode()
-        
-        def upload_file(body, key):
-            client.put_object(Body=body, Bucket=bucket, Key=key)
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Wild Rydes lambda function to parse unicorn csv data and send downstream to lookup nearest groundstation
+      Handler: index.handler
+      MemorySize: 128
+      Environment:
+        Variables:
+          OUTPUT_BUCKET: !Ref TransformedDataBucket
+      Role: !GetAtt DataProcessingExecutionRole.Arn
+      Runtime: python3.7
+      Timeout: 3
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+      Code:
+        ZipFile: >
+          import boto3
+          import json
+          import os
+          
+          client = boto3.client('s3')
+          bucket = os.environ['OUTPUT_BUCKET']
+          
+          def handler(event, context):
+              print('## EVENT')
+              print(event)
+              for record in event['Records']:
+                  json_event = json.loads(record['body'])
+                  key = get_key_from_event_json(json_event)
+                  body = get_body_from_event_json(json_event)
+                  upload_file(body, key)
+              return event
+          
+          def get_key_from_event_json(event):
+              time = event["statustime"].split(' ')[1]
+              date = event["statustime"].split(' ')[0]
+              return 'processed/' + date + '/' + event["name"] + '-' + time + '.json'
+          
+          def get_body_from_event_json(event):
+              return json.dumps(event).encode()
+          
+          def upload_file(body, key):
+              client.put_object(Body=body, Bucket=bucket, Key=key)
+
   ParseUnicornDataFunction:
     Type: AWS::Lambda::Function
     Properties:

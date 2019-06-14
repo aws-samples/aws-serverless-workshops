@@ -1,9 +1,17 @@
 const AWS = require('aws-sdk');
 const fastCsv = require('fast-csv');
+AWS.config.update({region: 'us-east-1'});
+const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+const NEAREST_STATION_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/538473421153/nearestWeatherStation';
 const s3 = new AWS.S3();
 exports.handler = async function(event, context) {
     console.log("EVENT: \n" + JSON.stringify(event, null, 2));
-    await parse(event);
+    try {
+        await parse(event);
+    } catch(e) {
+        console.error('FATAL error: ', e);
+        return e;
+    }
 }
 
 function getUploadedFileStreamFromEvent(event) {
@@ -22,17 +30,24 @@ function parse(s3Event) {
     return new Promise((resolve, reject) => {
         fastCsv.fromStream(s3Stream, {headers : true})
         .on('data', (data) => {
-            // do something here
-            console.log('data: ', data);
-
+            console.log('CSV row: ', data);
             // put this row on queue for looking up nearest station
+            // not waiting for async response here.. if it blows up it blows up
+            // TODO better error handling
+            sendToNearestStationQueue(data);
         })
+        .on('error', e => reject(e))
         .on('end', () => console.log('done parsing!'));
     });
 }
 
-function lookupNearestWeatherStation(row) {
-    
+async function sendToNearestStationQueue(row) {
+    var params = {
+        DelaySeconds: 0,
+        MessageBody: JSON.stringify(row),
+        QueueUrl: NEAREST_STATION_QUEUE_URL
+      };
+    return sqs.sendMessage(params).promise();
 }
 
 parse({});

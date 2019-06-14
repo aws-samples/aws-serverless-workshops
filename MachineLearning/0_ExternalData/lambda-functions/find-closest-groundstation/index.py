@@ -5,18 +5,20 @@ import boto3
 import json
 
 sqs = boto3.client('sqs')
-queue_url = 'https://sqs.us-east-1.amazonaws.com/538473421153/nearestWeatherStation'
+queue_url = 'https://sqs.us-east-1.amazonaws.com/538473421153/toDataLakeCombinedDataAndStation'
 
 def lambda_handler(event, context):
-    event = event_format_check(event)
     print('## EVENT')
     print(event)
-    event["groundstation"] = closest(groundstations(),
-                                        {"latitude": event["latitude"], "longitude": event["longitude" ]})["id"]
-    send_message(event)
+    for record in event['Records']:
+        json_event = json.loads(record['body'])
+        json_event = event_format_check(json_event)
+        json_event["groundstation"] = closest(groundstations(),
+                                            {"latitude": json_event["latitude"], "longitude": json_event["longitude" ]})["id"]
+        send_message_sqs(json_event)
     return event
 
-def send_message(event):
+def send_message_sqs(event):
     response = sqs.send_message(
         QueueUrl=queue_url,
         DelaySeconds=0,

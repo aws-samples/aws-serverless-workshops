@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const fastCsv = require('fast-csv');
 AWS.config.update({region: 'us-east-1'});
 const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
-const NEAREST_STATION_QUEUE_URL = 'https://sqs.us-east-1.amazonaws.com/538473421153/nearestWeatherStation';
+const NEAREST_STATION_QUEUE_URL = process.env.OUTPUT_QUEUE;
 const s3 = new AWS.S3();
 exports.handler = async function(event, context) {
     console.log("EVENT: \n" + JSON.stringify(event, null, 2));
@@ -20,13 +20,14 @@ function getUploadedFileStreamFromEvent(event) {
     return s3.getObject({Bucket: bucket, Key: key}).createReadStream();
 }
 
-function getLocalFileStream(event) {
-    return require('fs').createReadStream('/Users/forrcoll/Downloads/unicorn-sample-data.csv');
-}
+// for local testing
+// function getLocalFileStream(event) {
+//     return require('fs').createReadStream('/Users/forrcoll/Downloads/unicorn-sample-data.csv');
+// }
 
 function parse(s3Event) {
-    // const s3Stream = getUploadedFileStreamFromEvent(s3Event);
-    const s3Stream = getLocalFileStream(s3Event);
+    const s3Stream = getUploadedFileStreamFromEvent(s3Event);
+    // const s3Stream = getLocalFileStream(s3Event);
     return new Promise((resolve, reject) => {
         fastCsv.fromStream(s3Stream, {headers : true})
         .on('data', (data) => {
@@ -49,5 +50,3 @@ async function sendToNearestStationQueue(row) {
       };
     return sqs.sendMessage(params).promise();
 }
-
-parse({});

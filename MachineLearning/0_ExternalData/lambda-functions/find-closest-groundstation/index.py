@@ -3,11 +3,12 @@
 from math import cos, asin, sqrt
 import boto3
 import json
+import os
 
 sqs = boto3.client('sqs')
-queue_url = 'https://sqs.us-east-1.amazonaws.com/538473421153/toDataLakeCombinedDataAndStation'
+queue_url = os.environ['OUTPUT_QUEUE']
 
-def lambda_handler(event, context):
+def handler(event, context):
     print('## EVENT')
     print(event)
     for record in event['Records']:

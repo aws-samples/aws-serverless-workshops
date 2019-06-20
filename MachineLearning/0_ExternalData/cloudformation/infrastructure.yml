@@ -69,6 +69,14 @@ Resources:
                 Action: "*"
                 Resource: !Sub "arn:aws:s3:::${TransformedDataBucket}"
         -
+          PolicyName: "AllowTransformedBucketObjects"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: !Sub "arn:aws:s3:::${TransformedDataBucket}/*"
+        -
           PolicyName: "AllowRawBucket"
           PolicyDocument:
             Version: "2012-10-17"
@@ -76,6 +84,14 @@ Resources:
               - Effect: "Allow"
                 Action: "*"
                 Resource: !Sub "arn:aws:s3:::${RawBucketName}"
+        -
+          PolicyName: "AllowRawBucketObjects"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: !Sub "arn:aws:s3:::${RawBucketName}/*"
         -
           PolicyName: "AllowNearestStationQueue"
           PolicyDocument:

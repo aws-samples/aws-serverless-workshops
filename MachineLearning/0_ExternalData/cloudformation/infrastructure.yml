@@ -277,14 +277,6 @@ Resources:
       EventSourceArn: !GetAtt ProcessedUnicornDataQueue.Arn
       FunctionName: !Ref ProcessedDataToS3Function
   
-  ProcessUnicornDataEventSource:
-    Type: AWS::Lambda::EventSourceMapping
-    Properties: 
-      BatchSize: 10
-      Enabled: True
-      EventSourceArn: !Sub "arn:aws:s3:::${RawBucketName}"
-      FunctionName: !Ref ParseUnicornDataFunction
-  
   TransformedDataBucket:
     Type: AWS::S3::Bucket
   SageMakerExecutionRole:

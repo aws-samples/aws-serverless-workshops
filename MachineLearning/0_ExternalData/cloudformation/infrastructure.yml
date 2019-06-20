@@ -92,6 +92,13 @@ Resources:
               - Effect: "Allow"
                 Action: "*"
                 Resource: !GetAtt ProcessedUnicornDataQueue.Arn
+        - PolicyName: "AllowLogging"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: ['logs:*']
+                Resource: 'arn:aws:logs:*:*:*'
   NearestWeatherStationQueue:
     Type: "AWS::SQS::Queue"
     Properties:
@@ -128,7 +135,7 @@ Resources:
           Key: Module
           Value: Machine Learning
       Code:
-        ZipFile: >
+        ZipFile: |
           import boto3
           import json
           import os
@@ -170,7 +177,7 @@ Resources:
         Variables:
           OUTPUT_QUEUE: !Ref NearestWeatherStationQueue
       Role: !GetAtt DataProcessingExecutionRole.Arn
-      Runtime: python3.7
+      Runtime: nodejs10.x
       Timeout: 3
       Tags:
         -
@@ -183,7 +190,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: >
+        ZipFile: |
           from math import cos, asin, sqrt
           import boto3
           import json
@@ -269,7 +276,15 @@ Resources:
       Enabled: True
       EventSourceArn: !GetAtt ProcessedUnicornDataQueue.Arn
       FunctionName: !Ref ProcessedDataToS3Function
-      
+  
+  ProcessUnicornDataEventSource:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties: 
+      BatchSize: 10
+      Enabled: True
+      EventSourceArn: !Sub "arn:aws:s3:::${RawBucketName}"
+      FunctionName: !Ref ParseUnicornDataFunction
+  
   TransformedDataBucket:
     Type: AWS::S3::Bucket
   SageMakerExecutionRole:
@@ -330,7 +345,7 @@ Outputs:
               AND id IN ('US1NYNY0074', 'USC00305798', 'USC00305799', 'USC00305804', 'USC00305806', 'USC00305816', 'USW00014732', 'USW00014786', 'USW00093732', 'USW00094728', 'USW00094789');
   AthenaCSVLocation:
     Value: !Sub |
-      https://s3.console.aws.amazon.com/s3/buckets/athena-query-results-${AWS::AccountId}-${AWS::Region}/Unsaved/
+      https://s3.console.aws.amazon.com/s3/buckets/aws-athena-query-results-${AWS::AccountId}-${AWS::Region}/Unsaved/?region=${AWS::Region}&tab=overview
   AthenaCreateTableQuery:
     Value: !Sub |
       CREATE TABLE "${WildRydesMLGlueDatabase}".nygroundstationdata

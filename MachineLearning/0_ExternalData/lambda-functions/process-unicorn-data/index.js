@@ -7,7 +7,7 @@ const s3 = new AWS.S3();
 exports.handler = async function(event, context) {
     console.log("EVENT: \n" + JSON.stringify(event, null, 2));
     try {
-        await parse(event);
+        return await parse(event);
     } catch(e) {
         console.error('FATAL error: ', e);
         return e;
@@ -38,7 +38,7 @@ function parse(s3Event) {
             sendToNearestStationQueue(data);
         })
         .on('error', e => reject(e))
-        .on('end', () => console.log('done parsing!'));
+        .on('end', () => resolve());
     });
 }
 

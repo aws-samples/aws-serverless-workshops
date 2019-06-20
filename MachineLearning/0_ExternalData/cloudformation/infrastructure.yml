@@ -5,29 +5,30 @@ Parameters:
     Description: Name of the S3 bucket with raw data
     Type: String
 Resources:
-  MyGlueDatabase:
+  WildRydesMLGlueDatabase:
     Type: AWS::Glue::Database
     Properties:
       DatabaseInput:
+        Name: !Sub "wildrydesmlgluedatabase-${AWS::StackName}"
         Description: "Glue DB for Wild Rydes ML workshop"
       CatalogId: !Ref AWS::AccountId
 
-  MyGlueTable:
+  WildRydesMLGlueTable:
     Type: AWS::Glue::Table
     Properties:
-      DatabaseName: !Ref MyGlueDatabase
+      DatabaseName: !Ref WildRydesMLGlueDatabase
       CatalogId: !Ref AWS::AccountId
       TableInput:
-        # Name: my-glue-table
+        Name: !Sub "externalweatherdatacsvtable-${AWS::StackName}"
         Parameters: { "classification" : "csv" }
         TableType: "EXTERNAL_TABLE"
         StorageDescriptor:
           Location:
             Fn::Sub: "s3://noaa-ghcn-pds/csv/"
           InputFormat: "org.apache.hadoop.mapred.TextInputFormat"
-          OutputFormat: "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
           SerdeInfo:
-            Parameters: { "separatorChar" : "," }
+            Parameters: { "separatorChar" : ",", "field.delim": "," }
             SerializationLibrary: "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
           StoredAsSubDirectories: false
           Columns:
@@ -66,7 +67,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !Ref TransformedDataBucket
+                Resource: !Sub "arn:aws:s3:::${TransformedDataBucket}"
         -
           PolicyName: "AllowRawBucket"
           PolicyDocument:
@@ -258,7 +259,7 @@ Resources:
     Properties: 
       BatchSize: 10
       Enabled: True
-      EventSourceArn: !Ref NearestWeatherStationQueue
+      EventSourceArn: !GetAtt NearestWeatherStationQueue.Arn
       FunctionName: !Ref FindClosestGroundstationLambdaFunction
   
   ProcessedDataEventSource:
@@ -266,7 +267,7 @@ Resources:
     Properties: 
       BatchSize: 10
       Enabled: True
-      EventSourceArn: !Ref ProcessedUnicornDataQueue
+      EventSourceArn: !GetAtt ProcessedUnicornDataQueue.Arn
       FunctionName: !Ref ProcessedDataToS3Function
       
   TransformedDataBucket:
@@ -290,7 +291,7 @@ Resources:
   SageMakerNotebook:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
-      NotebookInstanceName: WildRydesWeather
+      NotebookInstanceName: !Sub "WildRydesWeather${AWS::StackName}"
       InstanceType: ml.t3.medium
       RoleArn: !GetAtt SageMakerExecutionRole.Arn
       DirectInternetAccess: Enabled
@@ -321,6 +322,23 @@ Resources:
           Value: Machine Learning
   #API Gateway
 Outputs:
+  AthenaSelectQuery:
+    Value: !Sub |
+      SELECT *
+      FROM "${WildRydesMLGlueDatabase}"."${WildRydesMLGlueTable}"
+      WHERE q_flag = ''
+              AND id IN ('US1NYNY0074', 'USC00305798', 'USC00305799', 'USC00305804', 'USC00305806', 'USC00305816', 'USW00014732', 'USW00014786', 'USW00093732', 'USW00094728', 'USW00094789');
+  AthenaCSVLocation:
+    Value: !Sub |
+      https://s3.console.aws.amazon.com/s3/buckets/athena-query-results-${AWS::AccountId}-${AWS::Region}/Unsaved/
+  AthenaCreateTableQuery:
+    Value: !Sub |
+      CREATE TABLE "${WildRydesMLGlueDatabase}".nygroundstationdata
+      WITH ( format='TEXTFILE', external_location='s3://${TransformedDataBucket}/nygroundstationdata/' ) AS
+      SELECT *
+      FROM "${WildRydesMLGlueDatabase}"."${WildRydesMLGlueTable}"
+      WHERE q_flag = ''
+              AND id IN ('US1NYNY0074', 'USC00305798', 'USC00305799', 'USC00305804', 'USC00305806', 'USC00305816', 'USW00014732', 'USW00014786', 'USW00093732', 'USW00094728', 'USW00094789');
   TransformedDataBucketName:
     Value: !Ref TransformedDataBucket
   ModelBucketName:

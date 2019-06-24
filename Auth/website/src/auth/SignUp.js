@@ -80,7 +80,7 @@ class SignUp extends React.Component {
 
   renderSignUp() {
     const isValidEmail = this.isValidEmail(this.state.email);
-    const isValidPassword = this.state.password.length > 6;
+    const isValidPassword = this.state.password.length > 1;
     const isValidConfirmation = isValidPassword && this.state.password === this.state.confirm;
 
     return (

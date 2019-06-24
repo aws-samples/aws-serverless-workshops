@@ -332,45 +332,45 @@ Resources:
         -
           AttributeName: RideId
           KeyType: HASH
-      ProvisionedThroughput: 
+      ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
   RequestUnicornExecutionRole:
     Type: AWS::IAM::Role
-    Properties: 
+    Properties:
       RoleName: WildRydesLambda
-      AssumeRolePolicyDocument: 
+      AssumeRolePolicyDocument:
         Version: 2012-10-17
-        Statement: 
-          - 
+        Statement:
+          -
             Effect: Allow
-            Principal: 
-              Service: 
+            Principal:
+              Service:
                 - lambda.amazonaws.com
-            Action: 
+            Action:
               - "sts:AssumeRole"
       Path: "/wildrydes/"
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies: 
-        - 
+      Policies:
+        -
           PolicyName: PutRidePolicy
-          PolicyDocument: 
+          PolicyDocument:
             Version: 2012-10-17
-            Statement: 
-              - 
+            Statement:
+              -
                 Effect: Allow
-                Action: 
+                Action:
                   - dynamodb:PutItem
                   - dynamodb:Scan
                 Resource: !GetAtt RidesTable.Arn
-  
+
   RequestUnicornFunction:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: RequestUnicorn
-      Runtime: nodejs6.10
+      Runtime: nodejs8.10
       Role: !GetAtt RequestUnicornExecutionRole.Arn
       Timeout: 5
       MemorySize: 128
@@ -529,7 +529,7 @@ Resources:
                     statusCode: 200
                     responseParameters:
                       method.response.header.Access-Control-Allow-Origin: "'*'"
-                uri: 
+                uri:
                   Fn::Join:
                     - ""
                     - - "arn:aws:apigateway:"
@@ -590,7 +590,7 @@ Resources:
     Properties:
       Description: Prod deployment for wild Rydes API
       RestApiId: !Ref WildRydesApi
-      StageName: prod         
+      StageName: prod
 
   WildRydesFunctionPermissions:
     Type: AWS::Lambda::Permission
@@ -622,7 +622,7 @@ Resources:
             - ".execute-api."
             - !Ref AWS::Region
             - ".amazonaws.com/prod"
-      
+
   UpdateApiConfigFunction:
     Type: AWS::Lambda::Function
     DependsOn: UpdateCognitoConfigFunction

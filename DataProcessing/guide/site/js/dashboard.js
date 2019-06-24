@@ -115,8 +115,7 @@
     }
   }
 
-  Dashboard.Poller = function(kinesis, map, console) {
-    const streamName = 'wildrydes';
+  Dashboard.Poller = function(kinesis, streamName, map, console) {
     const shardIteratorType = 'LATEST';
     const pollFrequency = 1000;
 
@@ -189,8 +188,9 @@
   $(window).on('load', function() {
     const map = Dashboard.Map(L).init('map').render();
 
-    if (Cookies.get('cognitoIdentityPoolId') !== undefined) {
+    if (Cookies.get('cognitoIdentityPoolId') !== undefined || Cookies.get('kinesisStreamName') !== undefined) {
       $('#cognitoIdentityPoolId').val(Cookies.get('cognitoIdentityPoolId'));
+      $('#kinesisStreamName').val(Cookies.get('kinesisStreamName'));
       $('#modal').on('shown.bs.modal', () => $('button').focus());
     }
 
@@ -198,7 +198,8 @@
       e.preventDefault();
 
       const cognitoIdentityPoolId = $('#cognitoIdentityPoolId').val();
-      const region = cognitoIdentityPoolId.substring(0, cognitoIdentityPoolId.indexOf(":"))
+      const kinesisStreamName = $('$kinesisStreamName').val();
+      const region = cognitoIdentityPoolId.substring(0, cognitoIdentityPoolId.indexOf(":"));
 
       AWS.config.region = region;
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -209,7 +210,7 @@
 
       kinesis.listStreams().promise()
         .then(() => Cookies.set("cognitoIdentityPoolId", cognitoIdentityPoolId))
-        .then(() => Dashboard.Poller(kinesis, map, console).poll())
+        .then(() => Dashboard.Poller(kinesis, kinesisStreamName, map, console).poll())
         .then(() => $('#modal').modal('hide'))
         .catch((err) => $('#modal .notice').text(err).show());
     });

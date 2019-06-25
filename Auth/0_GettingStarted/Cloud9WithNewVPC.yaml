@@ -6,7 +6,7 @@
     Cloud9Instance:
       Type: "AWS::Cloud9::EnvironmentEC2"
       Properties:
-        Description: "Cloud9 IDE for the Serverless Authentication and Authorization Workshop
+        Description: "Cloud9 IDE for the Serverless Authentication and Authorization Workshop"
         AutomaticStopTimeMinutes: 60
         InstanceType: t2.micro
         Name: !Sub ${AWS::StackName}-Cloud9Instance

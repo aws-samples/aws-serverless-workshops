@@ -2,7 +2,6 @@
 
 In data analysis you often have hunches that you need to prove or disprove.  This module walks through the steps of loading and cleansing an external dataset - in this case, 3rd party weather data (see below for data set details).
 
-**TODO**
 Here are the Cloudformation templates to launch the full stack in it's completed state:
 
 Region| Launch
@@ -48,21 +47,35 @@ Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
 
 ## Implementation Overview
 
-**TODO**
-
-This section should provide students with the high level steps required to complete the solution. It should enumerate all the components and major configuration tasks required, but should not get to the detail of providing step-by-step instructions for which console buttons to click, etc.
-
-Sample:
-
 The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
 
-*Create an S3 Bucket* - Use the console or CLI to create an S3 bucket. If you'd like to use a custom domain to host the site make sure you name your bucket using the full domain name (e.g. wildrydesdemo.example.com). Read more about custom domain names for S3 buckets here.
+#### Upload raw travel data
+Use the console or CLI to upload travel data to the raw S3 bucket.
 
-*Upload content* - Copy the content from the example bucket, xyz. There is also a zip archive available at xyz that you can download locally and extract in order to upload the content via the console.
+<details>
+<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
 
-*Add a bucket policy to allow public reads* - Bucket policies can be updated via the console or CLI. You can use the provided policy document or build your own. See the documentation for more information.
+Manually:
 
-*Enable public web hosting*
+*TODO*
+
+CLI:
+```
+aws cloudformation describe-stacks \
+  --stack-name wildrydes-machine-learning-module-0 \
+  --query "Stacks[0].Outputs[?OutputKey=='RawDataBucketName'].OutputValue" \
+  --output text | xargs -I {} \
+      aws s3 cp data/ride_data.json s3://{}
+```
+
+</p></details>
+
+#### Monitor data transformation
+Once your travel data lands in the raw data bucket, a Lambda function will supplement each record with weather information.
+
+#### Train and host a model
+
+#### Make inferences against the model
 
 
 ## The Dataset
@@ -105,3 +118,38 @@ aws athena get-query-execution \
 ```
 
 Now from inside your sagemaker notebook you can reference this athena table: https://aws.amazon.com/blogs/machine-learning/run-sql-queries-from-your-sagemaker-notebooks-using-amazon-athena/
+
+## Clean up
+
+Remove the data from your raw and transformed buckets. Once this is complete, you can delete the stack via CLI or console.
+
+<details>
+<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
+
+Manually:
+
+*TODO*
+
+CLI:
+1. Delete data in your raw bucket
+  ```
+  aws cloudformation describe-stacks \
+    --stack-name wildrydes-machine-learning-module-0 \
+    --query "Stacks[0].Outputs[?OutputKey=='RawDataBucketName'].OutputValue" \
+    --output text | xargs -I {} \
+        aws s3 rm s3://{} --recursive
+  ```
+2. Delete data in your transformed bucket
+  ```
+  aws cloudformation describe-stacks \
+    --stack-name wildrydes-machine-learning-module-0 \
+    --query "Stacks[0].Outputs[?OutputKey=='TransformedDataBucketName'].OutputValue" \
+    --output text | xargs -I {} \
+        aws s3 rm s3://{} --recursive
+  ```
+3. Delete the stack
+  ```
+  aws cloudformation delete-stack \
+    --stack-name wildrydes-machine-learning-module-0
+  ```
+</p></details>

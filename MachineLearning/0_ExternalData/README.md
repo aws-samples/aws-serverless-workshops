@@ -18,8 +18,6 @@ Manually:
 
 1. Click **Next** on the Select Template page.
 
-1. Provide a globally unique name for the **Raw Bucket Name** such as `wildrydes-yourname` and click **Next**.
-
 1. On the Options page, leave all the defaults and click **Next**.
 
 1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
@@ -35,8 +33,7 @@ CLI:
 aws cloudformation create-stack \
 --stack-name wildrydes-machine-learning-module-0 \
 --capabilities CAPABILITY_NAMED_IAM \
---template-body file://cloudformation/infrastructure.yml \
---parameters ParameterKey=RawBucketName,ParameterValue=
+--template-body file://cloudformation/infrastructure.yml
 ```
 
 </p></details>

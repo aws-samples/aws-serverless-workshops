@@ -153,10 +153,10 @@ Resources:
           import boto3
           import json
           import os
-          
+
           client = boto3.client('s3')
           bucket = os.environ['OUTPUT_BUCKET']
-          
+
           def handler(event, context):
               print('## EVENT')
               print(event)
@@ -166,15 +166,15 @@ Resources:
                   body = get_body_from_event_json(json_event)
                   upload_file(body, key)
               return event
-          
+
           def get_key_from_event_json(event):
               time = event["statustime"].split(' ')[1]
               date = event["statustime"].split(' ')[0]
               return 'processed/' + date + '/' + event["name"] + '-' + time + '.json'
-          
+
           def get_body_from_event_json(event):
               return json.dumps(event).encode()
-          
+
           def upload_file(body, key):
               client.put_object(Body=body, Bucket=bucket, Key=key)
 
@@ -183,7 +183,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: "central-multicustomer-aws-immersion-days"
-        S3Key: "functions/wild-rydes-ml-lab/function.zip" 
+        S3Key: "functions/wild-rydes-ml-lab/function.zip"
       Description: Wild Rydes lambda function to parse unicorn csv data and send downstream to lookup nearest groundstation
       Handler: index.handler
       MemorySize: 128
@@ -274,23 +274,23 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  
+
   LookUpNearestGroundstationEventSource:
     Type: AWS::Lambda::EventSourceMapping
-    Properties: 
+    Properties:
       BatchSize: 10
       Enabled: True
       EventSourceArn: !GetAtt NearestWeatherStationQueue.Arn
       FunctionName: !Ref FindClosestGroundstationLambdaFunction
-  
+
   ProcessedDataEventSource:
     Type: AWS::Lambda::EventSourceMapping
-    Properties: 
+    Properties:
       BatchSize: 10
       Enabled: True
       EventSourceArn: !GetAtt ProcessedUnicornDataQueue.Arn
       FunctionName: !Ref ProcessedDataToS3Function
-  
+
   TransformedDataBucket:
     Type: AWS::S3::Bucket
   SageMakerExecutionRole:

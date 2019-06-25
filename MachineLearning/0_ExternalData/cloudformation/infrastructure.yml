@@ -314,7 +314,6 @@ Resources:
   SageMakerNotebook:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
-      NotebookInstanceName: !Sub "WildRydesWeather${AWS::StackName}"
       InstanceType: ml.t3.medium
       RoleArn: !GetAtt SageMakerExecutionRole.Arn
       DirectInternetAccess: Enabled

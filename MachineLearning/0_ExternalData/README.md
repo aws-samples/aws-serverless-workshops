@@ -34,6 +34,7 @@ CLI:
 ```
 aws cloudformation create-stack \
 --stack-name wildrydes-machine-learning-module-0 \
+--capabilities CAPABILITY_NAMED_IAM \
 --template-body file://cloudformation/infrastructure.yml \
 --parameters ParameterKey=RawBucketName,ParameterValue=
 ```

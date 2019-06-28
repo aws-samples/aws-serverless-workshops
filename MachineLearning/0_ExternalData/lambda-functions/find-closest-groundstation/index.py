@@ -16,7 +16,13 @@ def handler(event, context):
         json_event = event_format_check(json_event)
         json_event["groundstation"] = closest(groundstations(),
                                             {"latitude": json_event["latitude"], "longitude": json_event["longitude" ]})["id"]
+        json_event = label_heavy_magic_utilization(json_event)
         send_message_sqs(json_event)
+    return event
+
+def label_heavy_magic_utilization(event):
+    magic_per_distance = 100
+    event['heavy_utilization'] = event['distance'] > (event['magicpoints'] * magic_per_distance)
     return event
 
 def send_message_sqs(event):

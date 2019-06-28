@@ -70,6 +70,21 @@ aws cloudformation describe-stacks \
 
 </p></details>
 
+#### Weather Data Prep
+1. Run the CF template
+1. In the outputs tab, grab the `AthenaSelectQuery` resource value
+1. Open up athena, and run that command.  This is filtering to just historical data for the relevant NY weather stations from a larger dataset of roughly ~1B in an external S3 bucket.
+1. Go back to CF, in the outputs tab, grab the `AthenaCSVLocation` value and drill into today's date until you find a CSV for the query you just ran.  It will contain the results of your query in CSV format that you can later provide the path to your notebook.
+1. Now you have the relevant weather data in CSV format
+
+#### Unicorn data prep
+1. Run the CF template
+1. Upload raw-data.json into the `raw-bucket` generated from your CF template
+1. This will:
+* emit an s3 event, triggering the process unicorn data function that will read it line by line and place it on an SQS queue
+* consume from that queue, and trigger the find nearest groundstation function that will not only find the closest weather station, but also label the data weather (ha ha) or not it was a "heavy utilization" scenario and emit the updated records on another queue
+* consume from the processed queue to a final lambda function that simply emits the data back out to s3 in the transformed bucket in JSON format (TODO: change final emit format to CSV)
+
 #### Monitor data transformation
 Once your travel data lands in the raw data bucket, a Lambda function will supplement each record with weather information.
 

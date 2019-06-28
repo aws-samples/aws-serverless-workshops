@@ -1,2 +1,0 @@
-# Publishing
-`npm run build` to build the function.zip in `./build/function.zip` you can then upload to your own lambda.  The source code in this repo is already built and available in a public S3 bucket referenced in the cloudformation script at `s3://central-multicustomer-aws-immersion-days/functions/wild-rydes-ml-lab/function.zip` or `https://central-multicustomer-aws-immersion-days.s3.amazonaws.com/functions/wild-rydes-ml-lab/function.zip`

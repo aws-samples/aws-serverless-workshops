@@ -5,6 +5,7 @@ Resources:
     Type: AWS::S3::Bucket
     DependsOn: ParseUnicornDataFunction
     Properties:
+      BucketName: !Sub "${AWS::StackName}-raw-bucket-${AWS::AccountId}"
       NotificationConfiguration:
         LambdaConfigurations:
           -
@@ -16,6 +17,13 @@ Resources:
                   -
                     Name: suffix
                     Value: json
+  S3RawDataBucketInvokeLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ParseUnicornDataFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !Sub "arn:aws:s3:::${AWS::StackName}-raw-bucket-${AWS::AccountId}"
   WildRydesMLGlueDatabase:
     Type: AWS::Glue::Database
     Properties:
@@ -94,7 +102,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !GetAtt RawDataBucket.Arn
+                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-raw-bucket-${AWS::AccountId}"
         -
           PolicyName: "AllowRawBucketObjects"
           PolicyDocument:
@@ -102,7 +110,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !GetAtt RawDataBucket.Arn
+                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-raw-bucket-${AWS::AccountId}/*"
         -
           PolicyName: "AllowNearestStationQueue"
           PolicyDocument:
@@ -206,10 +214,11 @@ Resources:
           
           def send_to_sqs(json_data):
             for entry in json_data['travel_data']:
+              lower_cased = {k.lower(): v for k, v in entry.items()}
               response = sqs.send_message(
                 QueueUrl=queue_url,
                 DelaySeconds=0,
-                MessageBody=json.dumps(entry)
+                MessageBody=json.dumps(lower_cased)
               )
             print('all rows sent to sqs')
               
@@ -217,8 +226,8 @@ Resources:
               for record in event['Records']:
                   bucket = record['s3']['bucket']['name']
                   key = record['s3']['object']['key'] 
-                  content_object = client.Object(bucket, key)
-              file_content = content_object.get()['Body'].read().decode('utf-8')
+                  content_object = client.get_object(Bucket=bucket, Key=key)
+              file_content = content_object['Body'].read().decode('utf-8')
               json_content = json.loads(file_content)
               send_to_sqs(json_content)
         
@@ -259,7 +268,7 @@ Resources:
                   json_event = event_format_check(json_event)
                   json_event["groundstation"] = closest(groundstations(),
                                                       {"latitude": json_event["latitude"], "longitude": json_event["longitude" ]})["id"]
-                                                      json_event = label_heavy_magic_utilization(json_event)
+                  json_event = label_heavy_magic_utilization(json_event)
                   send_message_sqs(json_event)
               return event
           

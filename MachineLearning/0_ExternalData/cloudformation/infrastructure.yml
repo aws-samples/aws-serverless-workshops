@@ -5,7 +5,14 @@ Resources:
     Type: AWS::S3::Bucket
     DependsOn: ParseUnicornDataFunction
     Properties:
-      BucketName: !Sub "${AWS::StackName}-raw-bucket-${AWS::AccountId}"
+      BucketName: !Sub "${AWS::StackName}-rawbucket-${AWS::AccountId}"
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
       NotificationConfiguration:
         LambdaConfigurations:
           -
@@ -23,7 +30,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref ParseUnicornDataFunction
       Principal: s3.amazonaws.com
-      SourceArn: !Sub "arn:aws:s3:::${AWS::StackName}-raw-bucket-${AWS::AccountId}"
+      SourceArn: !Sub "arn:aws:s3:::${AWS::StackName}-rawbucket-${AWS::AccountId}"
   WildRydesMLGlueDatabase:
     Type: AWS::Glue::Database
     Properties:
@@ -102,7 +109,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-raw-bucket-${AWS::AccountId}"
+                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-rawbucket-${AWS::AccountId}"
         -
           PolicyName: "AllowRawBucketObjects"
           PolicyDocument:
@@ -110,7 +117,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-raw-bucket-${AWS::AccountId}/*"
+                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-rawbucket-${AWS::AccountId}/*"
         -
           PolicyName: "AllowNearestStationQueue"
           PolicyDocument:
@@ -142,6 +149,13 @@ Resources:
       MessageRetentionPeriod: "345600"
       ReceiveMessageWaitTimeSeconds: "0"
       VisibilityTimeout: "30"
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
   ProcessedUnicornDataQueue:
     Type: "AWS::SQS::Queue"
     Properties:
@@ -150,6 +164,13 @@ Resources:
       MessageRetentionPeriod: "345600"
       ReceiveMessageWaitTimeSeconds: "0"
       VisibilityTimeout: "30"
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
   ProcessedDataToS3Function:
     Type: AWS::Lambda::Function
     Properties:
@@ -189,12 +210,12 @@ Resources:
               return event
 
           def get_key_from_event_json(event):
-              time = event["statustime"].split(' ')[1]
-              date = event["statustime"].split(' ')[0]
-              return 'processed/' + date + '/' + event["name"] + '-' + time + '.json'
-
+              return 'processed/' + event["statustime"] + '.csv'
+            
           def get_body_from_event_json(event):
-              return json.dumps(event).encode()
+              body = ",".join(event.keys()) + "\n"
+              body = body + ",".join(map(str, event.values()))
+              return body
 
           def upload_file(body, key):
               client.put_object(Body=body, Bucket=bucket, Key=key)
@@ -346,6 +367,14 @@ Resources:
 
   TransformedDataBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
   SageMakerExecutionRole:
     Type: AWS::IAM::Role
     Properties:

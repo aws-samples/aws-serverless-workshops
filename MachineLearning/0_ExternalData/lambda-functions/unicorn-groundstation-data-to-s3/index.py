@@ -18,12 +18,12 @@ def handler(event, context):
     return event
 
 def get_key_from_event_json(event):
-    time = event["statustime"].split(' ')[1]
-    date = event["statustime"].split(' ')[0]
-    return 'processed/' + date + '/' + event["name"] + '-' + time + '.json'
+    return 'processed/' + event["statustime"] + '.csv'
 
 def get_body_from_event_json(event):
-    return json.dumps(event).encode()
+    body = ",".join(event.keys()) + "\n"
+    body = body + ",".join(map(str, event.values()))
+    return body
 
 def upload_file(body, key):
     client.put_object(Body=body, Bucket=bucket, Key=key)

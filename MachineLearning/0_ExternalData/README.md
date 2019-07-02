@@ -67,8 +67,16 @@ aws cloudformation describe-stacks \
   --output text | xargs -I {} \
       aws s3 cp data/ride_data.json s3://{}
 ```
+</p></details><br>
 
-</p></details>
+Sequence of events:
+
+1. Upload ride_data.json into the `raw-bucket` generated from your CF template
+1. S3 event triggers the Process Unicorn Data function
+1. Process Unicorn Data function will read the file line by line and place the record on an SQS queue
+1. Find Nearest Ground Station function reads from the SQS queue, finds the closest weather station, and applies a label indicating if the ride was a "heavy utilization" scenario
+1. Find Nearest Ground Station function places the record on another SQS queue
+1. Processed Data to S3 function puts the record back into s3 in the transformed bucket in CSV format
 
 #### Weather Data Prep
 
@@ -100,27 +108,23 @@ Manually:
 1. Now you have the relevant weather data in CSV format
 
 CLI:
+1. Kick off the Athena query, escaping quotes in the query string. The execution takes about 20 seconds.
 ```
-aws cloudformation describe-stacks \
-  --stack-name wildrydes-machine-learning-module-0 \
-  --query "Stacks[0].Outputs[?OutputKey=='AthenaSelectQuery'].OutputValue" \
-  --output text | xargs -I {} \
-    aws athena start-query-execution \
-      --query-string "{}" \
-      --region us-east-1
+aws athena start-query-execution \
+  --query-string "[INSERT ATHENA SELECT QUERY]" \
+  --result-configuration "OutputLocation=s3://[INSERT TRANSFORMED BUCKET NAME]/nygroundstationdata/" \
+  --region us-east-1
 ```
+1. Check on the status. We're looking for 'SUCCEEDED'.
+```
+aws athena get-query-execution \
+  --query-execution-id "[INSERT EXECUTION ID FROM ABOVE]" \
+  --query "QueryExecution.Status.State" \
+  --output text
+```
+</p></details><br>
 
-Now from inside your sagemaker notebook you can reference this athena table: https://aws.amazon.com/blogs/machine-learning/run-sql-queries-from-your-sagemaker-notebooks-using-amazon-athena/
-
-#### Unicorn data prep
-1. Run the CF template
-1. Upload raw-data.json into the `raw-bucket` generated from your CF template
-1. This will:
-* emit an s3 event, triggering the process unicorn data function that will read it line by line and place it on an SQS queue
-* consume from that queue, and trigger the find nearest groundstation function that will not only find the closest weather station, but also label the data weather (ha ha) or not it was a "heavy utilization" scenario and emit the updated records on another queue
-* consume from the processed queue to a final lambda function that simply emits the data back out to s3 in the transformed bucket in CSV format
-
-*At this point you have both your unicorn data and your relevant weather data ready for further labelling in sagemaker*
+Now from inside your Amazon SageMaker notebook you can [reference this Athena table (external link)](https://aws.amazon.com/blogs/machine-learning/run-sql-queries-from-your-sagemaker-notebooks-using-amazon-athena/).
 
 #### Train and host a model
 

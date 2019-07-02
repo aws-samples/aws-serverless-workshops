@@ -391,6 +391,23 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
         - arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
       MaxSessionDuration: 3600
+      Policies:
+        -
+          PolicyName: AllowIAMGetRole
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "iam:GetRole"
+                Resource: "*"
+        -
+          PolicyName: AllowSageMakerCreateTrainingJob
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "sagemaker:CreateTrainingJob"
+                Resource: "*"
   SageMakerNotebook:
     Type: AWS::SageMaker::NotebookInstance
     Properties:

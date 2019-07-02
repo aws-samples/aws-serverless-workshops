@@ -448,14 +448,6 @@ Outputs:
   AthenaCSVLocation:
     Value: !Sub |
       https://s3.console.aws.amazon.com/s3/buckets/aws-athena-query-results-${AWS::AccountId}-${AWS::Region}/Unsaved/?region=${AWS::Region}&tab=overview
-  AthenaCreateTableQuery:
-    Value: !Sub |
-      CREATE TABLE "${WildRydesMLGlueDatabase}".nygroundstationdata
-      WITH ( format='TEXTFILE', external_location='s3://${TransformedDataBucket}/nygroundstationdata/' ) AS
-      SELECT *
-      FROM "${WildRydesMLGlueDatabase}"."${WildRydesMLGlueTable}"
-      WHERE q_flag = ''
-              AND id IN ('US1NYNY0074', 'USC00305798', 'USC00305799', 'USC00305804', 'USC00305806', 'USC00305816', 'USW00014732', 'USW00014786', 'USW00093732', 'USW00094728', 'USW00094789');
   RawDataBucketName:
     Value: !Ref RawDataBucket
   TransformedDataBucketName:

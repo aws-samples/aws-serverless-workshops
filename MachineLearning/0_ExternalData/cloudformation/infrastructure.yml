@@ -254,13 +254,13 @@ Resources:
 
       Description: Wild Rydes lambda function to parse unicorn JSON data and send downstream to lookup nearest groundstation
       Handler: index.handler
-      MemorySize: 512
+      MemorySize: 256
       Environment:
         Variables:
           OUTPUT_QUEUE: !Ref NearestWeatherStationQueue
       Role: !GetAtt DataProcessingExecutionRole.Arn
       Runtime: python3.7
-      Timeout: 10
+      Timeout: 300
       Tags:
         -
           Key: Workshop

@@ -397,8 +397,6 @@ Resources:
       InstanceType: ml.t3.medium
       RoleArn: !GetAtt SageMakerExecutionRole.Arn
       DirectInternetAccess: Enabled
-      # DefaultCodeRepository:
-      #   -
       VolumeSizeInGB: 5
       RootAccess: Enabled
   ModelBucket:

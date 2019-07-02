@@ -50,7 +50,7 @@ Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
 The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
 
 #### Upload raw travel data
-Use the console or CLI to upload travel data to the raw S3 bucket.
+Use the console or CLI to upload travel data to the raw S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1#) to track how your Lambda functions are processing the data. With our record size of about ten thousand records, expect this to take about two minutes.
 
 <details>
 <summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
@@ -71,11 +71,46 @@ aws cloudformation describe-stacks \
 </p></details>
 
 #### Weather Data Prep
-1. Run the CF template
-1. In the outputs tab, grab the `AthenaSelectQuery` resource value
-1. Open up athena, and run that command.  This is filtering to just historical data for the relevant NY weather stations from a larger dataset of roughly ~1B in an external S3 bucket.
-1. Go back to CF, in the outputs tab, grab the `AthenaCSVLocation` value and drill into today's date until you find a CSV for the query you just ran.  It will contain the results of your query in CSV format that you can later provide the path to your notebook.
+
+The dataset we're using is [NOAA Global Historical Climatology Network Daily (GHCN-D)](https://registry.opendata.aws/noaa-ghcn/) ([dataset readme](https://docs.opendata.aws/noaa-ghcn-pds/readme.html)).  There are roughly one billion records in this public data set. We should pair that down. Since our unicorns operate within the New York City area, we're only interested in those ground stations:
+
+```
+US1NYNY0074  40.7969  -73.9330    6.1 NY NEW YORK 8.8 N                              
+USC00305798  40.6000  -73.9667    6.1 NY NEW YORK BENSONHURST                        
+USC00305799  40.8667  -73.8833   27.1 NY NEW YORK BOTANICAL GRD                      
+USC00305804  40.7333  -73.9333    3.0 NY NEW YORK LAUREL HILL                        
+USC00305806  40.8500  -73.9167   54.9 NY NEW YORK UNIV ST                            
+USC00305816  40.7000  -74.0167    3.0 NY NEW YORK WB CITY                            
+USW00014732  40.7794  -73.8803    3.4 NY NEW YORK LAGUARDIA AP                  72503
+USW00014786  40.5833  -73.8833    4.9 NY NEW YORK FLOYD BENNETT FLD                  
+USW00093732  39.8000  -72.6667   25.9 NY NEW YORK SHOALS AFS                         
+USW00094728  40.7789  -73.9692   39.6 NY NEW YORK CNTRL PK TWR              HCN 72506
+USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP                   74486
+```
+
+<details>
+<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
+
+Manually:
+
+1. Navigate to your CloudFormation stack
+1. In the outputs tab, grab the `AthenaSelectQuery` value
+1. Open Amazon Athena, and run that command.
+1. Go back to CloudFormation, in the outputs tab, grab the `AthenaCSVLocation` value and drill into today's date until you find a CSV for the query you just ran.  It will contain the results of your query in CSV format that you can later provide the path to your notebook.
 1. Now you have the relevant weather data in CSV format
+
+CLI:
+```
+aws cloudformation describe-stacks \
+  --stack-name wildrydes-machine-learning-module-0 \
+  --query "Stacks[0].Outputs[?OutputKey=='AthenaSelectQuery'].OutputValue" \
+  --output text | xargs -I {} \
+    aws athena start-query-execution \
+      --query-string "{}" \
+      --region us-east-1
+```
+
+Now from inside your sagemaker notebook you can reference this athena table: https://aws.amazon.com/blogs/machine-learning/run-sql-queries-from-your-sagemaker-notebooks-using-amazon-athena/
 
 #### Unicorn data prep
 1. Run the CF template
@@ -99,52 +134,13 @@ aws cloudformation describe-stacks \
 ```
 curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/nearest_neighbor.ipynb -o SageMaker/nearest_neighbor.ipynb
 ```
+1. Open the `nearest_neighbor.ipynb` notebook and follow the instructions.
 
 </p></details>
 
 #### Make inferences against the model
 
 
-## The Dataset
-The dataset we're using is [NOAA Global Historical Climatology Network Daily (GHCN-D)](https://registry.opendata.aws/noaa-ghcn/) ([dataset readme](https://docs.opendata.aws/noaa-ghcn-pds/readme.html)).  We're only interested in the NY groundstations:
-
-```
-US1NYNY0074  40.7969  -73.9330    6.1 NY NEW YORK 8.8 N                              
-USC00305798  40.6000  -73.9667    6.1 NY NEW YORK BENSONHURST                        
-USC00305799  40.8667  -73.8833   27.1 NY NEW YORK BOTANICAL GRD                      
-USC00305804  40.7333  -73.9333    3.0 NY NEW YORK LAUREL HILL                        
-USC00305806  40.8500  -73.9167   54.9 NY NEW YORK UNIV ST                            
-USC00305816  40.7000  -74.0167    3.0 NY NEW YORK WB CITY                            
-USW00014732  40.7794  -73.8803    3.4 NY NEW YORK LAGUARDIA AP                  72503
-USW00014786  40.5833  -73.8833    4.9 NY NEW YORK FLOYD BENNETT FLD                  
-USW00093732  39.8000  -72.6667   25.9 NY NEW YORK SHOALS AFS                         
-USW00094728  40.7789  -73.9692   39.6 NY NEW YORK CNTRL PK TWR              HCN 72506
-USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP                   74486
-```
-
-### Trimming Down the dataset with Athena
-*Copy the dataset from the public location to your own S3 bucket*
-```
-aws athena start-query-execution \
---query-string "CREATE EXTERNAL TABLE IF NOT EXISTS default.noaatmp (  `id` string,  `year_date` string,  `element` string,  `data_value` string,  `m_flag` string,  `q_flag` string,  `s_flag` string,  `obs_time` string ) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' WITH SERDEPROPERTIES (  'serialization.format' = ',',  'field.delim' = ',') LOCATION 's3://noaa-ghcn-pds/csv/' TBLPROPERTIES ('has_encrypted_data'='false');" \
---result-configuration "OutputLocation=s3://[YOUR PRIVATE S3 BUCKET]/output/" \
---region us-east-1
-```
-
-*Convert your CSV dataset into Parquet*
-```
-aws athena start-query-execution \
---query-string "CREATE table default.noaatmpparquet WITH (format='PARQUET', external_location='s3://[YOUR PRIVATE S3 BUCKET]/parquet/') AS SELECT * FROM default.noaatmp WHERE q_flag = '' AND id IN ('US1NYNY0074', 'USC00305798', 'USC00305799', 'USC00305804', 'USC00305806', 'USC00305816', 'USW00014732', 'USW00014786', 'USW00093732', 'USW00094728', 'USW00094789') AND year_date LIKE '2019%';" \
---region us-east-1
-```
-
-```
-aws athena get-query-execution \
---region us-east-1 \
---query-execution-id "${last_query_id}"
-```
-
-Now from inside your sagemaker notebook you can reference this athena table: https://aws.amazon.com/blogs/machine-learning/run-sql-queries-from-your-sagemaker-notebooks-using-amazon-athena/
 
 ## Clean up
 

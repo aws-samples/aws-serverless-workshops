@@ -89,6 +89,19 @@ aws cloudformation describe-stacks \
 
 #### Train and host a model
 
+<details>
+<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
+
+1. Navigate to **Amazon SageMaker** in AWS Console
+1. Click **Open Jupyter** link under Actions
+1. When redirected to the notebook instance, click **New** then select **Terminal** from list. A new tab will open.
+1. When in the terminal, type the following commands:
+```
+curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/nearest_neighbor.ipynb -o SageMaker/nearest_neighbor.ipynb
+```
+
+</p></details>
+
 #### Make inferences against the model
 
 

@@ -211,7 +211,7 @@ Resources:
 
           def get_key_from_event_json(event):
               return 'processed/' + event["statustime"] + '.csv'
-            
+
           def get_body_from_event_json(event):
               body = ",".join(event.keys()) + "\n"
               body = body + ",".join(map(str, event.values()))
@@ -228,11 +228,11 @@ Resources:
           import boto3
           import json
           import os
-          
+
           client = boto3.client('s3')
           sqs = boto3.client('sqs')
           queue_url = os.environ['OUTPUT_QUEUE']
-          
+
           def send_to_sqs(json_data):
             for entry in json_data['travel_data']:
               lower_cased = {k.lower(): v for k, v in entry.items()}
@@ -242,16 +242,16 @@ Resources:
                 MessageBody=json.dumps(lower_cased)
               )
             print('all rows sent to sqs')
-              
+
           def handler(event, context):
               for record in event['Records']:
                   bucket = record['s3']['bucket']['name']
-                  key = record['s3']['object']['key'] 
+                  key = record['s3']['object']['key']
                   content_object = client.get_object(Bucket=bucket, Key=key)
               file_content = content_object['Body'].read().decode('utf-8')
               json_content = json.loads(file_content)
               send_to_sqs(json_content)
-        
+
       Description: Wild Rydes lambda function to parse unicorn JSON data and send downstream to lookup nearest groundstation
       Handler: index.handler
       MemorySize: 512
@@ -292,7 +292,7 @@ Resources:
                   json_event = label_heavy_magic_utilization(json_event)
                   send_message_sqs(json_event)
               return event
-          
+
           def label_heavy_magic_utilization(event):
               magic_per_distance = 100
               event['heavy_utilization'] = event['distance'] > (event['magicpoints'] * magic_per_distance)

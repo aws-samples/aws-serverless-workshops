@@ -138,6 +138,7 @@ Now from inside your Amazon SageMaker notebook you can [reference this Athena ta
 ```
 curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/nearest_neighbor.ipynb -o SageMaker/nearest_neighbor.ipynb
 ```
+1. Exit the terminal tab/window
 1. Open the `nearest_neighbor.ipynb` notebook and follow the instructions.
 
 </p></details>

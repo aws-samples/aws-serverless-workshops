@@ -141,14 +141,39 @@ Resources:
               - Effect: Allow
                 Action: ['logs:*']
                 Resource: 'arn:aws:logs:*:*:*'
+  FindClosestGroundstationLambdaFunctionDLQ:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+  ParseUnicornDataFunctionDLQ:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+  ProcessedDataToS3FunctionDLQ:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
   NearestWeatherStationQueue:
     Type: "AWS::SQS::Queue"
     Properties:
-      DelaySeconds: "0"
-      MaximumMessageSize: "262144"
-      MessageRetentionPeriod: "345600"
-      ReceiveMessageWaitTimeSeconds: "0"
-      VisibilityTimeout: "30"
       Tags:
         -
           Key: Workshop
@@ -159,11 +184,6 @@ Resources:
   ProcessedUnicornDataQueue:
     Type: "AWS::SQS::Queue"
     Properties:
-      DelaySeconds: "0"
-      MaximumMessageSize: "262144"
-      MessageRetentionPeriod: "345600"
-      ReceiveMessageWaitTimeSeconds: "0"
-      VisibilityTimeout: "30"
       Tags:
         -
           Key: Workshop
@@ -176,6 +196,8 @@ Resources:
     Properties:
       Description: Wild Rydes lambda function to parse unicorn csv data and send downstream to lookup nearest groundstation
       Handler: index.handler
+      DeadLetterConfig:
+        TargetArn: !GetAtt ProcessedDataToS3FunctionDLQ.Arn
       MemorySize: 128
       Environment:
         Variables:
@@ -254,6 +276,8 @@ Resources:
 
       Description: Wild Rydes lambda function to parse unicorn JSON data and send downstream to lookup nearest groundstation
       Handler: index.handler
+      DeadLetterConfig:
+        TargetArn: !GetAtt ParseUnicornDataFunctionDLQ.Arn
       MemorySize: 256
       Environment:
         Variables:
@@ -295,7 +319,7 @@ Resources:
 
           def label_heavy_magic_utilization(event):
               magic_per_distance = 100
-              event['heavy_utilization'] = event['distance'] > (event['magicpoints'] * magic_per_distance)
+              event['heavy_utilization'] = int(event['distance'] > (event['magicpoints'] * magic_per_distance))
               return event
 
           def send_message_sqs(event):
@@ -322,18 +346,13 @@ Resources:
 
           def groundstations():
               return [{"id": "US1NYNY0074",  "latitude": 40.7969, "longitude": -73.9330, "elevation": 6.1},
-                      {"id": "USC00305798",  "latitude": 40.6000, "longitude": -73.9667, "elevation": 6.1},
-                      {"id": "USC00305799",  "latitude": 40.8667, "longitude": -73.8833, "elevation": 27.1},
-                      {"id": "USC00305804",  "latitude": 40.7333, "longitude": -73.9333, "elevation": 3.0},
-                      {"id": "USC00305806",  "latitude": 40.8500, "longitude": -73.9167, "elevation": 54.9},
-                      {"id": "USC00305816",  "latitude": 40.7000, "longitude": -74.0167, "elevation": 3.0},
-                      {"id": "USW00014732",  "latitude": 40.7794, "longitude": -73.8803, "elevation": 3.4},
-                      {"id": "USW00014786",  "latitude": 40.5833, "longitude": -73.8833, "elevation": 4.9},
-                      {"id": "USW00093732",  "latitude": 39.8000, "longitude": -72.6667, "elevation": 25.9},
-                      {"id": "USW00094728",  "latitude": 40.7789, "longitude": -73.9692, "elevation": 39.6},
-                      {"id": "USW00094789",  "latitude": 40.6386, "longitude": -73.7622, "elevation": 3.4}]
+                  {"id": "USW00014732",  "latitude": 40.7794, "longitude": -73.8803, "elevation": 3.4},
+                  {"id": "USW00094728",  "latitude": 40.7789, "longitude": -73.9692, "elevation": 39.6},
+                  {"id": "USW00094789",  "latitude": 40.6386, "longitude": -73.7622, "elevation": 3.4}]
       Description: Wild Rydes lambda function to look up nearest weather groundstation based on lat/long
       Handler: index.handler
+      DeadLetterConfig:
+        TargetArn: !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
       MemorySize: 128
       Environment:
         Variables:

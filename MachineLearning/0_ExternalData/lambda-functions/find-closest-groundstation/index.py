@@ -22,7 +22,7 @@ def handler(event, context):
 
 def label_heavy_magic_utilization(event):
     magic_per_distance = 100
-    event['heavy_utilization'] = event['distance'] > (event['magicpoints'] * magic_per_distance)
+    event['heavy_utilization'] = int(event['distance'] > (event['magicpoints'] * magic_per_distance))
     return event
 
 def send_message_sqs(event):
@@ -49,13 +49,6 @@ def closest(listOfStations, target):
 
 def groundstations():
     return [{"id": "US1NYNY0074",  "latitude": 40.7969, "longitude": -73.9330, "elevation": 6.1},
-            {"id": "USC00305798",  "latitude": 40.6000, "longitude": -73.9667, "elevation": 6.1},
-            {"id": "USC00305799",  "latitude": 40.8667, "longitude": -73.8833, "elevation": 27.1},
-            {"id": "USC00305804",  "latitude": 40.7333, "longitude": -73.9333, "elevation": 3.0},
-            {"id": "USC00305806",  "latitude": 40.8500, "longitude": -73.9167, "elevation": 54.9},
-            {"id": "USC00305816",  "latitude": 40.7000, "longitude": -74.0167, "elevation": 3.0},
-            {"id": "USW00014732",  "latitude": 40.7794, "longitude": -73.8803, "elevation": 3.4},
-            {"id": "USW00014786",  "latitude": 40.5833, "longitude": -73.8833, "elevation": 4.9},
-            {"id": "USW00093732",  "latitude": 39.8000, "longitude": -72.6667, "elevation": 25.9},
-            {"id": "USW00094728",  "latitude": 40.7789, "longitude": -73.9692, "elevation": 39.6},
-            {"id": "USW00094789",  "latitude": 40.6386, "longitude": -73.7622, "elevation": 3.4}]
+        {"id": "USW00014732",  "latitude": 40.7794, "longitude": -73.8803, "elevation": 3.4},
+        {"id": "USW00094728",  "latitude": 40.7789, "longitude": -73.9692, "elevation": 39.6},
+        {"id": "USW00094789",  "latitude": 40.6386, "longitude": -73.7622, "elevation": 3.4}]

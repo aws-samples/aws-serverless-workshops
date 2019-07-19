@@ -22,7 +22,7 @@ def handler(event, context):
 
 def label_heavy_magic_utilization(event):
     magic_per_distance = 100
-    event['heavy_utilization'] = int(event['distance'] > (event['magicpoints'] * magic_per_distance))
+    event['heavy_utilization'] = int(event['magicpoints'] > (event['distance'] * magic_per_distance))
     return event
 
 def send_message_sqs(event):

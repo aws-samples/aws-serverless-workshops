@@ -7,7 +7,11 @@ sqs = boto3.client('sqs')
 queue_url = os.environ['OUTPUT_QUEUE']
 
 def send_to_sqs(json_data):
-  for entry in json_data['travel_data']:
+  data = json_data
+  if 'travel_data' in json_data:
+    data = json_data['travel_data']
+  
+  for entry in data:
     lower_cased = {k.lower(): v for k, v in entry.items()}
     response = sqs.send_message(
       QueueUrl=queue_url,

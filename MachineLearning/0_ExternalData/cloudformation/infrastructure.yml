@@ -278,7 +278,11 @@ Resources:
           queue_url = os.environ['OUTPUT_QUEUE']
 
           def send_to_sqs(json_data):
-            for entry in json_data['travel_data']:
+            data = json_data
+            if 'travel_data' in json_data:
+              data = json_data['travel_data']
+            
+            for entry in data:
               lower_cased = {k.lower(): v for k, v in entry.items()}
               response = sqs.send_message(
                 QueueUrl=queue_url,
@@ -341,7 +345,7 @@ Resources:
 
           def label_heavy_magic_utilization(event):
               magic_per_distance = 100
-              event['heavy_utilization'] = int(event['distance'] > (event['magicpoints'] * magic_per_distance))
+              event['heavy_utilization'] = int(event['magicpoints'] > (event['distance'] * magic_per_distance))
               return event
 
           def send_message_sqs(event):

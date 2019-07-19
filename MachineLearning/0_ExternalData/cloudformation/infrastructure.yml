@@ -133,7 +133,29 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !GetAtt ProcessedUnicornDataQueue.Arn
+                Resource: 
+                  - 
+                    !GetAtt ProcessedUnicornDataQueue.Arn
+                  - 
+                    !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
+                  - 
+                    !GetAtt ParseUnicornDataFunctionDLQ.Arn
+                  - 
+                    !GetAtt ProcessedDataToS3FunctionDLQ.Arn
+        -
+          PolicyName: "AllowDLQs"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: 
+                  - 
+                    !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
+                  - 
+                    !GetAtt ParseUnicornDataFunctionDLQ.Arn
+                  - 
+                    !GetAtt ProcessedDataToS3FunctionDLQ.Arn
         - PolicyName: "AllowLogging"
           PolicyDocument:
             Version: "2012-10-17"

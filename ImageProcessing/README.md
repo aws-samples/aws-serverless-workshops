@@ -430,7 +430,7 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	and replace it with
 	
 	```JSON
-      		"Next": "ParallelProcessing",
+	     	 "Next": "ParallelProcessing",
 
 	```
 	This tells AWS Step Functions if the  `CheckFaceDuplicate ` state runs successfully, go on to run the `ParallelProcessing ` state as the next step in the process. 
@@ -512,12 +512,15 @@ The ARNs of the two AWS Lambda functions that performs face index and generate t
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, update the `RiderPhotoProcessing` statemachine by copy-pasting the updated JSON definition:
+1. Go back the AWS Step Functions Console, click the **Edit state machine** button to update the `RiderPhotoProcessing` state machine.
+
+1. Paste the updated JSON definition and click the refresh button in the preview panel to visualize the changes:
 
 	![Update State Machine with parallel step](./images/5-update-state-machine-with-parallel-step.png)
 
+1. Click the **Save** button to save the state machine.
 	
-1. Test the new state machine with the test input you've used before:
+1. Click the **Start execution** button to test the new state machine with the test input you've used before:
 
 	```JSON
 	{

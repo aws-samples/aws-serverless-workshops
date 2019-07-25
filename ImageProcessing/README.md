@@ -291,7 +291,7 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	and replace it with
 	
 	```JSON
-      		"Next": "CheckFaceDuplicate",
+	     	 "Next": "CheckFaceDuplicate",
 
 	```
 	This tells AWS Step Functions if the  `FaceDetection` state runs successfully, go on to run the `CheckFaceDuplicate` state as the next step in the process. 
@@ -349,11 +349,16 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	
 	![edit state machine](./images/4-edit-state-machine.png)
 
-1. Copy-paste the updated JSON definition into the editor, then click **Update and start execution**
+1. Copy-paste the updated JSON definition into the editor, then click **Save**
 
 	![update state machine definition](./images/4-update-state-machine-definition.png)
 
-	
+1. An IAM warning will appear suggesting to verify your IAM role's permissions. Click **Save anyway**.
+
+	![save state machine definition](./images/4-save-state-machine-definition.png)
+
+1. Click **Start execution**.
+
 1. Test the new state machine with the test input you've used before:
 
 	```JSON
@@ -363,7 +368,7 @@ If the uploaded photo has passed the basic face detection checks, the next step 
 	  "s3Key": "1_happy_face.jpg"
 	} 
 	```
-	Because we haven't added the step yet to index the face in the photo into the Rekognition collection, the `CheckFaceDuplicate` step will always succeed at this point. 
+	Because we haven't added the step yet to index the face in the photo into the Rekognition collection, the `CheckFaceDuplicate` step will always succeed at this point.
 
 </p></details>
 

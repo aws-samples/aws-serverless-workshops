@@ -17,7 +17,8 @@ When users upload the photo of themselves, a few steps of verification and proce
 1. Index the user's face into the collection so it can be used for matching in the future. 
 1. Store the photo metadata with the user's profile.  
 
-In the serverless world, each of steps above can be easily implemented with a AWS Lambda function. But how can we manage the flow of invoking one Lambda function after the previous step has finished and keep track of what happened with each image? What if one of the Lambda function times out and needs to be retried? Some of the Lambda functions can be run in parallel to reduce end-to-end processing latency, how can we coordinate running Lambda functions in parallel and wait for them to finish? AWS Step Functions makes it very easy to solve these problems and provides an audit trail and visualization to track what happened with each flow. 
+In the serverless world, each of steps above can be easily implemented with a AWS Lambda function. But how can we manage the flow of invoking one Lambda function after the previous step has finished and keep track of what happened with each image? What if one of the Lambda function times out and needs to be retried? Some of the Lambda functions can be run in parallel to reduce end-to-end processing latency, how can we coordinate running Lambda functions in parallel and wait for them to finish? AWS Step Functions makes it very easy to solve these problems and provides an audit trail and visualization to track what happened with each flow. 
+
 ## Architecture Overview
 The architecture for this module is composed of several AWS Lambda functions that leverage the facial detection capabilities of **Amazon Rekognition**, resize the uploaded image stored in **Amazon S3**, and save the image metadata with the user profile using **Amazon DynamoDB**. The orchestration of these Lambda functions is managed by an **AWS Step Functions**  state machine.
 
@@ -27,7 +28,8 @@ Below is the flow diagram of the workflow we will build as visualized by  **AWS 
 
 <img src="./images/4th-state-machine-graph.png" width="60%">
 
-In this module, we will manually kick-off processing workflows from the AWS Step Functions management console. In a real world application, you can configure an Amazon API Gateway that your application invokes to trigger the Step Functions state machine, or have it triggered by an Amazon S3 upload event through Amazon CloudWatch Events or S3 event notifications. 
+In this module, we will manually kick-off processing workflows from the AWS Step Functions management console. In a real world application, you can configure an Amazon API Gateway that your application invokes to trigger the Step Functions state machine, or have it triggered by an Amazon S3 upload event through Amazon CloudWatch Events or S3 event notifications. 
+
 ## Implementation Instructions
 
 Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
@@ -69,8 +71,10 @@ Using the AWS Command Line Interface, create a collection in the Amazon Rekognit
 
 ### 2. Deploy Amazon S3, AWS Lambda and Amazon DynamoDB resources using AWS CloudFormation
 
-The following AWS CloudFormation template will create these resources:
-* Two Amazon S3 buckets: 	* **RiderPhotoS3Bucket** stores the photos uploaded by the riders
+The following AWS CloudFormation template will create these resources:
+
+* Two Amazon S3 buckets: 
+	* **RiderPhotoS3Bucket** stores the photos uploaded by the riders
 	* A few test images will be copied into the **RiderPhotoS3Bucket**  bucket
 	* **ThumbnailS3Bucket** stores the resized thumbnails of the rider photos
 * One Amazon DynamoDB table **RiderPhotoDDBTable** that stores the metadata of the rider's photo with rider's profile
@@ -191,22 +195,22 @@ Now you can create an AWS Step Functions state machine with the initial face det
 
 1. Type `RiderPhotoProcessing` for the state machine name.
 
-1. For **IAM role for your state machine executions**, pick **I will use an existing role**, and select the IAM role created by the CloudFormation in the previous step. 
+1. Paste in the JSON from your `rider-photo-state-machine.json` file into the **Code** editor portion.
+
+1. You can click on the &#x21ba; sign in the preview panel to visualize the workflow:
+ 
+	![create initial state machine](./images/3-initial-sfn-code.png)
+
+1. Click **Next**.
+
+1. For **IAM role for executions**, pick **Choose an existing role**, and select the IAM role created by the CloudFormation in the previous step. 
 	> The name of the IAM role should have the prefix `wildrydes-step-modules-resources` (the name of the CloudFormation stack) To verify the IAM role's full name, you can open a new tab for the CloudFormation console and check the **Output** section of the stack you just created, and look for `StateMachineRole`.
 
 	![select IAM role](./images/3-create-statemachine-select-role.png)
 
-
-1. Paste in the JSON from your `rider-photo-state-machine.json` file into the **Code** editor portion. 
-
-1. You can click on the &#x21ba; sign next to **Preview** to visualize the workflow:
- 
-	![create initial state machine](./images/3-initial-sfn-code.png)
-
-
 1. Click **Create State Machine** to create the state machine.
 
-1. Click the **New execution** button to start a new execution.
+1. Click the **Start execution** button to start a new execution.
 
 1. Here you specify the input data passed into the AWS Step Functions state machine to process.
 
@@ -214,11 +218,10 @@ Now you can create an AWS Step Functions state machine with the initial face det
    
    For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` field with your own values. 
    
-	For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`. 
+   For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`. 
 	
-	The `userId` field is needed because in later processing steps, the userId is used to record which user the profile picture is associated with.
+   The `userId` field is needed because in later processing steps, the userId is used to record which user the profile picture is associated with.
 
-	
 	```JSON
 	{
 	  "userId": "user_a", 

@@ -589,7 +589,7 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	and replace it with
 	
 	```JSON
-      		"Next": "PersistMetadata"
+	     	 "Next": "PersistMetadata"
 
 	```
 	> **Note**: be careful to edit the `"End"` line at the `ParallelProcessing` level, not the individual branch level within the parallel state. 
@@ -678,12 +678,15 @@ The ARN of the AWS Lambda function that persists the metadata can be found in th
 	```
 	</p></details>
 
-1. Go back the AWS Step Functions Console, update the state machine by copy-pasting the updated JSON definition:
+1. Go back the AWS Step Functions Console, click the **Edit state machine** button to update the `RiderPhotoProcessing` state machine.
+
+1. Paste the updated JSON definition and click the refresh button in the preview panel to visualize the changes:
 
 	![Update state machine with persistence step](./images/6-update-state-machine-persistence.png)
+
+1. Click the **Save** button to save the state machine.
 	
-	
-1. Test the new state machine with test input:
+1. Click the **Start execution** button to test the new state machine with with test input:
 
 	```JSON
 	{

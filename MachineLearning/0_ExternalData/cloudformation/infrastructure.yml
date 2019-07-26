@@ -213,6 +213,67 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
+  ModelInferenceFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Wild Rydes lambda function make model inferences
+      Handler: index.handler
+      MemorySize: 128
+      Role: !GetAtt DataProcessingExecutionRole.Arn
+      Runtime: python3.7
+      Timeout: 3
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+      Code:
+        ZipFile: |
+          import boto3
+          import json
+          import os
+
+          client = boto3.client('s3')
+
+          def handler(event, context):
+              print('## EVENT')
+              print(event)
+              return event
+  ApiGateway:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Name: "ModelInferenceApi"
+      Description: "Wild Rydes Model Inference REST API"
+
+  ApiGatewayRootMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: "NONE"
+      HttpMethod: "POST"
+      Integration:
+        IntegrationHttpMethod: "POST"
+        Type: "AWS_PROXY"
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "ModelInferenceFunction.Arn"
+      ResourceId: !GetAtt "ApiGateway.RootResourceId"
+      RestApiId: !Ref "ApiGateway"
+  lambdaApiGatewayInvoke:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt "ModelInferenceFunction.Arn"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/POST/"
+  apiGatewayDeployment:
+    Type: "AWS::ApiGateway::Deployment"
+    DependsOn:
+      - "apiGatewayRootMethod"
+    Properties:
+      RestApiId: !Ref "ApiGateway"
+      StageName: "prod"
   ProcessedDataToS3Function:
     Type: AWS::Lambda::Function
     Properties:
@@ -496,3 +557,5 @@ Outputs:
     Value: !Ref TransformedDataBucket
   ModelBucketName:
     Value: !Ref ModelBucket
+  ApiGatewayInvokeURL:
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"

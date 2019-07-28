@@ -352,7 +352,7 @@ Congratuations, you've successfully corrected the code bug!  Next, let's look at
 
 Having this testing framework in place ensures that the exact same set of steps are run every time we test our code. However, we are still running this test manually. Let's configure our CodeBuild environment to run these tests for us every time a build is performed.
 
-1. Using a text editor, open `buildspec.yml` and navigate to the `build:` section. 
+1. Using a text editor, open `buildspec.yml` and navigate to the `pre-build:` section. 
 
 1. We have discovered that our nemesis, Chet, has disabled our unit tests! Why, Chet, why?! To fix this, uncomment the line that executes the `mocha` command so our unit tests will be run during the build.
 

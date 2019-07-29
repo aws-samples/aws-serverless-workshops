@@ -1,5 +1,7 @@
 # Module 5: Enabling 3rd party applications using OAuth 2.0
 
+*Note! This section is currently a work in progress and may not function 100%*
+
 In this module we will turn our Wild Rydes application into a platform, enabling third party developers to build new applications on top of our APIs. Working with third party developers makes it easier for us to open new markets and geographies as well as provide new functionality for our riders.
 
 You'll configure your Cognito User Pool from module #2 to enable OAuth 2.0 flows. Using OAuth, third party developers can build new client applications on top of your APIs. We will create a new method in the application's API that allows unicorns to list the rides they have given. This will open a new line of business for us, making it easy for third party developers to build applications that help unicorns manage their time and earnings. First, we will create the new method to list rides. Then, we will enable OAuth flows in our Cognito User Pool and deploy a sample client.

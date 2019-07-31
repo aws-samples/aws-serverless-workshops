@@ -56,7 +56,7 @@ Now from your Cloud9 development environment:
     ec2-user:~/environment $ 
     ```
 
-#### Using GitHub
+#### Additional Github Step (This step is only required if you're using Github instead of Codecommit)
 **:white_check_mark: Step-by-step directions**
 1. Follow the instructions on [GitHub][github] to [Create a repository][create-repo]. NOTE: You should not create a first commit, just create the repository.
 1. Clone the repository locally using your GitHub credentials

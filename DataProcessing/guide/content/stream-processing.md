@@ -129,7 +129,9 @@ environment variable with the key `TABLE_NAME` and the value
 
 1. Click **Create a function**.
 
-1. Enter `WildRydesStreamProcessor` in the **Name** field.
+1. Enter `WildRydesStreamProcessor` in the **Function name** field.
+
+1. Select **Node.js 10.x** from **Runtime**.
 
 1. Select **WildRydesStreamProcessorRole** from the **Existing role** dropdown.
 
@@ -138,8 +140,6 @@ environment variable with the key `TABLE_NAME` and the value
 1. Click **Create function**.
 
 1. Scroll down to the **Function code** section.
-
-1. Select **Node.js 6.10** from **Runtime**.
 
 1. Copy and paste the JavaScript code below into the code editor.
 

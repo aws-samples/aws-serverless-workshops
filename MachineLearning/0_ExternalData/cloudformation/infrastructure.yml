@@ -270,7 +270,7 @@ Resources:
   apiGatewayDeployment:
     Type: "AWS::ApiGateway::Deployment"
     DependsOn:
-      - "apiGatewayRootMethod"
+      - "ApiGatewayRootMethod"
     Properties:
       RestApiId: !Ref "ApiGateway"
       StageName: "prod"

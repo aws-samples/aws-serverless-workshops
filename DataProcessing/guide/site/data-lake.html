@@ -38,7 +38,7 @@
 <li><p>Provide a globally unique name for your bucket such as <code>wildrydes-data-yourname</code>.</p></li>
 <li><p>Select the region you’ve been using for your bucket.</p>
 <p><img src="images/data-lake-create-bucket.png" /></kbd></p></li>
-<li><p>Click <strong>Next</strong> twice, and then click <strong>Create bucket</strong>.</p></li>
+<li><p>Click <strong>Next</strong> three times, and then click <strong>Create bucket</strong>.</p></li>
 </ol>
 <h4 id="create-an-amazon-kinesis-data-firehose-delivery-stream">2. Create an Amazon Kinesis Data Firehose delivery stream</h4>
 <p>Create an Amazon Kinesis Data Firehose delivery stream named <strong>wildrydes</strong> that is configured to source data from the <strong>wildrydes</strong> stream and deliver its contents in batches to the S3 bucket created in the previous section.</p>
@@ -99,7 +99,9 @@ Copy to Clipboard
 <li><p>Enter the bucket name you create in the first section in the <strong>Search for buckets</strong> text input.</p></li>
 <li><p>Click on the bucket name and navigate through the year, month, day, and hour folders to ensure that files are being populated in your bucket.</p>
 <p><img src="images/data-lake-object-list.png" /></p></li>
-<li><p>Click on one of the files and click <strong>Download</strong>. Open the file with a text editor and explore its contents.</p></li>
+<li><p>Click on one of the files.</p></li>
+<li><p>Click the <strong>Select from</strong> tab, select <code>JSON</code> from <strong>File format</strong>, and click the <strong>Show file preview</strong> to preview the file content.</p>
+<p><img src="images/data-lake-object-preview.png" /></p></li>
 </ol>
 <h4 id="query-the-data-files">5. Query the data files</h4>
 <p>Query the Amazon Athena table to see all records that have been delivered via Kinesis Data Firehose to S3.</p>

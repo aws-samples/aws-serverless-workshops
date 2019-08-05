@@ -75,12 +75,12 @@
 <ol type="1">
 <li><p>Go to the AWS Management Console, choose <strong>Services</strong> then select <strong>Lambda</strong> under Compute.</p></li>
 <li><p>Click <strong>Create a function</strong>.</p></li>
-<li><p>Enter <code>WildRydesStreamProcessor</code> in the <strong>Name</strong> field.</p></li>
+<li><p>Enter <code>WildRydesStreamProcessor</code> in the <strong>Function name</strong> field.</p></li>
+<li><p>Select <strong>Node.js 10.x</strong> from <strong>Runtime</strong>.</p></li>
 <li><p>Select <strong>WildRydesStreamProcessorRole</strong> from the <strong>Existing role</strong> dropdown.</p>
 <p><img src="./images/stream-processing-lambda-basic-information.png" /></p></li>
 <li><p>Click <strong>Create function</strong>.</p></li>
 <li><p>Scroll down to the <strong>Function code</strong> section.</p></li>
-<li><p>Select <strong>Node.js 8.10</strong> from <strong>Runtime</strong>.</p></li>
 <li><p>Copy and paste the JavaScript code below into the code editor.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="st">&#39;use strict&#39;</span><span class="op">;</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
@@ -171,7 +171,7 @@ Copy to Clipboard
 <ol type="1">
 <li><p>Run the producer to start emiting sensor data to the stream with a unique unicorn name.</p>
 <pre class="console"><code>./producer -name Rocinante</code></pre></li>
-<li><p>Click on the <strong>Monitoring</strong> tab and explore the metrics available to monitor the function. Click on <strong>View logs in CloudWatch</strong> to explore the function’s log output.</p></li>
+<li><p>Click on the <strong>Monitoring</strong> tab and explore the metrics available to monitor the function. Click on <strong>Jump to Logs</strong> to explore the function’s log output.</p></li>
 </ol>
 <button class="btn btn-outline-primary copy">
 Copy to Clipboard

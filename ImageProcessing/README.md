@@ -106,11 +106,9 @@ Asia Pacific (Sydney) | <span style="font-family:'Courier';">ap-southeast-2</spa
 
 1. On the Options page, leave all the defaults and click **Next**.
 
-1. On the Review page, Click the checkboxes to give AWS CloudFormation permission to **"create IAM resources"** and **"create IAM resources with custom names"**
+1. On the Review page, Click the checkboxes to give AWS CloudFormation permission to **"create IAM resources"**, **"create IAM resources with custom names"**, and **"CAPABILITY_AUTO_EXPAND"**
 
-1. Click **"Create Change Set"** in the Transforms section
-
-1. Click **"Execute"**
+1. Click **"Create Stack"** in the Transforms section
 
 1. Wait for the `wildrydes-step-module-resources` stack to reach a status of `CREATE_COMPLETE`.
 

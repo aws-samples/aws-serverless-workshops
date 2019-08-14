@@ -116,7 +116,7 @@ Once completed, click on the site image to launch your Wild Rydes site.
 
 ![Wild Rydes homepage screenshot](../images/wildrydes-homepage.png)
 
-If you click on the link for *Master* you'll see various pieces of information about your website deployment, including sample rendorings on various platforms:
+If you click on the link for *Master* you'll see various pieces of information about your website deployment, including sample renderings on various platforms:
 
 ![Amplify Client Renderings](../images/amplify-renderings.png)
 

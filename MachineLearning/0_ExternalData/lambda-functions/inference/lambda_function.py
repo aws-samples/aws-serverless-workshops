@@ -7,6 +7,29 @@ import os
 import numpy as np
 import pandas as pd
 
+# Test payload
+# {
+# 	"body": { "distance": 100, "healthpoints": 10000, "magicpoints": 50, "TMAX": 1, "TMIN": 1, "PRCP": 240 },
+# 	"httpMethod": "POST",
+# 	"resource": "/",
+# 	"queryStringParameters": null,
+# 	"requestContext": {
+# 		"httpMethod": "POST",
+# 		"requestId": "test-invoke-request",
+# 		"path": "/",
+# 		"extendedRequestId": "test-invoke-extendedRequestId",
+# 		"resourceId": "XXXXXXXXX",
+# 		"apiId": "XXXXXXXX",
+# 		"stage": "test-invoke-stage",
+# 		"resourcePath": "/"
+# 	},
+# 	"accountId": "XXXXXXXXXXXX",
+# 	"headers": null,
+# 	"stageVariables": null,
+# 	"path": "/",
+# 	"pathParameters": null,
+# 	"isBase64Encoded": false
+# }
 
 def download_model():
     bucket = 'wrtest1-modelbucket-zvao8a2ziew5'
@@ -16,11 +39,23 @@ def download_model():
     os.system('cd /tmp && tar -zxvf model.tar.gz')
     os.system('cd /tmp && unzip model_algo-1')
 
-def create_data_iter():
-    data = np.random.rand(100,3)
-    label = np.random.randint(0, 10, (100,))
-    data_iter = mx.io.NDArrayIter(data=data, label=label, batch_size=30)
+def create_data_iter(input):
+    # 'distance','healthpoints','magicpoints','TMIN','TMAX','PRCP','heavy_utilization'
+    data = np.array([[input['distance'],input['healthpoints'],input['magicpoints'],input['TMIN'],input['TMAX'],input['PRCP']]])
+    # data_iter = mx.io.NDArrayIter(data=data, label=label, batch_size=30)
+    data_iter = mx.io.NDArrayIter(data=data, batch_size=1)
     return data_iter
+
+def make_prediction(input):
+    data_iter = create_data_iter(input)
+ 
+    # Next bind the module with the data shapes.
+    mod.bind(data_shapes=data_iter.provide_data)
+     
+    # Predict
+    results = mod.predict(data_iter)
+    return round(results.asnumpy().tolist()[0][0], 2)
+
 
 download_model()
 
@@ -31,21 +66,17 @@ mod._arg_params['fc0_weight'].asnumpy().flatten()
  
 # model bias
 mod._arg_params['fc0_bias'].asnumpy().flatten()
- 
-# Using the model for prediction
-# First create a mxnet data iterator:
-# https://mxnet.incubator.apache.org/tutorials/basic/data.html#reading-data-in-memory
-# https://mxnet.incubator.apache.org/tutorials/basic/data.html#reading-data-from-csv-files
-data_iter = create_data_iter()
- 
-# Next bind the module with the data shapes.
-mod.bind(data_shapes=data_iter.provide_data)
- 
-# Predict
-mod.predict(data_iter)
+
+
+
+
+
+
+
 
 def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
-
-    return 'done'  # Echo back the first key value
-    #raise Exception('Something went wrong')
+    # make_prediction({ "distance": 100, "healthpoints": 10000, "magicpoints": 50, "TMAX": 1, "TMIN": 1, "PRCP": 240 })
+    result = make_prediction(event['body'])
+    return { "result": result }
+    

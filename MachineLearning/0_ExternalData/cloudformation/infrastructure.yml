@@ -222,7 +222,7 @@ Resources:
       Role: !GetAtt DataProcessingExecutionRole.Arn
       Runtime: python2.7
       Layers:
-        - !Ref LambdaLayer
+        - !Ref WildRydesMLLambdaLayer
       Environment:
         Variables:
           OUTPUT_BUCKET: !Ref ModelBucket

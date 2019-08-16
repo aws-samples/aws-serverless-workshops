@@ -220,7 +220,12 @@ Resources:
       Handler: index.handler
       MemorySize: 128
       Role: !GetAtt DataProcessingExecutionRole.Arn
-      Runtime: python3.7
+      Runtime: python2.7
+      Layers:
+        - !Ref LambdaLayer
+      Environment:
+        Variables:
+          OUTPUT_BUCKET: !Ref ModelBucket
       Timeout: 3
       Tags:
         -
@@ -231,16 +236,58 @@ Resources:
           Value: Machine Learning
       Code:
         ZipFile: |
-          import boto3
+          from __future__ import print_function
+
+          import mxnet as mx
           import json
+          import boto3
           import os
-
-          client = boto3.client('s3')
-
-          def handler(event, context):
-              print('## EVENT')
-              print(event)
-              return event
+          import numpy as np
+          import pandas as pd
+          
+          def download_model():
+              bucket = os.environ['OUTPUT_BUCKET']
+              # UPDATE THIS PATH TO YOUR S3 KEY
+              key = 'linear-learner-2019-08-14-20-24-39-776/output/model.tar.gz'
+              boto3.resource('s3').Bucket(bucket).download_file(key, '/tmp/model.tar.gz')
+              
+              os.system('cd /tmp && tar -zxvf model.tar.gz')
+              os.system('cd /tmp && unzip model_algo-1')
+          
+          def create_data_iter(input):
+              # 'distance','healthpoints','magicpoints','TMIN','TMAX','PRCP','heavy_utilization'
+              data = np.array([[input['distance'],input['healthpoints'],input['magicpoints'],input['TMIN'],input['TMAX'],input['PRCP']]])
+              # data_iter = mx.io.NDArrayIter(data=data, label=label, batch_size=30)
+              data_iter = mx.io.NDArrayIter(data=data, batch_size=1)
+              return data_iter
+          
+          def make_prediction(input):
+              data_iter = create_data_iter(input)
+          
+              # Next bind the module with the data shapes.
+              mod.bind(data_shapes=data_iter.provide_data)
+              
+              # Predict
+              results = mod.predict(data_iter)
+              return round(results.asnumpy().tolist()[0][0], 2)
+          
+          
+          download_model()
+          
+          mod = mx.module.Module.load("/tmp/mx-mod", 0, label_names=["out_label"])
+          
+          # model's weights
+          mod._arg_params['fc0_weight'].asnumpy().flatten()
+          
+          # model bias
+          mod._arg_params['fc0_bias'].asnumpy().flatten()
+          
+          def lambda_handler(event, context):
+              #print("Received event: " + json.dumps(event, indent=2))
+              # make_prediction({ "distance": 100, "healthpoints": 10000, "magicpoints": 50, "TMAX": 1, "TMIN": 1, "PRCP": 240 })
+              result = make_prediction(event['body'])
+              return { "result": result }
+                  
   ApiGateway:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
@@ -524,7 +571,7 @@ Resources:
       RootAccess: Enabled
   ModelBucket:
     Type: AWS::S3::Bucket
-  LambdaLayer:
+  WildRydesMLLambdaLayer:
     Type: AWS::Lambda::LayerVersion
     Properties: 
       CompatibleRuntimes: 

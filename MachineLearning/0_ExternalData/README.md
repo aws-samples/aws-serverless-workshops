@@ -50,12 +50,24 @@ Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
 The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
 
 #### Upload raw travel data
+
+We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 100 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
+
 Use the console or CLI to upload travel data to the raw S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1#) to track how your Lambda functions are processing the data. With our record size of about ten thousand records, expect this to take about two minutes.
+
+High level steps:
+
+1. Manually upload ride_data.json into the raw bucket generated from your CF template
+1. S3 event automatically triggers the Parse Unicorn Data function
+1. Parse Unicorn Data function will read the JSON file and places each entry on an SQS queue
+1. Find Nearest Ground Station function reads from the SQS queue, finds the closest weather station, and applies a label indicating if the ride was a "heavy utilization" scenario
+1. Find Nearest Ground Station function places the record on another SQS queue
+1. Processed Data to S3 function puts the record back into s3 in the transformed bucket in CSV format
 
 <details>
 <summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
 
-Manually:
+Console:
 
 *TODO*
 
@@ -69,79 +81,50 @@ aws cloudformation describe-stacks \
 ```
 </p></details><br>
 
-Sequence of events:
+Our travel data has been processed and stored back in S3. We want to see if weather is impacting the magic points used by our unicorns. Let's get some weather related data to fold in.
 
-1. Upload ride_data.json into the `raw-bucket` generated from your CF template
-1. S3 event triggers the Process Unicorn Data function
-1. Process Unicorn Data function will read the file line by line and place the record on an SQS queue
-1. Find Nearest Ground Station function reads from the SQS queue, finds the closest weather station, and applies a label indicating if the ride was a "heavy utilization" scenario
-1. Find Nearest Ground Station function places the record on another SQS queue
-1. Processed Data to S3 function puts the record back into s3 in the transformed bucket in CSV format
-
-#### Weather Data Prep
+#### Ground Station Data Prep
 
 The dataset we're using is [NOAA Global Historical Climatology Network Daily (GHCN-D)](https://registry.opendata.aws/noaa-ghcn/) ([dataset readme](https://docs.opendata.aws/noaa-ghcn-pds/readme.html)).  There are roughly one billion records in this public data set. We should pair that down. Since our unicorns operate within the New York City area, we're only interested in those ground stations:
 
 ```
-US1NYNY0074  40.7969  -73.9330    6.1 NY NEW YORK 8.8 N                              
-USC00305798  40.6000  -73.9667    6.1 NY NEW YORK BENSONHURST                        
-USC00305799  40.8667  -73.8833   27.1 NY NEW YORK BOTANICAL GRD                      
-USC00305804  40.7333  -73.9333    3.0 NY NEW YORK LAUREL HILL                        
-USC00305806  40.8500  -73.9167   54.9 NY NEW YORK UNIV ST                            
-USC00305816  40.7000  -74.0167    3.0 NY NEW YORK WB CITY                            
-USW00014732  40.7794  -73.8803    3.4 NY NEW YORK LAGUARDIA AP                  72503
-USW00014786  40.5833  -73.8833    4.9 NY NEW YORK FLOYD BENNETT FLD                  
-USW00093732  39.8000  -72.6667   25.9 NY NEW YORK SHOALS AFS                         
-USW00094728  40.7789  -73.9692   39.6 NY NEW YORK CNTRL PK TWR              HCN 72506
-USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP                   74486
+US1NYNY0074  40.7969  -73.9330    6.1 NY NEW YORK 8.8 N
+USW00014732  40.7794  -73.8803    3.4 NY NEW YORK LAGUARDIA AP
+USW00094728  40.7789  -73.9692   39.6 NY NEW YORK CNTRL PK TWR
+USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP
 ```
 
-<details>
-<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
+:white_check_mark: **Step-by-step directions**
 
-Manually:
-
-1. Navigate to your CloudFormation stack
+1. Navigate to your CloudFormation stack in the AWS Console
 1. In the outputs tab, grab the `AthenaSelectQuery` value
-1. Open Amazon Athena, and run that command.
+1. Open Amazon Athena and run that command.
 1. Go back to CloudFormation, in the outputs tab, grab the `AthenaCSVLocation` value and drill into today's date until you find a CSV for the query you just ran.  It will contain the results of your query in CSV format that you can later provide the path to your notebook.
-1. Now you have the relevant weather data in CSV format
+1. Check the box next to the CSV file, click `Actions`, `Copy`
+1. Navigate to your transformed data bucket
+1. Create a new folder by clicking `Create folder` and type `nygroundstationdata`
+1. Navigate into `nygroundstationdata`, click `Actions`, `Paste`
+1. Now you have the relevant weather data in CSV format in our transformed data bucket.
 
-CLI:
-1. Kick off the Athena query, escaping quotes in the query string. The execution takes about 20 seconds.
-```
-aws athena start-query-execution \
-  --query-string "[INSERT ATHENA SELECT QUERY]" \
-  --result-configuration "OutputLocation=s3://[INSERT TRANSFORMED BUCKET NAME]/nygroundstationdata/" \
-  --region us-east-1
-```
-1. Check on the status. We're looking for 'SUCCEEDED'.
-```
-aws athena get-query-execution \
-  --query-execution-id "[INSERT EXECUTION ID FROM ABOVE]" \
-  --query "QueryExecution.Status.State" \
-  --output text
-```
-</p></details><br>
+Without provisioning any servers we were able to use Amazon Athena to get the records we need from 94 GB of data in about 20 seconds. Now our ride data has been augmented with business logic and we have weather data from relevant weather stations. We can now mold this data using our SageMaker notebook.
 
-Now from inside your Amazon SageMaker notebook you can [reference this Athena table (external link)](https://aws.amazon.com/blogs/machine-learning/run-sql-queries-from-your-sagemaker-notebooks-using-amazon-athena/).
+#### Additional Data Prep and Model Training
 
-#### Train and host a model
+The role of a data scientist involves pulling data from various sources. We will use a SageMaker notebook to walk through additional data preparation and model training. Below are directions to access the notebook. Within the notebook you'll find another set of detailed directions.
 
-<details>
-<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
+:white_check_mark: **Step-by-step directions**
 
 1. Navigate to **Amazon SageMaker** in AWS Console
 1. Click **Open Jupyter** link under Actions
 1. When redirected to the notebook instance, click **New** then select **Terminal** from list. A new tab will open.
 1. When in the terminal, type the following commands:
 ```
-curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/nearest_neighbor.ipynb -o SageMaker/nearest_neighbor.ipynb
+curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/linear_learner.ipynb -o SageMaker/linear_learner.ipynb
 ```
 1. Exit the terminal tab/window
-1. Open the `nearest_neighbor.ipynb` notebook and follow the instructions.
+1. Open the `linear_learner.ipynb` notebook and follow the instructions.
 
-</p></details>
+At this point, you should have a trained model in S3. You may have set up the optional endpoint to test your work. Instead of using an endpoint with an always on server, let's explore using Lambda to make inferences against our model.
 
 #### Make inferences against the model
 
@@ -167,7 +150,7 @@ CLI:
     --output text | xargs -I {} \
         aws s3 rm s3://{} --recursive
   ```
-2. Delete data in your transformed bucket
+1. Delete data in your transformed bucket
   ```
   aws cloudformation describe-stacks \
     --stack-name wildrydes-machine-learning-module-0 \
@@ -175,7 +158,15 @@ CLI:
     --output text | xargs -I {} \
         aws s3 rm s3://{} --recursive
   ```
-3. Delete the stack
+1. Delete data in your model bucket
+  ```
+  aws cloudformation describe-stacks \
+    --stack-name wildrydes-machine-learning-module-0 \
+    --query "Stacks[0].Outputs[?OutputKey=='ModelBucketName'].OutputValue" \
+    --output text | xargs -I {} \
+        aws s3 rm s3://{} --recursive
+  ```
+1. Delete the stack
   ```
   aws cloudformation delete-stack \
     --stack-name wildrydes-machine-learning-module-0

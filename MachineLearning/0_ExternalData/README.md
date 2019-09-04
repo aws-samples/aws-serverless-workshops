@@ -150,7 +150,7 @@ CLI:
     --output text | xargs -I {} \
         aws s3 rm s3://{} --recursive
   ```
-1. Delete data in your transformed bucket
+2. Delete data in your transformed bucket
   ```
   aws cloudformation describe-stacks \
     --stack-name wildrydes-machine-learning-module-0 \
@@ -158,7 +158,7 @@ CLI:
     --output text | xargs -I {} \
         aws s3 rm s3://{} --recursive
   ```
-1. Delete data in your model bucket
+3. Delete data in your model bucket
   ```
   aws cloudformation describe-stacks \
     --stack-name wildrydes-machine-learning-module-0 \
@@ -166,7 +166,7 @@ CLI:
     --output text | xargs -I {} \
         aws s3 rm s3://{} --recursive
   ```
-1. Delete the stack
+4. Delete the stack
   ```
   aws cloudformation delete-stack \
     --stack-name wildrydes-machine-learning-module-0

@@ -61,7 +61,7 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 
     ![CodeStar 5](images/codestar-5.png)
 
-1. Cick the **Create Project** button in the lower right corner of the browser window to proceed.
+1. Click the **Create Project** button in the lower right corner of the browser window to proceed.
 
     ![CodeStar 5b](images/codestar-5b.png)
 
@@ -111,7 +111,7 @@ Congratulations!  You have successfully create a serverless web service project 
     
     ![CodeStar 11](images/codestar-11b.png)
     
-1. You can select instructions to clone the CodeCommit respository using **Visual Studio**, **Eclipse**, or **Command line tools**.  Click **See instructions** for instructions for cloning to **macOS**, **Windows**, and **Linux** operating systems.  Complete the instructions to clone the CodeCommit Git repository to your local workstation.
+1. You can select instructions to clone the CodeCommit repository using **Visual Studio**, **Eclipse**, or **Command line tools**.  Click **See instructions** for instructions for cloning to **macOS**, **Windows**, and **Linux** operating systems.  Complete the instructions to clone the CodeCommit Git repository to your local workstation.
 
     ![CodeStar 12](images/codestar-12.png)
 

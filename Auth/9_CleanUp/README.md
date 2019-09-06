@@ -28,7 +28,7 @@
 	```
 	> Copy and paste your Cognito identity pool ID from your scratch pad (example: us-west-2:b4b755cd-d359-42a1-9b49-f0e73f5b2571).
 
-	> If you closed your scratch pad with your Cognito idenity pool ID, you can run the following list call via CLI to find the proper identiy pool ID, then run the delete call above.
+	> If you closed your scratch pad with your Cognito identity pool ID, you can run the following list call via CLI to find the proper identity pool ID, then run the delete call above.
 	
 	```
 	aws cognito-identity list-identity-pools --max-results 10

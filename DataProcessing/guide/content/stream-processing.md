@@ -116,7 +116,7 @@ the DynamoDB table created in the last section and attach it to the new role.
 #### 3. Create a Lambda function to process the stream
 
 Create a Lambda function called `WildRydesStreamProcessor` that will be
-triggered whenever a new record is avaialble in the **wildrydes** stream. Use
+triggered whenever a new record is available in the **wildrydes** stream. Use
 the provided index.js implementation for your function code.  Create an
 environment variable with the key `TABLE_NAME` and the value
 `UnicornSensorData`. Configure the function to use the
@@ -249,7 +249,7 @@ function.
 
 **:white_check_mark: Step-by-step Instructions**
 
-1. Run the producer to start emiting sensor data to the stream with a unique
+1. Run the producer to start emitting sensor data to the stream with a unique
    unicorn name.
 
     ```console

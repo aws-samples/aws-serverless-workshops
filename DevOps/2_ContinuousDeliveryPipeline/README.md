@@ -326,7 +326,7 @@ HOW TO correct code bug and verify passing unit test (expand for details)
 </strong></summary>
 <p>
 
-1. Using a text editor, open `app/read.js` and navigate to the end where we construct our response. We will see that, where we specify the status code to return, we use the existence of a retured item to determine whether we return a 200 (OK) or a 500 (server error) code.
+1. Using a text editor, open `app/read.js` and navigate to the end where we construct our response. We will see that, where we specify the status code to return, we use the existence of a returned item to determine whether we return a 200 (OK) or a 500 (server error) code.
 
 1. Change the code to return a 404 (resource not found) status code instead of a 500.
 

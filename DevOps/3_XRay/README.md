@@ -305,7 +305,7 @@ After pushing your changes to the CodeStar project's CodeCommit git repository, 
     
     
     
-### 4. Excercise Unicorn API List Resource
+### 4. Exercise Unicorn API List Resource
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 
@@ -319,7 +319,7 @@ After pushing your changes to the CodeStar project's CodeCommit git repository, 
 
 1. Paste the URL in a browser window and append `/unicorns` to the path and hit enter.  For example: `https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/Prod/unicorns/`
 
-1. Your browser should return an error, like the following.  Feel free to refresh your broser several times to register multiple visits to the REST API.
+1. Your browser should return an error, like the following.  Feel free to refresh your browser several times to register multiple visits to the REST API.
 
 Your browser should no longer return an error.  Refresh your browser several times to register multiple REST API requests.
 
@@ -459,7 +459,7 @@ After pushing your changes to the CodeStar project's CodeCommit git repository, 
 
 
 
-### 4. Excercise Unicorn API List Resource
+### 4. Exercise Unicorn API List Resource
 
 1. In the AWS Management Console choose **Services** then select **CodeStar** under Developer Tools.
 

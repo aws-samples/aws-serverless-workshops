@@ -65,14 +65,14 @@ Set the destination stream of the application to **wildrydes-summary**.
 
 1. Switch to the tab where you have your Cloud9 environment opened.
 
-1. Run the producer to start emiting sensor data to the stream.
+1. Run the producer to start emitting sensor data to the stream.
 
     ```console
     ./producer
     ```
 <button class="btn btn-outline-primary copy">Copy to Clipboard</button>
 
-    Activately producing sensor data while we're building our application will
+    Actively producing sensor data while we're building our application will
     allow Amazon Kinesis Data Analytics to auto-detect our schema.
 
 1. Go to the AWS Management Console, click **Services** then select **Kinesis**

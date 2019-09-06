@@ -100,7 +100,7 @@ Delete the AWS Amplify Console application and optionally the AWS CodeCommit or 
 
 **:white_check_mark: Step-by-step directions**
 
-#### For the Amplify Console web applcation:
+#### For the Amplify Console web application:
 
 1. Launch the [Amplify Console console page][amplify-console-console].
 1. Select the application you launched today.

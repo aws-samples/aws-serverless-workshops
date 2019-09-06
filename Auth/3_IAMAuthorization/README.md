@@ -69,7 +69,7 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 	
 	> If the full name of the role is hidden from view due to column width, you can hover over the partially visible name of the role to see the full name of the role as a tool tip.
 	
-	![IAM WildRydes Auth Role Selction](../images/iam-wildrydes-role-selection.png)
+	![IAM WildRydes Auth Role Selection](../images/iam-wildrydes-role-selection.png)
 	
 1. We want to grant permissions to this role explicitly so we will use an inline policy, which would be deleted with this role if it were ever to be deleted.
 
@@ -141,7 +141,7 @@ Browse to the IAM console and find your Cognito Identity Pool's authenticated us
 
 ### 3. Update application to upload photos with AWS Amplify
 
-Now that your IAM policies and Amplify SDK are initialized, you will be able to upload photos and render S3 photos with minimal code using Amplify's built-in UI components. S3 image is the component used to both render image objects for a React application, as well as embeding an image picker to help with uploads.
+Now that your IAM policies and Amplify SDK are initialized, you will be able to upload photos and render S3 photos with minimal code using Amplify's built-in UI components. S3 image is the component used to both render image objects for a React application, as well as embedding an image picker to help with uploads.
 
 #### High-Level Instructions
 

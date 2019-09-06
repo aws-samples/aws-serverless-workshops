@@ -180,7 +180,7 @@ Kinesis Data Firehose to S3.
 real-time streaming data to destinations such as Amazon S3. Amazon Athena allows
 us to run ad-hoc queries against the raw data using standard SQL.
 
-:wrench: In this module, you've created a Kinesis Data Firehose deliery stream
+:wrench: In this module, you've created a Kinesis Data Firehose delivery stream
 to deliver data from the Kinesis stream to an Amazon S3 bucket. Using Athena,
 you ran queries against this data on S3.
 

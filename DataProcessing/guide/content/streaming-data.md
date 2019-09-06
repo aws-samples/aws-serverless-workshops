@@ -63,7 +63,7 @@ the stream.
 
 1. Switch to the tab where you have your Cloud9 environment opened.
 
-1. In the terminal, run the producer to start emiting sensor data to the stream.
+1. In the terminal, run the producer to start emitting sensor data to the stream.
 
     ```console
     ./producer

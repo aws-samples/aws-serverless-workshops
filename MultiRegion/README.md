@@ -92,8 +92,8 @@ You will also need to either purchase a domain, or repurpose an existing
 unused domain you already own.  You will need to delegate DNS to Route53 if
 the domain is not already acquired through AWS.  You may also need access to
 the email account associated with the domain name registration or to the
-DNS server assigend to the domain in order to prove you own the domain when
-creating SSL certiticates in Amazon Certificate Manager.  
+DNS server assigned to the domain in order to prove you own the domain when
+creating SSL certificates in Amazon Certificate Manager.  
   
 (re:Invent 2018 participants - please see the workshop team if you need to "borrow"
 a domain in order to complete the workshop)

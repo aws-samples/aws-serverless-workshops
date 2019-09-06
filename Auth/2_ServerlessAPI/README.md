@@ -252,7 +252,7 @@ Now that you've deployed the new authorizer configuration to production, all API
 </p></details>
 <br>
 
-If the API now invokes correctly and application funcions as expected summoning unicorns, you may **proceed to complete either**:
+If the API now invokes correctly and application functions as expected summoning unicorns, you may **proceed to complete either**:
 
 - **Optional module 2 extension** with [Fine-grained IAM-based authorization with API Gateway](./Optional-APIGateway-IAMAuth.md)
 

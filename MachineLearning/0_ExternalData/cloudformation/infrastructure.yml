@@ -561,4 +561,10 @@ Outputs:
   ApiGatewayInvokeURL:
     Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"
   InferenceFunctionTestCommand:
-    Value: !Sub curl -d '{ "distance": 1, "healthpoints": 100, "magicpoints": 200, "TMAX": 1, "TMIN": 1, "PRCP": 100 }' -H "Content-Type: application/json" -X POST !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"'
+    Description: "cURL command to invoke our lambda function to make inferences"
+    Value:
+      Fn::Join:
+        - " "
+        -
+          - "curl -d '{ \"distance\": 1, \"healthpoints\": 100, \"magicpoints\": 200, \"TMAX\": 1, \"TMIN\": 1, \"PRCP\": 100 }' -H \"Content-Type: application/json\" -X POST"
+          - !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"

@@ -237,8 +237,6 @@ Resources:
       MemorySize: 128
       Role: !GetAtt DataProcessingExecutionRole.Arn
       Runtime: python2.7
-      Layers:
-        - !Ref WildRydesMLLambdaLayer
       Environment:
         Variables:
           OUTPUT_BUCKET: !Ref ModelBucket

@@ -5,35 +5,11 @@ import json
 import boto3
 import os
 import numpy as np
-import pandas as pd
-
-# Test payload
-# {
-# 	"body": { "distance": 100, "healthpoints": 10000, "magicpoints": 50, "TMAX": 1, "TMIN": 1, "PRCP": 240 },
-# 	"httpMethod": "POST",
-# 	"resource": "/",
-# 	"queryStringParameters": null,
-# 	"requestContext": {
-# 		"httpMethod": "POST",
-# 		"requestId": "test-invoke-request",
-# 		"path": "/",
-# 		"extendedRequestId": "test-invoke-extendedRequestId",
-# 		"resourceId": "XXXXXXXXX",
-# 		"apiId": "XXXXXXXX",
-# 		"stage": "test-invoke-stage",
-# 		"resourcePath": "/"
-# 	},
-# 	"accountId": "XXXXXXXXXXXX",
-# 	"headers": null,
-# 	"stageVariables": null,
-# 	"path": "/",
-# 	"pathParameters": null,
-# 	"isBase64Encoded": false
-# }
 
 def download_model():
-    bucket = 'wrtest1-modelbucket-zvao8a2ziew5'
-    key = 'linear-learner-2019-08-14-20-24-39-776/output/model.tar.gz'
+    bucket = os.environ['OUTPUT_BUCKET']
+    # UPDATE THIS PATH TO YOUR S3 KEY
+    key = os.environ['MODEL_PATH']
     boto3.resource('s3').Bucket(bucket).download_file(key, '/tmp/model.tar.gz')
     
     os.system('cd /tmp && tar -zxvf model.tar.gz')
@@ -48,10 +24,10 @@ def create_data_iter(input):
 
 def make_prediction(input):
     data_iter = create_data_iter(input)
- 
+
     # Next bind the module with the data shapes.
     mod.bind(data_shapes=data_iter.provide_data)
-     
+    
     # Predict
     results = mod.predict(data_iter)
     return round(results.asnumpy().tolist()[0][0], 2)
@@ -59,24 +35,18 @@ def make_prediction(input):
 
 download_model()
 
-mod = mx.module.Module.load("/tmp/mx-mod", 0, label_names=["out_label"])
+# mod = mx.module.Module.load("/tmp/mx-mod", 0, label_names=["out_label"])
+mod = mx.module.Module.load("/tmp/mx-mod", 0, label_names=None)
 
 # model's weights
 mod._arg_params['fc0_weight'].asnumpy().flatten()
- 
+
 # model bias
 mod._arg_params['fc0_bias'].asnumpy().flatten()
 
-
-
-
-
-
-
-
-def lambda_handler(event, context):
+def handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
     # make_prediction({ "distance": 100, "healthpoints": 10000, "magicpoints": 50, "TMAX": 1, "TMIN": 1, "PRCP": 240 })
     result = make_prediction(event['body'])
     return { "result": result }
-    
+        

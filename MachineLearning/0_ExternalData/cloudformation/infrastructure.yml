@@ -547,15 +547,6 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  WildRydesMLLambdaLayer:
-    Type: AWS::Lambda::LayerVersion
-    Properties: 
-      CompatibleRuntimes: 
-        - python2.7
-      Content: 
-        S3Bucket: central-multicustomer-aws-immersion-days
-        S3Key: wild-rydes-ml-lab/mxnet-python-layer.zip
-      Description: Wild Rydes ML lab python dependencies, includes MX Net for amzn-ami-hvm-2018.03.0.20181129-x86_64-gp2
 Outputs:
   AthenaSelectQuery:
     Value: !Sub |

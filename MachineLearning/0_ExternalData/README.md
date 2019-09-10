@@ -129,6 +129,8 @@ At this point, you should have a trained model in S3. You may have set up the op
 #### Make inferences against the model
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
+First we need to update the Lambda function environment variable to reference our trained model on s3.  Then we can issue HTTP POST requests with a JSON body via our client of choice to see our model in action!
+
 :white_check_mark: **Step-by-step directions**
 
 1. Go back to CloudFormation, in the resources tab, find the `ModelBucket` and click on the link.  Drill into the the path that starts will `linear-learner-*` until you find `model.tar.gz`.  Select the checkmark next to this file, and select "Copy Path"

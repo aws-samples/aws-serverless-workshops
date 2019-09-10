@@ -47,6 +47,6 @@ mod._arg_params['fc0_bias'].asnumpy().flatten()
 def handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
     # make_prediction({ "distance": 100, "healthpoints": 10000, "magicpoints": 50, "TMAX": 1, "TMIN": 1, "PRCP": 240 })
-    result = make_prediction(event['body'])
-    return { "result": result }
+    result = make_prediction(json.loads(event['body']))
+    return { "statusCode": 200, "body": result }
         

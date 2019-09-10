@@ -127,7 +127,14 @@ curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/maste
 At this point, you should have a trained model in S3. You may have set up the optional endpoint to test your work. Instead of using an endpoint with an always on server, let's explore using Lambda to make inferences against our model.
 
 #### Make inferences against the model
+At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
+:white_check_mark: **Step-by-step directions**
+
+1. Go back to CloudFormation, in the resources tab, find the `ModelBucket` and click on the link.  Drill into the the path that starts will `linear-learner-*` until you find `model.tar.gz`.  Select the checkmark next to this file, and select "Copy Path"
+1. Go back to CloudFormation, in the resources tab, find the `ModelInferenceFunction` and click on the link.  Scroll down to the environment variables section and update the `MODEL_PATH` parameter with the value you copied from the previous step.  Delete the `s3://BUCKET_NAME/` from the pasted value so that only the key (folder + filename) remains.  Save the changes.
+1. Go back to CloudFormation, in the outputs tab, copy the curl command for making inferences against your function hosting your model.
+1. _Optional_: You can also test the lambda function by putting using the test API UI in the API Gateway console.
 
 
 ## Clean up

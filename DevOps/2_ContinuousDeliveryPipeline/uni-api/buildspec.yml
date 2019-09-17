@@ -3,7 +3,9 @@ version: 0.2
 phases:
   install:
     commands:
+      - cd app
       - npm install
+      - cd ..
 
       # Upgrade AWS CLI to the latest version
       - pip install --upgrade awscli

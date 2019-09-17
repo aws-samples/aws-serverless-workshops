@@ -137,9 +137,27 @@ After the repository has been seeded, it will start a pipeline execution.  Monit
 ![Pipeline Complete](images/codestar-3.png)
 </details>
 
+### 4. Turn on Function Tracing
+
+Open the `uni-api/template.yml` and delete the `#` symbols on lines that say `#Tracing: Active`. This changes us from the default (no tracing) to enabling trace collection for our functions.
+
+### 5. Commit the change to local Git repository
+
+1. Using your Git client, add the local changes to the Git index, and commit with a message.  For example:
+
+    ```
+    git add -u
+    git commit -m "Fix bug"
+    ```
+
+1. Using your Git client, push the Git repository updates to the origin.  For example:
+
+    ```
+    git push origin
+    ```
 
 
-### 4. Exercise List Unicorns API Method
+### 6. Exercise List Unicorns API Method
 
 **Goal:** Use the CodeStar Console to find the Application Endpoint, and use your browser to test the "/unicorns" list resource.
 

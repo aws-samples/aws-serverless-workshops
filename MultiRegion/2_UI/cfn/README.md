@@ -11,8 +11,9 @@ resources, e.g. user pool, identity pool, etc.
 
 ```bash
 aws cloudformation deploy \
---template-file ticket-service-output.yaml \
---stack-name ticket-service-api \
+--region eu-west-1 \
+--template-file web-ui-stack.yaml \
+--stack-name ticket-service-ui \
 --capabilities CAPABILITY_IAM
 ```
 

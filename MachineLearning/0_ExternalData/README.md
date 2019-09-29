@@ -47,13 +47,13 @@ Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
 
 ## Implementation Overview
 
-The following provides an overview of the steps needed to complete this module. This section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, please use the heading links to jump to the appropriate section.
+The following provides an overview of the steps needed to complete this module. Each section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, look for a check mark and expand that section.
 
 #### Upload raw travel data
 
 We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 100 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
 
-Use the console or CLI to upload travel data to the raw S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1#) to track how your Lambda functions are processing the data. With our record size of about ten thousand records, expect this to take about two minutes.
+Use the console or CLI to upload travel data to the raw S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1) to track how your Lambda functions are processing the data and/or use the CloudWatch Dashboard built as part of this lab.
 
 High level steps:
 
@@ -69,7 +69,12 @@ High level steps:
 
 Console:
 
-*TODO*
+1. Navigate to your [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/home?region=us-east-1) stack in the AWS Console
+1. In the outputs tab, take note of the **RawDataBucketName** value
+1. Open [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1) in the AWS Console
+1. Navigate to the raw data bucket and click into it
+1. Click **Upload**
+1. Click **Add files**
 
 CLI:
 ```
@@ -96,14 +101,14 @@ USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP
 
 :white_check_mark: **Step-by-step directions**
 
-1. Navigate to your CloudFormation stack in the AWS Console
-1. In the outputs tab, grab the `AthenaSelectQuery` value
-1. Open Amazon Athena and run that command.
-1. Go back to CloudFormation, in the outputs tab, grab the `AthenaCSVLocation` value and drill into today's date until you find a CSV for the query you just ran.  It will contain the results of your query in CSV format that you can later provide the path to your notebook.
-1. Check the box next to the CSV file, click `Actions`, `Copy`
+1. Navigate to your [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/home?region=us-east-1) stack in the AWS Console
+1. In the outputs tab, grab the **AthenaSelectQuery** value
+1. Open [Amazon Athena](https://console.aws.amazon.com/athena/home?region=us-east-1) and run that command.
+1. Go back to [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/home?region=us-east-1), in the outputs tab, click into the **AthenaCSVLocation** link and drill into today's date until you find a CSV for the query you just ran.  It will contain the results of your query in CSV format that you can later provide the path to your notebook.
+1. Check the box next to the CSV file, click **Actions**, **Copy**
 1. Navigate to your transformed data bucket
-1. Create a new folder by clicking `Create folder` and type `nygroundstationdata`
-1. Navigate into `nygroundstationdata`, click `Actions`, `Paste`
+1. Create a new folder by clicking **Create folder** and type `nygroundstationdata`
+1. Navigate into **nygroundstationdata**, click **Actions**, **Paste**
 1. Now you have the relevant weather data in CSV format in our transformed data bucket.
 
 Without provisioning any servers we were able to use Amazon Athena to get the records we need from 94 GB of data in about 20 seconds. Now our ride data has been augmented with business logic and we have weather data from relevant weather stations. We can now mold this data using our SageMaker notebook.
@@ -114,15 +119,16 @@ The role of a data scientist involves pulling data from various sources. We will
 
 :white_check_mark: **Step-by-step directions**
 
-1. Navigate to **Amazon SageMaker** in AWS Console
-1. Click **Open Jupyter** link under Actions
+1. Navigate to [Amazon SageMaker](https://console.aws.amazon.com/sagemaker/home?region=us-east-1#/notebook-instances) in AWS Console
+1. Open the notebook instance named `WildRydesNotebook-***`
+1. Click the **Open Jupyter** link under Actions
 1. When redirected to the notebook instance, click **New** then select **Terminal** from list. A new tab will open.
 1. When in the terminal, type the following commands:
 ```
 curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/linear_learner.ipynb -o SageMaker/linear_learner.ipynb
 ```
 1. Exit the terminal tab/window
-1. Open the `linear_learner.ipynb` notebook and follow the instructions.
+1. Open the **linear_learner.ipynb** notebook and follow the instructions.
 
 At this point, you should have a trained model in S3. You may have set up the optional endpoint to test your work. Instead of using an endpoint with an always on server, let's explore using Lambda to make inferences against our model.
 

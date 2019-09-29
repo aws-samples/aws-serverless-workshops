@@ -149,14 +149,14 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: 
-                  - 
+                Resource:
+                  -
                     !GetAtt ProcessedUnicornDataQueue.Arn
-                  - 
+                  -
                     !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
-                  - 
+                  -
                     !GetAtt ParseUnicornDataFunctionDLQ.Arn
-                  - 
+                  -
                     !GetAtt ProcessedDataToS3FunctionDLQ.Arn
         -
           PolicyName: "AllowDLQs"
@@ -165,12 +165,12 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: 
-                  - 
+                Resource:
+                  -
                     !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
-                  - 
+                  -
                     !GetAtt ParseUnicornDataFunctionDLQ.Arn
-                  - 
+                  -
                     !GetAtt ProcessedDataToS3FunctionDLQ.Arn
         - PolicyName: "AllowLogging"
           PolicyDocument:
@@ -354,7 +354,7 @@ Resources:
             data = json_data
             if 'travel_data' in json_data:
               data = json_data['travel_data']
-            
+
             for entry in data:
               lower_cased = {k.lower(): v for k, v in entry.items()}
               response = sqs.send_message(

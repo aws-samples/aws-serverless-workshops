@@ -18,7 +18,6 @@ const (
 	longitudeStart  = -73.985184
 	latitudeOffset  = 110540
 	longitudeOffset = 111320
-	pointsStart     = 150
 	minDistance     = 29.0
 	maxDistance     = 31.0
 )
@@ -53,17 +52,15 @@ func main() {
 func simulateUnicorn(client *kinesis.Kinesis, name, stream *string) {
 	rand.Seed(time.Now().UnixNano())
 
-	magicPoints := pointsStart
-	healthPoints := pointsStart
 	latitude := latitudeStart
 	longitude := longitudeStart
 	bearing := rand.Float64() * math.Pi * 2
 	ticker := time.NewTicker(time.Second)
 
 	for range ticker.C {
-		magicPoints = nextPoints(magicPoints)
-		healthPoints = nextPoints(healthPoints)
 		distance := float64(rand.Intn(maxDistance-minDistance)+minDistance) + rand.Float64()
+		magicPoints := nextPoints(distance)
+		healthPoints := nextPoints(distance)
 		latitude, longitude = nextLocation(latitude, longitude, bearing, distance)
 		status, _ := json.Marshal(
 			&unicornStatus{
@@ -98,14 +95,13 @@ func nextLocation(latitude, longitude, bearing float64, distance float64) (nextL
 	return
 }
 
-func nextPoints(points int) int {
-
-	return y
+func nextPoints(distance float64) int {
+	return int(10 * distance)
 }
 
 func randate() time.Time {
-    min := time.Date(2010, 1, 0, 0, 0, 0, 0, time.UTC).Unix()
-    max := time.Now().Unix()
+    min := time.Date(2018, 1, 0, 0, 0, 0, 0, time.UTC).Unix()
+    max := time.Date(2019, 1, 0, 0, 0, 0, 0, time.UTC).Unix()
     delta := max - min
 
     sec := rand.Int63n(delta) + min

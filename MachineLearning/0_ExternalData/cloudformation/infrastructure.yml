@@ -545,7 +545,88 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
+  CloudWatchDashboard:
+    Type: "AWS::CloudWatch::Dashboard"
+    Properties:
+      DashboardName: "Wild_Rydes_Machine_Learning"
+      DashboardBody: !Sub
+        - |
+            {
+            	"widgets": [{
+            		"type": "metric",
+            		"x": 0,
+            		"y": 0,
+            		"width": 12,
+            		"height": 9,
+            		"properties": {
+            			"metrics": [
+            				["AWS/Lambda", "Invocations", "FunctionName", "${ParseUnicornDataFunction}"],
+            				["...", "${ProcessedDataToS3Function}"],
+            				["...", "${FindClosestGroundstationLambdaFunction}"]
+            			],
+            			"view": "timeSeries",
+            			"stacked": false,
+            			"region": "us-east-1",
+            			"stat": "Sum",
+            			"period": 60
+            		}
+            	}, {
+            		"type": "metric",
+            		"x": 12,
+            		"y": 0,
+            		"width": 12,
+            		"height": 6,
+            		"properties": {
+            			"metrics": [
+            				["AWS/SQS", "NumberOfMessagesSent", "QueueName", "${NearestWeatherStationQueue}"],
+            				["...", "${ProcessedUnicornDataQueue}"]
+            			],
+            			"view": "timeSeries",
+            			"stacked": false,
+            			"region": "us-east-1",
+            			"stat": "Sum",
+            			"period": 300
+            		}
+            	}, {
+            		"type": "metric",
+            		"x": 12,
+            		"y": 6,
+            		"width": 12,
+            		"height": 6,
+            		"properties": {
+            			"metrics": [
+            				["AWS/SQS", "NumberOfEmptyReceives", "QueueName", "${NearestWeatherStationQueue}"],
+            				["...", "${ProcessedUnicornDataQueue}"]
+            			],
+            			"view": "timeSeries",
+            			"stacked": false,
+            			"region": "us-east-1",
+            			"stat": "Sum",
+            			"period": 300
+            		}
+            	}]
+            }
+        - { ParseUnicornDataFunction: !Ref ParseUnicornDataFunction, ProcessedDataToS3Function: !Ref ProcessedDataToS3Function, FindClosestGroundstationLambdaFunction: !Ref FindClosestGroundstationLambdaFunction, NearestWeatherStationQueue: !GetAtt NearestWeatherStationQueue.QueueName, ProcessedUnicornDataQueue: !GetAtt ProcessedUnicornDataQueue.QueueName }
 Outputs:
+  JSON:
+    Value:
+      Fn::Join:
+        - ''
+        - - '{\"widgets\":[{\"type\":\"metric\",\"x\":0,\"y\":0,\"width\":12,\"height\":9,\"properties\":{\"metrics\":[[\"AWS/Lambda\",\"Invocations\",\"FunctionName\",\"'
+          - !Ref ParseUnicornDataFunction
+          - '\"],[\"...\",\"'
+          - !Ref ProcessedDataToS3Function
+          - '\"],[\"...\",\"'
+          - !Ref FindClosestGroundstationLambdaFunction
+          - '\"]],\"view\":\"timeSeries\",\"stacked\":false,\"region\":\"us-east-1\",\"stat\":\"Sum\",\"period\":60}},{\"type\":\"metric\",\"x\":12,\"y\":0,\"width\":12,\"height\":6,\"properties\":{\"metrics\":[[\"AWS/SQS\",\"NumberOfMessagesSent\",\"QueueName\",\"'
+          - !GetAtt NearestWeatherStationQueue.QueueName
+          - '\"],[\"...\",\"'
+          - !GetAtt ProcessedUnicornDataQueue.QueueName
+          - '\"]],\"view\":\"timeSeries\",\"stacked\":false,\"region\":\"us-east-1\",\"stat\":\"Sum\",\"period\":300}},{\"type\":\"metric\",\"x\":12,\"y\":6,\"width\":12,\"height\":6,\"properties\":{\"metrics\":[[\"AWS/SQS\",\"NumberOfEmptyReceives\",\"QueueName\",\"'
+          - !GetAtt NearestWeatherStationQueue.QueueName
+          - '\"],[\"...\",\"'
+          - !GetAtt ProcessedUnicornDataQueue.QueueName
+          - '\"]],\"view\":\"timeSeries\",\"stacked\":false,\"region\":\"us-east-1\",\"stat\":\"Sum\",\"period\":300}}]}'
   AthenaSelectQuery:
     Value: !Sub |
       SELECT * FROM "${WildRydesMLGlueDatabase}"."${WildRydesMLGlueTable}" WHERE q_flag = '' AND id IN ('US1NYNY0074', 'USC00305798', 'USC00305799', 'USC00305804', 'USC00305806', 'USC00305816', 'USW00014732', 'USW00014786', 'USW00093732', 'USW00094728', 'USW00094789');

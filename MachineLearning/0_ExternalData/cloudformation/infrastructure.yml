@@ -557,7 +557,7 @@ Resources:
             		"x": 0,
             		"y": 0,
             		"width": 12,
-            		"height": 9,
+            		"height": 12,
             		"properties": {
             			"metrics": [
             				["AWS/Lambda", "Invocations", "FunctionName", "${ParseUnicornDataFunction}"],

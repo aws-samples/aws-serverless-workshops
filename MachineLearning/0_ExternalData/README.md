@@ -51,7 +51,7 @@ The following provides an overview of the steps needed to complete this module. 
 
 #### Upload raw travel data
 
-We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 100 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
+We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 50 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
 
 Use the console or CLI to upload travel data to the raw S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1) to track how your Lambda functions are processing the data and/or use the CloudWatch Dashboard built as part of this lab.
 

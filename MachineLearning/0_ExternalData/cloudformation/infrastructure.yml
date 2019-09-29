@@ -526,7 +526,7 @@ Resources:
               - Effect: "Allow"
                 Action: "sagemaker:CreateTrainingJob"
                 Resource: "*"
-  SageMakerNotebook:
+  WildRydesNotebook:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
       InstanceType: ml.t3.medium

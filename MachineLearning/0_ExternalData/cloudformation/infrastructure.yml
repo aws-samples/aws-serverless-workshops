@@ -383,7 +383,7 @@ Resources:
           OUTPUT_QUEUE: !Ref NearestWeatherStationQueue
       Role: !GetAtt DataProcessingExecutionRole.Arn
       Runtime: python3.7
-      Timeout: 300
+      Timeout: 900
       Tags:
         -
           Key: Workshop

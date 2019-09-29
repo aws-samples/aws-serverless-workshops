@@ -14,17 +14,11 @@ US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.
 Manually:
 
 1. Click the **Launch Stack** link above for the region of your choice.
-
 1. Click **Next** on the Select Template page.
-
 1. On the Options page, leave all the defaults and click **Next**.
-
 1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-
 1. On the Review page click **Create**.
-
 1. Wait for the `wildrydes-machine-learning-module-0` stack to reach a status of `CREATE_COMPLETE`.
-
 1. With the `wildrydes-machine-learning-module-0` stack selected, click on the **Outputs** tab
 
 CLI:
@@ -53,7 +47,7 @@ The following provides an overview of the steps needed to complete this module. 
 
 We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 50 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
 
-Use the console or CLI to upload travel data to the raw S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1) to track how your Lambda functions are processing the data and/or use the CloudWatch Dashboard built as part of this lab.
+Use the console or CLI to upload travel data to the raw S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1) to track how your Lambda functions are processing the data and/or use the [CloudWatch Dashboard](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=Wild_Rydes_Machine_Learning;start=PT1H) built as part of this lab.
 
 High level steps:
 
@@ -86,7 +80,9 @@ aws cloudformation describe-stacks \
 ```
 </p></details><br>
 
-Our travel data has been processed and stored back in S3. We want to see if weather is impacting the magic points used by our unicorns. Let's get some weather related data to fold in.
+Remember to check out [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1) and/or [CloudWatch Dashboard](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=Wild_Rydes_Machine_Learning;start=PT1H) to track the progress.
+
+Once our travel data has been processed and stored back in S3, we want to see if weather is impacting the magic points used by our unicorns. Let's get some weather related data to fold in.
 
 #### Ground Station Data Prep
 
@@ -122,11 +118,11 @@ The role of a data scientist involves pulling data from various sources. We will
 1. Navigate to [Amazon SageMaker](https://console.aws.amazon.com/sagemaker/home?region=us-east-1#/notebook-instances) in AWS Console
 1. Open the notebook instance named `WildRydesNotebook-***`
 1. Click the **Open Jupyter** link under Actions
-1. When redirected to the notebook instance, click **New** then select **Terminal** from list. A new tab will open.
-1. When in the terminal, type the following commands:
-```
-curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/linear_learner.ipynb -o SageMaker/linear_learner.ipynb
-```
+1. When redirected to the notebook instance, click **New** (upper right), then select **Terminal** from list.
+1. A new tab will open. When in the terminal, run the following command:
+    ```
+    curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/0_ExternalData/notebooks/linear_learner.ipynb -o SageMaker/linear_learner.ipynb && exit
+    ```
 1. Exit the terminal tab/window
 1. Open the **linear_learner.ipynb** notebook and follow the instructions.
 
@@ -158,32 +154,32 @@ Manually:
 
 CLI:
 1. Delete data in your raw bucket
-  ```
-  aws cloudformation describe-stacks \
-    --stack-name wildrydes-machine-learning-module-0 \
-    --query "Stacks[0].Outputs[?OutputKey=='RawDataBucketName'].OutputValue" \
-    --output text | xargs -I {} \
-        aws s3 rm s3://{} --recursive
-  ```
-2. Delete data in your transformed bucket
-  ```
-  aws cloudformation describe-stacks \
-    --stack-name wildrydes-machine-learning-module-0 \
-    --query "Stacks[0].Outputs[?OutputKey=='TransformedDataBucketName'].OutputValue" \
-    --output text | xargs -I {} \
-        aws s3 rm s3://{} --recursive
-  ```
-3. Delete data in your model bucket
-  ```
-  aws cloudformation describe-stacks \
-    --stack-name wildrydes-machine-learning-module-0 \
-    --query "Stacks[0].Outputs[?OutputKey=='ModelBucketName'].OutputValue" \
-    --output text | xargs -I {} \
-        aws s3 rm s3://{} --recursive
-  ```
-4. Delete the stack
-  ```
-  aws cloudformation delete-stack \
-    --stack-name wildrydes-machine-learning-module-0
-  ```
+    ```
+    aws cloudformation describe-stacks \
+      --stack-name wildrydes-machine-learning-module-0 \
+      --query "Stacks[0].Outputs[?OutputKey=='RawDataBucketName'].OutputValue" \
+      --output text | xargs -I {} \
+          aws s3 rm s3://{} --recursive
+    ```
+1. Delete data in your transformed bucket
+    ```
+    aws cloudformation describe-stacks \
+      --stack-name wildrydes-machine-learning-module-0 \
+      --query "Stacks[0].Outputs[?OutputKey=='TransformedDataBucketName'].OutputValue" \
+      --output text | xargs -I {} \
+          aws s3 rm s3://{} --recursive
+    ```
+1. Delete data in your model bucket
+    ```
+    aws cloudformation describe-stacks \
+      --stack-name wildrydes-machine-learning-module-0 \
+      --query "Stacks[0].Outputs[?OutputKey=='ModelBucketName'].OutputValue" \
+      --output text | xargs -I {} \
+          aws s3 rm s3://{} --recursive
+    ```
+1. Delete the stack
+    ```
+    aws cloudformation delete-stack \
+      --stack-name wildrydes-machine-learning-module-0
+    ```
 </p></details>

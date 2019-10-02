@@ -66,7 +66,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Click **Create function**.
 
-1. Select **Node.js 6.10** for the **Runtime**.
+1. Select **Node.js 8.10** for the **Runtime**.
 
 1. Copy and paste the code from [listUnicornRides.js](./listUnicornRides.js?raw=1) into the code entry area.
 
@@ -147,7 +147,7 @@ Open the API Gateway console and create a new authorizer in the **WildRydes** AP
 
 1. Using the **Lambda Function** field, select your region and enter the **ListUnicornAuthorizer** Lambda function name.
 
-1. Leave the **Lambda Execution Role** field blank. Configured this way, the API Gateway console automatically sets the permissions on the Lambda function to allow the invocation. The console will ask you to confirm this action as you save the new authorizer settings.
+1. Leave the **Lambda Invoke Role** field blank. Configured this way, the API Gateway console automatically sets the permissions on the Lambda function to allow the invocation. The console will ask you to confirm this action as you save the new authorizer settings.
 
 1. Select **Token** as the **Lambda Event Payload** and enter **Authorization** as the **Token Source**.
 

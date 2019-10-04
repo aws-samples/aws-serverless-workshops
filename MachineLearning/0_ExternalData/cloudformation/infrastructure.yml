@@ -141,7 +141,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !GetAtt NearestWeatherStationQueue.Arn
+                Resource: !GetAtt IngestedRawDataQueue.Arn
         -
           PolicyName: "AllowProcessedBucketQueue"
           PolicyDocument:
@@ -151,7 +151,7 @@ Resources:
                 Action: "*"
                 Resource:
                   -
-                    !GetAtt ProcessedUnicornDataQueue.Arn
+                    !GetAtt TransformedAndMappedDataQueue.Arn
                   -
                     !GetAtt TransformAndMapDataFunctionDLQ.Arn
                   -
@@ -209,7 +209,7 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  NearestWeatherStationQueue:
+  IngestedRawDataQueue:
     Type: "AWS::SQS::Queue"
     Properties:
       Tags:
@@ -219,7 +219,7 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  ProcessedUnicornDataQueue:
+  TransformedAndMappedDataQueue:
     Type: "AWS::SQS::Queue"
     Properties:
       Tags:
@@ -380,7 +380,7 @@ Resources:
       MemorySize: 256
       Environment:
         Variables:
-          OUTPUT_QUEUE: !Ref NearestWeatherStationQueue
+          OUTPUT_QUEUE: !Ref IngestedRawDataQueue
       Role: !GetAtt DataProcessingExecutionRole.Arn
       Runtime: python3.7
       Timeout: 900
@@ -455,7 +455,7 @@ Resources:
       MemorySize: 128
       Environment:
         Variables:
-          OUTPUT_QUEUE: !Ref ProcessedUnicornDataQueue
+          OUTPUT_QUEUE: !Ref TransformedAndMappedDataQueue
       Role: !GetAtt DataProcessingExecutionRole.Arn
       Runtime: python3.7
       Timeout: 3
@@ -472,7 +472,7 @@ Resources:
     Properties:
       BatchSize: 10
       Enabled: True
-      EventSourceArn: !GetAtt NearestWeatherStationQueue.Arn
+      EventSourceArn: !GetAtt IngestedRawDataQueue.Arn
       FunctionName: !Ref TransformAndMapDataFunction
 
   ProcessedDataEventSource:
@@ -480,7 +480,7 @@ Resources:
     Properties:
       BatchSize: 10
       Enabled: True
-      EventSourceArn: !GetAtt ProcessedUnicornDataQueue.Arn
+      EventSourceArn: !GetAtt TransformedAndMappedDataQueue.Arn
       FunctionName: !Ref WriteTransformedDataToS3Function
 
   TransformedDataBucket:
@@ -578,8 +578,8 @@ Resources:
             		"height": 6,
             		"properties": {
             			"metrics": [
-            				["AWS/SQS", "NumberOfMessagesSent", "QueueName", "${NearestWeatherStationQueue}"],
-            				["...", "${ProcessedUnicornDataQueue}"]
+            				["AWS/SQS", "NumberOfMessagesSent", "QueueName", "${IngestedRawDataQueue}"],
+            				["...", "${TransformedAndMappedDataQueue}"]
             			],
             			"view": "timeSeries",
             			"stacked": false,
@@ -595,8 +595,8 @@ Resources:
             		"height": 6,
             		"properties": {
             			"metrics": [
-            				["AWS/SQS", "NumberOfEmptyReceives", "QueueName", "${NearestWeatherStationQueue}"],
-            				["...", "${ProcessedUnicornDataQueue}"]
+            				["AWS/SQS", "NumberOfEmptyReceives", "QueueName", "${IngestedRawDataQueue}"],
+            				["...", "${TransformedAndMappedDataQueue}"]
             			],
             			"view": "timeSeries",
             			"stacked": false,
@@ -606,7 +606,7 @@ Resources:
             		}
             	}]
             }
-        - { IngestUnicornRawDataFunction: !Ref IngestUnicornRawDataFunction, WriteTransformedDataToS3Function: !Ref WriteTransformedDataToS3Function, TransformAndMapDataFunction: !Ref TransformAndMapDataFunction, NearestWeatherStationQueue: !GetAtt NearestWeatherStationQueue.QueueName, ProcessedUnicornDataQueue: !GetAtt ProcessedUnicornDataQueue.QueueName }
+        - { IngestUnicornRawDataFunction: !Ref IngestUnicornRawDataFunction, WriteTransformedDataToS3Function: !Ref WriteTransformedDataToS3Function, TransformAndMapDataFunction: !Ref TransformAndMapDataFunction, IngestedRawDataQueue: !GetAtt IngestedRawDataQueue.QueueName, TransformedAndMappedDataQueue: !GetAtt TransformedAndMappedDataQueue.QueueName }
 Outputs:
   AthenaSelectQuery:
     Value: !Sub |

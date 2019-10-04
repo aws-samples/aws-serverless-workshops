@@ -3,7 +3,7 @@ Description: Wild Rydes machine learning infrastructure
 Resources:
   RawDataBucket:
     Type: AWS::S3::Bucket
-    DependsOn: ParseUnicornDataFunction
+    DependsOn: IngestUnicornRawDataFunction
     Properties:
       BucketName: !Sub "${AWS::StackName}-rawbucket-${AWS::AccountId}"
       Tags:
@@ -16,7 +16,7 @@ Resources:
       NotificationConfiguration:
         LambdaConfigurations:
           -
-            Function: !GetAtt ParseUnicornDataFunction.Arn
+            Function: !GetAtt IngestUnicornRawDataFunction.Arn
             Event: "s3:ObjectCreated:*"
             Filter:
               S3Key:
@@ -28,7 +28,7 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !Ref ParseUnicornDataFunction
+      FunctionName: !Ref IngestUnicornRawDataFunction
       Principal: s3.amazonaws.com
       SourceArn: !Sub "arn:aws:s3:::${AWS::StackName}-rawbucket-${AWS::AccountId}"
   WildRydesMLGlueDatabase:
@@ -153,11 +153,11 @@ Resources:
                   -
                     !GetAtt ProcessedUnicornDataQueue.Arn
                   -
-                    !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
+                    !GetAtt TransformAndMapDataFunctionDLQ.Arn
                   -
-                    !GetAtt ParseUnicornDataFunctionDLQ.Arn
+                    !GetAtt IngestUnicornRawDataFunctionDLQ.Arn
                   -
-                    !GetAtt ProcessedDataToS3FunctionDLQ.Arn
+                    !GetAtt WriteTransformedDataToS3FunctionDLQ.Arn
         -
           PolicyName: "AllowDLQs"
           PolicyDocument:
@@ -167,11 +167,11 @@ Resources:
                 Action: "*"
                 Resource:
                   -
-                    !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
+                    !GetAtt TransformAndMapDataFunctionDLQ.Arn
                   -
-                    !GetAtt ParseUnicornDataFunctionDLQ.Arn
+                    !GetAtt IngestUnicornRawDataFunctionDLQ.Arn
                   -
-                    !GetAtt ProcessedDataToS3FunctionDLQ.Arn
+                    !GetAtt WriteTransformedDataToS3FunctionDLQ.Arn
         - PolicyName: "AllowLogging"
           PolicyDocument:
             Version: "2012-10-17"
@@ -179,7 +179,7 @@ Resources:
               - Effect: Allow
                 Action: ['logs:*']
                 Resource: 'arn:aws:logs:*:*:*'
-  FindClosestGroundstationLambdaFunctionDLQ:
+  TransformAndMapDataFunctionDLQ:
     Type: "AWS::SQS::Queue"
     Properties:
       Tags:
@@ -189,7 +189,7 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  ParseUnicornDataFunctionDLQ:
+  IngestUnicornRawDataFunctionDLQ:
     Type: "AWS::SQS::Queue"
     Properties:
       Tags:
@@ -199,7 +199,7 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  ProcessedDataToS3FunctionDLQ:
+  WriteTransformedDataToS3FunctionDLQ:
     Type: "AWS::SQS::Queue"
     Properties:
       Tags:
@@ -286,13 +286,13 @@ Resources:
     Properties:
       RestApiId: !Ref "ApiGateway"
       StageName: "prod"
-  ProcessedDataToS3Function:
+  WriteTransformedDataToS3Function:
     Type: AWS::Lambda::Function
     Properties:
       Description: Wild Rydes lambda function to parse unicorn csv data and send downstream to lookup nearest groundstation
       Handler: index.handler
       DeadLetterConfig:
-        TargetArn: !GetAtt ProcessedDataToS3FunctionDLQ.Arn
+        TargetArn: !GetAtt WriteTransformedDataToS3FunctionDLQ.Arn
       MemorySize: 128
       Environment:
         Variables:
@@ -337,7 +337,7 @@ Resources:
           def upload_file(body, key):
               client.put_object(Body=body, Bucket=bucket, Key=key)
 
-  ParseUnicornDataFunction:
+  IngestUnicornRawDataFunction:
     Type: AWS::Lambda::Function
     Properties:
       Code:
@@ -376,7 +376,7 @@ Resources:
       Description: Wild Rydes lambda function to parse unicorn JSON data and send downstream to lookup nearest groundstation
       Handler: index.handler
       DeadLetterConfig:
-        TargetArn: !GetAtt ParseUnicornDataFunctionDLQ.Arn
+        TargetArn: !GetAtt IngestUnicornRawDataFunctionDLQ.Arn
       MemorySize: 256
       Environment:
         Variables:
@@ -391,7 +391,7 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  FindClosestGroundstationLambdaFunction:
+  TransformAndMapDataFunction:
     Type: AWS::Lambda::Function
     Properties:
       Code:
@@ -451,7 +451,7 @@ Resources:
       Description: Wild Rydes lambda function to look up nearest weather groundstation based on lat/long
       Handler: index.handler
       DeadLetterConfig:
-        TargetArn: !GetAtt FindClosestGroundstationLambdaFunctionDLQ.Arn
+        TargetArn: !GetAtt TransformAndMapDataFunctionDLQ.Arn
       MemorySize: 128
       Environment:
         Variables:
@@ -473,7 +473,7 @@ Resources:
       BatchSize: 10
       Enabled: True
       EventSourceArn: !GetAtt NearestWeatherStationQueue.Arn
-      FunctionName: !Ref FindClosestGroundstationLambdaFunction
+      FunctionName: !Ref TransformAndMapDataFunction
 
   ProcessedDataEventSource:
     Type: AWS::Lambda::EventSourceMapping
@@ -481,7 +481,7 @@ Resources:
       BatchSize: 10
       Enabled: True
       EventSourceArn: !GetAtt ProcessedUnicornDataQueue.Arn
-      FunctionName: !Ref ProcessedDataToS3Function
+      FunctionName: !Ref WriteTransformedDataToS3Function
 
   TransformedDataBucket:
     Type: AWS::S3::Bucket
@@ -560,9 +560,9 @@ Resources:
             		"height": 12,
             		"properties": {
             			"metrics": [
-            				["AWS/Lambda", "Invocations", "FunctionName", "${ParseUnicornDataFunction}"],
-            				["...", "${ProcessedDataToS3Function}"],
-            				["...", "${FindClosestGroundstationLambdaFunction}"]
+            				["AWS/Lambda", "Invocations", "FunctionName", "${IngestUnicornRawDataFunction}"],
+            				["...", "${WriteTransformedDataToS3Function}"],
+            				["...", "${TransformAndMapDataFunction}"]
             			],
             			"view": "timeSeries",
             			"stacked": false,
@@ -606,7 +606,7 @@ Resources:
             		}
             	}]
             }
-        - { ParseUnicornDataFunction: !Ref ParseUnicornDataFunction, ProcessedDataToS3Function: !Ref ProcessedDataToS3Function, FindClosestGroundstationLambdaFunction: !Ref FindClosestGroundstationLambdaFunction, NearestWeatherStationQueue: !GetAtt NearestWeatherStationQueue.QueueName, ProcessedUnicornDataQueue: !GetAtt ProcessedUnicornDataQueue.QueueName }
+        - { IngestUnicornRawDataFunction: !Ref IngestUnicornRawDataFunction, WriteTransformedDataToS3Function: !Ref WriteTransformedDataToS3Function, TransformAndMapDataFunction: !Ref TransformAndMapDataFunction, NearestWeatherStationQueue: !GetAtt NearestWeatherStationQueue.QueueName, ProcessedUnicornDataQueue: !GetAtt ProcessedUnicornDataQueue.QueueName }
 Outputs:
   AthenaSelectQuery:
     Value: !Sub |

@@ -5,9 +5,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {},
-  "scripts": {
-    "postinstall": "cd app && npm install"
-  },
+  "scripts": {},
   "devDependencies": {
     "mocha": "^4.0.1",
     "proxyquire": "^1.8.0"

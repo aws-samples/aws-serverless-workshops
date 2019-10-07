@@ -6,6 +6,9 @@ phases:
       nodejs: 10
 
     commands:
+      # Install application dependencies
+      - npm install --prefix app
+
       # Install dependencies needed for running tests
       - npm install
 

@@ -51,7 +51,7 @@ Use the console or CLI to upload travel data to an S3 bucket. Once you upload th
 
 High level steps:
 
-1. Manually upload ride_data.json into the bucket generated from your CF template
+1. Manually upload ride_data.json into the bucket generated from your CF template, under a directory named `raw/`
 1. S3 event automatically triggers the Parse Unicorn Data function
 1. Parse Unicorn Data function will read the JSON file and places each entry on an SQS queue
 1. Find Nearest Ground Station function reads from the SQS queue, finds the closest weather station, and applies a label indicating if the ride was a "heavy utilization" scenario
@@ -67,6 +67,8 @@ Console:
 1. In the outputs tab, take note of the **DataBucketName** value
 1. Open [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1) in the AWS Console
 1. Navigate to the data bucket and click into it
+1. Click **Create Folder**, type `raw`, and click save
+1. Click the new `raw` directory to navigate into it
 1. Click **Upload**
 1. Click **Add files**
 1. Select `ride_data.json` from the `data` directory in this repository

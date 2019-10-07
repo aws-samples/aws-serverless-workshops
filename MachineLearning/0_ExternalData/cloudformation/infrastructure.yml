@@ -22,6 +22,9 @@ Resources:
               S3Key:
                 Rules:
                   -
+                    Name: prefix
+                    Value: raw/
+                  -
                     Name: suffix
                     Value: json
   S3DataBucketInvokeLambdaPermission:
@@ -579,5 +582,5 @@ Outputs:
       Fn::Join:
         - " "
         -
-          - "curl -d '{ \"distance\": 1, \"healthpoints\": 100, \"magicpoints\": 200, \"TMAX\": 1, \"TMIN\": 1, \"PRCP\": 100 }' -H \"Content-Type: application/json\" -X POST"
+          - "curl -d '{ \"distance\": 30, \"healthpoints\": 30, \"magicpoints\": 1500, \"TMAX\": 333, \"TMIN\": 300, \"PRCP\": 100 }' -H \"Content-Type: application/json\" -X POST"
           - !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"

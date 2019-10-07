@@ -252,7 +252,7 @@ Resources:
       Code:
         S3Bucket: central-multicustomer-aws-immersion-days
         S3Key: wild-rydes-ml-lab/inferencefunction.zip
-                  
+
   ApiGateway:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
@@ -529,7 +529,7 @@ Resources:
   WildRydesNotebook:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
-      InstanceType: ml.t3.medium
+      InstanceType: ml.t3.xlarge
       RoleArn: !GetAtt SageMakerExecutionRole.Arn
       DirectInternetAccess: Enabled
       VolumeSizeInGB: 5

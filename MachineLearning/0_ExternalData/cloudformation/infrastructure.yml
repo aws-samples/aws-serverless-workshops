@@ -1,11 +1,11 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Wild Rydes machine learning infrastructure
 Resources:
-  RawDataBucket:
+  DataBucket:
     Type: AWS::S3::Bucket
     DependsOn: IngestUnicornRawDataFunction
     Properties:
-      BucketName: !Sub "${AWS::StackName}-rawbucket-${AWS::AccountId}"
+      BucketName: !Sub "${AWS::StackName}-databucket-${AWS::AccountId}"
       Tags:
         -
           Key: Workshop
@@ -24,56 +24,13 @@ Resources:
                   -
                     Name: suffix
                     Value: json
-  S3RawDataBucketInvokeLambdaPermission:
+  S3DataBucketInvokeLambdaPermission:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref IngestUnicornRawDataFunction
       Principal: s3.amazonaws.com
-      SourceArn: !Sub "arn:aws:s3:::${AWS::StackName}-rawbucket-${AWS::AccountId}"
-  WildRydesMLGlueDatabase:
-    Type: AWS::Glue::Database
-    Properties:
-      DatabaseInput:
-        Name: !Sub "wildrydesmlgluedatabase-${AWS::StackName}"
-        Description: "Glue DB for Wild Rydes ML workshop"
-      CatalogId: !Ref AWS::AccountId
-
-  WildRydesMLGlueTable:
-    Type: AWS::Glue::Table
-    Properties:
-      DatabaseName: !Ref WildRydesMLGlueDatabase
-      CatalogId: !Ref AWS::AccountId
-      TableInput:
-        Name: !Sub "externalweatherdatacsvtable-${AWS::StackName}"
-        Parameters: { "classification" : "csv" }
-        TableType: "EXTERNAL_TABLE"
-        StorageDescriptor:
-          Location:
-            Fn::Sub: "s3://noaa-ghcn-pds/csv/"
-          InputFormat: "org.apache.hadoop.mapred.TextInputFormat"
-          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-          SerdeInfo:
-            Parameters: { "separatorChar" : ",", "field.delim": "," }
-            SerializationLibrary: "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
-          StoredAsSubDirectories: false
-          Columns:
-            - Name: id
-              Type: string
-            - Name: year_date
-              Type: string
-            - Name: element
-              Type: string
-            - Name: data_value
-              Type: string
-            - Name: m_flag
-              Type: string
-            - Name: q_flag
-              Type: string
-            - Name: s_flag
-              Type: string
-            - Name: obs_time
-              Type: string
+      SourceArn: !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}"
   DataProcessingExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -93,7 +50,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !Sub "arn:aws:s3:::${TransformedDataBucket}"
+                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}"
         -
           PolicyName: "AllowTransformedBucketObjects"
           PolicyDocument:
@@ -101,39 +58,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: "*"
-                Resource: !Sub "arn:aws:s3:::${TransformedDataBucket}/*"
-        -
-          PolicyName: "AllowModelBucket"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-modelbucket-${AWS::AccountId}"
-        -
-          PolicyName: "AllowModelBucketObjects"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-modelbucket-${AWS::AccountId}/*"
-        -
-          PolicyName: "AllowRawBucket"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-rawbucket-${AWS::AccountId}"
-        -
-          PolicyName: "AllowRawBucketObjects"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-rawbucket-${AWS::AccountId}/*"
+                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}/*"
         -
           PolicyName: "AllowNearestStationQueue"
           PolicyDocument:
@@ -229,63 +154,6 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  ModelInferenceFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      Description: Wild Rydes lambda function make model inferences
-      Handler: index.handler
-      MemorySize: 128
-      Role: !GetAtt DataProcessingExecutionRole.Arn
-      Runtime: python2.7
-      Environment:
-        Variables:
-          OUTPUT_BUCKET: !Ref ModelBucket
-          MODEL_PATH: 'linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz'
-      Timeout: 3
-      Tags:
-        -
-          Key: Workshop
-          Value: Wild Rydes
-        -
-          Key: Module
-          Value: Machine Learning
-      Code:
-        S3Bucket: central-multicustomer-aws-immersion-days
-        S3Key: wild-rydes-ml-lab/inferencefunction.zip
-
-  ApiGateway:
-    Type: "AWS::ApiGateway::RestApi"
-    Properties:
-      Name: "ModelInferenceApi"
-      Description: "Wild Rydes Model Inference REST API"
-
-  ApiGatewayRootMethod:
-    Type: "AWS::ApiGateway::Method"
-    Properties:
-      AuthorizationType: "NONE"
-      HttpMethod: "POST"
-      Integration:
-        IntegrationHttpMethod: "POST"
-        Type: "AWS_PROXY"
-        Uri: !Sub
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "ModelInferenceFunction.Arn"
-      ResourceId: !GetAtt "ApiGateway.RootResourceId"
-      RestApiId: !Ref "ApiGateway"
-  lambdaApiGatewayInvoke:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "ModelInferenceFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/POST/"
-  apiGatewayDeployment:
-    Type: "AWS::ApiGateway::Deployment"
-    DependsOn:
-      - "ApiGatewayRootMethod"
-    Properties:
-      RestApiId: !Ref "ApiGateway"
-      StageName: "prod"
   WriteTransformedDataToS3Function:
     Type: AWS::Lambda::Function
     Properties:
@@ -296,7 +164,7 @@ Resources:
       MemorySize: 128
       Environment:
         Variables:
-          OUTPUT_BUCKET: !Ref TransformedDataBucket
+          OUTPUT_BUCKET: !Ref DataBucket
       Role: !GetAtt DataProcessingExecutionRole.Arn
       Runtime: python3.7
       Timeout: 3
@@ -482,17 +350,54 @@ Resources:
       Enabled: True
       EventSourceArn: !GetAtt TransformedAndMappedDataQueue.Arn
       FunctionName: !Ref WriteTransformedDataToS3Function
-
-  TransformedDataBucket:
-    Type: AWS::S3::Bucket
+  #####
+  # NY Ground Station resources
+  #####
+  WildRydesMLGlueDatabase:
+    Type: AWS::Glue::Database
     Properties:
-      Tags:
-        -
-          Key: Workshop
-          Value: Wild Rydes
-        -
-          Key: Module
-          Value: Machine Learning
+      DatabaseInput:
+        Name: !Sub "wildrydesmlgluedatabase-${AWS::StackName}"
+        Description: "Glue DB for Wild Rydes ML workshop"
+      CatalogId: !Ref AWS::AccountId
+  WildRydesMLGlueTable:
+    Type: AWS::Glue::Table
+    Properties:
+      DatabaseName: !Ref WildRydesMLGlueDatabase
+      CatalogId: !Ref AWS::AccountId
+      TableInput:
+        Name: !Sub "externalweatherdatacsvtable-${AWS::StackName}"
+        Parameters: { "classification" : "csv" }
+        TableType: "EXTERNAL_TABLE"
+        StorageDescriptor:
+          Location:
+            Fn::Sub: "s3://noaa-ghcn-pds/csv/"
+          InputFormat: "org.apache.hadoop.mapred.TextInputFormat"
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          SerdeInfo:
+            Parameters: { "separatorChar" : ",", "field.delim": "," }
+            SerializationLibrary: "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
+          StoredAsSubDirectories: false
+          Columns:
+            - Name: id
+              Type: string
+            - Name: year_date
+              Type: string
+            - Name: element
+              Type: string
+            - Name: data_value
+              Type: string
+            - Name: m_flag
+              Type: string
+            - Name: q_flag
+              Type: string
+            - Name: s_flag
+              Type: string
+            - Name: obs_time
+              Type: string
+  #####
+  # Data prep/Machine Learning resources
+  #####
   SageMakerExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -534,10 +439,22 @@ Resources:
       DirectInternetAccess: Enabled
       VolumeSizeInGB: 5
       RootAccess: Enabled
-  ModelBucket:
-    Type: AWS::S3::Bucket
+  #####
+  # Inference resources
+  #####
+  ModelInferenceFunction:
+    Type: AWS::Lambda::Function
     Properties:
-      BucketName: !Sub "${AWS::StackName}-modelbucket-${AWS::AccountId}"
+      Description: Wild Rydes lambda function make model inferences
+      Handler: index.handler
+      MemorySize: 128
+      Role: !GetAtt DataProcessingExecutionRole.Arn
+      Runtime: python2.7
+      Environment:
+        Variables:
+          OUTPUT_BUCKET: !Ref DataBucket
+          MODEL_PATH: 'linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz'
+      Timeout: 3
       Tags:
         -
           Key: Workshop
@@ -545,6 +462,44 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
+      Code:
+        S3Bucket: central-multicustomer-aws-immersion-days
+        S3Key: wild-rydes-ml-lab/inferencefunction.zip
+  ApiGateway:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Name: "ModelInferenceApi"
+      Description: "Wild Rydes Model Inference REST API"
+  ApiGatewayRootMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: "NONE"
+      HttpMethod: "POST"
+      Integration:
+        IntegrationHttpMethod: "POST"
+        Type: "AWS_PROXY"
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "ModelInferenceFunction.Arn"
+      ResourceId: !GetAtt "ApiGateway.RootResourceId"
+      RestApiId: !Ref "ApiGateway"
+  lambdaApiGatewayInvoke:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt "ModelInferenceFunction.Arn"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/POST/"
+  apiGatewayDeployment:
+    Type: "AWS::ApiGateway::Deployment"
+    DependsOn:
+      - "ApiGatewayRootMethod"
+    Properties:
+      RestApiId: !Ref "ApiGateway"
+      StageName: "prod"
+  #####
+  # CloudWatch Dashboard
+  #####
   CloudWatchDashboard:
     Type: "AWS::CloudWatch::Dashboard"
     Properties:
@@ -614,12 +569,8 @@ Outputs:
   AthenaCSVLocation:
     Value: !Sub |
       https://s3.console.aws.amazon.com/s3/buckets/aws-athena-query-results-${AWS::AccountId}-${AWS::Region}/Unsaved/?region=${AWS::Region}&tab=overview
-  RawDataBucketName:
-    Value: !Ref RawDataBucket
-  TransformedDataBucketName:
-    Value: !Ref TransformedDataBucket
-  ModelBucketName:
-    Value: !Ref ModelBucket
+  DataBucketName:
+    Value: !Ref DataBucket
   ApiGatewayInvokeURL:
     Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"
   InferenceFunctionTestCommand:

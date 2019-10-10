@@ -161,7 +161,7 @@ environment variable with the key `TABLE_NAME` and the value
 
     function buildRequestItems(records) {
       return records.map((record) => {
-        const json = Buffer.from(record.kinesis.data, 'base64').toString('ascii');
+        const json = Buffer.from(record.kinesis.data, 'base64').toString('utf8');
         const item = JSON.parse(json);
 
         return {

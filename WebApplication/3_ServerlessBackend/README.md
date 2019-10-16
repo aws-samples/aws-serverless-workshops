@@ -55,7 +55,7 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 Next you need to add permissions to the role so that it can access your DynamoDB table.
 
 **:white_check_mark: Step-by-step directions*
-1. While in the IAM Console on the roles page type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
+1. While in the IAM Console on the roles page, type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
 1. On the Permissions tab, choose the **Add inline policy** link in the lower right corner to create a new inline policy.
     ![Inline policies screenshot](../images/inline-policies.png)
 1. Select **Choose a service**.

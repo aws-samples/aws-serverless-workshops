@@ -2,7 +2,7 @@
 
 *Note! This section is currently a work in progress and may not function 100%*
 
-In this module we will turn our Wild Rydes application into a platform, enabling third party developers to build new applications on top of our APIs. Working with third party developers makes it easier for us to open new markets and geographies as well as provide new functionality for our riders.
+In this module, we will turn our Wild Rydes application into a platform, enabling third party developers to build new applications on top of our APIs. Working with third party developers makes it easier for us to open new markets and geographies as well as provide new functionality for our riders.
 
 You'll configure your Cognito User Pool from module #2 to enable OAuth 2.0 flows. Using OAuth, third party developers can build new client applications on top of your APIs. We will create a new method in the application's API that allows unicorns to list the rides they have given. This will open a new line of business for us, making it easy for third party developers to build applications that help unicorns manage their time and earnings. First, we will create the new method to list rides. Then, we will enable OAuth flows in our Cognito User Pool and deploy a sample client.
 
@@ -52,7 +52,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Choose on **Services** then select **Lambda** in the Compute section.
+1. Choose on **Services**, then select **Lambda** in the Compute section.
 
 1. Choose **Create function**.
 
@@ -83,17 +83,17 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 #### Background
 Amazon API Gateway can leverage an AWS Lambda function to make authorization decisions. In order to support bearer tokens, such as JWT tokens, you can use custom authorizers. When configured with a custom authorizer, API Gateway invokes a Lambda function with the request token and context. The Lambda custom authorizer must return a policy that API Gateway can use to make the authorization decision for the entire API, not just the specific method that was called. To make the creation of custom authorizers easier, we have created JavaScript and Python blueprints that you can select from the Lambda console. These blueprints contain a utility object that simplifies policy generation.
 
-You can also return a set of key/value pairs that are appended to the request context values. The code for our custom authorizer is in the `ListUnicornAuthorizer` folder, open the folder and take a look at the `index.js` file to get an idea of how our custom authorizer works. To authorize access to our new list rides API we rely on a custom scope called `UnicornManager/unicorn` - this scope is automatically added to client tokens produced by the Unicorn Manager application.
+You can also return a set of key/value pairs that are appended to the request context values. The code for our custom authorizer is in the `ListUnicornAuthorizer` folder. Open the folder and take a look at the `index.js` file to get an idea of how our custom authorizer works. To authorize access to our new list rides API, we rely on a custom scope called `UnicornManager/unicorn` - this scope is automatically added to client tokens produced by the Unicorn Manager application.
 
 #### High-Level Instructions
-Use the AWS Lambda console to create a new Lambda function called **ListUnicornAuthorizer** that will process incoming JWT bearer tokens. Upload the provided [ListUnicornAuthorizer.zip](./ListUnicornAuthorizer.zip) as the function code. The authorizer Lambda function relies on an environment variable called **`USER_POOL_ID`**, define this in the Lambda console and set the value of the WildRydes **Pool Id** from the Cognito console.
+Use the AWS Lambda console to create a new Lambda function called **ListUnicornAuthorizer** that will process incoming JWT bearer tokens. Upload the provided [ListUnicornAuthorizer.zip](./ListUnicornAuthorizer.zip) as the function code. The authorizer Lambda function relies on an environment variable called **`USER_POOL_ID`**. Define this in the Lambda console and set the value of the WildRydes **Pool Id** from the Cognito console.
 
 Make sure to configure your function to use the **WildRydesLambda** IAM role you created in module 2 of this workshop.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. Choose on **Services** then select **Lambda** in the Compute section.
+1. Choose on **Services**, then select **Lambda** in the Compute section.
 
 1. Choose **Create function**.
 
@@ -203,14 +203,14 @@ In the API Gateway console, open the `WildRydes` API we created in module #4 and
 #### Background
 Our new partner website, called Unicorn Manager, is also a static application hosted on Amazon S3. You can define who can access the content in your S3 buckets using a bucket policy. Bucket policies are JSON documents that specify what principals are allowed to execute various actions against the objects in your bucket.
 
-By default objects in an S3 bucket are available via URLs with the structure http://&lt;Regional-S3-prefix&gt;.amazonaws.com/<bucket-name>/<object-key>. In order to serve assets from the root URL (e.g. /index.html), you'll need to enable website hosting on the bucket. This will make your objects available at the AWS Region-specific website endpoint of the bucket: <bucket-name>.s3-website-<AWS-region>.amazonaws.com
+By default, objects in an S3 bucket are available via URLs with the structure http://&lt;Regional-S3-prefix&gt;.amazonaws.com/<bucket-name>/<object-key>. In order to serve assets from the root URL (e.g. /index.html), you'll need to enable website hosting on the bucket. This will make your objects available at the AWS Region-specific website endpoint of the bucket: <bucket-name>.s3-website-<AWS-region>.amazonaws.com
 
 Because our application interacts with Cognito via the OAuth 2.0 implicit flow, which requires a redirect, we need our website to use HTTPS. To have an HTTPS endpoint for an S3 static website, we can use a [CloudFront distribution](https://aws.amazon.com/cloudfront/).
 
 #### High-Level Instructions
 Use the console or AWS CLI to create an Amazon S3 bucket. Keep in mind that your bucket's name must be globally unique across all regions and customers. We recommend using a name like `unicornmanager-firstname-lastname`. If you get an error that your bucket name already exists, try adding additional numbers or characters until you find an unused name.
 
-You will need to add a bucket policy to your new Amazon S3 bucket to let anonymous users view your site. By default your bucket will only be accessible by authenticated users with access to your AWS account. See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-2) of a policy that will grant read only access to anonymous users. This example policy allows anyone on the Internet to view your content. The easiest way to update a bucket policy is to use the console. Select the bucket, choose the permission tab and then select Bucket Policy.
+You will need to add a bucket policy to your new Amazon S3 bucket to let anonymous users view your site. By default, your bucket will only be accessible by authenticated users with access to your AWS account. See [this example](http://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-2) of a policy that will grant read only access to anonymous users. This example policy allows anyone on the Internet to view your content. The easiest way to update a bucket policy is to use the console. Select the bucket, choose the permission tab, and then select Bucket Policy.
 
 Using the console, enable static website hosting. You can do this on the Properties tab after you've selected the bucket. Set `index.html` as the index document, and leave the error document blank. See the documentation on [configuring a bucket for static website hosting](https://docs.aws.amazon.com/AmazonS3/latest/dev/HowDoIWebsiteConfiguration.html) for more details.
 
@@ -219,7 +219,7 @@ Using the CloudFront console, create a new Distribution for web content specifyi
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console choose **Services** then select **S3** under Storage.
+1. In the AWS Management Console choose **Services**, then select **S3** under Storage.
 
 1. Choose **+ Create Bucket**
 
@@ -275,7 +275,7 @@ Using the CloudFront console, create a new Distribution for web content specifyi
 
 1. In the **Origin Domain Name** field, paste the URL for the S3 static website we just created and **/** as the origin path. **Do not select the bucket from dropdown list, paste the full website url including the http:// prefix. The origin type should be `custom`, not `s3`**.
 
-1. In the **Viewer Protocol Policy** make sure that **Redirect HTTP to HTTPS** is selected.
+1. In the **Viewer Protocol Policy**, make sure that **Redirect HTTP to HTTPS** is selected.
 
     ![Create CloudFront distribution](../images/create-cloudfront-distribution.png)
 
@@ -298,7 +298,7 @@ Using the Cognito console, add a new client application called **UnicornManager*
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console choose **Services** then select **Cognito** under Mobile.
+1. In the AWS Management Console, choose **Services** then select **Cognito** under Mobile.
 
 1. In the intro page, click **Manage your User Pools** an open the **WildRydes** pool.
 
@@ -342,7 +342,7 @@ Using the Cognito console, open the **WildRydes** User Pool and create a new cus
 
 1. Specify **UnicornServer** as the **Name**.
 
-1. Use **UnicornManager** as the  **Identifier** for the custom resource server.
+1. Use **UnicornManager** as the **Identifier** for the custom resource server.
 
 1. In the **Scopes** section, declare a new scope called **unicorn**. I've used "**Allow listing of rides for unicorns**" as the description.
 
@@ -354,7 +354,7 @@ Using the Cognito console, open the **WildRydes** User Pool and create a new cus
 ### 8. Configure the new app client for OAuth
 
 #### Background
-Amazon Cognito User Pools supports the authorization code grant, implicit, and client credentials grants. Third party developers can load the Cognito hosted UI with their application ID and request any of the enabled flows. Cognito User Pools also exposes a set of client and server/admin APIs that you can use to build custom authentication flows. As a result of a successful authentication Cognito produces and OpenID Connect-compatible identity token and a JWT access token. The access token includes the custom scopes you declared for the application.
+Amazon Cognito User Pools supports the authorization code grant, implicit, and client credentials grants. Third party developers can load the Cognito hosted UI with their application ID and request any of the enabled flows. Cognito User Pools also exposes a set of client and server/admin APIs that you can use to build custom authentication flows. As a result of a successful authentication, Cognito produces an OpenID Connect-compatible identity token and a JWT access token. The access token includes the custom scopes you declared for the application.
 
 In our example, we will use the implicit flow for the sake of simplicity. Implicit grant flows are mostly used by mobile applications. For web applications, you would normally require third party developers to host their own backend service and use the authorization code grant flow.
 
@@ -364,9 +364,9 @@ Open the **App client settings** and configure the **UnicornManager** app to use
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console choose **Services** then select **Cognito** under Mobile.
+1. In the AWS Management Console, choose **Services**, then select **Cognito** under Mobile.
 
-1. In the intro page, click **Manage your User Pools** an open the **WildRydes** pool.
+1. In the intro page, click **Manage your User Pools** and open the **WildRydes** pool.
 
 1. Open the **App clients settings** from the **App integration** menu on the left. This page lists both the app clients declared for your user pool. Make sure you make the following changes only to the **UnicornManager** client app.
 
@@ -445,4 +445,4 @@ Click **Sign up** to create the unicorn account. The hosted registration ui will
 
 Once the account is confirmed, the application will redirect you to the main web page of the Unicorn manager. Use the **Refresh** button on the top right to load a list of the rides for the unicorn you registered.
 
-We have now turned **Wild Rydes** into a platform. Third party developers can now ask us for a new client app id, use our hosted UI to authenticate and register new users. This will allow us to grow our customer base and toolkit beyond what our team can produce by itself, **UnicornManager** is just the first step.
+We have now turned **Wild Rydes** into a platform. Third party developers can now ask us for a new client app id, use our hosted UI to authenticate, and register new users. This will allow us to grow our customer base and toolkit beyond what our team can produce by itself, **UnicornManager** is just the first step.

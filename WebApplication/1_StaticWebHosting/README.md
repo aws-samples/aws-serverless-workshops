@@ -40,7 +40,7 @@ git config --global credential.helper '!aws codecommit credential-helper $@'
 git config --global credential.UseHttpPath true
 ```
 
-Next you need to create the repository and clone it to your Cloud9 environment:
+Next, you need to create the repository and clone it to your Cloud9 environment:
 1. Open the [AWS CodeCommit console][codecommit-console]
 1. Select **Create Repository**
 1. Set the *Repository name** to "wildrydes-site"
@@ -95,18 +95,18 @@ From your Cloud9 development environment(or local environment)
     ```
 
 ### Deploy the site with the AWS Amplify Console
-Next you'll use the [AWS Amplify Console][amplify-console] to deploy the website you've just commited to git. The Amplify Console takes care of the work of setting up a place to store your static web application code and provides a number of helpful capabilities to simplify both the lifecycle of that application as well as enable best practices.
+Next, you'll use the [AWS Amplify Console][amplify-console] to deploy the website you've just commited to git. The Amplify Console takes care of the work of setting up a place to store your static web application code and provides a number of helpful capabilities to simplify both the lifecycle of that application as well as enable best practices.
 
 **:white_check_mark: Step-by-step directions**
 1. Launch the [Amplify Console console page][amplify-console-console]
 1. Click **Connect App**
 1. Select the *Repository service provider* used today and select **Next**
     1. If you used GitHub, you'll need to authorize AWS Amplify to your GitHub account
-1. From the dropdown select the *Repository* and *Branch* created today
+1. From the dropdown, select the *Repository* and *Branch* created today
     
     ![Amplify Repository configuration](../images/amplify-console-repository-setup.png)
-1. On the "Configure build settings" page leave all the defaults and select **Next**
-1. On the "Review" page select **Save and deploy**
+1. On the "Configure build settings" page, leave all the defaults and select **Next**
+1. On the "Review" page, select **Save and deploy**
     
     The process takes a couple of minutes for Amplify Console to create the neccesary resources and to deploy your code.
     
@@ -116,7 +116,7 @@ Once completed, click on the site image to launch your Wild Rydes site.
 
 ![Wild Rydes homepage screenshot](../images/wildrydes-homepage.png)
 
-If you click on the link for *Master* you'll see various pieces of information about your website deployment, including sample renderings on various platforms:
+If you click on the link for *Master*, you'll see various pieces of information about your website deployment, including sample renderings on various platforms:
 
 ![Amplify Client Renderings](../images/amplify-renderings.png)
 
@@ -124,7 +124,7 @@ If you click on the link for *Master* you'll see various pieces of information a
 The AWS Amplify Console will rebuild and redeploy the app when it detects changes to the connected repository. Make a change to the main page to test out this process.
 
 **:white_check_mark: Step-by-step directions**
-1. From your Cloud9 environment open the ```index.html``` file in the root directory of the repository.
+1. From your Cloud9 environment, open the ```index.html``` file in the root directory of the repository.
 1. Modify the title line:
     ```
       <title>Wild Rydes</title>

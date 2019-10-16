@@ -1,12 +1,12 @@
 # Module 3: Serverless Service Backend
 
-In this module you'll use [AWS Lambda][lambda] and [Amazon DynamoDB][dynamodb] to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a unicorn be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
+In this module, you'll use [AWS Lambda][lambda] and [Amazon DynamoDB][dynamodb] to build a backend process for handling requests from your web application. The browser application that you deployed in the first module allows users to request that a unicorn be sent to a location of their choice. In order to fulfill those requests, the JavaScript running in the browser will need to invoke a service running in the cloud.
 
-You'll implement a Lambda function that will be invoked each time a user requests a unicorn. The function will select a unicorn from the fleet, record the request in a DynamoDB table and then respond to the front-end application with details about the unicorn being dispatched.
+You'll implement a Lambda function that will be invoked each time a user requests a unicorn. The function will select a unicorn from the fleet, record the request in a DynamoDB table, and then respond to the front-end application with details about the unicorn being dispatched.
 
 ![Serverless backend architecture](../images/serverless-backend-architecture.png)
 
-The function is invoked from the browser using [Amazon API Gateway][api-gw]. You'll implement that connection in the next module. For this module you'll just test your function in isolation.
+The function is invoked from the browser using [Amazon API Gateway][api-gw]. You'll implement that connection in the next module. For this module, you'll just test your function in isolation.
 
 ## Implementation Instructions
 
@@ -74,7 +74,7 @@ Next you need to add permissions to the role so that it can access your DynamoDB
 
 #### Background
 
-AWS Lambda will run your code in response to events such as an HTTP request. In this step you'll build the core function that will process API requests from the web application to dispatch a unicorn. In the next module you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
+AWS Lambda will run your code in response to events such as an HTTP request. In this step, you'll build the core function that will process API requests from the web application to dispatch a unicorn. In the next module, you'll use Amazon API Gateway to create a RESTful API that will expose an HTTP endpoint that can be invoked from your users' browsers. You'll then connect the Lambda function you create in this step to that API in order to create a fully functional backend for your web application.
 
 #### High-Level Instructions
 
@@ -99,7 +99,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 ## Implementation Validation
 
-For this module you will test the function that you built using the AWS Lambda console. In the next module you will add a REST API with API Gateway so you can invoke your function from the browser-based application that you deployed in the first module.
+For this module, you will test the function that you built using the AWS Lambda console. In the next module, you will add a REST API with API Gateway so you can invoke your function from the browser-based application that you deployed in the first module.
 
 **:white_check_mark: Step-by-step directions**
 1. From the main edit screen for your function, select **Configure test events** from the the **Select a test event...** dropdown.
@@ -130,7 +130,7 @@ For this module you will test the function that you built using the AWS Lambda c
     ```
     ![Configure test event](../images/configure-test-event-2.png)
 1. Click **Create**.
-1. On the main function edit screen click **Test** with `TestRequestEvent` selected in the dropdown.   
+1. On the main function edit screen, click **Test** with `TestRequestEvent` selected in the dropdown.   
 1. Scroll to the top of the page and expand the **Details** section of the **Execution result** section.
 1. Verify that the execution succeeded and that the function result looks like the following:
     ```JSON
@@ -147,7 +147,7 @@ For this module you will test the function that you built using the AWS Lambda c
 
 :key: [AWS Lambda][lambda] is a serverless functions as a service product that removes the burden of managing servers to run your applications. You configure a trigger and set the role that the function can use and then can interface with almost anything you want from databases, to datastores, to other services eithe publicly on the internet or in your own Amazon Virtual Private Cloud (VPC). [Amazon DynamoDB][dynamodb] is a non-relational serverless database that can scale automatically to handle massive amounts of traffic and data without you need manage any servers.
 
-:wrench: In this module you've created a DynamoDB table and then a Lambda function to write data into it. This function will be put behind an Amazon API Gateway in the next module which will in turn be connected to your web application to capture the ride details from your users.
+:wrench: In this module, you've created a DynamoDB table and then a Lambda function to write data into it. This function will be put behind an Amazon API Gateway in the next module which will in turn be connected to your web application to capture the ride details from your users.
 
 ### Next
 

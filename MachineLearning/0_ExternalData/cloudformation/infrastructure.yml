@@ -47,37 +47,17 @@ Resources:
             Action: sts:AssumeRole
       Policies:
         -
-          PolicyName: "AllowTransformedBucket"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}"
-        -
-          PolicyName: "AllowTransformedBucketObjects"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource: !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}/*"
-        -
-          PolicyName: "AllowNearestStationQueue"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource: !GetAtt IngestedRawDataQueue.Arn
-        -
-          PolicyName: "AllowProcessedBucketQueue"
+          PolicyName: "AllowLambdaFunctionality"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: "Allow"
                 Action: "*"
                 Resource:
+                  -
+                    !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}/*"
+                  - 
+                    !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}"
                   -
                     !GetAtt TransformedAndMappedDataQueue.Arn
                   -
@@ -86,14 +66,8 @@ Resources:
                     !GetAtt IngestUnicornRawDataFunctionDLQ.Arn
                   -
                     !GetAtt WriteTransformedDataToS3FunctionDLQ.Arn
-        -
-          PolicyName: "AllowDLQs"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "*"
-                Resource:
+                  - 
+                    !GetAtt IngestedRawDataQueue.Arn
                   -
                     !GetAtt TransformAndMapDataFunctionDLQ.Arn
                   -

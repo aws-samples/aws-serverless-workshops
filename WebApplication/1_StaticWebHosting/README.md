@@ -67,7 +67,7 @@ Now from your Cloud9 development environment:
 Once your git repository is created and cloned locally, you'll need to pull in the files for your website and sync them up to the repository. 
 
 **:white_check_mark: Step-by-step directions**
-From your Cloud9 development environment(or local environment)
+From your Cloud9 development environment (or local environment)
 1. Change directory into your repository:
     ```
     cd wildrydes-site/

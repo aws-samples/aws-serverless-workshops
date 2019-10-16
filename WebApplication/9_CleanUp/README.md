@@ -8,6 +8,7 @@ This page provides instructions for cleaning up the resources created during the
 
 <details>
 <summary><strong>:white_check_mark: Step-by-step directions(expand for details)</strong></summary><p>
+
 Delete the AppSync GraphQL API. From the AppSync console, select the application and click **Delete**
 
 1. Go to the [AWS AppSync Console][appsync-console].
@@ -21,6 +22,7 @@ Delete the AppSync GraphQL API. From the AppSync console, select the application
 
 <details>
 <summary><strong>:white_check_mark: Step-by-step directions(expand for details)</strong></summary><p>
+
 Delete the Unicorn Manager CloudFront distribution and S3 bucket for the static website hosting created in module 5. Using the Lambda console, also delete the **ListUnicornRides** and **ListUnicornAuthorizer** functions. If you have deployed the pre-requisites CloudFormation stack, delete the stack using the CloudFormation console.
 
 1. In the AWS Management Console, click **Services** then select **CloudFront** under Networking & Content Delivery.
@@ -31,7 +33,7 @@ Delete the Unicorn Manager CloudFront distribution and S3 bucket for the static 
 
 1. Using the **Services** dropdown, navigate to the **S3** console under Storage.
 
-1. Select the **unicornmanager-xxx** bucket and click **Delete bucket**. In the confirmation window enter the bucket name and click **Confirm**.
+1. Select the **unicornmanager-xxx** bucket and click **Delete bucket**. In the confirmation window, enter the bucket name and click **Confirm**.
 
 1. Next, using the **Services** dropdown navigate to the **Lambda** console under Compute.
 
@@ -56,7 +58,7 @@ Delete the REST API created in module 4. There is a **Delete API** option in the
 1. Enter the name of your API when prompted and choose **Delete API**.
 
 ### 4. Module 3 - Serverless Backend Cleanup
-Delete the AWS Lambda function, IAM role and Amazon DynamoDB table you created in module 3.
+Delete the AWS Lambda function, IAM role, and Amazon DynamoDB table you created in module 3.
 
 **:white_check_mark: Step-by-step directions**
 
@@ -120,7 +122,7 @@ AWS Lambda automatically creates a new log group per function in Amazon CloudWat
 
 **:white_check_mark: Step-by-step directions**
 
-1. From the AWS Console click **Services** then select **CloudWatch** under Management Tools.
+1. From the AWS Console click **Services**, then select **CloudWatch** under Management Tools.
 1. Choose **Logs** in the navigation menu.
 1. Select the **/aws/lambda/RequestUnicorn** log group. If you have many log groups in your account, you can type `/aws/lambda/RequestUnicorn` into the **Filter** text box to easily locate the log group.
 1. Choose **Delete log group** from the **Actions** drop-down.

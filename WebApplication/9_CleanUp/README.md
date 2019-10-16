@@ -7,7 +7,7 @@ This page provides instructions for cleaning up the resources created during the
 ### 1. Module 6 - AppSync GraphQL API Cleanup
 
 <details>
-<summary><strong>:white_check_mark: Step-by-step directions(expand for details)</strong></summary><p>
+<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
 
 Delete the AppSync GraphQL API. From the AppSync console, select the application and click **Delete**
 
@@ -21,7 +21,7 @@ Delete the AppSync GraphQL API. From the AppSync console, select the application
 ### 2. Module 5 - OAuth Cleanup
 
 <details>
-<summary><strong>:white_check_mark: Step-by-step directions(expand for details)</strong></summary><p>
+<summary><strong>:white_check_mark: Step-by-step directions (expand for details)</strong></summary><p>
 
 Delete the Unicorn Manager CloudFront distribution and S3 bucket for the static website hosting created in module 5. Using the Lambda console, also delete the **ListUnicornRides** and **ListUnicornAuthorizer** functions. If you have deployed the pre-requisites CloudFormation stack, delete the stack using the CloudFormation console.
 

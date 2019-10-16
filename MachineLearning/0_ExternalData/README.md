@@ -1,12 +1,64 @@
 # Module 0: Leveraging External Data in Exploratory Work
 
-In data analysis you often have hunches that you need to prove or disprove.  This module walks through the steps of loading and cleansing an external dataset - in this case, 3rd party weather data (see below for data set details).
+Welcome to the Wild Rydes Unicorn Efficiency team! We are a lean team of one; you! You'll need to wear many hats such as developer, data scientist, and operations. Your goal is to help unicorns maximize their efficiency while they deliver riders around the globe. Our unicorns generate data with each ride and we capture data points such as distance traveled, energy points consumed, and magic points consumed. We have received anecdotal reports that some unicorns use too many magic points. We have collected data from rides and need your help identifying the root cause.
+
+
+## Solution Architecture
+
+Our plan is to create a serverless data processing pipeline using AWS Lambda, Amazon S3, and Amazon SQS. You will then use AWS Machine Learning services to train a model. Finally you will make inferences against the model using AWS Lambda so our costs are appropriately controlled.
+
+![Architecture diagram](assets/WildRydesML.png)
+
+Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
+
+
+## Implementation Overview
+
+The following provides an overview of the steps needed to complete this module. Each section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, look for a check mark and expand that section.
+
+#### Set up your development environment
+
+We are going to use AWS Cloud9 as our cloud-based integrated development environment. It will get you bootstrapped with the right tools and access on Day 1. Create your Cloud9 instance by following these steps:
+
+1. Navigate to AWS Cloud9 [in the console](https://us-east-1.console.aws.amazon.com/cloud9)
+1. Click **Create environment**
+1. Provide a name and optional description
+1. Click **Next step**
+1. Leave all defaults
+1. Click **Next step**
+1. Click **Create environment**
+
+After a minute or so, your environment will be ready. Go ahead and:
+
+1. Close the "Welcome" tab
+1. Drag the lower section up so you have a comfortable amount of space
+1. Find the tab that looks like a terminal (hint: it will have `...~/environment $`)
+1. Run a command to list S3 buckets: `aws s3 ls`
+
+*Hint: New editors and terminals can be created by clicking the green "+" icon in a circle*
+
+Let's get our code and start working. Inside the terminal:
+
+1. Run the following command to get our code:
+    ```
+    git clone https://github.com/jmcwhirter/aws-serverless-workshops/
+    ```
+1. Navigate to our module:
+    ```
+    cd aws-serverless-workshops/MachineLearning/0_ExternalData/
+    ```
+1. Explore the directory structure:
+  * The `cloudformation` directory contains CloudFormation templates we will use to create resources
+  * The `data` directory contains ride data collected from unicorns
+  * The `lambda-functions` directory contains all of the code we'll use to process data and make inferences
+  * The `notebooks` directory contains a linear learner iPython notebook
+
 
 Here are the CloudFormation templates to launch the full stack in it's completed state:
-
+<!--
 Region| Launch
 ------|-----
-US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-machine-learning-module-0&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml)
+US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-machine-learning-module-0&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml) -->
 
 <details>
 <summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
@@ -30,18 +82,6 @@ aws cloudformation create-stack \
 ```
 
 </p></details>
-
-
-## Solution Architecture
-
-![Architecture diagram](assets/WildRydesML.png)
-
-Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
-
-
-## Implementation Overview
-
-The following provides an overview of the steps needed to complete this module. Each section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, look for a check mark and expand that section.
 
 #### Upload raw travel data
 

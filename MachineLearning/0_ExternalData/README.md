@@ -215,15 +215,47 @@ At this point, you should have a trained model in S3. You may have set up the op
 
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
-First we need to update the Lambda function environment variable to reference our trained model on s3.  Then we can issue HTTP POST requests with a JSON body via our client of choice to see our model in action!
+<details>
+<summary><strong>Figure It Out :metal: (expand for details)</strong></summary><p>
 
-:white_check_mark: **Step-by-step directions**
+Our model has been trained and is stored on S3.  Now we need a serverless environment to do inferences within.  Remember that the model was trained in an algorithm based on Apache MXNet.  To make inferences against the model in lambda, we'll need a version of MXNet built for the [current lambda runtime](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html).
 
+1. _Expert Optional step requiring extra time (skip to step 3):_ Follow the ![instructions](building-mxnet-1.2.1.md) to build MXNet from source
+1. _Expert Optional step requiring extra time (skip to step 3):_ Use the code from ![lambda_function.py](lambda-functions/inference/lambda_function.py) as the `index.py`, and prepare a python lambda function with the additional dependencies (using [these](https://docs.aws.amazon.com/lambda/latest/dg/lambda-python-how-to-create-deployment-package.html#python-package-dependencies) instructions as a guide).  You can use `pip install` to get the remaining dependencies install based on their imports in `index.py`.
+1. The previous 2 steps have already been completed for you as MXNet can take 20-30 minutes to build from source depending on the compute resources you're using.  You can find the finished artifacts in this ![code zip archive](assets/inferencefunction.zip).
+1. Create a new python 2.7 lambda function based on this zip file.
+1. Update the `MODEL_PATH` environment variable in your lambda function configuration to your model s3 location from the training job in the previous section.  Do not include the `s3://BUCKET_NAME/` prefix.
+1. Create a new API Gateway with a method that proxies request to your lambda function
+1. Deploy your API gateway and issue HTTP requests against it to make inferences!
+
+</p></details>
+<details>
+<summary><strong>Hold My Hand :white_check_mark: (expand for details)</strong></summary><p>
+
+1. Create a new python 2.7 lambda function with the provided ![code zip archive](assets/inferencefunction.zip)
+2. Update the `MODEL_PATH` environment variable in your lambda function configuration to your model s3 location from the training job in the previous section.  Do not include the `s3://BUCKET_NAME/` prefix.
+3. Create a new API Gateway with a single root `POST` method action that proxies requests to the function you created in step 1. Accept any dialogues requesting to add invoke permissions from API Gateway to your lambda function.
+4. Deploy the API Gateway via a stage called `prod`. 
+5. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL/prod`
+
+</p></details>
+<details>
+<summary><strong>Do it For Me :see_no_evil: (expand for details)</strong></summary><p>
+
+1. Navigate to your Cloud9 environment
+1. Run the following command:
+    ```
+    aws cloudformation create-stack \
+    --stack-name wildrydes-ml-mod0-4 \
+    --capabilities CAPABILITY_NAMED_IAM \
+    --template-body file://cloudformation/4_inference.yml
+    ```
 1. Go back to CloudFormation, in the resources tab, find the `DataBucket` and click on the link.  Drill into the the path that starts will `linear-learner-*` until you find `model.tar.gz`.  Select the checkmark next to this file, and select "Copy Path"
-1. Go back to CloudFormation, in the resources tab, find the `ModelInferenceFunction` and click on the link.  Scroll down to the environment variables section and update the `MODEL_PATH` parameter with the value you copied from the previous step.  Delete the `s3://BUCKET_NAME/` from the pasted value so that only the key (folder + filename) remains.  Save the changes.
-1. Go back to CloudFormation, in the outputs tab, copy the curl command for making inferences against your function hosting your model.
+1. Go back to CloudFormation, in the resources tab, find the `ModelInferenceFunction` and click on the link.  Scroll down to the environment variables section and update the `MODEL_PATH` environment variable with the value you copied from the previous step.  Delete the `s3://BUCKET_NAME/` from the pasted value so that only the key (folder + filename) remains.  Save the changes.
+1. Go back to CloudFormation, in the outputs tab, copy the curl command for making inferences against your function hosting your model and execute.
 1. _Optional_: You can also test the lambda function by putting using the test API UI in the API Gateway console.
 
+</p></details><br>
 
 ## Clean up
 
@@ -245,7 +277,7 @@ CLI:
       --output text | xargs -I {} \
           aws s3 rm s3://{} --recursive
     ```
-1. Delete the stack
+2. Delete the stack
     ```
     aws cloudformation delete-stack \
       --stack-name wildrydes-machine-learning-module-0

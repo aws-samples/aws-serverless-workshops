@@ -10,6 +10,8 @@ This module has a few difficulty levels:
 * Hold My Hand mode :white_check_mark: = You'll be given detailed directions with little to figure out.
 * Do it For Me mode :see_no_evil: = Just run some commands to get the work done.
 
+_Time Committment Expections: This workshop was created to be completed in approximately 2 hours.  In "Do it For Me" mode :see_no_evil:, the workshop can be completed in roughly 30-45 minutes based on AWS experience._ 
+
 ## Solution Architecture
 
 Our plan is to create a serverless data processing pipeline using AWS Lambda, Amazon S3, and Amazon SQS. You will then use AWS Machine Learning services to train a model. Finally you will make inferences against the model using AWS Lambda so our costs are appropriately controlled.

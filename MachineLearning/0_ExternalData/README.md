@@ -1,49 +1,113 @@
 # Module 0: Leveraging External Data in Exploratory Work
 
-In data analysis you often have hunches that you need to prove or disprove.  This module walks through the steps of loading and cleansing an external dataset - in this case, 3rd party weather data (see below for data set details).
+## Introduction
 
-Here are the CloudFormation templates to launch the full stack in it's completed state:
+Welcome to the Wild Rydes Unicorn Efficiency team! We are a lean team of one; you! You'll need to wear many hats such as developer, data scientist, and operations. Your goal is to help unicorns maximize their efficiency while they deliver riders around the globe. Our unicorns generate data with each ride and we capture data points such as distance traveled, energy points consumed, and magic points consumed. We have received anecdotal reports that some unicorns use too many magic points. We have collected data from rides and need your help identifying the root cause.
 
-Region| Launch
-------|-----
-US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-machine-learning-module-0&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml)
+This module has a few difficulty levels:
 
-<details>
-<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
-
-Manually:
-
-1. Click the **Launch Stack** link above for the region of your choice.
-1. Click **Next** on the Select Template page.
-1. On the Options page, leave all the defaults and click **Next**.
-1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-1. On the Review page click **Create**.
-1. Wait for the `wildrydes-machine-learning-module-0` stack to reach a status of `CREATE_COMPLETE`.
-1. With the `wildrydes-machine-learning-module-0` stack selected, click on the **Outputs** tab
-
-CLI:
-```
-aws cloudformation create-stack \
---stack-name wildrydes-machine-learning-module-0 \
---capabilities CAPABILITY_NAMED_IAM \
---template-body file://cloudformation/infrastructure.yml
-```
-
-</p></details>
-
+* Figure it Out mode :metal: = You'll be given high level directions and you need to figure out the details.
+* Hold My Hand mode :white_check_mark: = You'll be given detailed directions with little to figure out.
+* Do it For Me mode :see_no_evil: = Just run some commands to get the work done.
 
 ## Solution Architecture
+
+Our plan is to create a serverless data processing pipeline using AWS Lambda, Amazon S3, and Amazon SQS. You will then use AWS Machine Learning services to train a model. Finally you will make inferences against the model using AWS Lambda so our costs are appropriately controlled.
 
 ![Architecture diagram](assets/WildRydesML.png)
 
 Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
 
+## Implementation
 
-## Implementation Overview
+### Set up your development environment
 
-The following provides an overview of the steps needed to complete this module. Each section is intended to provide enough details to complete the module for students who are already familiar with the AWS console and CLI. If you'd like detailed, step-by-step instructions, look for a check mark and expand that section.
+We are going to use AWS Cloud9 as our cloud-based integrated development environment. It will get you bootstrapped with the right tools and access on Day 1.
 
-#### Upload raw travel data
+<details>
+<summary><strong>Figure It Out :metal: (expand for details)</strong></summary><p>
+1. Create a Cloud9 environment.
+</p></details>
+
+<details>
+<summary><strong>Hold My Hand :white_check_mark: (expand for details)</strong></summary><p>
+Create your Cloud9 instance by following these steps:
+
+1. Navigate to AWS Cloud9 [in the console](https://us-east-1.console.aws.amazon.com/cloud9)
+1. Click **Create environment**
+1. Provide a name and optional description
+1. Click **Next step**
+1. Leave all defaults
+1. Click **Next step**
+1. Click **Create environment**
+
+After a minute or so, your environment will be ready. Go ahead and:
+
+1. Close the "Welcome" tab
+1. Drag the lower section up so you have a comfortable amount of space
+1. Find the tab that looks like a terminal (hint: it will have `...~/environment $`)
+1. Run a command to list S3 buckets: `aws s3 ls`
+
+*Hint: New editors and terminals can be created by clicking the green "+" icon in a circle*
+
+Let's get our code and start working. Inside the terminal:
+
+1. Run the following command to get our code:
+    ```
+    git clone https://github.com/jmcwhirter/aws-serverless-workshops/
+    ```
+1. Navigate to our module:
+    ```
+    cd aws-serverless-workshops/MachineLearning/0_ExternalData/
+    ```
+1. Explore the directory structure:
+  * The `cloudformation` directory contains CloudFormation templates we will use to create resources
+  * The `data` directory contains ride data collected from unicorns
+  * The `lambda-functions` directory contains all of the code we'll use to process data and make inferences
+  * The `notebooks` directory contains a linear learner iPython notebook
+
+</p></details>
+
+Do it For Me :see_no_evil: (not available)
+
+### Create data processing pipeline
+
+![Architecture diagram](assets/WildRydesML_1.png)
+
+<details>
+<summary><strong>Figure It Out :metal: (expand for details)</strong></summary><p>
+
+1. Create an S3 bucket
+1. Create an execution role for Lambda
+1. Create a Lambda function based on `lambda-functions/process-unicorn-data/index.py`
+1. Create an SQS queue to buffer the ingest function
+1. Create a Lambda function based on `lambda-functions/find-closest-groundstation/index.py`
+1. Create an SQS queue to buffer the groundstation function
+1. Create a Lambda function based on `lambda-functions/unicorn-groundstation-data-to-s3/index.py`
+
+</p></details>
+
+<details>
+<summary><strong>Hold My Hand :white_check_mark: (expand for details)</strong></summary><p>
+
+1. 
+
+</p></details>
+
+<details>
+<summary><strong>Do it For Me :see_no_evil: (expand for details)</strong></summary><p>
+1. Navigate to your Cloud9 environment
+1. Run the following command:
+    ```
+    aws cloudformation create-stack \
+    --stack-name wildrydes-ml-mod0-1 \
+    --capabilities CAPABILITY_NAMED_IAM \
+    --template-body file://cloudformation/1_data-pipeline.yml
+    ```
+
+</p></details>
+
+### Upload raw travel data
 
 We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 50 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
 
@@ -51,7 +115,7 @@ Use the console or CLI to upload travel data to an S3 bucket. Once you upload th
 
 High level steps:
 
-1. Manually upload ride_data.json into the bucket generated from your CF template, under a directory named `raw/`
+1. upload ride_data.json into the data bucket, under a directory named `raw/`
 1. S3 event automatically triggers the Parse Unicorn Data function
 1. Parse Unicorn Data function will read the JSON file and places each entry on an SQS queue
 1. Find Nearest Ground Station function reads from the SQS queue, finds the closest weather station, and applies a label indicating if the ride was a "heavy utilization" scenario
@@ -87,7 +151,7 @@ The upload takes about 8 minutes to process. Remember you can check out [Amazon 
 
 Once our travel data has been processed and stored back in S3, we want to see if weather is impacting the magic points used by our unicorns. Let's get some weather related data to fold in.
 
-#### Ground Station Data Prep
+### Ground Station Data Prep
 
 The dataset we're using is [NOAA Global Historical Climatology Network Daily (GHCN-D)](https://registry.opendata.aws/noaa-ghcn/) ([dataset readme](https://docs.opendata.aws/noaa-ghcn-pds/readme.html)).  There are roughly one billion records in this public data set. We should pair that down. Since our unicorns operate within the New York City area, we're only interested in those ground stations:
 
@@ -112,7 +176,9 @@ USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP
 
 Without provisioning any servers we were able to use Amazon Athena to get the records we need from 94 GB of data in about 20 seconds. Now our ride data has been augmented with business logic and we have weather data from relevant weather stations. We can now mold this data using our SageMaker notebook.
 
-#### Additional Data Prep and Model Training
+### Additional Data Prep and Model Training
+
+![Architecture diagram](assets/WildRydesML_2.png)
 
 The role of a data scientist involves pulling data from various sources. We will use a SageMaker notebook to walk through additional data preparation and model training. Below are directions to access the notebook. Within the notebook you'll find another set of detailed directions.
 
@@ -131,7 +197,10 @@ The role of a data scientist involves pulling data from various sources. We will
 
 At this point, you should have a trained model in S3. You may have set up the optional endpoint to test your work. Instead of using an endpoint with an always on server, let's explore using Lambda to make inferences against our model.
 
-#### Make inferences against the model
+### Make inferences against the model
+
+![Architecture diagram](assets/WildRydesML_3.png)
+
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 First we need to update the Lambda function environment variable to reference our trained model on s3.  Then we can issue HTTP POST requests with a JSON body via our client of choice to see our model in action!

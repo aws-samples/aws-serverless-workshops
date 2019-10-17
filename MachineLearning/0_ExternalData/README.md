@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to the Wild Rydes Unicorn Efficiency team! We are a lean team of one; you! You'll need to wear many hats such as developer, data scientist, and operations. Your goal is to help unicorns maximize their efficiency while they deliver riders around the globe. Our unicorns generate data with each ride and we capture data points such as distance traveled, energy points consumed, and magic points consumed. We have received anecdotal reports that some unicorns use too many magic points. We have collected data from rides and need your help identifying the root cause.
+Welcome to the Wild Rydes Unicorn Efficiency team! We are a lean team of one; you! You'll need to wear many hats such as developer, data scientist, and operations. If you recall, [Wild Rydes](http://www.wildrydes.com/) is a app based, ride sharing service where unicorns are dispatched to get riders to their destinations faster and hassle-free.  Our ability to stay in business is largely driven by our ability to efficiently set the prices of the services we're providing to our customers.  Our typical model is to charge customers based on the estimated number of magic points a unicorn will use during the ride.  Recently, we've been receiving anecdotal reports that some unicorns are using too many magic points based on the distance being covered.  We've collected data from these rides and need your help identifying a root cause so moving forward, we can better predict magic usage and price the service appropriately.
 
 This module has a few difficulty levels:
 

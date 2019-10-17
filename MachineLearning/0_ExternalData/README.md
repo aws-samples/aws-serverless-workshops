@@ -182,6 +182,8 @@ Without provisioning any servers we were able to use Amazon Athena to get the re
 
 The role of a data scientist involves pulling data from various sources. We will use a SageMaker notebook to walk through additional data preparation and model training. Below are directions to access the notebook. Within the notebook you'll find another set of detailed directions.
 
+New to Amazon Sagemaker? Never used a Sagemaker Notebook? [Check out this quick start guide for a crash course](sagemaker-intro.md)
+
 :white_check_mark: **Step-by-step directions**
 
 1. Navigate to [Amazon SageMaker](https://console.aws.amazon.com/sagemaker/home?region=us-east-1#/notebook-instances) in AWS Console

@@ -157,56 +157,6 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
-  WriteTransformedDataToS3Function:
-    Type: AWS::Lambda::Function
-    Properties:
-      Description: Wild Rydes lambda function to parse unicorn csv data and send downstream to lookup nearest groundstation
-      Handler: index.handler
-      DeadLetterConfig:
-        TargetArn: !GetAtt WriteTransformedDataToS3FunctionDLQ.Arn
-      MemorySize: 128
-      Environment:
-        Variables:
-          OUTPUT_BUCKET: !Ref DataBucket
-      Role: !GetAtt DataProcessingExecutionRole.Arn
-      Runtime: python3.7
-      Timeout: 3
-      Tags:
-        -
-          Key: Workshop
-          Value: Wild Rydes
-        -
-          Key: Module
-          Value: Machine Learning
-      Code:
-        ZipFile: |
-          import boto3
-          import json
-          import os
-
-          client = boto3.client('s3')
-          bucket = os.environ['OUTPUT_BUCKET']
-
-          def handler(event, context):
-              print('## EVENT')
-              print(event)
-              for record in event['Records']:
-                  json_event = json.loads(record['body'])
-                  key = get_key_from_event_json(json_event)
-                  body = get_body_from_event_json(json_event)
-                  upload_file(body, key)
-              return event
-
-          def get_key_from_event_json(event):
-              return 'processed/' + event["statustime"] + '.csv'
-
-          def get_body_from_event_json(event):
-              body = ",".join(event.keys()) + "\n"
-              body = body + ",".join(map(str, event.values()))
-              return body
-
-          def upload_file(body, key):
-              client.put_object(Body=body, Bucket=bucket, Key=key)
 
   IngestUnicornRawDataFunction:
     Type: AWS::Lambda::Function
@@ -337,6 +287,56 @@ Resources:
         -
           Key: Module
           Value: Machine Learning
+  WriteTransformedDataToS3Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Wild Rydes lambda function to parse unicorn csv data and send downstream to lookup nearest groundstation
+      Handler: index.handler
+      DeadLetterConfig:
+        TargetArn: !GetAtt WriteTransformedDataToS3FunctionDLQ.Arn
+      MemorySize: 128
+      Environment:
+        Variables:
+          OUTPUT_BUCKET: !Ref DataBucket
+      Role: !GetAtt DataProcessingExecutionRole.Arn
+      Runtime: python3.7
+      Timeout: 3
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+      Code:
+        ZipFile: |
+          import boto3
+          import json
+          import os
+
+          client = boto3.client('s3')
+          bucket = os.environ['OUTPUT_BUCKET']
+
+          def handler(event, context):
+              print('## EVENT')
+              print(event)
+              for record in event['Records']:
+                  json_event = json.loads(record['body'])
+                  key = get_key_from_event_json(json_event)
+                  body = get_body_from_event_json(json_event)
+                  upload_file(body, key)
+              return event
+
+          def get_key_from_event_json(event):
+              return 'processed/' + event["statustime"] + '.csv'
+
+          def get_body_from_event_json(event):
+              body = ",".join(event.keys()) + "\n"
+              body = body + ",".join(map(str, event.values()))
+              return body
+
+          def upload_file(body, key):
+              client.put_object(Body=body, Bucket=bucket, Key=key)
 
   LookUpNearestGroundstationEventSource:
     Type: AWS::Lambda::EventSourceMapping
@@ -353,153 +353,6 @@ Resources:
       Enabled: True
       EventSourceArn: !GetAtt TransformedAndMappedDataQueue.Arn
       FunctionName: !Ref WriteTransformedDataToS3Function
-  #####
-  # NY Ground Station resources
-  #####
-  WildRydesMLGlueDatabase:
-    Type: AWS::Glue::Database
-    Properties:
-      DatabaseInput:
-        Name: !Sub "wildrydesmlgluedatabase-${AWS::StackName}"
-        Description: "Glue DB for Wild Rydes ML workshop"
-      CatalogId: !Ref AWS::AccountId
-  WildRydesMLGlueTable:
-    Type: AWS::Glue::Table
-    Properties:
-      DatabaseName: !Ref WildRydesMLGlueDatabase
-      CatalogId: !Ref AWS::AccountId
-      TableInput:
-        Name: !Sub "externalweatherdatacsvtable-${AWS::StackName}"
-        Parameters: { "classification" : "csv" }
-        TableType: "EXTERNAL_TABLE"
-        StorageDescriptor:
-          Location:
-            Fn::Sub: "s3://noaa-ghcn-pds/csv/"
-          InputFormat: "org.apache.hadoop.mapred.TextInputFormat"
-          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
-          SerdeInfo:
-            Parameters: { "separatorChar" : ",", "field.delim": "," }
-            SerializationLibrary: "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe"
-          StoredAsSubDirectories: false
-          Columns:
-            - Name: id
-              Type: string
-            - Name: year_date
-              Type: string
-            - Name: element
-              Type: string
-            - Name: data_value
-              Type: string
-            - Name: m_flag
-              Type: string
-            - Name: q_flag
-              Type: string
-            - Name: s_flag
-              Type: string
-            - Name: obs_time
-              Type: string
-  #####
-  # Data prep/Machine Learning resources
-  #####
-  SageMakerExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: /service-role/
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - sagemaker.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonS3FullAccess
-        - arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
-      MaxSessionDuration: 3600
-      Policies:
-        -
-          PolicyName: AllowIAMGetRole
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "iam:GetRole"
-                Resource: "*"
-        -
-          PolicyName: AllowSageMakerCreateTrainingJob
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: "sagemaker:CreateTrainingJob"
-                Resource: "*"
-  WildRydesNotebook:
-    Type: AWS::SageMaker::NotebookInstance
-    Properties:
-      InstanceType: ml.t3.xlarge
-      RoleArn: !GetAtt SageMakerExecutionRole.Arn
-      DirectInternetAccess: Enabled
-      VolumeSizeInGB: 5
-      RootAccess: Enabled
-  #####
-  # Inference resources
-  #####
-  ModelInferenceFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      Description: Wild Rydes lambda function make model inferences
-      Handler: index.handler
-      MemorySize: 128
-      Role: !GetAtt DataProcessingExecutionRole.Arn
-      Runtime: python2.7
-      Environment:
-        Variables:
-          OUTPUT_BUCKET: !Ref DataBucket
-          MODEL_PATH: 'linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz'
-      Timeout: 3
-      Tags:
-        -
-          Key: Workshop
-          Value: Wild Rydes
-        -
-          Key: Module
-          Value: Machine Learning
-      Code:
-        S3Bucket: central-multicustomer-aws-immersion-days
-        S3Key: wild-rydes-ml-lab/inferencefunction.zip
-  ApiGateway:
-    Type: "AWS::ApiGateway::RestApi"
-    Properties:
-      Name: "ModelInferenceApi"
-      Description: "Wild Rydes Model Inference REST API"
-  ApiGatewayRootMethod:
-    Type: "AWS::ApiGateway::Method"
-    Properties:
-      AuthorizationType: "NONE"
-      HttpMethod: "POST"
-      Integration:
-        IntegrationHttpMethod: "POST"
-        Type: "AWS_PROXY"
-        Uri: !Sub
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "ModelInferenceFunction.Arn"
-      ResourceId: !GetAtt "ApiGateway.RootResourceId"
-      RestApiId: !Ref "ApiGateway"
-  lambdaApiGatewayInvoke:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "ModelInferenceFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/POST/"
-  apiGatewayDeployment:
-    Type: "AWS::ApiGateway::Deployment"
-    DependsOn:
-      - "ApiGatewayRootMethod"
-    Properties:
-      RestApiId: !Ref "ApiGateway"
-      StageName: "prod"
   #####
   # CloudWatch Dashboard
   #####
@@ -566,21 +419,5 @@ Resources:
             }
         - { IngestUnicornRawDataFunction: !Ref IngestUnicornRawDataFunction, WriteTransformedDataToS3Function: !Ref WriteTransformedDataToS3Function, TransformAndMapDataFunction: !Ref TransformAndMapDataFunction, IngestedRawDataQueue: !GetAtt IngestedRawDataQueue.QueueName, TransformedAndMappedDataQueue: !GetAtt TransformedAndMappedDataQueue.QueueName }
 Outputs:
-  AthenaSelectQuery:
-    Value: !Sub |
-      SELECT * FROM "${WildRydesMLGlueDatabase}"."${WildRydesMLGlueTable}" WHERE q_flag = '' AND id IN ('US1NYNY0074', 'USC00305798', 'USC00305799', 'USC00305804', 'USC00305806', 'USC00305816', 'USW00014732', 'USW00014786', 'USW00093732', 'USW00094728', 'USW00094789');
-  AthenaCSVLocation:
-    Value: !Sub |
-      https://s3.console.aws.amazon.com/s3/buckets/aws-athena-query-results-${AWS::AccountId}-${AWS::Region}/Unsaved/?region=${AWS::Region}&tab=overview
   DataBucketName:
     Value: !Ref DataBucket
-  ApiGatewayInvokeURL:
-    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"
-  InferenceFunctionTestCommand:
-    Description: "cURL command to invoke our lambda function to make inferences"
-    Value:
-      Fn::Join:
-        - " "
-        -
-          - "curl -d '{ \"distance\": 30, \"healthpoints\": 30, \"magicpoints\": 1500, \"TMAX\": 333, \"TMIN\": 300, \"PRCP\": 100 }' -H \"Content-Type: application/json\" -X POST"
-          - !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"

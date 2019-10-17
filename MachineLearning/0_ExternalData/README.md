@@ -59,6 +59,7 @@ Here are the CloudFormation templates to launch the full stack in it's completed
 Region| Launch
 ------|-----
 US East (N. Virginia) | [![Launch Module 1 in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-machine-learning-module-0&templateURL=https://s3.amazonaws.com/wildrydes-us-east-1/WorkshopTemplate/1_ExampleTemplate/example.yaml) -->
+![Architecture diagram](assets/WildRydesML_1.png)
 
 <details>
 <summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
@@ -153,6 +154,7 @@ USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP
 Without provisioning any servers we were able to use Amazon Athena to get the records we need from 94 GB of data in about 20 seconds. Now our ride data has been augmented with business logic and we have weather data from relevant weather stations. We can now mold this data using our SageMaker notebook.
 
 #### Additional Data Prep and Model Training
+![Architecture diagram](assets/WildRydesML_2.png)
 
 The role of a data scientist involves pulling data from various sources. We will use a SageMaker notebook to walk through additional data preparation and model training. Below are directions to access the notebook. Within the notebook you'll find another set of detailed directions.
 
@@ -172,6 +174,8 @@ The role of a data scientist involves pulling data from various sources. We will
 At this point, you should have a trained model in S3. You may have set up the optional endpoint to test your work. Instead of using an endpoint with an always on server, let's explore using Lambda to make inferences against our model.
 
 #### Make inferences against the model
+![Architecture diagram](assets/WildRydesML_3.png)
+
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 First we need to update the Lambda function environment variable to reference our trained model on s3.  Then we can issue HTTP POST requests with a JSON body via our client of choice to see our model in action!

@@ -12,7 +12,7 @@ This module has a few difficulty levels:
 * :white_check_mark: Hold My Hand mode = You'll be given detailed directions with little to figure out.
 * :see_no_evil: Do It for Me mode = Just run some commands to get the work done.
 
-_Time Committment Expections: This workshop was created to be completed in approximately 2 hours.  In "Do it For Me" mode :see_no_evil:, the workshop can be completed in roughly 30-45 minutes based on AWS experience._ 
+_Time Committment Expections: This workshop was created to be completed in approximately 2 hours.  In "Do it For Me" mode :see_no_evil:, the workshop can be completed in roughly 30-45 minutes based on AWS experience._
 
 ### Considerations for Each Role
 As the team lead on this lean team of one, you'll need to wear multiple hats.  Below are some things we'll cover from the perspective of each role:
@@ -258,8 +258,7 @@ At this point, you should have a trained model in S3. You may have set up the op
 
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
-<details>
-<summary><strong>Figure It Out :metal: (expand for details)</strong></summary><p>
+**Figure It Out :metal:**
 
 Our model has been trained and is stored on S3.  Now we need a serverless environment to do inferences within.  Remember that the model was trained in an algorithm based on Apache MXNet.  To make inferences against the model in lambda, we'll need a version of MXNet built for the [current lambda runtime](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html).
 
@@ -271,14 +270,13 @@ Our model has been trained and is stored on S3.  Now we need a serverless enviro
 1. Create a new API Gateway with a method that proxies request to your lambda function
 1. Deploy your API gateway and issue HTTP requests against it to make inferences!
 
-</p></details>
 <details>
 <summary><strong>Hold My Hand :white_check_mark: (expand for details)</strong></summary><p>
 
 1. Create a new python 2.7 lambda function with the provided ![code zip archive](assets/inferencefunction.zip)
 2. Update the `MODEL_PATH` environment variable in your lambda function configuration to your model s3 location from the training job in the previous section.  Do not include the `s3://BUCKET_NAME/` prefix.
 3. Create a new API Gateway with a single root `POST` method action that proxies requests to the function you created in step 1. Accept any dialogues requesting to add invoke permissions from API Gateway to your lambda function.
-4. Deploy the API Gateway via a stage called `prod`. 
+4. Deploy the API Gateway via a stage called `prod`.
 5. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL/prod`
 
 </p></details>

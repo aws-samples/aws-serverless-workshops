@@ -20,6 +20,10 @@ As the team lead on this lean team of one, you'll need to wear multiple hats.  B
 * Data Scientist - You'll need to load the data into your machine learning development environment.  Once loaded, you'll massage the data to test different assumptions and ultimately us a machine learning algorithm to enable your company to predict magic usage based on estimated weather + ride stats.
 * Operations - You'll need to understand how this solution is hosted.  How will it handle large batches of data? is it tightly coupled? what does a serverless inference environment mean from an operations perspective?
 
+### Goals
+
+At minimum, at the end of this workshop, you should have a machine learning model hosted on AWS lambda behind an HTTP endpoint that accepts temperature, precipitation amounts, and mileage and will return a percentage liklihood that the unicorn travelling in those conditions will experience heavy utilization.
+
 ## Solution Architecture
 
 Our plan is to create a serverless data processing pipeline using AWS Lambda, Amazon S3, and Amazon SQS. You will then use AWS Machine Learning services to train a model. Finally you will make inferences against the model using AWS Lambda so our costs are appropriately controlled.
@@ -33,6 +37,8 @@ Source for Draw.io: [diagram xml](assets/WildRydesML.xml)
 ### Set up your development environment
 
 We are going to use AWS Cloud9 as our cloud-based integrated development environment. It will get you bootstrapped with the right tools and access on Day 1.
+
+**Time to complete:** 15-20 minutes.
 
 **:metal: Figure It Out**
 1. Create a Cloud9 environment
@@ -125,6 +131,8 @@ Let's get our code and start working. Inside the terminal:
 
 ### Upload raw travel data
 
+**Time to complete:** 45-60 minutes.
+
 We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 50 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
 
 Use the console or CLI to upload travel data to an S3 bucket. Once you upload the raw travel data file, a process will be started involving three AWS Lambda functions and two Amazon Simple Queue Service (SQS) queues. You can use the [Amazon SQS console](https://console.aws.amazon.com/sqs/home?region=us-east-1) to track how your Lambda functions are processing the data and/or use the [CloudWatch Dashboard](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=Wild_Rydes_Machine_Learning;start=PT1H) built as part of this lab.
@@ -174,6 +182,8 @@ Once our travel data has been processed and stored back in S3, we want to see if
 
 ### Ground Station Data Prep
 
+**Time to complete:** 15-20 minutes.
+
 ![Architecture diagram](assets/WildRydesML_2.png)
 
 The dataset we're using is [NOAA Global Historical Climatology Network Daily (GHCN-D)](https://registry.opendata.aws/noaa-ghcn/) ([dataset readme](https://docs.opendata.aws/noaa-ghcn-pds/readme.html)).  There are roughly one billion records in this public data set. We should pair that down. Since our unicorns operate within the New York City area, we're only interested in those ground stations:
@@ -220,6 +230,8 @@ Without provisioning any servers we were able to use Amazon Athena to get the re
 
 ### Additional Data Prep and Model Training
 
+**Time to complete:** 30-45 minutes.
+
 ![Architecture diagram](assets/WildRydesML_3.png)
 
 The role of a data scientist involves pulling data from various sources. We will use a SageMaker notebook to walk through additional data preparation and model training. Below are directions to access the notebook. Within the notebook you'll find another set of detailed directions.
@@ -253,6 +265,8 @@ New to Amazon Sagemaker? Never used a Sagemaker Notebook? [Check out this quick 
 At this point, you should have a trained model in S3. You may have set up the optional endpoint to test your work. Instead of using an endpoint with an always on server, let's explore using Lambda to make inferences against our model.
 
 ### Make inferences against the model
+
+**Time to complete:** 15-20 minutes.
 
 ![Architecture diagram](assets/WildRydesML_4.png)
 
@@ -298,12 +312,25 @@ Our model has been trained and is stored on S3.  Now we need a serverless enviro
 
 </p></details><br>
 
+## Now What?
+Let's recap - you've put together a pipeline, that:
+* On the front end, ingests ride telemtry data from our unicorns
+* enhances the data with the nearest weather station ID
+* train a machine learning model to predict heavier than usual magic point usage
+* created an HTTP interface to make predictions against?
+
+#### How can Wild Rydes use this to improve the business?
+With the ability to now, get real-time information of whether or not a ride is going to "cost" more to the unicorn based on mileage _plus_ weather (instead of just mileage), our pricing workflow can be updated to include this http endpoint.  Enabling our company to give better, more realistic pricing based on actual usage.
+
+#### What does this mean to Wild Rydes customers?
+Not to be forgotten, how can this improve the end users' experience?  Well, in true customer obsession, if we're _under_ pricing during inclement weather, isn't it reasonable to question if we're _over_ charging the customer in ideal conditions?  Or maybe, without the losses in inclement conditions, we can pass the savings back on to the customers in ideal conditions? With this architecture in place, we can iterate on it over time to improve accuracy of models and ultimately test this hypothesis.
+
 ## Clean up
 
 **:metal: Figure It Out**
 
 1. Remove the data from your data bucket.
-1. Once this is complete, you can delete the stack via CLI or console.
+2. Once this is complete, you can delete the stack via CLI or console.
 
 <details>
 <summary><strong>:white_check_mark: Hold My Hand (expand for details)</strong></summary><p>

@@ -134,7 +134,7 @@ The [AWS AppSync Console][appsync-console] contains a helpful query tool that al
 **:white_check_mark: Step-by-step directions**
 1. While in the [AWS AppSync Console][appsync-console] in your `RidesHistory` API, select **Queries**.
 1. Select *Login with User Pools**
-1. In the *Login with Cognito User Pools* popup, for `ClientId` enter the `appid` saved earlier.
+1. In the *Login with Cognito User Pools* popup, for `ClientId` enter the `appid` saved earlier. The `appid` can also be found in the Amazon Cognito User Pool and click "App clients" under General settings on the left column.
 1. Now you need to login with the user you created earlier in the [User Management][user-management] module. One thing to note is that in Cognito your username is different than your email. You'll need to head to the Cognito Console to find the user name for your created user:
     1. Go to the [Amazon Cognito Console][cognito-console]
     1. Select **Manage User Pools**

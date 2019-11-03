@@ -95,17 +95,137 @@ Let's get our code and start working. Inside the terminal:
 **:metal: Figure It Out**
 
 1. Create an S3 bucket
-1. Create an execution role for Lambda
-1. Create a Lambda function based on `lambda-functions/process-unicorn-data/index.py`
-1. Create an SQS queue to buffer the ingest function
-1. Create a Lambda function based on `lambda-functions/find-closest-groundstation/index.py`
 1. Create an SQS queue to buffer the groundstation function
+1. Create an SQS queue to buffer the ingest function
+1. Create an execution role for Lambda that allows access to the S3 bucket you created, the SQS queues you created, and all CloudWatch Logs access.
+1. Create a Lambda function based on `lambda-functions/process-unicorn-data/index.py`
+1. Create a Lambda function based on `lambda-functions/find-closest-groundstation/index.py`
 1. Create a Lambda function based on `lambda-functions/unicorn-groundstation-data-to-s3/index.py`
 
 <details>
 <summary><strong>:white_check_mark: Hold My Hand (expand for details)</strong></summary><p>
 
-1.
+Create an S3 bucket:
+
+1. Navigate to [Simple Storage Service](https://s3.console.aws.amazon.com/) in the console
+1. Click **Create bucket**
+1. Give the bucket a globally unique name
+1. Keep all other options and click **Create**
+
+Create an SQS queue to buffer the groundstation function:
+
+1. Navigate to [Simple Queue Service](https://console.aws.amazon.com/sqs) in the console
+1. Click **Create New Queue**
+1. Provide a queue name such as **GroundstationQueue**
+1. Choose **Standard Queue**
+1. Click **Quick-Create Queue**
+
+Create an SQS queue to buffer the ingest function:
+
+1. Click **Create New Queue**
+1. Provide a queue name such as **IngestQueue**
+1. Choose **Standard Queue**
+1. Click **Quick-Create Queue**
+
+Create the correct policy Lambda:
+
+1. Navigate to [Identify and Access Management](https://console.aws.amazon.com/iam) in the console
+1. Click **Policies**
+1. Click **Create policy**
+1. Select the service: **S3**
+1. Select **All S3 actions**
+1. In the resource section:
+  1. Choose to add a bucket ARN and specify the bucket name you just created
+  1. Choose to add an object ARN, specifying the bucket name you just created and selecting **Any** for the objects
+1. Select **Add additional permissions**
+1. Select the service **SQS**
+1. Select **All SQS actions**
+1. In the resource section, choose to add a queue ARN and specify any region and any queue name
+1. Select **Add additional permissions**
+1. Select the service **CloudWatch Logs**
+1. Select **All CloudWatch Logs actions**
+1. In the resource, section choose **All resources**
+1. Click **Review policy**
+1. Provide a name, such as **AllowLambdaFunctionality**
+1. Click **Create policy**
+
+Create an execution role:
+
+1. Click **Roles**
+1. Click **Create role**
+1. Select **Lambda** as the service that will use the role
+1. Click **Next: Permissions**
+1. Select the policy you just created
+1. Click **Next: Tags**
+1. Click **Next: Review**
+1. Provide a role name such as **AllowLambdaFunctionality**
+
+Create a Lambda function to process unicorn data:
+
+1. Navigate to [Lambda](https://console.aws.amazon.com/lambda) in the console
+1. Click **Functions**
+1. Click **Create function**
+1. Select **Author from scratch**
+1. Provide a function name such as **ProcessUnicornData**
+1. Choose **Python 3.7** for the runtime
+1. Choose to use an existing execution role and select the one you just created
+1. Click **Create function**
+1. Copy and paste the code from `lambda-functions/process-unicorn-data/index.py` to the editor
+1. Create an environment variable with:
+  * Key == "OUTPUT_QUEUE"
+  * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
+1. Set the memory to 256 MB
+1. Set the timeout to 15 min
+1. In the Designer view, click **Add trigger**
+1. Select **S3**
+1. Choose the data bucket you created
+1. For the prefix, type `raw/`
+1. Click **Add**
+1. Click **Save**
+
+Create a Lambda function to find groundstation data:
+
+1. Click the "hamburger" menu on the left side
+1. Click **Functions**
+1. Click **Create function**
+1. Select **Author from scratch**
+1. Provide a function name such as **TransformUnicornData**
+1. Choose **Python 3.7** for the runtime
+1. Choose to use an existing execution role and select the one you just created
+1. Click **Create function**
+1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
+1. Create an environment variable with:
+  * Key == "OUTPUT_QUEUE"
+  * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_groundstation_queue_name>`
+1. Set the memory to 128 MB
+1. Set the timeout to 3 sec
+1. In the Designer view, click **Add trigger**
+1. Select **SQS**
+1. Choose the ground station queue you created
+1. Click **Add**
+1. Click **Save**
+
+Create a Lambda function to send data to S3:
+
+1. Click the "hamburger" menu on the left side
+1. Click **Functions**
+1. Click **Create function**
+1. Select **Author from scratch**
+1. Provide a function name such as **WriteData**
+1. Choose **Python 3.7** for the runtime
+1. Choose to use an existing execution role and select the one you just created
+1. Click **Create function**
+1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
+1. Create an environment variable with:
+  * Key == "OUTPUT_BUCKET"
+  * Value == *The name of the data bucket you created earlier*
+1. Set the memory to 128 MB
+1. Set the timeout to 3 sec
+1. In the Designer view, click **Add trigger**
+1. Select **SQS**
+1. Choose the ground station queue you created
+1. Click **Add**
+1. Click **Save**
 
 </p></details>
 

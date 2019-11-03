@@ -457,7 +457,16 @@ Not to be forgotten, how can this improve the end users' experience?  Well, in t
 <details>
 <summary><strong>:white_check_mark: Hold My Hand (expand for details)</strong></summary><p>
 
-1. tbd
+1. Navigate to [Lambda](https://console.aws.amazon.com/lambda) in the console
+1. Delete the functions you created
+1. Navigate to [Simple Queue Service](https://console.aws.amazon.com/sqs) in the console
+1. Delete the queues you created
+1. Navigate to [Identify and Access Management](https://console.aws.amazon.com/iam) in the console
+1. Delete the policy and role you created
+1. Open [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1) in the console
+1. Delete the data bucket you created
+1. Navigate to [Amazon SageMaker](https://console.aws.amazon.com/sagemaker/home?region=us-east-1#/notebook-instances) in console
+1. Delete the notebook you created
 
 </p></details>
 

@@ -88,6 +88,8 @@ Let's get our code and start working. Inside the terminal:
 
 ### Create data processing pipeline
 
+**Time to complete:** 45-60 minutes.
+
 ![Architecture diagram](assets/WildRydesML_1.png)
 
 **:metal: Figure It Out**
@@ -131,7 +133,7 @@ Let's get our code and start working. Inside the terminal:
 
 ### Upload raw travel data
 
-**Time to complete:** 45-60 minutes.
+**Time to complete:** 15-20 minutes.
 
 We have data collected from our unicorns of which we're going to focus on two attributes: magic points and distance. We hold a strong belief that a unicorn is heavily utilized when the number of magic points is more than 50 times the distance traveled. We can apply this business logic as a new attribute to our data using AWS Lambda.
 

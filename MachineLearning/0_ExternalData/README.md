@@ -77,10 +77,10 @@ Let's get our code and start working. Inside the terminal:
     cd aws-serverless-workshops/MachineLearning/0_ExternalData/
     ```
 1. Explore the directory structure:
-  * The `cloudformation` directory contains CloudFormation templates we will use to create resources
-  * The `data` directory contains ride data collected from unicorns
-  * The `lambda-functions` directory contains all of the code we'll use to process data and make inferences
-  * The `notebooks` directory contains a linear learner iPython notebook
+    * The `cloudformation` directory contains CloudFormation templates we will use to create resources
+    * The `data` directory contains ride data collected from unicorns
+    * The `lambda-functions` directory contains all of the code we'll use to process data and make inferences
+    * The `notebooks` directory contains a linear learner iPython notebook
 
 </p></details>
 

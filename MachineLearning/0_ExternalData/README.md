@@ -135,8 +135,8 @@ Create the correct policy Lambda:
 1. Select the service: **S3**
 1. Select **All S3 actions**
 1. In the resource section:
-  1. Choose to add a bucket ARN and specify the bucket name you just created
-  1. Choose to add an object ARN, specifying the bucket name you just created and selecting **Any** for the objects
+    1. Choose to add a bucket ARN and specify the bucket name you just created
+    1. Choose to add an object ARN, specifying the bucket name you just created and selecting **Any** for the objects
 1. Select **Add additional permissions**
 1. Select the service **SQS**
 1. Select **All SQS actions**
@@ -172,8 +172,8 @@ Create a Lambda function to process unicorn data:
 1. Click **Create function**
 1. Copy and paste the code from `lambda-functions/process-unicorn-data/index.py` to the editor
 1. Create an environment variable with:
-  * Key == "OUTPUT_QUEUE"
-  * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
+    * Key == "OUTPUT_QUEUE"
+    * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
 1. Set the memory to 256 MB
 1. Set the timeout to 15 min
 1. In the Designer view, click **Add trigger**
@@ -195,8 +195,8 @@ Create a Lambda function to find groundstation data:
 1. Click **Create function**
 1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
 1. Create an environment variable with:
-  * Key == "OUTPUT_QUEUE"
-  * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_groundstation_queue_name>`
+    * Key == "OUTPUT_QUEUE"
+    * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_groundstation_queue_name>`
 1. Set the memory to 128 MB
 1. Set the timeout to 3 sec
 1. In the Designer view, click **Add trigger**
@@ -217,8 +217,8 @@ Create a Lambda function to send data to S3:
 1. Click **Create function**
 1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
 1. Create an environment variable with:
-  * Key == "OUTPUT_BUCKET"
-  * Value == *The name of the data bucket you created earlier*
+    * Key == "OUTPUT_BUCKET"
+    * Value == *The name of the data bucket you created earlier*
 1. Set the memory to 128 MB
 1. Set the timeout to 3 sec
 1. In the Designer view, click **Add trigger**

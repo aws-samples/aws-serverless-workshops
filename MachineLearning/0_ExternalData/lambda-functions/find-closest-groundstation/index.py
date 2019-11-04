@@ -1,7 +1,7 @@
 # https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html
 
 # Function Name:
-# Find Closest Groundstation
+# Find Closest Groundstation (function B)
 
 # Function Path:
 # lambda-functions/find-closest-groundstation/index.py

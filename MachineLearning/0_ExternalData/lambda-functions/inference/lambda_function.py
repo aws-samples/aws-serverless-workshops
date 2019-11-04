@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 # Function Name:
-# Inference Function
+# Inference Function (function C)
 
 # Function Path:
 # lambda-functions/inference/lambda_function.py

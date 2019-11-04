@@ -17,8 +17,8 @@ _Time Commitment Expectations: This workshop was created to be completed in appr
 ### Considerations for Each Role
 As the team lead on this lean team of one, you'll need to wear multiple hats.  Below are some things we'll cover from the perspective of each role:
 * Developer - You'll write lambda code to stitch our ETL data pipeline together.  Each function will take advantage of a queue based system to pass messages back and forth.
-* Data Scientist - You'll need to load the data into your machine learning development environment.  Once loaded, you'll massage the data to test different assumptions and ultimately us a machine learning algorithm to enable your company to predict magic usage based on estimated weather + ride stats.
-* Operations - You'll need to understand how this solution is hosted.  How will it handle large batches of data? is it tightly coupled? what does a serverless inference environment mean from an operations perspective?
+* Data Scientist - You'll need to load the data into your machine learning development environment.  Once loaded, you'll massage the data to test different assumptions and ultimately use a machine learning algorithm to enable your company to predict magic usage based on estimated weather + ride stats.
+* Operations - You'll need to understand how this solution is hosted.  How will it handle large batches of data?  Is the solution tightly coupled?  What does a serverless inference environment mean from an operations perspective?
 
 ### Goals
 

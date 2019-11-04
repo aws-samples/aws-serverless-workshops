@@ -12,17 +12,17 @@ This module has a few difficulty levels:
 * :white_check_mark: Hold My Hand mode = You'll be given detailed directions with little to figure out.
 * :see_no_evil: Do It for Me mode = Just run some commands to get the work done.
 
-_Time Committment Expections: This workshop was created to be completed in approximately 2 hours.  In "Do it For Me" mode :see_no_evil:, the workshop can be completed in roughly 30-45 minutes based on AWS experience._
+_Time Commitment Expectations: This workshop was created to be completed in approximately 2 hours.  In "Do it For Me" mode :see_no_evil:, the workshop can be completed in roughly 30-45 minutes based on AWS experience._
 
 ### Considerations for Each Role
 As the team lead on this lean team of one, you'll need to wear multiple hats.  Below are some things we'll cover from the perspective of each role:
-* Developer - You'll write lambda code to stitch our etl data pipeline together.  Each function will take advantage of a queue based system to pass messages back and forth.
+* Developer - You'll write lambda code to stitch our ETL data pipeline together.  Each function will take advantage of a queue based system to pass messages back and forth.
 * Data Scientist - You'll need to load the data into your machine learning development environment.  Once loaded, you'll massage the data to test different assumptions and ultimately us a machine learning algorithm to enable your company to predict magic usage based on estimated weather + ride stats.
 * Operations - You'll need to understand how this solution is hosted.  How will it handle large batches of data? is it tightly coupled? what does a serverless inference environment mean from an operations perspective?
 
 ### Goals
 
-At minimum, at the end of this workshop, you should have a machine learning model hosted on AWS lambda behind an HTTP endpoint that accepts temperature, precipitation amounts, and mileage and will return a percentage liklihood that the unicorn travelling in those conditions will experience heavy utilization.
+At minimum, at the end of this workshop, you should have a machine learning model hosted on AWS lambda behind an HTTP endpoint that accepts temperature, precipitation amounts, and mileage and will return a percentage likelihood that the unicorn traveling in those conditions will experience heavy utilization.
 
 ## Solution Architecture
 
@@ -95,7 +95,7 @@ Let's get our code and start working. Inside the terminal:
 **:metal: Figure It Out**
 
 1. Create an S3 bucket
-1. Create an SQS queue to buffer the groundstation function
+1. Create an SQS queue to buffer the ground station function
 1. Create an SQS queue to buffer the ingest function
 1. Create an execution role for Lambda that allows access to the S3 bucket you created, the SQS queues you created, and all CloudWatch Logs access.
 1. Create a Lambda function based on `lambda-functions/process-unicorn-data/index.py`
@@ -112,7 +112,7 @@ Create an S3 bucket:
 1. Give the bucket a globally unique name
 1. Keep all other options and click **Create**
 
-Create an SQS queue to buffer the groundstation function:
+Create an SQS queue to buffer the ground station function:
 
 1. Navigate to [Simple Queue Service](https://console.aws.amazon.com/sqs) in the console
 1. Click **Create New Queue**
@@ -183,7 +183,7 @@ Create a Lambda function to process unicorn data:
 1. Click **Add**
 1. Click **Save**
 
-Create a Lambda function to find groundstation data:
+Create a Lambda function to find ground station data:
 
 1. Click the "hamburger" menu on the left side
 1. Click **Functions**
@@ -358,7 +358,7 @@ Without provisioning any servers we were able to use Amazon Athena to get the re
 
 The role of a data scientist involves pulling data from various sources. We will use a SageMaker notebook to walk through additional data preparation and model training. Below are directions to access the notebook. Within the notebook you'll find another set of detailed directions.
 
-New to Amazon Sagemaker? Never used a Sagemaker Notebook? [Check out this quick start guide for a crash course](sagemaker-intro.md)
+New to Amazon SageMaker? Never used a SageMaker Notebook? [Check out this quick start guide for a crash course](sagemaker-intro.md)
 
 **:metal: Figure It Out**
 
@@ -436,7 +436,7 @@ Our model has been trained and is stored on S3.  Now we need a serverless enviro
 
 ## Now What?
 Let's recap - you've put together a pipeline, that:
-* On the front end, ingests ride telemtry data from our unicorns
+* On the front end, ingests ride telemetry data from our unicorns
 * enhances the data with the nearest weather station ID
 * train a machine learning model to predict heavier than usual magic point usage
 * created an HTTP interface to make predictions against?

@@ -2,6 +2,12 @@ import boto3
 import json
 import os
 
+# Function Name:
+# Process Unicorn Data
+
+# Function Path:
+# lambda-functions/process-unicorn-data/index.py
+
 client = boto3.client('s3')
 sqs = boto3.client('sqs')
 queue_url = os.environ['OUTPUT_QUEUE']

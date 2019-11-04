@@ -1,5 +1,11 @@
 # https://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html
 
+# Function Name:
+# Find Closest Groundstation
+
+# Function Path:
+# lambda-functions/find-closest-groundstation/index.py
+
 from math import cos, asin, sqrt
 import boto3
 import json

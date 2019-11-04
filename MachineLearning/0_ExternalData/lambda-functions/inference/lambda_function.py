@@ -1,5 +1,11 @@
 from __future__ import print_function
 
+# Function Name:
+# Inference Function
+
+# Function Path:
+# lambda-functions/inference/lambda_function.py
+
 import mxnet as mx
 import json
 import boto3

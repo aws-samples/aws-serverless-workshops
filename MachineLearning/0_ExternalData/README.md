@@ -193,7 +193,7 @@ Create a Lambda function to find ground station data:
 1. Choose **Python 3.7** for the runtime
 1. Choose to use an existing execution role and select the one you just created
 1. Click **Create function**
-1. Copy and paste the code from `lambda-functions/unicorn-groundstation-data-to-s3/index.py` to the editor
+1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
 1. Create an environment variable with:
     * Key == "OUTPUT_QUEUE"
     * Value == `https://sqs.<your-region>.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
@@ -215,7 +215,7 @@ Create a Lambda function to send data to S3:
 1. Choose **Python 3.7** for the runtime
 1. Choose to use an existing execution role and select the one you just created
 1. Click **Create function**
-1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
+1. Copy and paste the code from `lambda-functions/unicorn-groundstation-data-to-s3/index.py` to the editor
 1. Create an environment variable with:
     * Key == "OUTPUT_BUCKET"
     * Value == *The name of the data bucket you created earlier*

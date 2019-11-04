@@ -159,6 +159,7 @@ Create an execution role:
 1. Click **Next: Tags**
 1. Click **Next: Review**
 1. Provide a role name such as **AllowLambdaFunctionality**
+1. Click **Create Role**
 
 Create a Lambda function to process unicorn data:
 
@@ -271,10 +272,7 @@ Use the console or CLI to upload travel data to an S3 bucket. Once you upload th
 <details>
 <summary><strong>:white_check_mark: Hold My Hand (expand for details)</strong></summary><p>
 
-1. Navigate to your [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/home?region=us-east-1) stack in the AWS Console
-1. In the outputs tab, take note of the **DataBucketName** value
-1. Open [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1) in the AWS Console
-1. Navigate to the data bucket and click into it
+1. Navigate to the data bucket you created in the previous section and click into it
 1. Click **Create Folder**, type `raw`, and click save
 1. Click the new `raw` directory to navigate into it
 1. Click **Upload**

@@ -173,7 +173,7 @@ Create a Lambda function to process unicorn data:
 1. Copy and paste the code from `lambda-functions/process-unicorn-data/index.py` to the editor
 1. Create an environment variable with:
     * Key == "OUTPUT_QUEUE"
-    * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
+    * Value == `https://sqs.<your-region>.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
 1. Set the memory to 256 MB
 1. Set the timeout to 15 min
 1. In the Designer view, click **Add trigger**
@@ -193,15 +193,15 @@ Create a Lambda function to find ground station data:
 1. Choose **Python 3.7** for the runtime
 1. Choose to use an existing execution role and select the one you just created
 1. Click **Create function**
-1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
+1. Copy and paste the code from `lambda-functions/unicorn-groundstation-data-to-s3/index.py` to the editor
 1. Create an environment variable with:
     * Key == "OUTPUT_QUEUE"
-    * Value == `https://sqs.us-east-1.amazonaws.com/<your_account_number>/<your_groundstation_queue_name>`
+    * Value == `https://sqs.<your-region>.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
 1. Set the memory to 128 MB
 1. Set the timeout to 3 sec
 1. In the Designer view, click **Add trigger**
 1. Select **SQS**
-1. Choose the ground station queue you created
+1. Choose the ingest queue you created
 1. Click **Add**
 1. Click **Save**
 

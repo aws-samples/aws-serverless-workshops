@@ -196,7 +196,7 @@ Create a Lambda function to find ground station data:
 1. Copy and paste the code from `lambda-functions/find-closest-groundstation/index.py` to the editor
 1. Create an environment variable with:
     * Key == "OUTPUT_QUEUE"
-    * Value == `https://sqs.<your-region>.amazonaws.com/<your_account_number>/<your_ingest_queue_name>`
+    * Value == `https://sqs.<your-region>.amazonaws.com/<your_account_number>/<your_groundstation_queue_name>`
 1. Set the memory to 128 MB
 1. Set the timeout to 3 sec
 1. In the Designer view, click **Add trigger**

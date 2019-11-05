@@ -54,7 +54,7 @@ In your Cloud9 terminal, run the following code:
 
 ```
 TODO - double check this syntax
-Run some code in the terminal to >> a scratchpad.txt with the appropriate parameters you'll need for this template
+Run some code in the terminal to >> a scratchpad.txt with the appropriate parameters you'll need for this template (also include DataProcessingRole Arn)
 
 aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod1-3 \

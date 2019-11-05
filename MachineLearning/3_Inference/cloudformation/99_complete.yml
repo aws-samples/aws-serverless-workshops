@@ -1,5 +1,14 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Wild Rydes machine learning infrastructure
+Parameters:
+  DataBucket:
+    Type: String
+    MinLength: 1
+    ConstraintDescription: 'Enter the name of your S3 data bucket (YOUR_BUCKET_NAME)'
+  DataProcessingExecutionRoleArn:
+    Type: String
+    ConstraintDescription: 'Enter the ARN of your role named DataProcessingExecutionRole (this can be found in your scratchpad.txt)'
+    MinLength: 1
 Resources:
   ModelInferenceFunction:
     Type: AWS::Lambda::Function
@@ -7,7 +16,7 @@ Resources:
       Description: Wild Rydes lambda function make model inferences
       Handler: index.handler
       MemorySize: 128
-      Role: !GetAtt DataProcessingExecutionRole.Arn
+      Role: !GetAtt DataProcessingExecutionRoleArn
       Runtime: python2.7
       Environment:
         Variables:

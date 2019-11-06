@@ -25,7 +25,10 @@ This is where your data will live before, during, and after formatting. It's als
 In your Cloud9 terminal, run the following code:
 
 ```
-aws s3 cb YOUR_BUCKET_NAME
+# Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
+# run `pwd` to see your current directory 
+
+aws s3 mb s3://YOUR_BUCKET_NAME --region YOUR_REGION >> scratchpad.txt
 ```
 </p></details>
 
@@ -39,11 +42,18 @@ To take advantage of the parallelism available with Lambda, we are going to fan-
 In your Cloud9 terminal, run the following code:
 
 ```
-TODO - double check this syntax
-aws sqs create-queue --queue-name IngestedRawDataFanOutQueue
+# Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
+# run `pwd` to see your current directory 
+
+aws sqs create-queue --queue-name IngestedRawDataFanOutQueue --region us-east-1 >> scratchpad.txt
+
+# scratchpad.txt now has the queue URL, you'll need it for the next command to grab the ARN.
+
+aws sqs get-queue-attributes --queue-url "YOUR_QUEUE_URL/IngestedRawDataFanOutQueue" --attribute-names QueueArn >> scratchpad.txt
 ```
 </p></details>
 
+Save the queue URL and ARN to a `scratchpad.txt` file we'll use later.
 
 
 ### Step 2: Create the lambda functions
@@ -53,11 +63,17 @@ aws sqs create-queue --queue-name IngestedRawDataFanOutQueue
 In your Cloud9 terminal, run the following code:
 
 ```
+# Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
+# run `pwd` to see your current directory 
+
 TODO - double check this syntax
 Run some code in the terminal to >> a scratchpad.txt with the appropriate parameters you'll need for this template (also include DataProcessingRole Arn)
 
 aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod1-3 \
+    --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \
+    ParameterKey=IngestedRawDataFanOutQueueArn,ParameterValue=YOUR_QUEUE_ARN \
+    --region YOUR_REGION \
     --capabilities CAPABILITY_NAMED_IAM \
     --template-body file://cloudformation/3_lambda_functions.yml
 ```

@@ -13,9 +13,9 @@ We are going to use AWS Cloud9 as our cloud-based integrated development environ
 <summary><strong>:white_check_mark: Hold My Hand (expand for details)</strong></summary><p>
 Create your Cloud9 instance by following these steps:
 
-1. Navigate to AWS Cloud9 [in the console](https://us-east-1.console.aws.amazon.com/cloud9)
+1. Navigate to AWS Cloud9 [in the console](https://console.aws.amazon.com/cloud9)
 1. Click **Create environment**
-1. Provide a name and optional description
+1. Provide a name: **WildRydesInference**
 1. Click **Next step**
 1. Leave all defaults
 1. Click **Next step**
@@ -23,10 +23,11 @@ Create your Cloud9 instance by following these steps:
 
 After a minute or so, your environment will be ready. Go ahead and:
 
-1. Close the "Welcome" tab
-1. Drag the lower section up so you have a comfortable amount of space
-1. Find the tab that looks like a terminal (hint: it will have `...~/environment $`)
-1. Run a command to list S3 buckets: `aws s3 ls`
+1. Find the "Welcome" tab and click the plus icon next to it
+    ![new_tab](new_tab.png)
+1. Select **New Terminal**
+1. Run a command to get the caller identity: `aws sts get-caller-identity`
+    * *This command will let you know who you are (account number, role, etc)*
 
 *Hint: New editors and terminals can be created by clicking the green "+" icon in a circle*
 

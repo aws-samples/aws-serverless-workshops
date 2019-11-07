@@ -36,6 +36,15 @@ Provide a list of prerequisites that are required to successfully complete your 
 
 Add a subsection for each prerequisite.
 
+Supported regions:
+* us-east-1 (N. Virginia)
+* us-east-2 (Ohio)
+* us-west-2 (Oregon)
+* ap-southeast-1 (Singapore)
+* ap-northeast-1 (Tokyo)
+* eu-central-1 (Frankfurt)
+* eu-west-1 (Ireland)
+
 ## Modules
 
 1. [Module 0: Setting up your development environment](0_Setup)

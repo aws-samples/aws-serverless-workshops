@@ -9,6 +9,9 @@ Parameters:
     Type: String
     ConstraintDescription: 'Enter the ARN of your queue named IngestedRawDataFanOutQueue (this can be found in your scratchpad.txt)'
     MinLength: 1
+  IngestedRawDataFanOutQueueName:
+    Type: String
+    Default: IngestedRawDataFanOutQueue
 Resources:
   S3DataBucketInvokeLambdaPermission:
     Type: AWS::Lambda::Permission
@@ -295,7 +298,7 @@ Resources:
                 }
               }]
             }
-        - { IngestUnicornRawDataFunction: !Ref IngestUnicornRawDataFunction, TransformAndMapDataFunction: !Ref TransformAndMapDataFunction, IngestedRawDataFanOutQueue: !GetAtt IngestedRawDataFanOutQueue.QueueName }
+        - { IngestUnicornRawDataFunction: !Ref IngestUnicornRawDataFunction, TransformAndMapDataFunction: !Ref TransformAndMapDataFunction, IngestedRawDataFanOutQueue: !Ref IngestedRawDataFanOutQueueName }
 Outputs:
   DataBucketName:
     Value: !Ref DataBucket

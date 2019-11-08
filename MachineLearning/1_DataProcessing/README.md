@@ -229,4 +229,4 @@ The output will be similar to the following:
 
 ## Next steps:
 
-We're ready to proceed with building and training a [machine learning model](../1_ModelBuilding).
+We're ready to proceed with building and training a [machine learning model](../2_ModelBuilding).

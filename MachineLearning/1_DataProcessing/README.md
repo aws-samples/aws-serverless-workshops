@@ -4,7 +4,6 @@
 
 ## What are we building?
 ![Architecture diagram](assets/WildRydesML_1.png)
-TODO - Add 1,2,3 annotations
 
 We'll be building a pipeline that consists of:
 
@@ -26,7 +25,7 @@ In your Cloud9 terminal, run the following code:
 
 ```
 # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
-# run `pwd` to see your current directory 
+# run `pwd` to see your current directory
 
 aws s3 mb s3://YOUR_BUCKET_NAME --region YOUR_REGION >> scratchpad.txt
 ```
@@ -43,7 +42,7 @@ In your Cloud9 terminal, run the following code:
 
 ```
 # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
-# run `pwd` to see your current directory 
+# run `pwd` to see your current directory
 
 aws sqs create-queue --queue-name IngestedRawDataFanOutQueue --region us-east-1 >> scratchpad.txt
 
@@ -64,7 +63,7 @@ In your Cloud9 terminal, run the following code:
 
 ```
 # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
-# run `pwd` to see your current directory 
+# run `pwd` to see your current directory
 
 TODO - double check this syntax
 Run some code in the terminal to >> a scratchpad.txt with the appropriate parameters you'll need for this template (also include DataProcessingRole Arn)
@@ -155,7 +154,7 @@ aws s3 upload ride_data.json
 ```
 </p></details>
 
-Your fan-out is in progress!  Checkout [your CloudWatch dashboard](link) to monitor progress (or view your [SQS console](link)).  It will take ~8 minutes to process all 200k entries. 
+Your fan-out is in progress!  Checkout [your CloudWatch dashboard](link) to monitor progress (or view your [SQS console](link)).  It will take ~8 minutes to process all 200k entries.
 
 ### Step 5: Cleanup (to be completed after all sections are done)
 1. Empty `YOUR_BUCKET_NAME`

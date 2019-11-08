@@ -275,7 +275,7 @@ Resources:
   CloudWatchDashboard:
     Type: "AWS::CloudWatch::Dashboard"
     Properties:
-      DashboardName: "Wild_Rydes_Machine_Learning"
+      DashboardName: !Sub "Wild_Rydes_Machine_Learning_${AWS::StackName}"
       DashboardBody: !Sub
         - |
             {

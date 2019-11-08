@@ -5,9 +5,9 @@ Parameters:
     Type: String
     MinLength: 1
     ConstraintDescription: 'Enter the name of your S3 data bucket (YOUR_BUCKET_NAME)'
-  DataProcessingExecutionRoleArn:
+  DataProcessingExecutionRoleName:
     Type: String
-    ConstraintDescription: 'Enter the ARN of your role named DataProcessingExecutionRole (this can be found in your scratchpad.txt)'
+    ConstraintDescription: 'Enter the name of your role named DataProcessingExecutionRole (this can be found in your scratchpad.txt)'
     MinLength: 1
 Resources:
   ModelInferenceFunction:
@@ -16,7 +16,7 @@ Resources:
       Description: Wild Rydes lambda function make model inferences
       Handler: index.handler
       MemorySize: 128
-      Role: !Ref DataProcessingExecutionRoleArn
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/${DataProcessingExecutionRoleName}"
       Runtime: python2.7
       Environment:
         Variables:
@@ -38,19 +38,19 @@ Resources:
     Properties:
       Name: "ModelInferenceApi"
       Description: "Wild Rydes Model Inference REST API"
-  ApiGatewayRootMethod:
-    Type: "AWS::ApiGateway::Method"
-    Properties:
-      AuthorizationType: "NONE"
-      HttpMethod: "POST"
-      Integration:
-        IntegrationHttpMethod: "POST"
-        Type: "AWS_PROXY"
+  # ApiGatewayRootMethod:
+  #   Type: "AWS::ApiGateway::Method"
+  #   Properties:
+  #     AuthorizationType: "NONE"
+  #     HttpMethod: "POST"
+      # Integration:
+      #   IntegrationHttpMethod: "POST"
+      #   Type: "AWS_PROXY"
         # Uri: !Sub
         #   - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
         #   - lambdaArn: !GetAtt "ModelInferenceFunction.Arn"
-      ResourceId: !GetAtt "ApiGateway.RootResourceId"
-      RestApiId: !Ref "ApiGateway"
+      # ResourceId: !GetAtt "ApiGateway.RootResourceId"
+      # RestApiId: !Ref "ApiGateway"
   lambdaApiGatewayInvoke:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -58,13 +58,13 @@ Resources:
       FunctionName: !GetAtt "ModelInferenceFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/POST/"
-  apiGatewayDeployment:
-    Type: "AWS::ApiGateway::Deployment"
-    DependsOn:
-      - "ApiGatewayRootMethod"
-    Properties:
-      RestApiId: !Ref "ApiGateway"
-      StageName: "prod"
+  # apiGatewayDeployment:
+  #   Type: "AWS::ApiGateway::Deployment"
+  #   DependsOn:
+  #     - "ApiGatewayRootMethod"
+  #   Properties:
+  #     RestApiId: !Ref "ApiGateway"
+  #     StageName: "prod"
 Outputs:
   ApiGatewayInvokeURL:
     Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"

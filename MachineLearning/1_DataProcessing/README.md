@@ -215,7 +215,15 @@ The output will be similar to the following:
     --query 'Stacks[0].StackStatus' \
     --output text
     ```
+1. In your Cloud9 terminal, run the following code:
 
+    ```
+    # Run this command to upload the ride data
+    aws s3 cp assets/ride_data.json s3://YOUR_BUCKET_NAME/raw/ride_data.json
+
+    # Run this command to verify the file was uploaded (you should see the file name listed)
+    aws s3 ls s3://YOUR_BUCKET_NAME/raw/
+    ```
 <h3>Cleanup</h3>
 1. Delete `wildrydes-ml-mod1-99`
 </p></details>

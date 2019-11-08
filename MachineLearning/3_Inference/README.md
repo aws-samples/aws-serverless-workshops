@@ -17,25 +17,41 @@ Why Lambda?  Our unicorn fleet isn't a single breed.  We offer the largest selec
 
 ## Step 0: Get CloudFormation parameters
 
-```
-TODO - double check this syntax
-Run some code in the terminal to >> a scratchpad.txt with the appropriate parameters you'll need for this template (also include DataProcessingRole Arn)
+<details>
+<summary><strong>Grab the name of your IAM DataProcessingExecutionRole and add it to scratchpad.txt for use later</strong></summary><p>
 
-```
+1. Navigate to your Cloud9 environment
+1. Run the following command:
+    ```
+    aws cloudformation describe-stack-resources \
+    --stack-name wildrydes-ml-mod1-3 \
+    --logical-resource-id DataProcessingExecutionRole \
+    --query "StackResources[0].PhysicalResourceId" >> scratchpad.txt
+    ```
+
+</p></details>
+
+
 
 ## Step 1: Create lambda function and API Gateway skeletons
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
-<summary><strong>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API</strong></summary><p>
+<summary><strong>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/0_lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-0</code></strong></summary><p>
 
 1. Navigate to your Cloud9 environment
-1. Run the following command:
+2. Make sure you're in the correct terminal directory first
+    ```
+    cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference
+    ```
+3. Run the following command:
     ```
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod3-0 \
+    --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \
+    ParameterKey=DataProcessingExecutionRoleName,ParameterValue=DATA_PROCESSING_ROLE_NAME_FROM_SCRATCHPAD.TXT \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/0_lambda_functions.yml
+    --template-body file://cloudformation/0_lambda_function.yml
     ```
 
 </p></details>
@@ -62,15 +78,29 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 <details>
 <summary><strong>Update the <code>ModelInferenceApi</code> API Gateway root resource to proxy requests to your <code>ModelInferenceFunction</code></strong></summary><p>
 
-
-TODO, get full steps
-1. Select the root POST resource
-2. Add a proxy request to your lambda function
-3. Redeploy the stage
+1. Open the [API gateway console](https://console.aws.amazon.com/apigateway/home)
+1. Select the root `/` resource
+1. Select **Actions** > **Create Method**
+1. Select `ANY` in the dropdown, click the checkbox next to it
+1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown.
+1. Click **Save**
+1. Click **OK** to the permissions dialogue box
 </p></details>
 
+<details>
+<summary><strong>Deploy your API Gateway</strong></summary><p>
+
+1. Open the [API gateway console](https://console.aws.amazon.com/apigateway/home)
+1. Under **Actions** select **Deploy API**
+1. Select `[New Stage]` for ** **Deployment Stage**
+1. Enter `prod` for **Stage name**
+1. Click **Deploy**
+</p></details>
+
+Take note of your **Invoke URL**
+
 ## Step 4: Test your API
-1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL/prod`
+1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL`
 
 ## Now What?
 Let's recap - you've put together a pipeline, that:

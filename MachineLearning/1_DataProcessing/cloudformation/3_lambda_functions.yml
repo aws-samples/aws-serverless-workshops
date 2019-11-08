@@ -125,7 +125,7 @@ Resources:
 
 
       Description: Wild Rydes lambda function to parse unicorn JSON data and send downstream to lookup nearest groundstation
-      Handler: lambda_function.lambda_handler
+      Handler: index.lambda_handler
       DeadLetterConfig:
         TargetArn: !GetAtt IngestUnicornRawDataFunctionDLQ.Arn
       MemorySize: 256
@@ -219,7 +219,7 @@ Resources:
           def upload_file(body, key):
               s3.put_object(Body=body, Bucket=bucket, Key=key)
       Description: Wild Rydes lambda function to look up nearest weather groundstation based on lat/long
-      Handler: lambda_function.lambda_handler
+      Handler: index.lambda_handler
       DeadLetterConfig:
         TargetArn: !GetAtt TransformAndMapDataFunctionDLQ.Arn
       MemorySize: 128

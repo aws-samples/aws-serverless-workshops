@@ -260,7 +260,7 @@ Resources:
                   ],
                   "view": "timeSeries",
                   "stacked": false,
-                  "region": "us-east-1",
+                  "region": "${AWS::Region}",
                   "stat": "Sum",
                   "period": 60
                 }
@@ -276,7 +276,7 @@ Resources:
                   ],
                   "view": "timeSeries",
                   "stacked": false,
-                  "region": "us-east-1",
+                  "region": "${AWS::Region}",
                   "stat": "Sum",
                   "period": 300
                 }
@@ -292,7 +292,7 @@ Resources:
                   ],
                   "view": "timeSeries",
                   "stacked": false,
-                  "region": "us-east-1",
+                  "region": "${AWS::Region}",
                   "stat": "Sum",
                   "period": 300
                 }

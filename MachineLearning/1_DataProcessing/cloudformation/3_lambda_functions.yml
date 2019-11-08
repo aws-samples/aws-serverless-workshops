@@ -42,13 +42,13 @@ Resources:
                 Resource:
                   -
                     !Sub "arn:aws:s3:::${DataBucket}/*"
-                  - 
+                  -
                     !Sub "arn:aws:s3:::${DataBucket}"
                   -
                     !GetAtt TransformAndMapDataFunctionDLQ.Arn
                   -
                     !GetAtt IngestUnicornRawDataFunctionDLQ.Arn
-                  - 
+                  -
                     !Ref IngestedRawDataFanOutQueueArn
         - PolicyName: "AllowLogging"
           PolicyDocument:
@@ -86,22 +86,22 @@ Resources:
           import boto3
           import json
           import os
-          
+
           # Function Name:
           # Process Unicorn Data (function #1)
-          
+
           # Function Path:
           # MachineLearning/1_DataProcessing/lambda-functions/1-process-s3-event-fan-out/index.py
-          
+
           client = boto3.client('s3')
           sqs = boto3.client('sqs')
           queue_url = os.environ['OUTPUT_QUEUE']
-          
+
           def send_to_sqs(json_data):
             data = json_data
             if 'travel_data' in json_data:
               data = json_data['travel_data']
-            
+
             counter = 0
             for entry in data:
               lower_cased = {k.lower(): v for k, v in entry.items()}
@@ -111,21 +111,21 @@ Resources:
                 MessageBody=json.dumps(lower_cased)
               )
               counter = counter + 1
-              print('Sent ' + counter + ' data entries')
+              print('Sent ', counter, ' data entries')
             print('all rows sent to sqs')
-              
+
           def lambda_handler(event, context):
               for record in event['Records']:
                   bucket = record['s3']['bucket']['name']
-                  key = record['s3']['object']['key'] 
+                  key = record['s3']['object']['key']
                   content_object = client.get_object(Bucket=bucket, Key=key)
               file_content = content_object['Body'].read().decode('utf-8')
               json_content = json.loads(file_content)
               send_to_sqs(json_content)
-        
+
 
       Description: Wild Rydes lambda function to parse unicorn JSON data and send downstream to lookup nearest groundstation
-      Handler: lambda_function.lambda_handler
+      Handler: index.lambda_handler
       DeadLetterConfig:
         TargetArn: !GetAtt IngestUnicornRawDataFunctionDLQ.Arn
       MemorySize: 256
@@ -171,7 +171,7 @@ Resources:
                   json_event = event_format_check(json_event)
                   json_event["groundstation"] = closest(groundstations(),
                                                       {"latitude": json_event["latitude"], "longitude": json_event["longitude" ]})["id"]
-                  print('Closest weatherstation for ' + json_event["latitude"] + ', ' + json_event["longitude"] + ' is ' + json_event["groundstation"])
+                  print('Closest weatherstation for ', json_event["latitude"], ', ', json_event["longitude"], ' is ', json_event["groundstation"])
                   json_event = label_heavy_magic_utilization(json_event)
                   # events look like:
                   # {"name": "Shadowfax", "statustime": "2019-05-07 20:11:04.247", "latitude": 41.441963, "longitude": -73.574745, "distance": "29.212845", "healthpoints": "217", "magicpoints": "112", "groundstation": "USC00305799"}
@@ -203,7 +203,7 @@ Resources:
                   {"id": "USW00094728",  "latitude": 40.7789, "longitude": -73.9692, "elevation": 39.6},
                   {"id": "USW00094789",  "latitude": 40.6386, "longitude": -73.7622, "elevation": 3.4}]
 
-          def send_event_to_s3(event, context):
+          def send_event_to_s3(event):
               key = get_key_from_event_json(event)
               body = get_body_from_event_json(event)
               upload_file(body, key)
@@ -219,7 +219,7 @@ Resources:
           def upload_file(body, key):
               s3.put_object(Body=body, Bucket=bucket, Key=key)
       Description: Wild Rydes lambda function to look up nearest weather groundstation based on lat/long
-      Handler: lambda_function.lambda_handler
+      Handler: index.lambda_handler
       DeadLetterConfig:
         TargetArn: !GetAtt TransformAndMapDataFunctionDLQ.Arn
       MemorySize: 128
@@ -260,7 +260,7 @@ Resources:
                   ],
                   "view": "timeSeries",
                   "stacked": false,
-                  "region": "us-east-1",
+                  "region": "${AWS::Region}",
                   "stat": "Sum",
                   "period": 60
                 }
@@ -276,7 +276,7 @@ Resources:
                   ],
                   "view": "timeSeries",
                   "stacked": false,
-                  "region": "us-east-1",
+                  "region": "${AWS::Region}",
                   "stat": "Sum",
                   "period": 300
                 }
@@ -292,7 +292,7 @@ Resources:
                   ],
                   "view": "timeSeries",
                   "stacked": false,
-                  "region": "us-east-1",
+                  "region": "${AWS::Region}",
                   "stat": "Sum",
                   "period": 300
                 }

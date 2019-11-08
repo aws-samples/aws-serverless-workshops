@@ -10,6 +10,7 @@ We are going to use [AWS Cloud9](https://aws.amazon.com/cloud9/) as our cloud-ba
 
 <details>
 <summary><strong>Expand if you want detailed directions</strong></summary><p>
+
 Create your Cloud9 instance by following these steps:
 
 1. Navigate to AWS Cloud9 [in the console](https://console.aws.amazon.com/cloud9)
@@ -35,7 +36,7 @@ After a minute or so, your environment will be ready and you can continue.
 1. Find the "Welcome" tab and click the plus icon next to it
 1. Select **New Terminal**
 1. Run a command to get the caller identity: `aws sts get-caller-identity`
-    * *This command will let you know who you are (account number, role, etc)*
+    * *This command will let you know who you are (account number, user ID, ARN)*
 
 *Hint: New editors and terminals can be created by clicking the green "+" icon in a circle*
 
@@ -54,6 +55,8 @@ Let's get our code and start working. Inside the terminal:
     cd aws-serverless-workshops/MachineLearning/
     ```
 
+At this point we have a cloud based development environment, with the right credentials, and our source code copied down.
+
 ## Next steps:
 
-Proceed with building your [data processing pipeline](../1_DataProcessing).
+We're ready to proceed with building the [data processing pipeline](../1_DataProcessing).

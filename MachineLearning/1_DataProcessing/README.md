@@ -179,12 +179,6 @@ aws s3 ls s3://YOUR_BUCKET_NAME/raw/
 
 Your fan-out is in progress!  Checkout the [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home?#dashboards:name=Wild_Rydes_Machine_Learning) to monitor progress (or view your [SQS console](https://console.aws.amazon.com/sqs)).  It will take ~8 minutes to process all 200k entries.
 
-### Step 5: Cleanup (to be completed after all sections are done)
-1. Empty `YOUR_BUCKET_NAME`
-1. Delete `YOUR_BUCKET_NAME`
-1. Delete `IngestedRawDataFanOutQueue`
-1. Delete CloudFormation Stack `wildrydes-ml-mod1-3`
-
 ### Troubleshooting
 Run the following commands in your Cloud9 environment terminal to assist in troubleshooting:
 ```

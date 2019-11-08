@@ -26,7 +26,7 @@ def send_to_sqs(json_data):
       MessageBody=json.dumps(lower_cased)
     )
     counter = counter + 1
-    print('Sent ' + counter + ' data entries')
+    print('Sent ', counter, ' data entries')
   print('all rows sent to sqs')
 
 def lambda_handler(event, context):

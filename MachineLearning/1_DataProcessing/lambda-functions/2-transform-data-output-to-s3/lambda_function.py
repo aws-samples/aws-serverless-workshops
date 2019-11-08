@@ -22,7 +22,7 @@ def lambda_handler(event, context):
         json_event = event_format_check(json_event)
         json_event["groundstation"] = closest(groundstations(),
                                             {"latitude": json_event["latitude"], "longitude": json_event["longitude" ]})["id"]
-        print('Closest weatherstation for ' + json_event["latitude"] + ', ' + json_event["longitude"] + ' is ' + json_event["groundstation"])
+        print('Closest weatherstation for ', json_event["latitude"], ', ', json_event["longitude"], ' is ', json_event["groundstation"])
         json_event = label_heavy_magic_utilization(json_event)
         # events look like:
         # {"name": "Shadowfax", "statustime": "2019-05-07 20:11:04.247", "latitude": 41.441963, "longitude": -73.574745, "distance": "29.212845", "healthpoints": "217", "magicpoints": "112", "groundstation": "USC00305799"}
@@ -54,7 +54,7 @@ def groundstations():
         {"id": "USW00094728",  "latitude": 40.7789, "longitude": -73.9692, "elevation": 39.6},
         {"id": "USW00094789",  "latitude": 40.6386, "longitude": -73.7622, "elevation": 3.4}]
 
-def send_event_to_s3(event, context):
+def send_event_to_s3(event):
     key = get_key_from_event_json(event)
     body = get_body_from_event_json(event)
     upload_file(body, key)

@@ -77,12 +77,16 @@ aws cloudformation create-stack \
     --capabilities CAPABILITY_NAMED_IAM \
     --template-body file://cloudformation/3_lambda_functions.yml
 ```
+
+View the progress of your CloudFormation Stack in the [CloudFormation console](https://console.aws.amazon.com/cloudformation/home).  The total stack deployment time should take about 30 seconds.
+
 </p></details>
 
 This gives you:
-* lambda function skeletons
-* DLQs
-* IAM permissions
+* A CloudWatch Dashboard
+* Lambda Function (not yet configured, source code only)
+* Dead Letter Queues for the Lambda functions, in case something should go wrong
+* Least-privelege IAM policies attached to lambda functions
 
 While these are necessary, they're not the focus of this part of the lab.  This is why we're creating them in a CloudFormation template for you.  
 
@@ -92,7 +96,7 @@ The previous step gave you the foundation for the lambda functions that will eit
 <details>
 <summary><strong>1. Add a lambda trigger to IngestUnicornRawDataFunction for your for your S3 bucket `raw/` prefix</strong></summary><p>
 
-1. Open the lambda console to your lambda function named `IngestUnicornRawDataFunction`
+1. Open the [lambda console](https://console.aws.amazon.com/lambda/home#/functions) to your lambda function named `IngestUnicornRawDataFunction`
 1. In the Designer view, click **Add trigger**
 1. Select **S3**
 1. Choose the data bucket you created
@@ -105,7 +109,7 @@ The previous step gave you the foundation for the lambda functions that will eit
 <summary><strong>2. Update OUTPUT_QUEUE environment variable for IngestUnicornRawDataFunction to your queue URL</strong></summary><p>
 
 1. Open the lambda console to your lambda function named `IngestUnicornRawDataFunction`
-1. Create an environment variable with:
+1. Create an environment variable with the URL of your queue as the value (available in `scratchpad.txt`):
     * Key == "OUTPUT_QUEUE"
     * Value == `https://sqs.<your-region>.amazonaws.com/<your_account_number>/IngestedRawDataFanOutQueue`
 2. Click save
@@ -139,7 +143,7 @@ To recap:
   3. Second lambda function picks up items on queue and matches the nearest weather station
 * Preconfigured IAM role for the lambda functions scoped to the appropriate services
 * Review the code for `TransformAndMapDataFunction`, the function is doing a lookup for the nearest weatherstation
-* We also have a CloudWatch dashboard to monitor progress!
+* We also have a [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home#dashboards:) to monitor progress!
 
 ### Step 4: Test your pipeline
 It's time to upload our ride telemtry data into our pipeline.
@@ -150,12 +154,11 @@ It's time to upload our ride telemtry data into our pipeline.
 In your Cloud9 terminal, run the following code:
 
 ```
-TODO get this command
-aws s3 upload ride_data.json
+aws s3 cp --region YOUR_REGION assets/ride_data.json s3://YOUR_DATA_BUCKET/raw
 ```
 </p></details>
 
-Your fan-out is in progress!  Checkout [your CloudWatch dashboard](link) to monitor progress (or view your [SQS console](link)).  It will take ~8 minutes to process all 200k entries. 
+Your fan-out is in progress!  Checkout [your CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home#dashboards:) to monitor progress (or view your [SQS console](https://console.aws.amazon.com/sqs/home)).  It will take ~8 minutes to process all 200k entries. 
 
 ### Step 5: Cleanup (to be completed after all sections are done)
 1. Empty `YOUR_BUCKET_NAME`

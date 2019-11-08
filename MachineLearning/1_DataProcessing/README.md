@@ -26,8 +26,16 @@ In your Cloud9 terminal, run the following code:
 ```
 # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
 # run `pwd` to see your current directory
+# Run this command to navigate to the correct folder
+cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing
 
-aws s3 mb s3://YOUR_BUCKET_NAME --region YOUR_REGION >> scratchpad.txt
+# Run this command to create your bucket
+aws s3 mb s3://YOUR_BUCKET_NAME >> scratchpad.txt
+
+# Run this command to verify your bucket was created successfully
+aws s3 ls s3://YOUR_BUCKET_NAME
+
+# If you don't see an error you're good.
 ```
 </p></details>
 
@@ -44,11 +52,11 @@ In your Cloud9 terminal, run the following code:
 # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
 # run `pwd` to see your current directory
 
-aws sqs create-queue --queue-name IngestedRawDataFanOutQueue --region us-east-1 >> scratchpad.txt
+aws sqs create-queue --queue-name IngestedRawDataFanOutQueue >> scratchpad.txt
 
-# scratchpad.txt now has the queue URL, you'll need it for the next command to grab the ARN.
+# scratchpad.txt now has the queue URL, you'll need it for the next command to grab the ARN. Keep the quotes and replace YOUR_QUEUE_URL with the value in scratchpad.txt.
 
-aws sqs get-queue-attributes --queue-url "YOUR_QUEUE_URL/IngestedRawDataFanOutQueue" --attribute-names QueueArn >> scratchpad.txt
+aws sqs get-queue-attributes --queue-url "YOUR_QUEUE_URL" --attribute-names QueueArn >> scratchpad.txt
 ```
 </p></details>
 
@@ -72,10 +80,21 @@ aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod1-3 \
     --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \
     ParameterKey=IngestedRawDataFanOutQueueArn,ParameterValue=YOUR_QUEUE_ARN \
-    --region YOUR_REGION \
     --capabilities CAPABILITY_NAMED_IAM \
     --template-body file://cloudformation/3_lambda_functions.yml
 ```
+
+There are a couple options to track the CloudFormation stack creation process:
+1. In your Cloud9 terminal, run the following code:
+    ```
+    # Run this command to verify the stack was successfully created. You should expect to see "CREATE_COMPLETE".
+    # If you see "CREATE_IN_PROGRESS", your stack is still being created. Wait and re-run the command.
+    # If you see "ROLLBACK_COMPLETE", pause and see what went wrong.
+    aws cloudformation describe-stacks \
+        --stack-name wildrydes-ml-mod1-3 \
+        --query "Stacks[0].StackStatus"
+    ```
+1. Go to [CloudFormation in the AWS Console](https://console.aws.amazon.com/cloudformation)
 </p></details>
 
 This gives you:
@@ -90,46 +109,46 @@ While these are necessary, they're not the focus of this part of the lab.  This 
 The previous step gave you the foundation for the Lambda functions that will either be triggered by S3 events or SQS queues.  Now, you need to wire up the Lambda function to appropriate event sources and set the appropriate environment variables. We're going to use values from scratchpad.txt, so have that handy.
 
 <details>
-<summary><strong>1. Add a lambda trigger to IngestUnicornRawDataFunction for your for your S3 bucket `raw/` prefix</strong></summary><p>
+<summary><strong>1. Update OUTPUT_QUEUE environment variable for IngestUnicornRawDataFunction to your queue URL (in scratchpad.txt)</strong></summary><p>
 
-1. Open the lambda console to your lambda function named `IngestUnicornRawDataFunction`
-1. In the Designer view, click **Add trigger**
+1. Open the [Lambda console](https://console.aws.amazon.com/lambda)
+1. Open the function containing `IngestUnicornRawDataFunction` in the name
+1. Scroll down and create an environment variable with:
+    * Key == "OUTPUT_QUEUE"
+    * Value == `YOUR_QUEUE_URL`
+1. Click **Save**
+</p></details>
+
+<details>
+<summary><strong>2. Add a Lambda trigger to IngestUnicornRawDataFunction for your for your S3 bucket `raw/` prefix</strong></summary><p>
+
+1. Scroll up and click **Add trigger** in the Designer view
 1. Select **S3**
 1. Choose the data bucket you created
 1. For the prefix, type `raw/`
 1. Click **Add**
+
+If the trigger won't save, make sure the S3 bucket does not have an identical active event ([Bucket](https://console.aws.amazon.com/s3) > Properties > Events).
+</p></details>
+
+<details>
+<summary><strong>3. Update OUTPUT_BUCKET environment variable for TransformAndMapDataFunction to your queue URL</strong></summary><p>
+
+1. Open the [Lambda console](https://console.aws.amazon.com/lambda)
+1. Open the function containing  `TransformAndMapDataFunction` in the name
+1. Scroll down and create an environment variable with:
+    * Key == "OUTPUT_BUCKET"
+    * Value == `YOUR_DATA_BUCKET` (*The name of the data bucket you created earlier*)
 1. Click **Save**
 </p></details>
 
 <details>
-<summary><strong>2. Update OUTPUT_QUEUE environment variable for IngestUnicornRawDataFunction to your queue URL</strong></summary><p>
+<summary><strong>4. Add a Lambda trigger to TransformAndMapDataFunction for your for your S3 bucket `raw/` prefix</strong></summary><p>
 
-1. Open the lambda console to your lambda function named `IngestUnicornRawDataFunction`
-1. Create an environment variable with:
-    * Key == "OUTPUT_QUEUE"
-    * Value == `https://sqs.<your-region>.amazonaws.com/<your_account_number>/IngestedRawDataFanOutQueue`
-2. Click save
-</p></details>
-
-<details>
-<summary><strong>3. Add a lambda trigger to TransformAndMapDataFunction for your for your S3 bucket `raw/` prefix</strong></summary><p>
-
-1. Open the lambda console to your lambda function named `TransformAndMapDataFunction`
-1. In the Designer view, click **Add trigger**
+1. Scroll up and click **Add trigger** in the Designer view
 1. Select **SQS**
 1. Choose the `IngestedRawDataFanOutQueue` queue you created
 1. Click **Add**
-1. Click **Save**
-</p></details>
-
-<details>
-<summary><strong>4. Update OUTPUT_BUCKET environment variable for TransformAndMapDataFunction to your queue URL</strong></summary><p>
-
-1. Open the lambda console to your lambda function named `TransformAndMapDataFunction`
-1. Create an environment variable with:
-    * Key == "OUTPUT_BUCKET"
-    * Value == `YOUR_DATA_BUCKET` (*The name of the data bucket you created earlier*)
-2. Click save
 </p></details>
 
 To recap:
@@ -150,8 +169,11 @@ It's time to upload our ride telemetry data into our pipeline.
 In your Cloud9 terminal, run the following code:
 
 ```
-TODO get this command
-aws s3 upload ride_data.json
+# Run this command to upload the ride data
+aws s3 cp assets/ride_data.json s3://YOUR_BUCKET_NAME/raw/ride_data.json
+
+# Run this command to verify the file was uploaded (you should see the file name listed)
+aws s3 ls s3://YOUR_BUCKET_NAME/raw/
 ```
 </p></details>
 

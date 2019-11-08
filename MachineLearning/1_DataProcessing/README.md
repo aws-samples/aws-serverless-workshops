@@ -140,12 +140,12 @@ If the trigger won't save, make sure the S3 bucket does not have an identical ac
 </p></details>
 
 <details>
-<summary><strong>4. Add a Lambda trigger to TransformAndMapDataFunction for your for your S3 bucket `raw/` prefix</strong></summary><p>
+<summary><strong>4. Add an SQS trigger to TransformAndMapDataFunction for your IngestedRawDataFanOutQueue queue</strong></summary><p>
 
 1. Scroll up and click **Add trigger** in the Designer view
-1. Select **SQS**
-1. Choose the `IngestedRawDataFanOutQueue` queue you created
-1. Click **Add**
+2. Select **SQS**
+3. Choose the `IngestedRawDataFanOutQueue` queue you created
+4. Click **Add**
 </p></details>
 
 To recap:
@@ -175,6 +175,8 @@ aws s3 ls s3://YOUR_BUCKET_NAME/raw/
 </p></details>
 
 Your fan-out is in progress!  Checkout the [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home?#dashboards:name=Wild_Rydes_Machine_Learning) to monitor progress (or view your [SQS console](https://console.aws.amazon.com/sqs)).  It will take ~8 minutes to process all 200k entries.
+
+You can run `aws s3 ls s3://YOUR_BUCKET_NAME/processed/ | wc -l` in your Cloud9 terminal to view the number of entries in your processed folder as the pipeline finishes.
 
 ### Troubleshooting
 Run the following commands in your Cloud9 environment terminal to assist in troubleshooting:

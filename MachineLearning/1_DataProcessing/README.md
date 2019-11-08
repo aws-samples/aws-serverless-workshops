@@ -73,9 +73,6 @@ In your Cloud9 terminal, run the following code:
 # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
 # run `pwd` to see your current directory
 
-TODO - double check this syntax
-Run some code in the terminal to >> a scratchpad.txt with the appropriate parameters you'll need for this template (also include DataProcessingRole Arn)
-
 aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod1-3 \
     --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \

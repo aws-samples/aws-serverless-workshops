@@ -14,31 +14,6 @@ We'll be building a pipeline that consists of:
 ## Why are we building it?
 If you recall, we're trying to build a system to make better unicorn magic point usage predictions so we can accurately price our service.  To do that, we need to get our data in order.  We need a pipeline that will take our unicorn ride data, join it with the relevant weather station data, and output to a location that can be used downstream by our data scientist from within the SageMaker notebook.  This is the beginning stages of building our training datasets.
 
-**Refer to the troubleshooting section at the end of this README if you experience issues along the way**
-
-### Step 0: Create an S3 Bucket
-This is where your data will live before, during, and after formatting. It's also where your machine learning model will output to.
-
-<details>
-<summary><strong>Create an S3 bucket with a globally unique name, (it will be referred to later as `YOUR_BUCKET_NAME`)</strong></summary><p>
-In your Cloud9 terminal, run the following code:
-
-```
-# Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
-# run `pwd` to see your current directory
-# Run this command to navigate to the correct folder
-cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing
-
-# Run this command to create your bucket
-aws s3 mb s3://YOUR_BUCKET_NAME >> scratchpad.txt
-
-# Run this command to verify your bucket was created successfully
-aws s3 ls s3://YOUR_BUCKET_NAME
-
-# If you don't see an error you're good.
-```
-</p></details>
-
 ### Short cut: Deploy everything for me
 
 We don't recommend this route unless you ran into a snag and are worried about completing the workshop on time.
@@ -73,7 +48,30 @@ We don't recommend this route unless you ran into a snag and are worried about c
     ```
 </p></details>
 
-### Step 1: Create an SQS queue for fan-out
+### Step 1: Create an S3 Bucket
+This is where your data will live before, during, and after formatting. It's also where your machine learning model will output to.
+
+<details>
+<summary><strong>Create an S3 bucket with a globally unique name, (it will be referred to later as `YOUR_BUCKET_NAME`)</strong></summary><p>
+In your Cloud9 terminal, run the following code:
+
+```
+# Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
+# run `pwd` to see your current directory
+# Run this command to navigate to the correct folder
+cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing
+
+# Run this command to create your bucket
+aws s3 mb s3://YOUR_BUCKET_NAME >> scratchpad.txt
+
+# Run this command to verify your bucket was created successfully
+aws s3 ls s3://YOUR_BUCKET_NAME
+
+# If you don't see an error you're good.
+```
+</p></details>
+
+### Step 2: Create an SQS queue for fan-out
 Our vehicle fleet generates ride data in a single, massive .json file, [ride_data.json](assets/ride_data.json). Feel free to check it out.  It includes the raw ride telemetry.  We need to split out the file into individual JSON entries, 1 for each ride data event entry.
 
 To take advantage of the parallelism available with Lambda, we are going to fan-out each entry to a queue that will be picked up by individual Lambda functions.
@@ -97,7 +95,7 @@ aws sqs get-queue-attributes --queue-url "YOUR_QUEUE_URL" --attribute-names Queu
 Save the queue URL and ARN to a `scratchpad.txt` file we'll use later.
 
 
-### Step 2: Create the Lambda functions
+### Step 3: Create the Lambda functions
 
 <details>
 <summary><strong>Create a CloudFormation stack from `cloudformation/1_lambda_functions.yml` named `wildrydes-ml-mod1-1`.</strong></summary><p>
@@ -136,7 +134,7 @@ This gives you:
 
 While these are necessary, they're not the focus of this part of the lab.  This is why we're creating them in a CloudFormation template for you.  
 
-### Step 3: Wire up the Lambda functions
+### Step 4: Wire up the Lambda functions
 The previous step gave you the foundation for the Lambda functions that will either be triggered by S3 events or SQS queues.  Now, you need to wire up the Lambda function to appropriate event sources and set the appropriate environment variables. We're going to use values from scratchpad.txt, so have that handy.
 
 <details>
@@ -191,7 +189,7 @@ To recap:
 * Review the code for `TransformAndMapDataFunction`, the function is doing a lookup for the nearest weather station
 * We also have a [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home?#dashboards:name=Wild_Rydes_Machine_Learning) to monitor progress!
 
-### Step 4: Test your pipeline
+### Step 5: Test your pipeline
 It's time to upload our ride telemetry data into our pipeline.
 
 <details>
@@ -212,6 +210,6 @@ Your fan-out is in progress!  Checkout the [CloudWatch dashboard](https://consol
 
 You can run `aws s3 ls s3://YOUR_BUCKET_NAME/processed/ | wc -l` in your Cloud9 terminal to view the number of entries in your processed folder as the pipeline finishes.
 
-## Next steps:
+## Next step:
 
 We're ready to proceed with building and training a [machine learning model](../2_ModelBuilding).

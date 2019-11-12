@@ -51,3 +51,4 @@ Supported regions:
 1. [Module 1: Build a data processing pipeline and get external data](1_DataProcessing)
 1. [Module 2: Build and train a model](2_ModelBuilding)
 1. [Module 3: Serverless inference](3_Inference)
+1. [Module 4: Clean up](4_Cleanup)

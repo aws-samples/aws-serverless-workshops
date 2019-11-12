@@ -15,7 +15,7 @@ With the ability to now, get real-time information of whether or not a ride is g
 
 Why Lambda?  Our unicorn fleet isn't a single breed.  We offer the largest selection of rare unicorn breeds for customers of all needs.  We expect that after further research, each breed is actually responding differently to various weather conditions.  By hosting our models on S3 and using Lambda to make inferences, we can have a dynamic HTTP interface to make predictions against a ML model specific to a unicorn breed without having to pay for separate Sagemaker endpoints (1 per unicorn breed - we have thousands).
 
-## Step 0: Get CloudFormation parameters
+## Step 1: Get CloudFormation parameters
 
 <details>
 <summary><strong>Grab the name of your IAM DataProcessingExecutionRole and add it to scratchpad.txt for use later</strong></summary><p>
@@ -33,7 +33,7 @@ Why Lambda?  Our unicorn fleet isn't a single breed.  We offer the largest selec
 
 
 
-## Step 1: Create lambda function and API Gateway skeletons
+## Step 2: Create lambda function and API Gateway skeletons
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
@@ -56,7 +56,7 @@ At this point, we have a trained model on s3.  Now, we're ready to load the mode
 
 </p></details>
 
-## Step 2: Update Lambda Function
+## Step 3: Update Lambda Function
 The previous step gave us a lambda function that will load the ML model from S3, make inferences against it in lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.
 
 <details>
@@ -72,7 +72,7 @@ The previous step gave us a lambda function that will load the ML model from S3,
 
 Take a moment to review the code in (lambda-functions/lambda_function.py)[lambda-functions/lambda_function.py].
 
-## Step 3: Wire up API Gateway
+## Step 4: Wire up API Gateway
 The last thing we need to connect is the HTTP API Gateway to your `ModelInferenceFunction`
 
 <details>
@@ -99,7 +99,7 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 
 Take note of your **Invoke URL**
 
-## Step 4: Test your API
+## Step 5: Test your API
 1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL`
 
 ## Now What?
@@ -135,9 +135,10 @@ Not to be forgotten, how can this improve the end users' experience?  Well, in t
 </p></details><br>
 
 
+## Next step:
+Once you're done testing the API call to your model, you can [clean up the resources](../4_Cleanup) so you're not charged.
 
-
-#### OLD
+<!-- #### OLD
 
 **Figure It Out :metal:**
 
@@ -160,4 +161,4 @@ Our model has been trained and is stored on S3.  Now we need a serverless enviro
 1. Deploy the API Gateway via a stage called `prod`.
 1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL/prod`
 
-</p></details>
+</p></details> -->

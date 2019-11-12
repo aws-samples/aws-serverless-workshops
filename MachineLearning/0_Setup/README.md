@@ -57,6 +57,6 @@ Let's get our code and start working. Inside the terminal:
 
 At this point we have a cloud based development environment, with the right credentials, and our source code copied down.
 
-## Next steps:
+## Next step:
 
 We're ready to proceed with building the [data processing pipeline](../1_DataProcessing).

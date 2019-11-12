@@ -129,5 +129,5 @@ Without provisioning any servers we were able to use Amazon Athena to get the re
 * [Security in SageMaker](https://docs.aws.amazon.com/sagemaker/latest/dg/security.html)
 * [Amazon SageMaker Example Notebooks](https://github.com/awslabs/amazon-sagemaker-examples)
 
-## Next steps:
+## Next step:
 Instead of using an endpoint with an always on server, let's explore [using Lambda to make inferences against our model](../3_Inference).

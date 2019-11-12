@@ -37,7 +37,7 @@ Why Lambda?  Our unicorn fleet isn't a single breed.  We offer the largest selec
 At this point, we have a trained model on s3.  Now, we're ready to load the model into lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
-<summary><strong>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/0_lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-0</code></strong></summary><p>
+<summary><strong>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/4_lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-4</code></strong></summary><p>
 
 1. Navigate to your Cloud9 environment
 2. Make sure you're in the correct terminal directory first
@@ -47,11 +47,11 @@ At this point, we have a trained model on s3.  Now, we're ready to load the mode
 3. Run the following command:
     ```
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod3-0 \
+    --stack-name wildrydes-ml-mod3-4 \
     --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \
     ParameterKey=DataProcessingExecutionRoleName,ParameterValue=DATA_PROCESSING_ROLE_NAME_FROM_SCRATCHPAD.TXT \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/0_lambda_function.yml
+    --template-body file://cloudformation/4_lambda_function.yml
     ```
 
 </p></details>

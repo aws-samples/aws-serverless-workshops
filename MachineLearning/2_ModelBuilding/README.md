@@ -6,13 +6,13 @@
 
 ![Architecture diagram](assets/WildRydesML_2.png)
 
-Amazon Athena is an interactive query service that makes it easy to analyze data in Amazon S3 using standard SQL. Athena is serverless, so we won't be managing any infrastructure.
+Amazon Athena is an interactive query service that makes it easy to analyze data in Amazon S3 using standard SQL. Athena is serverless, so you won't be managing any infrastructure.
 
 We will start by using Athena to extract a subset of data we're interested in from a much larger data source.
 
 ![Architecture diagram](assets/WildRydesML_3.png)
 
-Amazon SageMaker is a fully managed machine learning service. With SageMaker, data scientists and developers can quickly and easily build and train machine learning models.
+Amazon SageMaker is a fully managed machine learning service, so you don't have to manage servers. With SageMaker, data scientists and developers can quickly and easily build and train machine learning models.
 
 We will use a SageMaker notebook as a development space to join the [data we processed in the last section](../1_DataProcessing) with our reduced ground station dataset. Inside of the notebook we will run training jobs against the data and produce a model that is stored in Amazon S3.
 
@@ -27,7 +27,7 @@ USW00094728  40.7789  -73.9692   39.6 NY NEW YORK CNTRL PK TWR
 USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP
 ```
 
-Amazon SageMaker provides an integrated Jupyter authoring notebook instance for easy access to your data sources for exploration and analysis, so you don't have to manage servers. It also provides common machine learning algorithms that are optimized to run efficiently against extremely large data in a distributed environment. During this lab you'll be asked to import data from multiple sources, manipulate the data, and format it to the syntax required to take advantage of the built in SageMaker provided algorithms. This will be completed within a SageMaker notebook.
+Amazon SageMaker provides an integrated Jupyter authoring notebook instance for easy access to your data sources for exploration and analysis. It also provides common machine learning algorithms that are optimized to run efficiently against extremely large data in a distributed environment. During this lab you'll be asked to import data from multiple sources, manipulate the data, and format it to the syntax required to take advantage of the built in SageMaker provided algorithms. This will be completed within a SageMaker notebook.
 
 ### Step 1: Create an Amazon SageMaker notebook
 Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are not available instantly, so create it now and we will come back to it later.

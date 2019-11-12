@@ -66,7 +66,7 @@ Save the queue URL and ARN to a `scratchpad.txt` file we'll use later.
 ### Step 2: Create the Lambda functions
 
 <details>
-<summary><strong>Create a CloudFormation stack from `cloudformation/3_lambda_functions.yml` named `wildrydes-ml-mod1-3`.</strong></summary><p>
+<summary><strong>Create a CloudFormation stack from `cloudformation/1_lambda_functions.yml` named `wildrydes-ml-mod1-1`.</strong></summary><p>
 In your Cloud9 terminal, run the following code:
 
 ```
@@ -74,11 +74,11 @@ In your Cloud9 terminal, run the following code:
 # run `pwd` to see your current directory
 
 aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod1-3 \
+    --stack-name wildrydes-ml-mod1-1 \
     --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \
     ParameterKey=IngestedRawDataFanOutQueueArn,ParameterValue=YOUR_QUEUE_ARN \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/3_lambda_functions.yml
+    --template-body file://cloudformation/1_lambda_functions.yml
 ```
 
 There are a couple options to track the CloudFormation stack creation process:

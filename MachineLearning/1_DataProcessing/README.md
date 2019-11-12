@@ -39,6 +39,40 @@ aws s3 ls s3://YOUR_BUCKET_NAME
 ```
 </p></details>
 
+### Short cut: Deploy everything for me
+
+We don't recommend this route unless you ran into a snag and are worried about completing the workshop on time.
+
+<details>
+<summary><strong>:see_no_evil: BREAK GLASS! (use in case of emergency)</strong></summary><p>
+
+1. Navigate to your Cloud9 environment
+1. Run the following commands to create your resources:
+    ```
+    cd ~/environment/aws-serverless-workshops/MachineLearning/0_ExternalData
+    aws cloudformation create-stack \
+    --stack-name wildrydes-ml-mod1-1 \
+    --capabilities CAPABILITY_NAMED_IAM \
+    --template-body file://cloudformation/99_complete.yml
+    ```
+1. Run the following command until you get `CREATE_COMPLETE` in the output:
+    ```
+    aws cloudformation describe-stacks \
+    --stack-name wildrydes-ml-mod1-1 \
+    --query 'Stacks[0].StackStatus' \
+    --output text
+    ```
+1. In your Cloud9 terminal, run the following code:
+
+    ```
+    # Run this command to upload the ride data
+    aws s3 cp assets/ride_data.json s3://YOUR_BUCKET_NAME/raw/ride_data.json
+
+    # Run this command to verify the file was uploaded (you should see the file name listed)
+    aws s3 ls s3://YOUR_BUCKET_NAME/raw/
+    ```
+</p></details>
+
 ### Step 1: Create an SQS queue for fan-out
 Our vehicle fleet generates ride data in a single, massive .json file, [ride_data.json](assets/ride_data.json). Feel free to check it out.  It includes the raw ride telemetry.  We need to split out the file into individual JSON entries, 1 for each ride data event entry.
 
@@ -177,56 +211,6 @@ aws s3 ls s3://YOUR_BUCKET_NAME/raw/
 Your fan-out is in progress!  Checkout the [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home?#dashboards:name=Wild_Rydes_Machine_Learning) to monitor progress (or view your [SQS console](https://console.aws.amazon.com/sqs)).  It will take ~8 minutes to process all 200k entries.
 
 You can run `aws s3 ls s3://YOUR_BUCKET_NAME/processed/ | wc -l` in your Cloud9 terminal to view the number of entries in your processed folder as the pipeline finishes.
-
-### Troubleshooting
-Run the following commands in your Cloud9 environment terminal to assist in troubleshooting:
-```
-python assets/helper.py
-```
-The output will be similar to the following:
-```
-[x] S3 bucket exists (Step 0)
-[x] SQS queue exists (Step 1)
-[x] Lambda functions, and CloudFormation Stack wildrydes-ml-mod1-3 exists (Step 2)
-[ ] Lambda trigger for IngestUnicornRawDataFunction (Step 3)
-[x] OUTPUT_QUEUE for IngestUnicornRawDataFunction (Step 3)
-[x] Lambda trigger for TransformAndMapDataFunction (Step 3)
-[ ] OUTPUT_BUCKET for TransformAndMapDataFunction (Step 3)
-[ ] processed/ directory exists with _some_ data (Step 4)
-```
-
-### For reference
-<details>
-<summary><strong>:see_no_evil: Do it For Me (use in case of emergency)</strong></summary><p>
-
-1. Navigate to your Cloud9 environment
-1. Run the following commands to create your resources:
-    ```
-    cd ~/environment/aws-serverless-workshops/MachineLearning/0_ExternalData
-    aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod1-99 \
-    --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/99_complete.yml
-    ```
-1. Run the following command until you get `CREATE_COMPLETE` in the output:
-    ```
-    aws cloudformation describe-stacks \
-    --stack-name wildrydes-ml-mod1-99 \
-    --query 'Stacks[0].StackStatus' \
-    --output text
-    ```
-1. In your Cloud9 terminal, run the following code:
-
-    ```
-    # Run this command to upload the ride data
-    aws s3 cp assets/ride_data.json s3://YOUR_BUCKET_NAME/raw/ride_data.json
-
-    # Run this command to verify the file was uploaded (you should see the file name listed)
-    aws s3 ls s3://YOUR_BUCKET_NAME/raw/
-    ```
-<h3>Cleanup</h3>
-1. Delete `wildrydes-ml-mod1-99`
-</p></details>
 
 ## Next steps:
 

@@ -24,10 +24,11 @@ We don't recommend this route unless you ran into a snag and are worried about c
 1. Navigate to your Cloud9 environment
 1. Run the following command:
     ```
+    cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod0-4 \
+    --stack-name wildrydes-ml-mod3-4 \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/4_inference.yml
+    --template-body file://cloudformation/99_complete.yml
     ```
 1. Go back to CloudFormation, in the resources tab, find the `DataBucket` and click on the link.  Drill into the the path that starts will `linear-learner-*` until you find `model.tar.gz`.  Select the checkmark next to this file, and select "Copy Path"
 1. Go back to CloudFormation, in the resources tab, find the `ModelInferenceFunction` and click on the link.  Scroll down to the environment variables section and update the `MODEL_PATH` environment variable with the value you copied from the previous step.  Delete the `s3://BUCKET_NAME/` from the pasted value so that only the key (folder + filename) remains.  Save the changes.
@@ -44,15 +45,15 @@ We don't recommend this route unless you ran into a snag and are worried about c
 1. Run the following command:
     ```
     aws cloudformation describe-stack-resources \
-    --stack-name wildrydes-ml-mod1-3 \
+    --stack-name wildrydes-ml-mod1-1 \
     --logical-resource-id DataProcessingExecutionRole \
-    --query "StackResources[0].PhysicalResourceId" >> scratchpad.txt
+    --query "StackResources[0].PhysicalResourceId" >> ~/environment/scratchpad.txt
     ```
 
 </p></details>
 
 ### Step 2: Create Lambda function and API Gateway skeletons
-At this point, we have a trained model on s3.  Now, we're ready to load the model into Lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
+At this point, we have a trained model on S3.  Now, we're ready to load the model into Lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
 <summary><strong>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/4_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-4</code></strong></summary><p>
@@ -62,16 +63,27 @@ At this point, we have a trained model on s3.  Now, we're ready to load the mode
     ```
     cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference
     ```
-1. Run the following command:
+1. Run the following command to create your resources:
     ```
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod3-4 \
     --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \
     ParameterKey=DataProcessingExecutionRoleName,ParameterValue=DATA_PROCESSING_ROLE_NAME_FROM_SCRATCHPAD.TXT \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/4_Lambda_function.yml
+    --template-body file://cloudformation/4_lambda_function.yml
     ```
-</p></details>
+1. Run the following command to check on the status of your CloudFormation stack:
+    ```
+    # Run this command to verify the stack was successfully created. You should expect to see "CREATE_COMPLETE".
+    # If you see "CREATE_IN_PROGRESS", your stack is still being created. Wait and re-run the command.
+    # If you see "ROLLBACK_COMPLETE", pause and see what went wrong.
+    aws cloudformation describe-stacks \
+        --stack-name wildrydes-ml-mod3-4 \
+        --query "Stacks[0].StackStatus"
+    ```
+</p></details><br>
+
+**DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
 
 ### Step 3: Update Lambda Function
 The previous step gave us a Lambda function that will load the ML model from S3, make inferences against it in Lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.
@@ -133,7 +145,7 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 Take note of your **Invoke URL**
 
 ### Step 5: Test your API
-1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ 
+1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_
     ```
     curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL
     ```

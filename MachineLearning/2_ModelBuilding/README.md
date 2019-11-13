@@ -76,6 +76,9 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 1. In the outputs tab, copy the **AthenaSelectQuery** value
 1. Open [Amazon Athena](https://console.aws.amazon.com/athena/)
 1. Click **Get Started** if you have not used Athena in this region before.
+1. If you see an alert: *Before you run your first query, you need to set up a query result location in Amazon S3.*
+  1. Click on the link in the alert box
+  1. Provide an S3 bucket location to your data bucket: `s3://YOUR_BUCKET_NAME/athena/`
 1. Paste the value you copied into the **New query 1** section.
 1. Click **Run query**
 1. Wait until the query completes, typically 20-30 seconds.
@@ -83,10 +86,12 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 Without provisioning any servers we were able to use Amazon Athena to get the records we need from 94 GB of data in under a minute.
 
 ### Step 4: Save the reduced data set in your S3 bucket
-1. Close the Athena tab and go back to [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/)
-1. Make sure you're viewing the `wildrydes-ml-mod2-2` stack
-1. In the outputs tab, click into the **AthenaCSVLocation** link to go to Amazon S3
-1. Drill into today's date until you find a CSV for the query you just ran.
+1. In Athena, click **Settings**
+1. Make note of the **Query result location** value
+1. Close the Athena tab and go to [Amazon S3](https://console.aws.amazon.com/s3/)
+1. Navigate to the bucket that matches the query result location
+1. Drill into today's date until you find a CSV for the query you just ran
+    1. Click **Unsaved**
     1. Click the **current year**
     1. Click the **current month**
     1. Click the **current day**
@@ -122,7 +127,14 @@ Without provisioning any servers we were able to use Amazon Athena to get the re
     * You can run the notebook document step-by-step (one cell a time) by pressing `shift + enter`.
     * You can run the whole notebook in a single step by clicking on the menu `Cell -> Run All`.
     * To restart the kernel (i.e. the computational engine), click on the menu `Kernel -> Restart`. This can be useful to start over a computation from scratch (e.g. variables are deleted, open files are closed, etc…).
-1. Once complete, you should have a trained model in S3.
+1. Once complete, you should have a trained model in S3. Verify you have a model by:
+    1. Navigate to [Amazon S3](https://console.aws.amazon.com/s3/) in the console
+    1. Navigate to the data bucket you created
+    1. Navigate to a directory with a name containing `linear-learner-TODAYS_DATE`
+    1. Navigate to `output` directory
+    1. Verify you see `model.tar.gz`
+1. Close out of all SageMaker tabs
+1. Close S3 tab
 
 ## Learn more:
 * [First Time SageMaker User](https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html#first-time-user)

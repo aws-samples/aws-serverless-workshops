@@ -1,6 +1,6 @@
 # Set up your development environment
 
-**Time to complete:** 15-20 minutes.
+**Time to complete:** 5-10 minutes.
 
 ## What are we building?
 

@@ -1,6 +1,6 @@
 # Create data processing pipeline
 
-**Time to complete:** 45-60 minutes.
+**Time to complete:** 30-45 minutes.
 
 ## What are we building?
 ![Architecture diagram](assets/WildRydesML_1.png)

@@ -77,17 +77,33 @@ At this point, we have a trained model on s3.  Now, we're ready to load the mode
 The previous step gave us a Lambda function that will load the ML model from S3, make inferences against it in Lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.
 
 <details>
-<summary><strong>Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET</strong></summary><p>
+<summary><strong>Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET, and OUTPUT_BUCKET to YOUR_DATA_BUCKET</strong></summary><p>
 
 1. Open the Lambda console to your Lambda function named `ModelInferenceFunction`
 1. Create an environment variable with:
     * Key == "MODEL_PATH"
     * Value == *your path from YOUR_DATA_BUCKET, it will be in the format of linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz*
+1. Create an environment variable with:
+    * Key == "OUTPUT_BUCKET"
+    * Value == *YOUR_DATA_BUCKET*
 1. Click save
 
 </p></details>
 
-Take a moment to review the code in (Lambda-functions/Lambda_function.py)[Lambda-functions/Lambda_function.py].
+<details>
+<summary><strong>Take a moment to review the code in <code>lambda-functions/lambda_function.py</code>.</strong></summary><p>
+
+*Note: If you're not interested in learning how to host your own ML model on Lambda, you can stop reading now and close this step and continue in the README.  There are no steps here to complete, only additional information on steps required to recreate this yourself.*
+
+Amazon SageMaker can be used to build, train, and deploy machine learning models.  We're leveraging it to build and train our model.  Due to our business possibly having thousands of models, 1 per unicorn breed, its actually better for us to host this model ourselves on Lambda.  Below are the high level steps that we've completed on your behalf for this workshop, but you're free to explore if you need to recreate this.
+
+1. Build MXNet from source for 1) the current support Lambda runtime and 2) the current MXNet version that SageMaker uses. [Instructions here](building-mxnet-1.2.1.md).
+1. The code in [lambda-functions/lambda_function.py](lambda-functions/lambda_function.py) will load the model from S3, load mxnet, and make inferences against our model.  You'd need to install these dependencies locally in an environment similar to the runtime for Lambda and package those dependencies following [this instructions](https://docs.aws.amazon.com/Lambda/latest/dg/Lambda-python-how-to-create-deployment-package.html#python-package-dependencies).  If you unzip [lambda-functions/inferencefunction.zip](lambda-functions/inferencefunction.zip), you'll see the result of those steps as reference.
+1. **`download_model` function**: Once we've got MXNet built for our environment, and the Lambda package built, we can proceed reviewing the code.  The Lambda function loads the model from S3 on the fly at the time of request and unzips it locally.
+1. **`create_data_iter` function**: The HTTP request data is formated in a numpy array, required by the mxnet linear learner model interface to make inferences
+1. **`make_prediction` function**: An inference is made and then packaged for an HTTP response to the caller.
+
+</p></details>
 
 ### Step 4: Wire up API Gateway
 The last thing we need to connect is the HTTP API Gateway to your `ModelInferenceFunction`
@@ -96,12 +112,12 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 <summary><strong>Update the <code>ModelInferenceApi</code> API Gateway root resource to proxy requests to your <code>ModelInferenceFunction</code></strong></summary><p>
 
 1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway/home)
-1. Select the root `/` resource
-1. Select **Actions** > **Create Method**
-1. Select `ANY` in the dropdown, click the checkbox next to it
-1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown.
-1. Click **Save**
-1. Click **OK** to the permissions dialogue box
+2. Select the root `/` resource
+3. Select **Actions** > **Create Method**
+4. Select `ANY` in the dropdown, click the checkbox next to it
+5. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown.
+6. Click **Save**
+7. Click **OK** to the permissions dialogue box
 </p></details>
 
 <details>
@@ -109,22 +125,25 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 
 1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway/home)
 1. Under **Actions** select **Deploy API**
-1. Select `[New Stage]` for ** **Deployment Stage**
-1. Enter `prod` for **Stage name**
-1. Click **Deploy**
+2. Select `[New Stage]` for **Deployment Stage**
+3. Enter `prod` for **Stage name**
+4. Click **Deploy**
 </p></details>
 
 Take note of your **Invoke URL**
 
 ### Step 5: Test your API
-1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL`
+1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ 
+    ```
+    curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL
+    ```
 
 ### Now What?
 Let's recap - you've put together a pipeline, that:
-* On the front end, ingests ride telemetry data from our unicorns
-* enhances the data with the nearest weather station ID
-* train a machine learning model to predict heavier than usual magic point usage
-* created an HTTP interface to make predictions against?
+* On the front end of the data pipeline, we collect and ingest ride telemetry data from our unicorns
+* We've enhanced that data with the nearest, active weather station ID
+* We've trained a machine learning model to predict heavier than usual magic point usage based on different weather characteristics for that day
+* We've hosted this model behind an HTTP interface that loads the model dynamically
 
 #### How can Wild Rydes use this to improve the business?
 With the ability to now, get real-time information of whether or not a ride is going to "cost" more to the unicorn based on mileage _plus_ weather (instead of just mileage), our pricing workflow can be updated to include this http endpoint.  Enabling our company to give better, more realistic pricing based on actual usage.
@@ -134,28 +153,3 @@ Not to be forgotten, how can this improve the end users' experience?  Well, in t
 
 ## Next step:
 Once you're done testing the API call to your model, you can [clean up the resources](../4_Cleanup) so you're not charged.
-
-<!-- #### OLD
-
-**Figure It Out :metal:**
-
-Our model has been trained and is stored on S3.  Now we need a serverless environment to do inferences within.  Remember that the model was trained in an algorithm based on Apache MXNet.  To make inferences against the model in Lambda, we'll need a version of MXNet built for the [current Lambda runtime](https://docs.aws.amazon.com/Lambda/latest/dg/Lambda-runtimes.html).
-
-1. _Expert Optional step requiring extra time (skip to step 3):_ Follow the [instructions](building-mxnet-1.2.1.md) to build MXNet from source
-1. _Expert Optional step requiring extra time (skip to step 3):_ Use the code from [Lambda_function.py](Lambda-functions/inference/Lambda_function.py) as the `index.py`, and prepare a python Lambda function with the additional dependencies (using [these](https://docs.aws.amazon.com/Lambda/latest/dg/Lambda-python-how-to-create-deployment-package.html#python-package-dependencies) instructions as a guide).  You can use `pip install` to get the remaining dependencies install based on their imports in `index.py`.
-1. The previous 2 steps have already been completed for you as MXNet can take 20-30 minutes to build from source depending on the compute resources you're using.  You can find the finished artifacts in this [code zip archive](assets/inferencefunction.zip).
-1. Create a new python 2.7 Lambda function based on this zip file.
-1. Update the `MODEL_PATH` environment variable in your Lambda function configuration to your model s3 location from the training job in the previous section.  Do not include the `s3://BUCKET_NAME/` prefix.
-1. Create a new API Gateway with a method that proxies request to your Lambda function
-1. Deploy your API gateway and issue HTTP requests against it to make inferences!
-
-<details>
-<summary><strong>Hold My Hand :white_check_mark: (expand for details)</strong></summary><p>
-
-1. Create a new python 2.7 Lambda function with the provided ![code zip archive](assets/inferencefunction.zip)
-1. Update the `MODEL_PATH` environment variable in your Lambda function configuration to your model s3 location from the training job in the previous section.  Do not include the `s3://BUCKET_NAME/` prefix.
-1. Create a new API Gateway with a single root `POST` method action that proxies requests to the function you created in step 1. Accept any dialogues requesting to add invoke permissions from API Gateway to your Lambda function.
-1. Deploy the API Gateway via a stage called `prod`.
-1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_ `curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL/prod`
-
-</p></details> -->

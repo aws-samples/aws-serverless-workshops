@@ -22,9 +22,12 @@ We don't recommend this route unless you ran into a snag and are worried about c
 <summary><strong>:see_no_evil: BREAK GLASS! (use in case of emergency)</strong></summary><p>
 
 1. Navigate to your Cloud9 environment
+1. Make sure you're in the correct directory first
+    ```
+    cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
+    ```
 1. Run the following command:
     ```
-    cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod3-4 \
     --capabilities CAPABILITY_NAMED_IAM \
@@ -42,6 +45,10 @@ We don't recommend this route unless you ran into a snag and are worried about c
 <summary><strong>Grab the name of your IAM DataProcessingExecutionRole and add it to scratchpad.txt for use later</strong></summary><p>
 
 1. Navigate to your Cloud9 environment
+1. Make sure you're in the correct directory first
+    ```
+    cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
+    ```
 1. Run the following command:
     ```
     aws cloudformation describe-stack-resources \
@@ -73,10 +80,6 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 <summary><strong>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/4_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-4</code></strong></summary><p>
 
 1. Navigate to your Cloud9 environment
-1. Make sure you're in the correct terminal directory first
-    ```
-    cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference
-    ```
 1. Run the following command to create your resources:
     ```
     aws cloudformation create-stack \
@@ -95,6 +98,7 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
         --stack-name wildrydes-ml-mod3-4 \
         --query "Stacks[0].StackStatus"
     ```
+1. You can also use the [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/) console to check status and (unexpected) errors
 </p></details><br>
 
 **:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
@@ -103,15 +107,12 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 The previous step gave us a Lambda function that will load the ML model from S3, make inferences against it in Lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.
 
 <details>
-<summary><strong>Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET, and OUTPUT_BUCKET to YOUR_DATA_BUCKET</strong></summary><p>
+<summary><strong>Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET</strong></summary><p>
 
 1. Open the Lambda console to your Lambda function named `ModelInferenceFunction`
 1. Create an environment variable with:
     * Key == "MODEL_PATH"
     * Value == *your path from YOUR_DATA_BUCKET, it will be in the format of linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz*
-1. Create an environment variable with:
-    * Key == "OUTPUT_BUCKET"
-    * Value == *YOUR_DATA_BUCKET*
 1. Click save
 
 </p></details>
@@ -137,23 +138,35 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 <details>
 <summary><strong>Update the <code>ModelInferenceApi</code> API Gateway root resource to proxy requests to your <code>ModelInferenceFunction</code></strong></summary><p>
 
-1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway/home)
-2. Select the root `/` resource
-3. Select **Actions** > **Create Method**
-4. Select `ANY` in the dropdown, click the checkbox next to it
-5. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown.
-6. Click **Save**
-7. Click **OK** to the permissions dialogue box
+1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway)
+1. Click `ModelInferenceApi`
+1. Select the root `/` resource
+1. Click **Actions** > **Create Method**
+1. Select `ANY` in the dropdown
+1. Click the checkbox next to it
+1. Leave all defaults
+1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown.
+  * If you're in a region that does not match these directions, you need to provide the Amazon Resource Name (ARN). To find the ARN:
+    1. Go back to the [Lambda console](https://console.aws.amazon.com/lambda)
+    1. Click on the `ModelInferenceFunction` function
+    1. Copy the ARN in the upper right
+    1. Go back to the API Gateway screen
+    1. Paste the ARN in the text box
+1. Click **Save**
+1. Click **OK** to the permissions dialogue box
 </p></details>
 
 <details>
 <summary><strong>Deploy your API Gateway</strong></summary><p>
 
-1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway/home)
-1. Under **Actions** select **Deploy API**
-2. Select `[New Stage]` for **Deployment Stage**
-3. Enter `prod` for **Stage name**
-4. Click **Deploy**
+1. Navigate to the `ModelInferenceApi`. If not already there:
+  1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway)
+  1. Click `ModelInferenceApi`
+  1. Select the root `/` resource
+1. Click **Actions** > **Deploy API**
+1. Select `[New Stage]` for **Deployment Stage**
+1. Type `prod` for **Stage name**
+1. Click **Deploy**
 </p></details>
 
 Take note of your **Invoke URL**

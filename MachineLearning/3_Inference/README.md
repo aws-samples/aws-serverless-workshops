@@ -144,7 +144,8 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 1. Click **Actions** > **Create Method**
 1. Select `ANY` in the dropdown
 1. Click the checkbox next to it
-1. Leave all defaults
+1. Verify `Lambda Function` is selected as the **Integration type**
+1. Check the box next to **Use Lambda Proxy integration** so we get all request details
 1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown.
   * If you're in a region that does not match these directions, you need to provide the Amazon Resource Name (ARN). To find the ARN:
     1. Go back to the [Lambda console](https://console.aws.amazon.com/lambda)

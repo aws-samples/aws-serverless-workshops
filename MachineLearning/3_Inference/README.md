@@ -52,7 +52,21 @@ We don't recommend this route unless you ran into a snag and are worried about c
 
 </p></details>
 
-### Step 2: Create Lambda function and API Gateway skeletons
+### Step 2: Upload Inference Function Zip
+<details>
+<summary><strong>Upload <code>lambda-functions/inferencefunction.zip</code> to <code>YOUR_BUCKET_NAME/code</code></strong></summary><p>
+
+1. In your Cloud9 terminal, run the following code:
+    ```
+    # Run this command to upload the ride data
+    aws s3 cp lambda-functions/inferencefunction.zip s3://YOUR_BUCKET_NAME/code/inferencefunction.zip
+
+    # Run this command to verify the file was uploaded (you should see the file name listed)
+    aws s3 ls s3://YOUR_BUCKET_NAME/code/
+    ```
+</p></details>
+
+### Step 3: Create Lambda function and API Gateway skeletons
 At this point, we have a trained model on S3.  Now, we're ready to load the model into Lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
@@ -85,7 +99,7 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 
 **DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
 
-### Step 3: Update Lambda Function
+### Step 4: Update Lambda Function
 The previous step gave us a Lambda function that will load the ML model from S3, make inferences against it in Lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.
 
 <details>
@@ -117,7 +131,7 @@ Amazon SageMaker can be used to build, train, and deploy machine learning models
 
 </p></details>
 
-### Step 4: Wire up API Gateway
+### Step 5: Wire up API Gateway
 The last thing we need to connect is the HTTP API Gateway to your `ModelInferenceFunction`
 
 <details>
@@ -144,7 +158,7 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 
 Take note of your **Invoke URL**
 
-### Step 5: Test your API
+### Step 6: Test your API
 1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_
     ```
     curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL

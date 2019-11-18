@@ -31,8 +31,8 @@ Resources:
           Key: Module
           Value: Machine Learning
       Code:
-        S3Bucket: central-multicustomer-aws-immersion-days
-        S3Key: wild-rydes-ml-lab/inferencefunction.zip
+        S3Bucket: !Ref DataBucket
+        S3Key: code/inferencefunction.zip
   ApiGateway:
     Type: "AWS::ApiGateway::RestApi"
     Properties:

@@ -97,7 +97,7 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
     ```
 </p></details><br>
 
-**DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
+**:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
 
 ### Step 4: Update Lambda Function
 The previous step gave us a Lambda function that will load the ML model from S3, make inferences against it in Lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.

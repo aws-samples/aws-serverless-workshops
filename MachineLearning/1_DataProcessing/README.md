@@ -131,7 +131,7 @@ This gives you:
 
 While these are necessary, they're not the focus of this part of the lab.  This is why we're creating them in a CloudFormation template for you.
 
-**DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
+**:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
 
 ### Step 4: Wire up the Lambda functions
 The previous step gave you the foundation for the Lambda functions that will either be triggered by S3 events or SQS queues.  Now, you need to wire up the Lambda function to appropriate event sources and set the appropriate environment variables. We're going to use values from scratchpad.txt, so have that handy.

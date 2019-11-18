@@ -66,9 +66,9 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 
 **Hint:** Click the circular arrow icon to refresh the list if it does not auto-refresh.
 
-**DO NOT move past this point until you see CREATE_COMPLETE as the status**
+</p></details><br>
 
-</p></details>
+**:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status**
 
 ### Step 3: Use Amazon Athena to reduce the size of ground station data
 

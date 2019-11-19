@@ -65,6 +65,9 @@ We don't recommend this route unless you ran into a snag and are worried about c
 
 1. In your Cloud9 terminal, run the following code:
     ```
+    # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference in your cloud 9 environment
+    # run `pwd` to see your current directory
+
     # Run this command to upload the ride data
     aws s3 cp lambda-functions/inferencefunction.zip s3://YOUR_BUCKET_NAME/code/inferencefunction.zip
 
@@ -82,6 +85,9 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 1. Navigate to your Cloud9 environment
 1. Run the following command to create your resources:
     ```
+    # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference in your cloud 9 environment
+    # run `pwd` to see your current directory
+
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod3-4 \
     --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \

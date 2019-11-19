@@ -36,9 +36,12 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 <summary><strong>Create a CloudFormation stack from `cloudformation/3_sagemaker.yml` named `wildrydes-ml-mod2-3`.</strong></summary><p>
 
 1. Navigate to your Cloud9 environment
-1. Run the following commands to create your resources:
+1. Make sure you're in the correct directory first
     ```
     cd ~/environment/aws-serverless-workshops/MachineLearning/2_ModelBuilding
+    ```
+1. Run the following command to create your resources:
+    ```
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod2-3 \
     --capabilities CAPABILITY_NAMED_IAM \
@@ -52,10 +55,11 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 <details>
 <summary><strong>Create a CloudFormation stack from `cloudformation/2_ground-station.yml` named `wildrydes-ml-mod2-2`.</strong></summary><p>
 
-1. Navigate to your Cloud9 environment
-1. Run the following commands to create your resources:
+1. In your Cloud9 terminal, run the following code:
     ```
-    cd ~/environment/aws-serverless-workshops/MachineLearning/2_ModelBuilding
+    # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/2_MachineLearning in your cloud 9 environment
+    # run `pwd` to see your current directory
+
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod2-2 \
     --template-body file://cloudformation/2_ground-station.yml

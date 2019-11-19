@@ -22,9 +22,12 @@ We don't recommend this route unless you ran into a snag and are worried about c
 <summary><strong>:see_no_evil: BREAK GLASS! (use in case of emergency)</strong></summary><p>
 
 1. Navigate to your Cloud9 environment
-1. Run the following commands to create your resources:
+1. Make sure you're in the correct directory first
     ```
     cd ~/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing
+    ```
+1. Run the following command to create your resources:
+    ```
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod1-1 \
     --capabilities CAPABILITY_NAMED_IAM \
@@ -74,9 +77,13 @@ To take advantage of the parallelism available with Lambda, we are going to fan-
 <details>
 <summary><strong>Create an SQS queue and name it `IngestedRawDataFanOutQueue`</strong></summary><p>
 
-1. In your Cloud9 terminal, run the following code:
+1. Navigate to your Cloud9 environment
+1. Make sure you're in the correct directory first
     ```
-    cd /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing
+    cd ~/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing
+    ```
+1. Run the following command to create your resources:
+    ```
     aws sqs create-queue --queue-name IngestedRawDataFanOutQueue >> ~/environment/scratchpad.txt
     ```
 1. `scratchpad.txt` now has the queue URL, you'll need it for the next command to grab the ARN

@@ -252,8 +252,9 @@ It's time to upload our ride telemetry data into our pipeline.
 ### Your fan-out is in progress!
 
 It will take ~8 minutes to process all ~20k entries. Monitor the progress using:
-* [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home?#dashboards:name=Wild_Rydes_Machine_Learning)
+* [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home?#dashboards:)
   * This shows you the number of invocations for each Lambda function on the left and some SQS message metrics on the right.
+  * Refresh the dashboard to see how the plotted invocation count changes. When you see the invocation count settle back to zero, that indicates all of your data has been processed. Until then, feel free to explore the graphs and options.
 * [SQS console](https://console.aws.amazon.com/sqs)
   * This shows the number of messages flowing through `IngestedRawDataFanOutQueue`. There are also dead letter queues set up in case things go wrong.
 * Run `aws s3 ls s3://$bucket/processed/ | wc -l` in your Cloud9 terminal

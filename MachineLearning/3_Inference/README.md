@@ -42,37 +42,42 @@ We don't recommend this route unless you ran into a snag and are worried about c
 
 ### Step 1: Get CloudFormation parameters
 <details>
-<summary><strong>Grab the name of your IAM DataProcessingExecutionRole and add it to scratchpad.txt for use later</strong></summary><p>
+<summary>Grab the name of your IAM DataProcessingExecutionRole and add it to scratchpad.txt for use later. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to your Cloud9 environment
 1. Make sure you're in the correct directory first
     ```
     cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
     ```
-1. Run the following command:
+1. Set the data processing execution role as an environment variable
     ```
-    aws cloudformation describe-stack-resources \
-    --stack-name wildrydes-ml-mod1-1 \
-    --logical-resource-id DataProcessingExecutionRole \
-    --query "StackResources[0].PhysicalResourceId" >> ~/environment/scratchpad.txt
+    execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1-1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
     ```
-
+1. Verify the variable is set
+    ```
+    echo $execution_role
+    ```
+1. Add the bucket name to your scratchpad for future use
+    ```
+    echo "Data processing execution role:" $execution_role >> ~/environment/scratchpad.txt
+    ```
 </p></details>
 
 ### Step 2: Upload Inference Function Zip
 <details>
-<summary><strong>Upload <code>lambda-functions/inferencefunction.zip</code> to <code>YOUR_BUCKET_NAME/code</code></strong></summary><p>
+<summary>Upload <code>lambda-functions/inferencefunction.zip</code> to <code>YOUR_BUCKET_NAME/code</code>. (Expand for detailed instructions)</summary><p>
 
-1. In your Cloud9 terminal, run the following code:
+1. Navigate to your Cloud9 environment
+1. Run the following command to upload the Lambda function for inference
     ```
     # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference in your cloud 9 environment
     # run `pwd` to see your current directory
 
     # Run this command to upload the ride data
-    aws s3 cp lambda-functions/inferencefunction.zip s3://YOUR_BUCKET_NAME/code/inferencefunction.zip
+    aws s3 cp lambda-functions/inferencefunction.zip s3://$bucket/code/inferencefunction.zip
 
     # Run this command to verify the file was uploaded (you should see the file name listed)
-    aws s3 ls s3://YOUR_BUCKET_NAME/code/
+    aws s3 ls s3://$bucket/code/
     ```
 </p></details>
 
@@ -80,7 +85,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
 At this point, we have a trained model on S3.  Now, we're ready to load the model into Lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
-<summary><strong>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/4_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-4</code></strong></summary><p>
+<summary>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/4_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-4</code>. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to your Cloud9 environment
 1. Run the following command to create your resources:
@@ -90,8 +95,8 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod3-4 \
-    --parameters ParameterKey=DataBucket,ParameterValue=YOUR_BUCKET_NAME \
-    ParameterKey=DataProcessingExecutionRoleName,ParameterValue=DATA_PROCESSING_ROLE_NAME_FROM_SCRATCHPAD.TXT \
+    --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
+    ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
     --capabilities CAPABILITY_NAMED_IAM \
     --template-body file://cloudformation/4_lambda_function.yml
     ```
@@ -113,18 +118,18 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 The previous step gave us a Lambda function that will load the ML model from S3, make inferences against it in Lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.
 
 <details>
-<summary><strong>Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET</strong></summary><p>
+<summary>1. Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET. (Expand for detailed instructions)</summary><p>
 
-1. Open the Lambda console to your Lambda function named `ModelInferenceFunction`
-1. Create an environment variable with:
-    * Key == "MODEL_PATH"
-    * Value == *your path from YOUR_DATA_BUCKET, it will be in the format of linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz*
-1. Click save
+1. Open the [Lambda console](https://console.aws.amazon.com/lambda)
+1. Open the function containing `ModelInferenceFunction` in the name
+1. Scroll down and populate the `MODEL_PATH` key with the location of your model
+  * The format will look like this: linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz
+1. Click **Save**
 
 </p></details>
 
 <details>
-<summary><strong>Take a moment to review the code in <code>lambda-functions/lambda_function.py</code>.</strong></summary><p>
+<summary>2. Take a moment to review the code in <code>lambda-functions/lambda_function.py</code>. (Expand for detailed instructions)</summary><p>
 
 *Note: If you're not interested in learning how to host your own ML model on Lambda, you can stop reading now and close this step and continue in the README.  There are no steps here to complete, only additional information on steps required to recreate this yourself.*
 
@@ -142,7 +147,7 @@ Amazon SageMaker can be used to build, train, and deploy machine learning models
 The last thing we need to connect is the HTTP API Gateway to your `ModelInferenceFunction`
 
 <details>
-<summary><strong>Update the <code>ModelInferenceApi</code> API Gateway root resource to proxy requests to your <code>ModelInferenceFunction</code></strong></summary><p>
+<summary>1. Update the <code>ModelInferenceApi</code> API Gateway root resource to proxy requests to your <code>ModelInferenceFunction</code>. (Expand for detailed instructions)</summary><p>
 
 1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway)
 1. Click `ModelInferenceApi`
@@ -164,7 +169,7 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 </p></details>
 
 <details>
-<summary><strong>Deploy your API Gateway</strong></summary><p>
+<summary>2. Deploy your API Gateway. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to the `ModelInferenceApi`. If not already there:
   1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway)
@@ -174,7 +179,7 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 1. Select `[New Stage]` for **Deployment Stage**
 1. Type `prod` for **Stage name**
 1. Click **Deploy**
-</p></details>
+</p></details><br>
 
 Take note of your **Invoke URL**
 

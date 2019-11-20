@@ -1,7 +1,5 @@
 # Create data processing pipeline
 
-**Time to complete:** 30-45 minutes.
-
 ## What are we building?
 ![Architecture diagram](assets/WildRydesML_1.png)
 
@@ -14,12 +12,11 @@ We'll be building a pipeline that consists of:
 ## Why are we building it?
 If you recall, we're trying to build a system to make better unicorn magic point usage predictions so we can accurately price our service.  To do that, we need to get our data in order.  We need a pipeline that will take our unicorn ride data, join it with the relevant weather station data, and output to a location that can be used downstream by our data scientist from within the SageMaker notebook.  This is the beginning stages of building our training datasets.
 
-### Short cut: Deploy everything for me
+### Short Route: Deploy the pipeline for me :see_no_evil:
 
-We don't recommend this route unless you ran into a snag and are worried about completing the workshop on time.
+The purpose of this module is machine learning inference using serverless technologies. While data processing and ETL is an important component, we recommend using the provided CloudFormation template to ensure you complete the section on time. If you are very comfortable with Lambda and SQS, try the alternative route below with detailed steps.
 
-<details>
-<summary><strong>:see_no_evil: BREAK GLASS! (use in case of emergency)</strong></summary><p>
+**Time to complete:** 15-20 minutes.
 
 1. Navigate to your Cloud9 environment
 1. Make sure you're in the correct directory first
@@ -33,7 +30,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
     --capabilities CAPABILITY_NAMED_IAM \
     --template-body file://cloudformation/99_complete.yml
     ```
-1. Run the following command until you get `CREATE_COMPLETE` in the output:
+1. Run the following command (waiting 30-60 seconds between executions) until you get `CREATE_COMPLETE` in the output:
     ```
     aws cloudformation describe-stacks \
     --stack-name wildrydes-ml-mod1-1 \
@@ -49,7 +46,15 @@ We don't recommend this route unless you ran into a snag and are worried about c
     # Run this command to verify the file was uploaded (you should see the file name listed)
     aws s3 ls s3://YOUR_BUCKET_NAME/raw/
     ```
-</p></details>
+
+### Long Route: Build the pipeline yourself :white_check_mark:
+
+If you would like to learn more about serverless ETL, have experience working with Lambda and SQS, or want to take your time regardless of the duration then this route is a fit for you. This route will deploy the same components as described above. You will need to configure them to communicate with each other.
+
+**Time to complete:** 30-60 minutes.
+
+<details>
+<summary><strong>Expand for detailed instructions</strong></summary><p>
 
 ### Step 1: Create an S3 Bucket
 This is where your data will live before, during, and after formatting. It's also where your machine learning model will output to.
@@ -211,7 +216,9 @@ It's time to upload our ride telemetry data into our pipeline.
     ```
 </p></details>
 
-**Your fan-out is in progress!**
+</p></details>
+
+### Your fan-out is in progress!
 
 It will take ~8 minutes to process all ~20k entries. Monitor the progress using:
 * [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/home?#dashboards:name=Wild_Rydes_Machine_Learning)

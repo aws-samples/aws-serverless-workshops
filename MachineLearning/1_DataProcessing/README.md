@@ -12,6 +12,11 @@ We'll be building a pipeline that consists of:
 ## Why are we building it?
 If you recall, we're trying to build a system to make better unicorn magic point usage predictions so we can accurately price our service.  To do that, we need to get our data in order.  We need a pipeline that will take our unicorn ride data, join it with the relevant weather station data, and output to a location that can be used downstream by our data scientist from within the SageMaker notebook.  This is the beginning stages of building our training datasets.
 
+We recommend creating a file in Cloud9 where you can compile a few values. If you follow our detailed instructions, the file will be created for you in the home directory. If you want attempt the steps on your own, we recommend creating the file in your home directory to match our convention. In the end, the file will have the following values:
+1. Your bucket name
+1. The URL for your SQS queue
+1. The Amazon Resource Name (ARN) for your SQS queue
+
 ### Short Route: Deploy the pipeline for me :see_no_evil:
 
 The purpose of this module is machine learning inference using serverless technologies. While data processing and ETL is an important component, we recommend using the provided CloudFormation template to ensure you complete the section on time. If you are very comfortable with Lambda and SQS, try the alternative route below with detailed steps.
@@ -72,11 +77,6 @@ If you would like to learn more about serverless ETL, have experience working wi
 
 ### Step 1: Create an S3 Bucket
 This is where your data will live before, during, and after formatting. It's also where your machine learning model will output to.
-
-We recommend creating a file in Cloud9 where you can compile a few values. If you follow our detailed instructions, the file will be created for you in the home directory. If you want attempt the steps on your own, we recommend creating the file in your home directory to match our convention. In the end, the file will have the following values:
-1. Your bucket name
-1. The URL for your SQS queue
-1. The Amazon Resource Name (ARN) for your SQS queue
 
 <details>
 <summary>Create an S3 bucket with a globally unique name and save the name to a scratchpad.txt file that we will use later. (Expand for detailed instructions)</summary><p>

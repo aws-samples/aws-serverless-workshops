@@ -55,7 +55,7 @@ Let's get our code and start working. Inside the terminal:
     cd aws-serverless-workshops/MachineLearning/
     ```
 
-At this point we have a cloud based development environment, with the right credentials, and our source code copied down.
+At this point we have built our cloud based development environment, verified it is configured with the right credentials, and copied down some source code from a code repository.
 
 ## Next step:
 

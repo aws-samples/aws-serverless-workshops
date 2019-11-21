@@ -26,10 +26,16 @@ We don't recommend this route unless you ran into a snag and are worried about c
     ```
     cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
     ```
-1. Run the following command:
+1. Get the execution role ARN
+    ```
+    execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1-1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
+    ```
+1. Create your resources
     ```
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod3-4 \
+    --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
+    ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
     --capabilities CAPABILITY_NAMED_IAM \
     --template-body file://cloudformation/99_complete.yml
     ```

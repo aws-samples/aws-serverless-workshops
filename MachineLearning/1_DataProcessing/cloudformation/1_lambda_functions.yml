@@ -172,15 +172,9 @@ Resources:
                   json_event["groundstation"] = closest(groundstations(),
                                                       {"latitude": json_event["latitude"], "longitude": json_event["longitude" ]})["id"]
                   print('Closest weatherstation for ', json_event["latitude"], ', ', json_event["longitude"], ' is ', json_event["groundstation"])
-                  json_event = label_heavy_magic_utilization(json_event)
                   # events look like:
                   # {"name": "Shadowfax", "statustime": "2019-05-07 20:11:04.247", "latitude": 41.441963, "longitude": -73.574745, "distance": "29.212845", "healthpoints": "217", "magicpoints": "112", "groundstation": "USC00305799"}
                   send_event_to_s3(json_event)
-              return event
-
-          def label_heavy_magic_utilization(event):
-              magic_per_distance = 50
-              event['heavy_utilization'] = int(event['magicpoints'] >= (event['distance'] * magic_per_distance))
               return event
 
           def event_format_check(event):

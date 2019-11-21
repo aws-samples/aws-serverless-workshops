@@ -30,6 +30,10 @@ We don't recommend this route unless you ran into a snag and are worried about c
     ```
     execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1-1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
     ```
+1. Upload the inference code to Lambda
+    ```
+    aws s3 cp lambda-functions/inferencefunction.zip s3://$bucket/code/inferencefunction.zip
+    ```
 1. Create your resources
     ```
     aws cloudformation create-stack \

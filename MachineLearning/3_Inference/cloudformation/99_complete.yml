@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Wild Rydes machine learning infrastructure
+Description: Wild Rydes ML inference infrastructure
 Parameters:
   DataBucket:
     Type: String

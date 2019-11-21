@@ -5,9 +5,9 @@ Parameters:
     Type: String
     MinLength: 1
     ConstraintDescription: 'Enter the name of your S3 data bucket (YOUR_BUCKET_NAME)'
-  DataProcessingExecutionRoleArn:
+  DataProcessingExecutionRoleName:
     Type: String
-    ConstraintDescription: 'Enter the ARN of your role named DataProcessingExecutionRole (this can be found in your scratchpad.txt)'
+    ConstraintDescription: 'Enter the name of your role named DataProcessingExecutionRole (this can be found in your scratchpad.txt)'
     MinLength: 1
 Resources:
   ModelInferenceFunction:
@@ -16,7 +16,7 @@ Resources:
       Description: Wild Rydes lambda function make model inferences
       Handler: index.handler
       MemorySize: 128
-      Role: !GetAtt DataProcessingExecutionRoleArn
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/${DataProcessingExecutionRoleName}"
       Runtime: python2.7
       Environment:
         Variables:

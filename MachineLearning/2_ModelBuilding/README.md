@@ -4,30 +4,11 @@
 
 ### What are we building?
 
-![Architecture diagram](assets/WildRydesML_2.png)
-
-Amazon Athena is an interactive query service that makes it easy to analyze data in Amazon S3 using standard SQL. Athena is serverless, so you won't be managing any infrastructure.
-
-We will start by using Athena to extract a subset of data we're interested in from a much larger data source.
+Amazon SageMaker provides an integrated Jupyter notebook instance for easy access to your data sources for exploration and analysis. It also provides common machine learning algorithms that are optimized to run efficiently against extremely large data in a distributed environment. During this lab you'll be asked to import data from multiple sources, manipulate the data, and format it to the syntax required to take advantage of the built in SageMaker provided algorithms. This will all be completed within a SageMaker notebook.
 
 ![Architecture diagram](assets/WildRydesML_3.png)
 
-Amazon SageMaker is a fully managed machine learning service, so you don't have to manage servers. With SageMaker, data scientists and developers can quickly and easily build and train machine learning models.
-
-We will use a SageMaker notebook as a development space to join the [data we processed in the last section](../1_DataProcessing) with our reduced ground station dataset. Inside of the notebook we will run training jobs against the data and produce a model that is stored in Amazon S3.
-
-## Why are we building it?
-
-The dataset we're using is [NOAA Global Historical Climatology Network Daily (GHCN-D)](https://registry.opendata.aws/noaa-ghcn/) ([dataset readme](https://docs.opendata.aws/noaa-ghcn-pds/readme.html)). There are roughly one billion records in this public data set. We should pair that down. Since our unicorns operate within the New York City area, we're only interested in those ground stations:
-
-```
-US1NYNY0074  40.7969  -73.9330    6.1 NY NEW YORK 8.8 N
-USW00014732  40.7794  -73.8803    3.4 NY NEW YORK LAGUARDIA AP
-USW00094728  40.7789  -73.9692   39.6 NY NEW YORK CNTRL PK TWR
-USW00094789  40.6386  -73.7622    3.4 NY NEW YORK JFK INTL AP
-```
-
-Amazon SageMaker provides an integrated Jupyter authoring notebook instance for easy access to your data sources for exploration and analysis. It also provides common machine learning algorithms that are optimized to run efficiently against extremely large data in a distributed environment. During this lab you'll be asked to import data from multiple sources, manipulate the data, and format it to the syntax required to take advantage of the built in SageMaker provided algorithms. This will be completed within a SageMaker notebook.
+Within the notebook we willl take advantage of Amazon Athena to query data directly from S3.  Amazon Athena is a serverless query service allowing our entire data prep and training process to avoid provisioning any servers.  Amazon Athena will enable us to query the data we processed earlier as well as query a [public weather dataset](https://docs.opendata.aws/noaa-ghcn-pds/readme.html).  Finally we'll transform our Amazon Athena query results into Python dataframes to server as inputs into training our data model.
 
 ### Step 1: Create an Amazon SageMaker notebook
 Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are not available instantly, so create it now and we will come back to it later.
@@ -50,64 +31,8 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 
 </p></details>
 
-### Step 2: Create an AWS Glue database and table against the NOAA data set
 
-<details>
-<summary><strong>Create a CloudFormation stack from `cloudformation/2_ground-station.yml` named `wildrydes-ml-mod2-2`.</strong></summary><p>
-
-1. In your Cloud9 terminal, run the following code:
-    ```
-    # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/2_MachineLearning in your cloud 9 environment
-    # run `pwd` to see your current directory
-
-    aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod2-2 \
-    --template-body file://cloudformation/2_ground-station.yml
-    ```
-1. Open [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/)
-1. Find the `wildrydes-ml-mod2-2` stack in the list of stacks
-1. Wait for the status of the stack to be **CREATE_COMPLETE**
-
-**Hint:** Click the circular arrow icon to refresh the list if it does not auto-refresh.
-
-</p></details><br>
-
-**:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status**
-
-### Step 3: Use Amazon Athena to reduce the size of ground station data
-
-1. Click on the `wildrydes-ml-mod2-2` stack name
-1. In the outputs tab, copy the **AthenaSelectQuery** value
-1. Open [Amazon Athena](https://console.aws.amazon.com/athena/)
-1. Click **Get Started** if you have not used Athena in this region before.
-1. If you see an alert: *Before you run your first query, you need to set up a query result location in Amazon S3.*
-  1. Click on the link in the alert box
-  1. Provide an S3 bucket location to your data bucket: `s3://YOUR_BUCKET_NAME/athena/`
-1. Paste the value you copied into the **New query 1** section.
-1. Click **Run query**
-1. Wait until the query completes, typically 20-30 seconds.
-
-Without provisioning any servers we were able to use Amazon Athena to get the records we need from 94 GB of data in under a minute.
-
-### Step 4: Save the reduced data set in your S3 bucket
-1. In Athena, click **Settings**
-1. Make note of the **Query result location** value
-1. Close the Athena tab and go to [Amazon S3](https://console.aws.amazon.com/s3/)
-1. Navigate to the bucket that matches the query result location
-1. Drill into today's date until you find a CSV for the query you just ran
-    1. Click **Unsaved**
-    1. Click the **current year**
-    1. Click the **current month**
-    1. Click the **current day**
-    1. Find the file ending in `.csv`
-1. Check the box next to the CSV file, click **Actions**, **Copy**
-1. Navigate to your data bucket
-1. Create a new folder by clicking **Create folder**, type `nygroundstationdata`, click **Save**
-1. Navigate into **nygroundstationdata**, click **Actions**, **Paste**
-1. Now you have the relevant weather data in CSV format in our data bucket.
-1. Close the S3 tab
-
-### Step 5: Download the linear learner notebook provided in this workshop
+### Step 2: Download the linear learner notebook provided in this workshop
 1. Open [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/)
 1. Find the `wildrydes-ml-mod2-3` stack in the list of stacks
 1. Verify the status of the stack is **CREATE_COMPLETE**
@@ -126,7 +51,7 @@ Without provisioning any servers we were able to use Amazon Athena to get the re
 1. Exit the terminal tab/window
 1. Verify you see a file named **linear_learner.ipynb**
 
-### Step 6: Execute the instructions in the notebook
+### Step 3: Execute the instructions in the notebook
 1. Click on the **linear_learner.ipynb** file and follow the instructions.
     * You can run the notebook document step-by-step (one cell a time) by pressing `shift + enter`.
     * You can run the whole notebook in a single step by clicking on the menu `Cell -> Run All`.

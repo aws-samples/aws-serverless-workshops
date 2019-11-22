@@ -26,7 +26,7 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
     aws cloudformation create-stack \
     --stack-name wildrydes-ml-mod2 \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/3_sagemaker.yml
+    --template-body file://cloudformation/2_sagemaker.yml
     ```
 
 </p></details>

@@ -28,7 +28,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
     ```
 1. Get the execution role ARN
     ```
-    execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1-1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
+    execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
     ```
 1. Upload the inference code to Lambda
     ```
@@ -37,16 +37,36 @@ We don't recommend this route unless you ran into a snag and are worried about c
 1. Create your resources
     ```
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod3-4 \
+    --stack-name wildrydes-ml-mod3 \
     --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
     ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
     --capabilities CAPABILITY_NAMED_IAM \
     --template-body file://cloudformation/99_complete.yml
     ```
-1. Go back to CloudFormation, in the resources tab, find the `DataBucket` and click on the link.  Drill into the the path that starts will `linear-learner-*` until you find `model.tar.gz`.  Select the checkmark next to this file, and select "Copy Path"
-1. Go back to CloudFormation, in the resources tab, find the `ModelInferenceFunction` and click on the link.  Scroll down to the environment variables section and update the `MODEL_PATH` environment variable with the value you copied from the previous step.  Delete the `s3://BUCKET_NAME/` from the pasted value so that only the key (folder + filename) remains.  Save the changes.
-1. Go back to CloudFormation, in the outputs tab, copy the curl command for making inferences against your function hosting your model and execute.
-1. _Optional_: You can also test the Lambda function by putting using the test API UI in the API Gateway console.
+1. Copy path to trained model
+    1. Go back to [CloudFormation](https://console.aws.amazon.com/cloudformation/)
+    1. Navigate to `wildrydes-ml-mod1`
+    1. Navigate to the `Resources` tab
+    1. Find the `DataBucket` and click on the link
+    1. Drill into the the path that starts will `linear-learner-*` until you find `model.tar.gz`
+    1. Click **model.tar.gz**
+    1. Click **Copy Path**
+1. Update the path of the model in the Lambda function
+    1. Go back to [CloudFormation](https://console.aws.amazon.com/cloudformation/)
+    1. Navigate to `wildrydes-ml-mod3`
+    1. Navigate to the `Resources` tab
+    1. Find the `ModelInferenceFunction` and click on the link
+    1. Scroll down to the environment variables section
+    1. Update the `MODEL_PATH` environment variable with the value you copied from the previous step
+    1. Delete the `s3://BUCKET_NAME/` from the pasted value so that only the key (folder + filename) remains
+    1. Click **Save** at the top of the screen
+1. Test your API
+    1. Go back to [CloudFormation](https://console.aws.amazon.com/cloudformation/)
+    1. Navigate to `wildrydes-ml-mod3`
+    1. Navigate to `Outputs` tab
+    1. Copy the `InferenceFunctionTestCommand`
+    1. In Cloud9, execute the command
+    1. _Optional_: You can also test the Lambda function by putting using the test API UI in the API Gateway console.
 
 </p></details>
 
@@ -61,7 +81,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
     ```
 1. Set the data processing execution role as an environment variable
     ```
-    execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1-1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
+    execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
     ```
 1. Verify the variable is set
     ```
@@ -95,7 +115,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
 At this point, we have a trained model on S3.  Now, we're ready to load the model into Lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
-<summary>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/4_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-4</code>. (Expand for detailed instructions)</summary><p>
+<summary>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/3_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3</code>. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to your Cloud9 environment
 1. Run the following command to create your resources:
@@ -104,11 +124,11 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
     # run `pwd` to see your current directory
 
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod3-4 \
+    --stack-name wildrydes-ml-mod3 \
     --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
     ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/4_lambda_function.yml
+    --template-body file://cloudformation/3_lambda_function.yml
     ```
 1. Run the following command to check on the status of your CloudFormation stack:
     ```
@@ -116,7 +136,7 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
     # If you see "CREATE_IN_PROGRESS", your stack is still being created. Wait and re-run the command.
     # If you see "ROLLBACK_COMPLETE", pause and see what went wrong.
     aws cloudformation describe-stacks \
-        --stack-name wildrydes-ml-mod3-4 \
+        --stack-name wildrydes-ml-mod3 \
         --query "Stacks[0].StackStatus"
     ```
 1. You can also use the [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/) console to check status and (unexpected) errors

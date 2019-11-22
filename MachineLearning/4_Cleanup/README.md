@@ -10,13 +10,11 @@
     # Delete your bucket
     aws s3 rb s3://$bucket
     # The inference resources from module 3
-    aws cloudformation delete-stack --stack-name wildrydes-ml-mod3-4
+    aws cloudformation delete-stack --stack-name wildrydes-ml-mod3
     # The machine learning resources from module 2
-    aws cloudformation delete-stack --stack-name wildrydes-ml-mod2-3
-    # The Glue resources from module 2
-    aws cloudformation delete-stack --stack-name wildrydes-ml-mod2-2
+    aws cloudformation delete-stack --stack-name wildrydes-ml-mod2
     # The data processing resources from module 1
-    aws cloudformation delete-stack --stack-name wildrydes-ml-mod1-1
+    aws cloudformation delete-stack --stack-name wildrydes-ml-mod1
     ```
 1. Exit your Cloud9 environment
 1. Select the environment you've been using

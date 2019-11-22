@@ -14,7 +14,7 @@ Within the notebook we willl take advantage of Amazon Athena to query data direc
 Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are not available instantly, so create it now and we will come back to it later.
 
 <details>
-<summary><strong>Create a CloudFormation stack from `cloudformation/3_sagemaker.yml` named `wildrydes-ml-mod2-3`.</strong></summary><p>
+<summary><strong>Create a CloudFormation stack from `cloudformation/3_sagemaker.yml` named `wildrydes-ml-mod2`.</strong></summary><p>
 
 1. Navigate to your Cloud9 environment
 1. Make sure you're in the correct directory first
@@ -24,9 +24,9 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 1. Run the following command to create your resources:
     ```
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod2-3 \
+    --stack-name wildrydes-ml-mod2 \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/3_sagemaker.yml
+    --template-body file://cloudformation/2_sagemaker.yml
     ```
 
 </p></details>
@@ -34,7 +34,7 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 
 ### Step 2: Download the linear learner notebook provided in this workshop
 1. Open [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/)
-1. Find the `wildrydes-ml-mod2-3` stack in the list of stacks
+1. Find the `wildrydes-ml-mod2` stack in the list of stacks
 1. Verify the status of the stack is **CREATE_COMPLETE**
     * **Hint:** Click the circular arrow icon to refresh the list if it does not auto-refresh.
     * **DO NOT move past this point until you see CREATE_COMPLETE as the status**

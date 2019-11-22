@@ -37,7 +37,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
 1. Create your resources
     ```
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod3-4 \
+    --stack-name wildrydes-ml-mod3 \
     --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
     ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
     --capabilities CAPABILITY_NAMED_IAM \
@@ -95,7 +95,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
 At this point, we have a trained model on S3.  Now, we're ready to load the model into Lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
-<summary>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/4_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3-4</code>. (Expand for detailed instructions)</summary><p>
+<summary>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/3_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3</code>. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to your Cloud9 environment
 1. Run the following command to create your resources:
@@ -104,11 +104,11 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
     # run `pwd` to see your current directory
 
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod3-4 \
+    --stack-name wildrydes-ml-mod3 \
     --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
     ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
     --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/4_lambda_function.yml
+    --template-body file://cloudformation/3_lambda_function.yml
     ```
 1. Run the following command to check on the status of your CloudFormation stack:
     ```
@@ -116,7 +116,7 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
     # If you see "CREATE_IN_PROGRESS", your stack is still being created. Wait and re-run the command.
     # If you see "ROLLBACK_COMPLETE", pause and see what went wrong.
     aws cloudformation describe-stacks \
-        --stack-name wildrydes-ml-mod3-4 \
+        --stack-name wildrydes-ml-mod3 \
         --query "Stacks[0].StackStatus"
     ```
 1. You can also use the [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/) console to check status and (unexpected) errors

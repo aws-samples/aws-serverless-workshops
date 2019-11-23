@@ -150,10 +150,15 @@ The previous step gave us a Lambda function that will load the ML model from S3,
 <details>
 <summary>1. Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET. (Expand for detailed instructions)</summary><p>
 
+1. Run this command in your Cloud9 console:
+```
+aws s3 ls s3://$bucket
+```
+Copy the path that starts with `linear-learner-yyyy-mm-dd-00-40-46-627`. You'll need it below.
 1. Open the [Lambda console](https://console.aws.amazon.com/lambda)
 1. Open the function containing `ModelInferenceFunction` in the name
 1. Scroll down and populate the `MODEL_PATH` key with the location of your model
-  * The format will look like this: linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz
+  * The format will look like this: `linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz`.  Replace the first part with the string you copied in step 1.  Make sure the full string looks like `linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz`
 1. Click **Save**
 
 </p></details>
@@ -187,7 +192,7 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 1. Click the checkbox next to it
 1. Verify `Lambda Function` is selected as the **Integration type**
 1. Check the box next to **Use Lambda Proxy integration** so we get all request details
-1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown.
+1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown (if its not a dropdown, see the instructions below).
   * If you're in a region that does not match these directions, you need to provide the Amazon Resource Name (ARN). To find the ARN:
     1. Go back to the [Lambda console](https://console.aws.amazon.com/lambda)
     1. Click on the `ModelInferenceFunction` function

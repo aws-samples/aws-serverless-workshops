@@ -16,9 +16,7 @@ def download_model():
     os.system('cd /tmp && unzip model_algo-1')
 
 def create_data_iter(input):
-    # 'distance','healthpoints','magicpoints','TMIN','TMAX','PRCP','heavy_utilization'
     data = np.array([[input['distance'],input['healthpoints'],input['magicpoints'],input['TMIN'],input['TMAX'],input['PRCP']]])
-    # data_iter = mx.io.NDArrayIter(data=data, label=label, batch_size=30)
     data_iter = mx.io.NDArrayIter(data=data, batch_size=1)
     return data_iter
 

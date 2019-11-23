@@ -26,10 +26,6 @@ We don't recommend this route unless you ran into a snag and are worried about c
     ```
     cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
     ```
-1. Get the execution role ARN
-    ```
-    execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
-    ```
 1. Upload the inference code to Lambda
     ```
     aws s3 cp lambda-functions/inferencefunction.zip s3://$bucket/code/inferencefunction.zip
@@ -37,36 +33,14 @@ We don't recommend this route unless you ran into a snag and are worried about c
 1. Create your resources
     ```
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod3 \
-    --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
-    ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
-    --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/99_complete.yml
+      --stack-name wildrydes-ml-mod3 \
+      --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
+                   ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text) \
+                   ParameterKey=TrainedModelPath,ParameterValue=$(aws s3 ls s3://$bucket/linear-learner --recursive | grep 'model' | cut -c 32-) \
+      --capabilities CAPABILITY_NAMED_IAM \
+      --template-body file://cloudformation/99_complete.yml
     ```
-1. Copy path to trained model
-    1. Go back to [CloudFormation](https://console.aws.amazon.com/cloudformation/)
-    1. Navigate to `wildrydes-ml-mod1`
-    1. Navigate to the `Resources` tab
-    1. Find the `DataBucket` and click on the link
-    1. Drill into the the path that starts will `linear-learner-*` until you find `model.tar.gz`
-    1. Click **model.tar.gz**
-    1. Click **Copy Path**
-1. Update the path of the model in the Lambda function
-    1. Go back to [CloudFormation](https://console.aws.amazon.com/cloudformation/)
-    1. Navigate to `wildrydes-ml-mod3`
-    1. Navigate to the `Resources` tab
-    1. Find the `ModelInferenceFunction` and click on the link
-    1. Scroll down to the environment variables section
-    1. Update the `MODEL_PATH` environment variable with the value you copied from the previous step
-    1. Delete the `s3://BUCKET_NAME/` from the pasted value so that only the key (folder + filename) remains
-    1. Click **Save** at the top of the screen
-1. Test your API
-    1. Go back to [CloudFormation](https://console.aws.amazon.com/cloudformation/)
-    1. Navigate to `wildrydes-ml-mod3`
-    1. Navigate to `Outputs` tab
-    1. Copy the `InferenceFunctionTestCommand`
-    1. In Cloud9, execute the command
-    1. _Optional_: You can also test the Lambda function by putting using the test API UI in the API Gateway console.
+1. Scroll down to the section on testing your API
 
 </p></details>
 

@@ -9,6 +9,10 @@ Parameters:
     Type: String
     ConstraintDescription: 'Enter the name of your role named DataProcessingExecutionRole (this can be found in your scratchpad.txt)'
     MinLength: 1
+  TrainedModelPath:
+    Type: String
+    MinLength: 1
+    ConstraintDescription: 'Enter the path to your trained model'
 Resources:
   ModelInferenceFunction:
     Type: AWS::Lambda::Function
@@ -21,7 +25,7 @@ Resources:
       Environment:
         Variables:
           OUTPUT_BUCKET: !Ref DataBucket
-          MODEL_PATH: 'linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz'
+          MODEL_PATH: !Ref TrainedModelPath
       Timeout: 3
       Tags:
         -

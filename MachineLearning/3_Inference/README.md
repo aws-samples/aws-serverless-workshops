@@ -7,12 +7,12 @@
 
 Now that are model is trained, we need a way to make inferences against it.  In this section we'll be building an HTTP rest endpoint (API Gateway) where we can POST JSON data against our model sitting on S3.  A Lambda function will load the model, and make an inference directly against the model and return it in the HTTP response.
 
-We will be doing model inferences *outside* of SageMaker.
+We will be doing model inferences *outside* of Amazon SageMaker.
 
 ## Why are we building it?
 With the ability to now, get real-time information of whether or not a ride is going to "cost" more to the unicorn based on mileage _plus_ weather (instead of just mileage), our pricing workflow can be updated to include this http endpoint.  Enabling our company to give better, more realistic pricing based on actual usage.
 
-Why Lambda?  Our unicorn fleet isn't a single breed.  We offer the largest selection of rare unicorn breeds for customers of all needs.  We expect that after further research, each breed is actually responding differently to various weather conditions.  By hosting our models on S3 and using Lambda to make inferences, we can have a dynamic HTTP interface to make predictions against a ML model specific to a unicorn breed without having to pay for separate SageMaker endpoints (1 per unicorn breed - we have thousands).
+Why Lambda?  Our unicorn fleet isn't a single breed.  We offer the largest selection of rare unicorn breeds for customers of all needs.  We expect that after further research, each breed is actually responding differently to various weather conditions.  By hosting our models on S3 and using Lambda to make inferences, we can have a dynamic HTTP interface to make predictions against a ML model specific to a unicorn breed without having to pay for separate Amazon SageMaker endpoints (1 per unicorn breed - we have thousands).
 
 ### Short cut: Deploy everything for me
 
@@ -170,10 +170,10 @@ Copy the path that starts with `linear-learner-yyyy-mm-dd-00-40-46-627`. You'll 
 
 Amazon SageMaker can be used to build, train, and deploy machine learning models.  We're leveraging it to build and train our model.  Due to our business possibly having thousands of models, 1 per unicorn breed, its actually better for us to host this model ourselves on Lambda.  Below are the high level steps that we've completed on your behalf for this workshop, but you're free to explore if you need to recreate this.
 
-1. Build MXNet from source for 1) the current support Lambda runtime and 2) the current MXNet version that SageMaker uses. [Instructions here](building-mxnet-1.2.1.md).
-1. The code in [lambda-functions/lambda_function.py](lambda-functions/lambda_function.py) will load the model from S3, load mxnet, and make inferences against our model.  You'd need to install these dependencies locally in an environment similar to the runtime for Lambda and package those dependencies following [this instructions](https://docs.aws.amazon.com/Lambda/latest/dg/Lambda-python-how-to-create-deployment-package.html#python-package-dependencies).  If you unzip [lambda-functions/inferencefunction.zip](lambda-functions/inferencefunction.zip), you'll see the result of those steps as reference.
+1. Build MXNet from source for 1) the current support Lambda runtime and 2) the current MXNet version that Amazon SageMaker uses. [Instructions here](building-mxnet-1.2.1.md).
+1. The code in [lambda-functions/lambda_function.py](lambda-functions/lambda_function.py) will load the model from S3, load MXNet, and make inferences against our model.  You'd need to install these dependencies locally in an environment similar to the runtime for Lambda and package those dependencies following [this instructions](https://docs.aws.amazon.com/Lambda/latest/dg/Lambda-python-how-to-create-deployment-package.html#python-package-dependencies).  If you unzip [lambda-functions/inferencefunction.zip](lambda-functions/inferencefunction.zip), you'll see the result of those steps as reference.
 1. **`download_model` function**: Once we've got MXNet built for our environment, and the Lambda package built, we can proceed reviewing the code.  The Lambda function loads the model from S3 on the fly at the time of request and unzips it locally.
-1. **`create_data_iter` function**: The HTTP request data is formated in a numpy array, required by the mxnet linear learner model interface to make inferences
+1. **`create_data_iter` function**: The HTTP request data is formatted in a NumPy array, required by the MXNet linear learner model interface to make inferences
 1. **`make_prediction` function**: An inference is made and then packaged for an HTTP response to the caller.
 
 </p></details>
@@ -192,13 +192,13 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 1. Click the checkbox next to it
 1. Verify `Lambda Function` is selected as the **Integration type**
 1. Check the box next to **Use Lambda Proxy integration** so we get all request details
-1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown (if its not a dropdown, see the instructions below).
-  * If you're in a region that does not match these directions, you need to provide the Amazon Resource Name (ARN). To find the ARN:
-    1. Go back to the [Lambda console](https://console.aws.amazon.com/lambda)
-    1. Click on the `ModelInferenceFunction` function
-    1. Copy the ARN in the upper right
-    1. Go back to the API Gateway screen
-    1. Paste the ARN in the text box
+1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown (if it is not a dropdown, see the instructions below).
+    * If you're in a region that does not match these directions, you need to provide the Amazon Resource Name (ARN). To find the ARN:
+        1. Go back to the [Lambda console](https://console.aws.amazon.com/lambda)
+        1. Click on the `ModelInferenceFunction` function
+        1. Copy the ARN in the upper right
+        1. Go back to the API Gateway screen
+        1. Paste the ARN in the text box
 1. Click **Save**
 1. Click **OK** to the permissions dialogue box
 </p></details>
@@ -207,9 +207,9 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 <summary>2. Deploy your API Gateway. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to the `ModelInferenceApi`. If not already there:
-  1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway)
-  1. Click `ModelInferenceApi`
-  1. Select the root `/` resource
+    1. Open the [API Gateway console](https://console.aws.amazon.com/apigateway)
+    1. Click `ModelInferenceApi`
+    1. Select the root `/` resource
 1. Click **Actions** > **Deploy API**
 1. Select `[New Stage]` for **Deployment Stage**
 1. Type `prod` for **Stage name**

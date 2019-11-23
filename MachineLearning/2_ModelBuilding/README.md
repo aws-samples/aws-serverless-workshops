@@ -4,11 +4,11 @@
 
 ### What are we building?
 
-Amazon SageMaker provides an integrated Jupyter notebook instance for easy access to your data sources for exploration and analysis. It also provides common machine learning algorithms that are optimized to run efficiently against extremely large data in a distributed environment. During this lab you'll be asked to import data from multiple sources, manipulate the data, and format it to the syntax required to take advantage of the built in SageMaker provided algorithms. This will all be completed within a SageMaker notebook.
+Amazon SageMaker provides an integrated Jupyter notebook instance for easy access to your data sources for exploration and analysis. It also provides common machine learning algorithms that are optimized to run efficiently against extremely large data in a distributed environment. During this lab you'll be asked to import data from multiple sources, manipulate the data, and format it to the syntax required to take advantage of the built in Amazon SageMaker provided algorithms. This will all be completed within an Amazon SageMaker notebook.
 
 ![Architecture diagram](assets/WildRydesML_2.png)
 
-Within the notebook we willl take advantage of Amazon Athena to query data directly from S3.  Amazon Athena is a serverless query service allowing our entire data prep and training process to avoid provisioning any servers.  Amazon Athena will enable us to query the data we processed earlier as well as query a [public weather dataset](https://docs.opendata.aws/noaa-ghcn-pds/readme.html).  Finally we'll transform our Amazon Athena query results into Python dataframes to server as inputs into training our data model.
+Within the notebook we will take advantage of Amazon Athena to query data directly from S3.  Amazon Athena is a serverless query service allowing our entire data prep and training process to avoid provisioning any servers.  Amazon Athena will enable us to query the data we processed earlier as well as query a [public weather dataset](https://docs.opendata.aws/noaa-ghcn-pds/readme.html).  Finally we'll transform our Amazon Athena query results into Python dataframes to serve as inputs into training our data model.
 
 ### Step 1: Create an Amazon SageMaker notebook
 Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are not available instantly, so create it now and we will come back to it later.
@@ -24,9 +24,9 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 1. Run the following command to create your resources:
     ```
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod2 \
-    --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/2_sagemaker.yml
+      --stack-name wildrydes-ml-mod2 \
+      --capabilities CAPABILITY_NAMED_IAM \
+      --template-body file://cloudformation/2_sagemaker.yml
     ```
 
 </p></details>
@@ -46,7 +46,7 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 1. A new tab will open. When in the terminal, run the following command:
     ```
     curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/2_ModelBuilding/notebooks/linear_learner.ipynb \
-    -o SageMaker/linear_learner.ipynb && exit
+      -o SageMaker/linear_learner.ipynb && exit
     ```
 1. Exit the terminal tab/window
 1. Verify you see a file named **linear_learner.ipynb**
@@ -65,9 +65,9 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 1. Close out of all SageMaker tabs
 1. Close S3 tab
 
-## Learn more:
-* [First Time SageMaker User](https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html#first-time-user)
-* [Security in SageMaker](https://docs.aws.amazon.com/sagemaker/latest/dg/security.html)
+## Learn more about Amazon SageMaker:
+* [First Time Amazon SageMaker User](https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html#first-time-user)
+* [Security in Amazon SageMaker](https://docs.aws.amazon.com/sagemaker/latest/dg/security.html)
 * [Amazon SageMaker Example Notebooks](https://github.com/awslabs/amazon-sagemaker-examples)
 
 ## Next step:

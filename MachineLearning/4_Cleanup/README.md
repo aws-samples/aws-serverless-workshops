@@ -5,10 +5,8 @@
 1. Navigate to your Cloud9 environment
 1. Run the following commands to delete your resources:
     ```
-    # Delete all objects from your bucket
-    aws s3 rm s3://$bucket --recursive
-    # Delete your bucket
-    aws s3 rb s3://$bucket
+    # Delete your bucket and all contents
+    aws s3 rb s3://$bucket --force
     # The inference resources from module 3
     aws cloudformation delete-stack --stack-name wildrydes-ml-mod3
     # The machine learning resources from module 2

@@ -56,14 +56,16 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
     * You can run the notebook document step-by-step (one cell a time) by pressing `shift + enter`.
     * You can run the whole notebook in a single step by clicking on the menu `Cell -> Run All`.
     * To restart the kernel (i.e. the computational engine), click on the menu `Kernel -> Restart`. This can be useful to start over a computation from scratch (e.g. variables are deleted, open files are closed, etc…).
-1. Once complete, you should have a trained model in S3. Verify you have a model by:
-    1. Navigate to [Amazon S3](https://console.aws.amazon.com/s3/) in the console
-    1. Navigate to the data bucket you created
-    1. Navigate to a directory with a name containing `linear-learner-TODAYS_DATE`
-    1. Navigate to `output` directory
-    1. Verify you see `model.tar.gz`
-1. Close out of all SageMaker tabs
+1. Once complete, you should have a trained model in S3.
+
+### Step 4: Verify you have a model
+1. Navigate to [Amazon S3](https://console.aws.amazon.com/s3/) in the console
+1. Navigate to the data bucket you created
+1. Navigate to a directory with a name containing `linear-learner-TODAYS_DATE`
+1. Navigate to `output` directory
+1. Verify you see `model.tar.gz`
 1. Close S3 tab
+1. Close out of all Amazon SageMaker tabs
 
 ## Learn more about Amazon SageMaker:
 * [First Time Amazon SageMaker User](https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html#first-time-user)

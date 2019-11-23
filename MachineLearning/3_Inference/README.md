@@ -101,7 +101,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
 1. Run the following command to upload the Lambda function for inference
     ```
     # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference in your cloud 9 environment
-    # run `pwd` to see your current directory
+    cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
 
     # Run this command to upload the ride data
     aws s3 cp lambda-functions/inferencefunction.zip s3://$bucket/code/inferencefunction.zip
@@ -121,14 +121,14 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 1. Run the following command to create your resources:
     ```
     # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference in your cloud 9 environment
-    # run `pwd` to see your current directory
+    cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
 
     aws cloudformation create-stack \
-    --stack-name wildrydes-ml-mod3 \
-    --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
-    ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
-    --capabilities CAPABILITY_NAMED_IAM \
-    --template-body file://cloudformation/3_lambda_function.yml
+      --stack-name wildrydes-ml-mod3 \
+      --parameters ParameterKey=DataBucket,ParameterValue=$bucket \
+                   ParameterKey=DataProcessingExecutionRoleName,ParameterValue=$execution_role \
+      --capabilities CAPABILITY_NAMED_IAM \
+      --template-body file://cloudformation/3_lambda_function.yml
     ```
 1. Run the following command to check on the status of your CloudFormation stack:
     ```
@@ -151,14 +151,15 @@ The previous step gave us a Lambda function that will load the ML model from S3,
 <summary>1. Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET. (Expand for detailed instructions)</summary><p>
 
 1. Run this command in your Cloud9 console:
-```
-aws s3 ls s3://$bucket
-```
-Copy the path that starts with `linear-learner-yyyy-mm-dd-00-40-46-627`. You'll need it below.
+    ```
+    aws s3 ls s3://$bucket/linear-learner --recursive | grep 'model' | cut -c 32-
+    ```
+1. Copy the returned value. You'll need it below.
 1. Open the [Lambda console](https://console.aws.amazon.com/lambda)
 1. Open the function containing `ModelInferenceFunction` in the name
-1. Scroll down and populate the `MODEL_PATH` key with the location of your model
-  * The format will look like this: `linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz`.  Replace the first part with the string you copied in step 1.  Make sure the full string looks like `linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz`
+1. Scroll down and populate the `MODEL_PATH` key with the location of your model (what you just copied)
+  * Replace the entire existing value with the string you copied.
+  * Make sure the full string looks like this: `linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz`
 1. Click **Save**
 
 </p></details>
@@ -218,11 +219,19 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 
 Take note of your **Invoke URL**
 
-### Step 6: Test your API
-1. Copy the stage url, and invoke a `POST` request against your new HTTP endpoint to make an inference! _Example:_
+## Testing your API
+
+1. Navigate to your Cloud9 environment
+1. Run the following command to get a premade cURL command you can use to call your model:
     ```
-    curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 2500, "TMAX": 333, "TMIN": 300, "PRCP": 0 }' -H "Content-Type: application/json" -X POST STAGE_URL
+    # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference in your cloud 9 environment
+    cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
+    
+    aws cloudformation describe-stacks --stack-name wildrydes-ml-mod3 \
+      --query "Stacks[0].Outputs[?OutputKey=='InferenceFunctionTestCommand'].OutputValue" --output text
     ```
+1. Copy the output and execute the command that looks like: `curl -d { ... }`
+1. _Optional_: You can also test the Lambda function by putting using the test API UI in the API Gateway console.
 
 ### Now What?
 Let's recap - you've put together a pipeline, that:

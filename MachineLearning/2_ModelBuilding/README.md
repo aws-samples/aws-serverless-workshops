@@ -14,7 +14,7 @@ Within the notebook we will take advantage of Amazon Athena to query data direct
 Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are not available instantly, so create it now and we will come back to it later.
 
 <details>
-<summary><strong>Create a CloudFormation stack from `cloudformation/3_sagemaker.yml` named `wildrydes-ml-mod2`.</strong></summary><p>
+<summary>Create a CloudFormation stack from `cloudformation/2_sagemaker.yml` named `wildrydes-ml-mod2`.</summary><p>
 
 1. Navigate to your Cloud9 environment
 1. Make sure you're in the correct directory first
@@ -28,16 +28,24 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
       --capabilities CAPABILITY_NAMED_IAM \
       --template-body file://cloudformation/2_sagemaker.yml
     ```
+1. Monitor the status of your stack creation. **EITHER:**
+    1. Go to [CloudFormation in the AWS Console](https://console.aws.amazon.com/cloudformation) **OR**
+    1. Run the following command in Cloud9 until you get `CREATE_COMPLETE` in the output:
+        ```
+        # Run this command to verify the stack was successfully created. You should expect to see "CREATE_COMPLETE".
+        # If you see "CREATE_IN_PROGRESS", your stack is still being created. Wait and re-run the command.
+        # If you see "ROLLBACK_COMPLETE", pause and see what went wrong.
+        aws cloudformation describe-stacks \
+            --stack-name wildrydes-ml-mod2 \
+            --query "Stacks[0].StackStatus"
+        ```
 
-</p></details>
+</p></details><br>
+
+**:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
 
 
 ### Step 2: Download the linear learner notebook provided in this workshop
-1. Open [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/)
-1. Find the `wildrydes-ml-mod2` stack in the list of stacks
-1. Verify the status of the stack is **CREATE_COMPLETE**
-    * **Hint:** Click the circular arrow icon to refresh the list if it does not auto-refresh.
-    * **DO NOT move past this point until you see CREATE_COMPLETE as the status**
 1. Open [Amazon SageMaker](https://console.aws.amazon.com/sagemaker)
 1. Navigate to **Notebook instances**
 1. Find the notebook instance named `WildRydesNotebook-***`
@@ -59,13 +67,13 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 1. Once complete, you should have a trained model in S3.
 
 ### Step 4: Verify you have a model
-1. Navigate to [Amazon S3](https://console.aws.amazon.com/s3/) in the console
-1. Navigate to the data bucket you created
-1. Navigate to a directory with a name containing `linear-learner-TODAYS_DATE`
-1. Navigate to `output` directory
-1. Verify you see `model.tar.gz`
-1. Close S3 tab
-1. Close out of all Amazon SageMaker tabs
+1. Navigate to your Cloud9 environment
+1. Run the following command to verify you have a model:
+    ```
+    aws s3 ls s3://$bucket/linear-learner --recursive
+    ```
+1. If you get a result, great. If you don't get a result, check for errors in the Amazon SageMaker notebook output.
+1. Close all Amazon SageMaker tabs.
 
 ## Learn more about Amazon SageMaker:
 * [First Time Amazon SageMaker User](https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html#first-time-user)
@@ -73,4 +81,4 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 * [Amazon SageMaker Example Notebooks](https://github.com/awslabs/amazon-sagemaker-examples)
 
 ## Next step:
-Instead of using an endpoint with an always on server, let's explore [using Lambda to make inferences against our model](../3_Inference).
+Instead of using an Amazon SageMaker endpoint with an always-on server, let's explore [using Lambda to make inferences against our model](../3_Inference).

@@ -49,10 +49,6 @@ We don't recommend this route unless you ran into a snag and are worried about c
 <summary>Grab the name of your IAM DataProcessingExecutionRole and add it to scratchpad.txt for use later. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to your Cloud9 environment
-1. Make sure you're in the correct directory first
-    ```
-    cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
-    ```
 1. Set the data processing execution role as an environment variable
     ```
     execution_role=$(aws cloudformation describe-stack-resources --stack-name wildrydes-ml-mod1 --logical-resource-id DataProcessingExecutionRole --query "StackResources[0].PhysicalResourceId" --output text)
@@ -89,7 +85,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
 At this point, we have a trained model on S3.  Now, we're ready to load the model into Lambda at runtime and make inferences against the model.  The Lambda function that will make inferences is hosted behind an API Gateway that will accept POST HTTP requests.
 
 <details>
-<summary>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/3_Lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3</code>. (Expand for detailed instructions)</summary><p>
+<summary>Create Lambda function for Model Inferences named <code>ModelInferenceFunction</code> and an HTTP API by launching <code>cloudformation/3_lambda_function.yml</code> Stack and naming it <code>wildrydes-ml-mod3</code>. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to your Cloud9 environment
 1. Run the following command to create your resources:
@@ -104,16 +100,17 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
       --capabilities CAPABILITY_NAMED_IAM \
       --template-body file://cloudformation/3_lambda_function.yml
     ```
-1. Run the following command to check on the status of your CloudFormation stack:
-    ```
-    # Run this command to verify the stack was successfully created. You should expect to see "CREATE_COMPLETE".
-    # If you see "CREATE_IN_PROGRESS", your stack is still being created. Wait and re-run the command.
-    # If you see "ROLLBACK_COMPLETE", pause and see what went wrong.
-    aws cloudformation describe-stacks \
-        --stack-name wildrydes-ml-mod3 \
-        --query "Stacks[0].StackStatus"
-    ```
-1. You can also use the [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/) console to check status and (unexpected) errors
+1. Monitor the status of your stack creation. **EITHER:**
+    1. Go to [CloudFormation in the AWS Console](https://console.aws.amazon.com/cloudformation) **OR**
+    1. Run the following command in Cloud9 until you get `CREATE_COMPLETE` in the output:
+        ```
+        # Run this command to verify the stack was successfully created. You should expect to see "CREATE_COMPLETE".
+        # If you see "CREATE_IN_PROGRESS", your stack is still being created. Wait and re-run the command.
+        # If you see "ROLLBACK_COMPLETE", pause and see what went wrong.
+        aws cloudformation describe-stacks \
+            --stack-name wildrydes-ml-mod3 \
+            --query "Stacks[0].StackStatus"
+        ```
 </p></details><br>
 
 **:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
@@ -122,7 +119,7 @@ At this point, we have a trained model on S3.  Now, we're ready to load the mode
 The previous step gave us a Lambda function that will load the ML model from S3, make inferences against it in Lambda, and return the results from behind API Gateway.  For this to work, we need to connect some critical pieces.
 
 <details>
-<summary>1. Update the <code>ModelInferenceFunction</code> environment variable MODEL_PATH to the correct value from YOUR_DATA_BUCKET. (Expand for detailed instructions)</summary><p>
+<summary>1. Update the <code>MODEL_PATH</code> environment variable in <code>ModelInferenceFunction</code>. Set the value to your bucket name. (Expand for detailed instructions)</summary><p>
 
 1. Run this command in your Cloud9 console:
     ```
@@ -167,13 +164,7 @@ The last thing we need to connect is the HTTP API Gateway to your `ModelInferenc
 1. Click the checkbox next to it
 1. Verify `Lambda Function` is selected as the **Integration type**
 1. Check the box next to **Use Lambda Proxy integration** so we get all request details
-1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown (if it is not a dropdown, see the instructions below).
-    * If you're in a region that does not match these directions, you need to provide the Amazon Resource Name (ARN). To find the ARN:
-        1. Go back to the [Lambda console](https://console.aws.amazon.com/lambda)
-        1. Click on the `ModelInferenceFunction` function
-        1. Copy the ARN in the upper right
-        1. Go back to the API Gateway screen
-        1. Paste the ARN in the text box
+1. Select your `ModelInferenceFunction` in the **Lambda Function** dropdown. If it is not a dropdown, start typing 'inference' to find and select your function.
 1. Click **Save**
 1. Click **OK** to the permissions dialogue box
 </p></details>
@@ -200,7 +191,7 @@ Take note of your **Invoke URL**
     ```
     # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/3_Inference in your cloud 9 environment
     cd ~/environment/aws-serverless-workshops/MachineLearning/3_Inference
-    
+
     aws cloudformation describe-stacks --stack-name wildrydes-ml-mod3 \
       --query "Stacks[0].Outputs[?OutputKey=='InferenceFunctionTestCommand'].OutputValue" --output text
     ```

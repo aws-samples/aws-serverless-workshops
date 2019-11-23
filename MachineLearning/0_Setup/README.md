@@ -6,6 +6,8 @@
 
 We are going to use [AWS Cloud9](https://aws.amazon.com/cloud9/) as our cloud-based integrated development environment. It will get you bootstrapped with the right tools and access on Day 1.
 
+_If you already have a Cloud9 environment, feel free to use that._
+
 ### Step 1: Create a Cloud9 environment
 
 <details>

@@ -137,13 +137,13 @@ To take advantage of the parallelism available with Lambda, we are going to fan-
 </p></details>
 
 
-### Step 3: Create the Lambda functions
+### Step 3: Create the remaining infrastructure
 
 <details>
 <summary>Create a CloudFormation stack from `cloudformation/1_lambda_functions.yml` named `wildrydes-ml-mod1`. (Expand for detailed instructions)</summary><p>
 
 1. Navigate to your Cloud9 environment
-1. Run the following command to create your Lambda functions
+1. Run the following command to create your infrastructure
     ```
     # Command should be ran from /home/ec2-user/environment/aws-serverless-workshops/MachineLearning/1_DataProcessing in your cloud 9 environment
     # run `pwd` to see your current directory
@@ -168,23 +168,23 @@ To take advantage of the parallelism available with Lambda, we are going to fan-
         ```
 </p></details><br>
 
-This gives you:
+**:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
+
+After CloudFormation is done creating your infrastructure, you will have:
 * Lambda function skeletons
 * Dead Letter Queues (DLQ)
 * IAM permissions
 * CloudWatch dashboard
 
-While these are necessary, they're not the focus of this part of the lab.  This is why we're creating them in a CloudFormation template for you.
-
-**:heavy_exclamation_mark: DO NOT move past this point until you see CREATE_COMPLETE as the status for your CloudFormation stack**
+While these are necessary components of our data processing pipeline, they're not the focus of this part of the lab.  This is why we're creating them in a CloudFormation template for you.
 
 ### Step 4: Wire up the Lambda functions
-The previous step gave you the foundation for the Lambda functions that will either be triggered by S3 events or SQS queues.  Now, you need to wire up the Lambda function to appropriate event sources and set the appropriate environment variables. We're going to use values from scratchpad.txt, so have that handy.
+The previous step gave you the foundation for the Lambda functions that will either be triggered by S3 events or our SQS queue.  Now, you need to wire up the Lambda functions to appropriate event sources and set some environment variables. We're going to use values from scratchpad.txt, so have that handy.
 
-Expand each substep for detailed instructions.
+Expand each substep for detailed instructions, if needed.
 
 <details>
-<summary>1. Update OUTPUT_QUEUE environment variable for IngestUnicornRawDataFunction to your queue URL (in scratchpad.txt)</summary><p>
+<summary>1. Update the <code>OUTPUT_QUEUE</code> environment variable in <code>IngestUnicornRawDataFunction</code>. Set the value to your Queue URL (in scratchpad.txt).</summary><p>
 
 1. Open the [Lambda console](https://console.aws.amazon.com/lambda)
 1. Open the function containing `IngestUnicornRawDataFunction` in the name
@@ -193,7 +193,7 @@ Expand each substep for detailed instructions.
 </p></details>
 
 <details>
-<summary>2. Add a Lambda trigger to IngestUnicornRawDataFunction for your for your S3 bucket `raw/` prefix</summary><p>
+<summary>2. Add an S3 trigger to <code>IngestUnicornRawDataFunction</code>. Trigger off your S3 bucket and `raw/` prefix.</summary><p>
 
 1. Scroll up and click **Add trigger** in the Designer view
 1. Select **S3**
@@ -205,7 +205,7 @@ If the trigger won't save, make sure the S3 bucket does not have an identical ac
 </p></details>
 
 <details>
-<summary>3. Update OUTPUT_BUCKET environment variable for TransformAndMapDataFunction to your queue URL</summary><p>
+<summary>3. Update the <code>OUTPUT_BUCKET</code> environment variable in <code>TransformAndMapDataFunction</code>. Set the value to your bucket name.</summary><p>
 
 1. Open the [Lambda console](https://console.aws.amazon.com/lambda)
 1. Open the function containing  `TransformAndMapDataFunction` in the name
@@ -214,7 +214,7 @@ If the trigger won't save, make sure the S3 bucket does not have an identical ac
 </p></details>
 
 <details>
-<summary>4. Add an SQS trigger to TransformAndMapDataFunction for your IngestedRawDataFanOutQueue queue</summary><p>
+<summary>4. Add an SQS trigger to <code>TransformAndMapDataFunction</code>. Trigger off your <code>IngestedRawDataFanOutQueue</code> queue.</summary><p>
 
 1. Scroll up and click **Add trigger** in the Designer view
 2. Select **SQS**
@@ -225,7 +225,7 @@ If the trigger won't save, make sure the S3 bucket does not have an identical ac
 Let's recap what we created:
 * Serverless data processing pipeline:
   1. A Lambda function that reads a large JSON file from S3 and places a message in a queue for each ride
-  1. A queue able to buffer messages for each ride
+  1. A queue that buffers messages for each ride
   1. A Lambda function that picks up messages in the queue and matches the nearest weather station
     * Review the code for `TransformAndMapDataFunction`, the function is doing a lookup for the nearest weather station
 * Preconfigured IAM role for the Lambda functions scoped to the appropriate services

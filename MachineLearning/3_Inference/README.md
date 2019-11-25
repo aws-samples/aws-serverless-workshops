@@ -57,7 +57,7 @@ We don't recommend this route unless you ran into a snag and are worried about c
     ```
     echo $execution_role
     ```
-1. Add the bucket name to your scratchpad for future use
+1. Add the data processing execution role to your scratchpad for future use
     ```
     echo "Data processing execution role:" $execution_role >> ~/environment/scratchpad.txt
     ```
@@ -198,6 +198,8 @@ Take note of your **Invoke URL**
 1. Copy the output and execute the command that looks like: `curl -d { ... }`
 1. _Optional_: You can also test the Lambda function by putting using the test API UI in the API Gateway console.
 
+What did your `curl` command return?  What's this mean? The decimal returned from our API is actually a decimal representation of the liklihood that a unicorn experiencing the conditions in the CURL command is going to require service.
+
 ### Now What?
 Let's recap - you've put together a pipeline, that:
 * On the front end of the data pipeline, we collect and ingest ride telemetry data from our unicorns
@@ -206,10 +208,7 @@ Let's recap - you've put together a pipeline, that:
 * We've hosted this model behind an HTTP interface that loads the model dynamically
 
 #### How can Wild Rydes use this to improve the business?
-With the ability to now, get real-time information of whether or not a ride is going to "cost" more to the unicorn based on mileage _plus_ weather (instead of just mileage), our pricing workflow can be updated to include this http endpoint.  Enabling our company to give better, more realistic pricing based on actual usage.
-
-#### What does this mean to Wild Rydes customers?
-Not to be forgotten, how can this improve the end users' experience?  Well, in true customer obsession, if we're _under_ pricing during inclement weather, isn't it reasonable to question if we're _over_ charging the customer in ideal conditions?  Or maybe, without the losses in inclement conditions, we can pass the savings back on to the customers in ideal conditions? With this architecture in place, we can iterate on it over time to improve accuracy of models and ultimately test this hypothesis.
+We're now able to predict real time, when each unicorn is going to need to be serviced.  Leveraging this new capability, we're able to perform preventative repairs on the unicorns before the more costly repairs are required and the unicorn is removed from service.
 
 ## Next step:
 Once you're done testing the API call to your model, you can [clean up the resources](../4_Cleanup) so you're not charged.

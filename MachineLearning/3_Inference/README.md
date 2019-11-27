@@ -198,7 +198,17 @@ Take note of your **Invoke URL**
 1. Copy the output and execute the command that looks like: `curl -d { ... }`
 1. _Optional_: You can also test the Lambda function by putting using the test API UI in the API Gateway console.
 
-What did your `curl` command return?  What's this mean? The decimal returned from our API is actually a decimal representation of the liklihood that a unicorn experiencing the conditions in the CURL command is going to require service.
+What did your `curl` command return?  What's this mean? 
+
+Lets look at the `curl` command first:
+
+    ```
+    curl -d '{ "distance": 30, "healthpoints": 30, "magicpoints": 1500, "TMAX": 333, "TMIN": 300, "PRCP": 100 }' -H "Content-Type: application/json" -X POST STAGE_URL
+    ```
+
+This is asking our deployed model how likely a unicorn traveling a distance of 30, burning 1500 magic points in the weather conditions = "TMAX": 333, "TMIN": 300, "PRCP": 100 (PRCP = Precipitation (tenths of mm), TMAX = Maximum temperature (tenths of degrees C), and TMIN = Minimum temperature (tenths of degrees C)).
+
+The decimal returned from our API is actually a decimal representation of the liklihood that a unicorn experiencing the conditions in the CURL command is going to require service.
 
 ### Now What?
 Let's recap - you've put together a pipeline, that:

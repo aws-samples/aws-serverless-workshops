@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Wild Rydes ML SageMaker infrastructure
+Resources:
+  SageMakerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /service-role/
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - sagemaker.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
+        - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
+        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
+      MaxSessionDuration: 3600
+      Policies:
+        -
+          PolicyName: AllowIAMGetRole
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "iam:GetRole"
+                Resource: "*"
+        -
+          PolicyName: AllowSageMakerCreateTrainingJob
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "sagemaker:CreateTrainingJob"
+                Resource: "*"
+  WildRydesNotebook:
+    Type: AWS::SageMaker::NotebookInstance
+    Properties:
+      InstanceType: ml.t3.xlarge
+      RoleArn: !GetAtt SageMakerExecutionRole.Arn
+      DirectInternetAccess: Enabled
+      VolumeSizeInGB: 5
+      RootAccess: Enabled

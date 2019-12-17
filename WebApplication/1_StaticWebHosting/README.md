@@ -32,9 +32,16 @@ Once you've chosen a region, you should deploy all of the resources for this wor
 ![Region selection screenshot](../images/region-selection.png)
 
 ### Create the git repository
-You have two options for this first step which is to either use [AWS CodeCommit][commit] or [GitHub][github] to host your site's repository. The choice is yours. If you have a GitHub account feel free to use that. Otherwise [CodeCommit is included in the AWS Free Tier][codecommit-free]
-#### Using CodeCommit
+You have two options to manage the source code for this module:
+
+* [AWS CodeCommit][commit] - CodeCommit access is included in the [AWS Free Tier][codecommit-free].
+* [GitHub.com][github] - If you're more comfortable with GitHub.com and already have an account.
+
+#### Option 1: Using AWS CodeCommit
+**:white_check_mark: Step-by-step directions**
+
 The AWS Cloud9 development environment comes with AWS managed temporary credentials that are associated with your IAM user. You use these credentials with the AWS CLI credential helper. Enable the credential helper by running the following two commands in the terminal of your Cloud9 environment.
+
 ```bash
 git config --global credential.helper '!aws codecommit credential-helper $@'
 git config --global credential.UseHttpPath true
@@ -55,18 +62,19 @@ Now from your Cloud9 development environment:
     warning: You appear to have cloned an empty repository.
     ec2-user:~/environment $ 
     ```
-
-#### Additional Github Step (This step is only required if you're using Github instead of Codecommit)
+#### Option 2: Using GitHub.com 
 **:white_check_mark: Step-by-step directions**
+
 1. Follow the instructions on [GitHub][github] to [Create a repository][create-repo]. NOTE: You should not create a first commit, just create the repository.
 1. Clone the repository locally using your GitHub credentials
     1. If you do not have credentially locally, or want to use Cloud9 for today's lab, follow these steps to [Generating a new SSH key and adding it to the ssh-agent][github-new-sshkey]
     1. [Clone the repository][github-clone]
 
 #### Populate the git repository
-Once your git repository is created and cloned locally, you'll need to pull in the files for your website and sync them up to the repository. 
+Once you've used either AWS CodeCommit or GitHub.com to create your git repository and clone it locally, you'll need to copy the web site content from an existing publicly accessible S3 bucket associated with this workshop and add the content to your repository.
 
 **:white_check_mark: Step-by-step directions**
+
 From your Cloud9 development environment(or local environment)
 1. Change directory into your repository:
     ```
@@ -98,9 +106,15 @@ From your Cloud9 development environment(or local environment)
 Next you'll use the [AWS Amplify Console][amplify-console] to deploy the website you've just commited to git. The Amplify Console takes care of the work of setting up a place to store your static web application code and provides a number of helpful capabilities to simplify both the lifecycle of that application as well as enable best practices.
 
 **:white_check_mark: Step-by-step directions**
-1. Launch the [Amplify Console console page][amplify-console-console]
+1. Launch the [Amplify Console home page][amplify-console-console]
+1. In the upper left of the home page, click the hamburger icon (three stacked horizontal bars):
+
+    ![Amplify home page](../images/amplify-home-page.png)
+1. Click **All apps**
+
+   ![Amplify Console](../images/amplify-console.png)
 1. Click **Connect App**
-1. Select the *Repository service provider* used today and select **Next**
+1. Select the *Repository service provider* used today and select **Continue**
     1. If you used GitHub, you'll need to authorize AWS Amplify to your GitHub account
 1. From the dropdown select the *Repository* and *Branch* created today
     

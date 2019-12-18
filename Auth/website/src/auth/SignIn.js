@@ -67,7 +67,7 @@ class SignIn extends React.Component {
 
   renderSignIn() {
     const isValidEmail = this.isValidEmail(this.state.email);
-    const isValidPassword = this.state.password.length > 6;
+    const isValidPassword = this.state.password.length > 1;
 
     return (
       <div className="app">

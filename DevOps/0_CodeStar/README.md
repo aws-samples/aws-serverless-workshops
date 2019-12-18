@@ -29,9 +29,6 @@ This workshop can be deployed in any AWS region that supports the following serv
 - AWS Lambda
 - AWS X-Ray
 
-This workshop is available in the **Ireland** and **Sydney** regions.
-
-
 Once you've chosen a region, you should deploy all of the resources for this workshop there. Make sure you select your region from the dropdown in the upper right corner of the AWS Console before getting started.
 
 

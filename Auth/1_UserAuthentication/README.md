@@ -89,7 +89,7 @@ Use the AWS console to create an Amazon Cognito User Pool requiring e-mail verif
 
 	![User Pool Setup Step 4](../images/cognito-userpool-setup-step4.png)
 
-14. Leave all message defaults as-is and choose **Next step**.
+14. Leave all message and SES defaults as-is and choose **Next step**.
 
 15. Skip adding any tags and click **Next step**.
 

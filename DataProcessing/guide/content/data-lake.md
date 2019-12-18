@@ -33,7 +33,7 @@ must be globally unique. We recommend using a name such as
 
     ![](images/data-lake-create-bucket.png)</kbd>
 
-1. Click **Next** twice, and then click **Create bucket**.
+1. Click **Next** three times, and then click **Create bucket**.
 
 #### 2. Create an Amazon Kinesis Data Firehose delivery stream
 
@@ -140,8 +140,13 @@ text editor to see the contents.
 
     ![](images/data-lake-object-list.png)
 
-1. Click on one of the files and click **Download**. Open the file with a text
-   editor and explore its contents.
+1. Click on one of the files.
+
+1. Click the **Select from** tab, select ``JSON`` from **File format**, and click
+   the **Show file preview** to preview the file content.
+
+    ![](images/data-lake-object-preview.png)
+
 
 #### 5. Query the data files
 

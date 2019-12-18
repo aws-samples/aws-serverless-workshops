@@ -1,5 +1,7 @@
 # Module 5: Enabling 3rd party applications using OAuth 2.0
 
+*Note! This section is currently a work in progress and may not function 100%*
+
 In this module we will turn our Wild Rydes application into a platform, enabling third party developers to build new applications on top of our APIs. Working with third party developers makes it easier for us to open new markets and geographies as well as provide new functionality for our riders.
 
 You'll configure your Cognito User Pool from module #2 to enable OAuth 2.0 flows. Using OAuth, third party developers can build new client applications on top of your APIs. We will create a new method in the application's API that allows unicorns to list the rides they have given. This will open a new line of business for us, making it easy for third party developers to build applications that help unicorns manage their time and earnings. First, we will create the new method to list rides. Then, we will enable OAuth flows in our Cognito User Pool and deploy a sample client.
@@ -64,7 +66,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 
 1. Click **Create function**.
 
-1. Select **Node.js 6.10** for the **Runtime**.
+1. Select **Node.js 8.10** for the **Runtime**.
 
 1. Copy and paste the code from [listUnicornRides.js](./listUnicornRides.js?raw=1) into the code entry area.
 
@@ -145,7 +147,7 @@ Open the API Gateway console and create a new authorizer in the **WildRydes** AP
 
 1. Using the **Lambda Function** field, select your region and enter the **ListUnicornAuthorizer** Lambda function name.
 
-1. Leave the **Lambda Execution Role** field blank. Configured this way, the API Gateway console automatically sets the permissions on the Lambda function to allow the invocation. The console will ask you to confirm this action as you save the new authorizer settings.
+1. Leave the **Lambda Invoke Role** field blank. Configured this way, the API Gateway console automatically sets the permissions on the Lambda function to allow the invocation. The console will ask you to confirm this action as you save the new authorizer settings.
 
 1. Select **Token** as the **Lambda Event Payload** and enter **Authorization** as the **Token Source**.
 

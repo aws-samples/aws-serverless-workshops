@@ -56,7 +56,7 @@ Now from your Cloud9 development environment:
     ec2-user:~/environment $ 
     ```
 
-#### Using GitHub
+#### Additional Github Step (This step is only required if you're using Github instead of Codecommit)
 **:white_check_mark: Step-by-step directions**
 1. Follow the instructions on [GitHub][github] to [Create a repository][create-repo]. NOTE: You should not create a first commit, just create the repository.
 1. Clone the repository locally using your GitHub credentials
@@ -99,7 +99,7 @@ Next you'll use the [AWS Amplify Console][amplify-console] to deploy the website
 
 **:white_check_mark: Step-by-step directions**
 1. Launch the [Amplify Console console page][amplify-console-console]
-1. Under "Deploy", select **Get Started**
+1. Click **Connect App**
 1. Select the *Repository service provider* used today and select **Next**
     1. If you used GitHub, you'll need to authorize AWS Amplify to your GitHub account
 1. From the dropdown select the *Repository* and *Branch* created today
@@ -116,7 +116,7 @@ Once completed, click on the site image to launch your Wild Rydes site.
 
 ![Wild Rydes homepage screenshot](../images/wildrydes-homepage.png)
 
-If you click on the link for *Master* you'll see various pieces of information about your website deployment, including sample rendorings on various platforms:
+If you click on the link for *Master* you'll see various pieces of information about your website deployment, including sample renderings on various platforms:
 
 ![Amplify Client Renderings](../images/amplify-renderings.png)
 

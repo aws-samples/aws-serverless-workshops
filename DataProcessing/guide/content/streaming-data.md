@@ -81,7 +81,7 @@ the stream.
 1. In the Amazon Kinesis Streams console, click on **wildrydes** and click on
    the **Monitoring** tab.
 
-1. After several minutes, you will see the **Put Record (success count)** graph
+1. After several minutes, you will see the **Put Record Success (percent) - Average** graph
    begin to record a single put a second.
 
 #### 3. Read messages from the stream
@@ -177,13 +177,33 @@ the stream to plot the unicorns on the map.
 
 1. Tick the **Read** and **List** permissions checkboxes.
 
-1. Click **Resources** to limit the role to the **wildrydes** stream.
+1. Click **Resources** to limit the role to the **wildrydes** stream and consumer.
+
+1. Click **Add ARN** next to **consumer**.
+
+1. In the **Add ARN(s)** dialog box, enter the following information:
+
+    *  the region you're using in **Region** (e.g. us-east-1)
+    *  your [Account ID][find-account-id] in **Account**
+    * `*` in **Stream type**
+    * `wildrydes` in **Stream name**
+    * `*` in **Consumer name**
+    * `*` in **Consumer creation timestamp**
+
+    <br/>
+    ![](images/streaming-data-consumer-arn.png)
+
+1. Click **Add**.
 
 1. Click **Add ARN** next to **stream**.
 
-1. Enter the region you're using in **Region** (e.g. us-east-1), your [Account
-   ID][find-account-id] in **Account**, and `wildrydes` in **Stream name**.
+1. In the **Add ARN(s)** dialog box, enter the following information:
 
+    *  the region you're using in **Region** (e.g. us-east-1)
+    *  your [Account ID][find-account-id] in **Account**
+    * `wildrydes` in **Stream name**
+
+    <br/>
     ![](images/streaming-data-stream-arn.png)
 
 1. Click **Add**.

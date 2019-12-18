@@ -87,7 +87,7 @@ Make sure to configure your function to use the `WildRydesLambda` IAM role you c
 1. Click **Create function**.
 1. Keep the default **Author from scratch** card selected.
 1. Enter `RequestUnicorn` in the **Name** field.
-1. Select **Node.js 8.10** for the **Runtime**.
+1. Select **Node.js 10.x** for the **Runtime**.
 2. Expand *Choose or create an execution role* under **Permissions**.
 1. Ensure `Choose an existing role` is selected from the **Role** dropdown.
 1. Select `WildRydesLambda` from the **Existing Role** dropdown.

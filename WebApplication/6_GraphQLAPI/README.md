@@ -1,5 +1,7 @@
 # Module 6: Serverless GraphQL API
 
+*Note! This section is currently part of expansion of this lab. There is currently no Step 7*
+
 In this module you'll use [AWS AppSync][appsync] to build a GraphQL API to find more information about the rides you have taken so far. In a subsequent module you will then modify our web application to add the ride history page which will query this API.
 
 ## Architecture Overview

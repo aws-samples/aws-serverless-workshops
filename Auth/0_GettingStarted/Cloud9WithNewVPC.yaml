@@ -1,12 +1,12 @@
 ---
   AWSTemplateFormatVersion: 2010-09-09
-  Description: VPC Infrastructure setup and deployment of Cloud9 IDE for SRV306 AWS Re:Invent Workshop 2018
+  Description: VPC Infrastructure setup and deployment of Cloud9 IDE for Serverless Auth Workshop
   Resources:
     # Create the Cloud9 Instance in a specified Subnet
     Cloud9Instance:
       Type: "AWS::Cloud9::EnvironmentEC2"
       Properties:
-        Description: "Cloud9 IDE for the SRV306 Serverless Authentication and Authorization Workshop at AWS Re:Invent 2018"
+        Description: "Cloud9 IDE for the Serverless Authentication and Authorization Workshop"
         AutomaticStopTimeMinutes: 60
         InstanceType: t2.micro
         Name: !Sub ${AWS::StackName}-Cloud9Instance

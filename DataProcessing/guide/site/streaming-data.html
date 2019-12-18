@@ -57,7 +57,7 @@ Copy to Clipboard
 <pre class="console"><code>$ ./producer -region us-east-1
 ..................................................</code></pre></li>
 <li><p>In the Amazon Kinesis Streams console, click on <strong>wildrydes</strong> and click on the <strong>Monitoring</strong> tab.</p></li>
-<li><p>After several minutes, you will see the <strong>Put Record (success count)</strong> graph begin to record a single put a second.</p></li>
+<li><p>After several minutes, you will see the <strong>Put Record Success (percent) - Average</strong> graph begin to record a single put a second.</p></li>
 </ol>
 <h4 id="read-messages-from-the-stream">3. Read messages from the stream</h4>
 <p><strong>✅ Step-by-step Instructions</strong></p>
@@ -116,10 +116,27 @@ Copy to Clipboard
 <li><p>Click on <strong>Choose a service</strong> and click <strong>Kinesis</strong>.</p></li>
 <li><p>Click on <strong>Actions</strong>.</p></li>
 <li><p>Tick the <strong>Read</strong> and <strong>List</strong> permissions checkboxes.</p></li>
-<li><p>Click <strong>Resources</strong> to limit the role to the <strong>wildrydes</strong> stream.</p></li>
+<li><p>Click <strong>Resources</strong> to limit the role to the <strong>wildrydes</strong> stream and consumer.</p></li>
+<li><p>Click <strong>Add ARN</strong> next to <strong>consumer</strong>.</p></li>
+<li><p>In the <strong>Add ARN(s)</strong> dialog box, enter the following information:</p>
+<ul>
+<li>the region you’re using in <strong>Region</strong> (e.g. us-east-1)</li>
+<li>your <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html">Account ID</a> in <strong>Account</strong></li>
+<li><code>*</code> in <strong>Stream type</strong></li>
+<li><code>wildrydes</code> in <strong>Stream name</strong></li>
+<li><code>*</code> in <strong>Consumer name</strong></li>
+<li><code>*</code> in <strong>Consumer creation timestamp</strong></li>
+</ul>
+<p><br/> <img src="images/streaming-data-consumer-arn.png" /></p></li>
+<li><p>Click <strong>Add</strong>.</p></li>
 <li><p>Click <strong>Add ARN</strong> next to <strong>stream</strong>.</p></li>
-<li><p>Enter the region you’re using in <strong>Region</strong> (e.g. us-east-1), your <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html">Account ID</a> in <strong>Account</strong>, and <code>wildrydes</code> in <strong>Stream name</strong>.</p>
-<p><img src="images/streaming-data-stream-arn.png" /></p></li>
+<li><p>In the <strong>Add ARN(s)</strong> dialog box, enter the following information:</p>
+<ul>
+<li>the region you’re using in <strong>Region</strong> (e.g. us-east-1)</li>
+<li>your <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html">Account ID</a> in <strong>Account</strong></li>
+<li><code>wildrydes</code> in <strong>Stream name</strong></li>
+</ul>
+<p><br/> <img src="images/streaming-data-stream-arn.png" /></p></li>
 <li><p>Click <strong>Add</strong>.</p>
 <p><img src="images/streaming-data-stream-policy.png" /></p></li>
 <li><p>Click <strong>Review policy</strong>.</p></li>

@@ -30,9 +30,9 @@ Use the Amazon Cognito console to create a new user pool using the default setti
 **:white_check_mark: Step-by-step directions**
 
 1. Go to the [Amazon Cognito Console][cognito-console]
-1. Choose **Manage your User Pools**.
+1. Choose **Manage User Pools**.
 1. Choose **Create a User Pool**
-1. Provide a name for your user pool such as `WildRydes`, then select **Review Defaults**
+1. Provide a name for your user pool such as `WildRydes`, then select **Review defaults**
     ![Create a user pool screenshot](../images/create-a-user-pool.png)
 1. On the review page, click **Create pool**.
 1. Note the **Pool Id** on the Pool details page of your newly created user pool.

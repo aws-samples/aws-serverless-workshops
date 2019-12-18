@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Wild Rydes ML inference infrastructure
+Parameters:
+  DataBucket:
+    Type: String
+    MinLength: 1
+    ConstraintDescription: 'Enter the name of your S3 data bucket (YOUR_BUCKET_NAME)'
+  DataProcessingExecutionRoleName:
+    Type: String
+    ConstraintDescription: 'Enter the name of your role named DataProcessingExecutionRole (this can be found in your scratchpad.txt)'
+    MinLength: 1
+Resources:
+  ModelInferenceFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Wild Rydes lambda function make model inferences
+      Handler: index.handler
+      MemorySize: 128
+      Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/${DataProcessingExecutionRoleName}"
+      Runtime: python2.7
+      Environment:
+        Variables:
+          OUTPUT_BUCKET: !Ref DataBucket
+          MODEL_PATH: 'linear-learner-yyyy-mm-dd-00-40-46-627/output/model.tar.gz'
+      Timeout: 3
+      Tags:
+        -
+          Key: Workshop
+          Value: Wild Rydes
+        -
+          Key: Module
+          Value: Machine Learning
+      Code:
+        S3Bucket: !Ref DataBucket
+        S3Key: code/inferencefunction.zip
+  ApiGateway:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Name: "ModelInferenceApi"
+      Description: "Wild Rydes Model Inference REST API"
+  # ApiGatewayRootMethod:
+  #   Type: "AWS::ApiGateway::Method"
+  #   Properties:
+  #     AuthorizationType: "NONE"
+  #     HttpMethod: "POST"
+      # Integration:
+      #   IntegrationHttpMethod: "POST"
+      #   Type: "AWS_PROXY"
+        # Uri: !Sub
+        #   - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+        #   - lambdaArn: !GetAtt "ModelInferenceFunction.Arn"
+      # ResourceId: !GetAtt "ApiGateway.RootResourceId"
+      # RestApiId: !Ref "ApiGateway"
+  lambdaApiGatewayInvoke:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt "ModelInferenceFunction.Arn"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/POST/"
+  # apiGatewayDeployment:
+  #   Type: "AWS::ApiGateway::Deployment"
+  #   DependsOn:
+  #     - "ApiGatewayRootMethod"
+  #   Properties:
+  #     RestApiId: !Ref "ApiGateway"
+  #     StageName: "prod"
+Outputs:
+  ApiGatewayInvokeURL:
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"
+  InferenceFunctionTestCommand:
+    Description: "cURL command to invoke our lambda function to make inferences"
+    Value:
+      Fn::Join:
+        - " "
+        -
+          - "curl -d '{ \"distance\": 30, \"healthpoints\": 30, \"magicpoints\": 1500, \"TMAX\": 333, \"TMIN\": 300, \"PRCP\": 100 }' -H \"Content-Type: application/json\" -X POST"
+          - !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod"

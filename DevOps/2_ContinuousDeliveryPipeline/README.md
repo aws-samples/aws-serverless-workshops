@@ -99,7 +99,7 @@ Using a text editor, open the `template.yml` file and append a new **AWS::Server
 
 1. **FunctionName** is `uni-api-update`
 
-1. **Runtime** is `nodejs8.10`
+1. **Runtime** is `nodejs10.x`
 
 1. **CodeUri** is `app`
 
@@ -125,7 +125,7 @@ Using a text editor, open the `template.yml` file and append a new **AWS::Server
        Type: 'AWS::Serverless::Function'
        Properties:
          FunctionName: 'uni-api-update'
-         Runtime: nodejs8.10
+         Runtime: nodejs10.x
          CodeUri: app
          Handler: update.lambda_handler
          Description: Update Unicorn

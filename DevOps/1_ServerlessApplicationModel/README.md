@@ -25,7 +25,7 @@ Below is a code snippet from the SAM template to list Unicorns:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'uni-api-list'
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       CodeUri: app
       Handler: list.lambda_handler
       Description: List Unicorns

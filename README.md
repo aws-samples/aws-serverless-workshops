@@ -18,6 +18,8 @@ This repository contains a collection of workshops and other hands on content th
 
 - [**Security**](https://github.com/aws-samples/aws-serverless-security-workshop) - This workshop shows you techniques to secure a serverless application built with AWS Lambda, Amazon API Gateway and RDS Aurora. We will cover AWS services and features you can leverage to improve the security of a serverless applications in 5 domains: identity & access management, infrastructure, data, code, and logging & monitoring.
 
+- [**Machine Learning**](MachineLearning) - This workshop shows you how to collect, process, and join disparate data sources using AWS Lambda and Amazon Athena. This data can be used to train a machine learning model using Amazon SageMaker. With the trained model hosted on Amazon S3, you will determine the probability that a unicorn will request service with Amazon API Gateway and Lambda.
+
 
 # Third Party Workshops
 

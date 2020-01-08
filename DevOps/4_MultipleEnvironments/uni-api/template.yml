@@ -34,7 +34,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: !Sub 'uni-api-read${CustomSuffix}'
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       CodeUri: app
       Handler: read.lambda_handler
       Description: View Unicorn by name
@@ -54,7 +54,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: !Sub 'uni-api-list${CustomSuffix}'
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       CodeUri: app
       Handler: list.lambda_handler
       Description: List Unicorns
@@ -74,7 +74,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: !Sub 'uni-api-update${CustomSuffix}'
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       CodeUri: app
       Handler: update.lambda_handler
       Description: Update Unicorn
@@ -94,7 +94,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: !Sub 'uni-api-remove${CustomSuffix}'
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       CodeUri: app
       Handler: delete.lambda_handler
       Description: Remove Unicorn

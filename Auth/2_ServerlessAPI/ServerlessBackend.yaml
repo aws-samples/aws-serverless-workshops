@@ -55,7 +55,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: RequestUnicorn
-      Runtime: nodejs8.10
+      Runtime: nodejs10.x
       Role: !GetAtt RequestUnicornExecutionRole.Arn
       Timeout: 5
       MemorySize: 128

@@ -131,9 +131,9 @@ Resources:
               });
           };
 
-          // This is where you would implement logic to find the optimal unicorn for
-          // this ride (possibly invoking another Lambda function as a microservice.)
-          // For simplicity, we'll just pick a unicorn at random.
+                  // This is where you would implement logic to find the optimal unicorn for
+                  // this ride (possibly invoking another Lambda function as a microservice.)
+                  // For simplicity, we'll just pick a unicorn at random.
 
           function findUnicorn(pickupLocation) {
               console.log('Finding unicorn for ', pickupLocation.Latitude, ', ', pickupLocation.Longitude);

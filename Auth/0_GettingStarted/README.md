@@ -92,11 +92,11 @@ Keep your AWS Cloud9 IDE opened in a tab throughout this workshop as you'll be u
 
 ### Initialize your developer workspace
 
-1. Run the following commands to upgrade your Node.js version to the latest version of Node.js 8. The [AWS Amplify](https://aws-amplify.github.io/) JavaScript library which we will be using requires Node.js 8 or higher.
+1. Run the following commands to upgrade your Node.js version to the latest version of Node.js 10. The [AWS Amplify](https://aws-amplify.github.io/) JavaScript library which we will be using requires Node.js 10 or higher.
 
     ```console
-    nvm i 8
-    nvm alias default 8
+    nvm i 10
+    nvm alias default 10
     ```
 
 2. Install the yarn package manager and website dependencies by running the following commands

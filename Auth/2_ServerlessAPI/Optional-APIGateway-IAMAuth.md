@@ -58,13 +58,13 @@ In the IAM console, assocate the *WildRydesAPI-StandardUserPolicy* with your Cog
 
 1. Choose **Attach policies**.
 
-1. Search for `WildRydes` and check the box next to the policy named *WildRydesAPI-StandardUserAccess*.
+1. Search for `WildRydes` and check the box next to the policy named *WildRydesAPI-StandardUserPolicy*.
 
 	![Attach API Gateway IAM Policy](../images/iam-cognito-authrole-attach-apigateway-policy.png)
 
 1. Choose **Attach policy**.
 
-1. You should now see the *WildRydesAPI-StandardUserAccess* policy associated with your Cognito IAM auth role.
+1. You should now see the *WildRydesAPI-StandardUserPolicy* policy associated with your Cognito IAM auth role.
 
 	![Permissions after adding IAM policy](../images/iam-cognito-authrole-permissions-after-policy-update.png)
 
@@ -156,4 +156,4 @@ Now that you've deployed the new authorizer configuration to production, all API
 </p></details>
 <br>
 
-If your API now invokes correctly and application funcions as expected summoning unicorns again, you can proceed to the next module, [IAM-based Authorization](../3_IAMAuthorization).
+If your API now invokes correctly and application functions as expected summoning unicorns again, you can proceed to the next module, [IAM-based Authorization](../3_IAMAuthorization).

@@ -26,7 +26,7 @@ If you're using the latest version of the Chrome, Firefox, or Safari web browser
 For us to be able to use request signing and IAM-based fine-grained access control, we'll first need to associate an IAM policy that provides permissions to invoke API operations for your API Gateway deployment. For further details, you can review [controlling access to an API with IAM permissions](https://docs.aws.amazon.com/apigateway/latest/developerguide/permissions.html) documentation.
 
 #### High-Level Instructions
-In the IAM console, assocate the *WildRydesAPI-StandardUserPolicy* with your Cognito Identity Pool's authenticated user role to provide all authenticated users access to invoke operations the */ride* path.
+In the IAM console, associate the *WildRydesAPI-StandardUserPolicy* with your Cognito Identity Pool's authenticated user role to provide all authenticated users access to invoke operations on the */ride* path.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>

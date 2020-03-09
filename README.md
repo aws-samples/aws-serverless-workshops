@@ -20,6 +20,7 @@ This repository contains a collection of workshops and other hands on content th
 
 - [**Machine Learning**](MachineLearning) - This workshop shows you how to collect, process, and join disparate data sources using AWS Lambda and Amazon Athena. This data can be used to train a machine learning model using Amazon SageMaker. With the trained model hosted on Amazon S3, you will build a serverless API using Amazon API Gateway and AWS Lambda to predict the probability that a unicorn will request service after completing a ride.
 
+- [**Decoupled Microservices**](https://async-messaging.workshop.aws/) - This workshop demonstrates the use of asynchronous messaging patterns to build micro-services based architecture. It applies the well known enterprise integration patterns using AWS services like SQS and SNS to implement various use cases for wild rydes business. All the labs are self contained and users can choose to go on their own adventure based on their requirements.
 
 # Third Party Workshops
 

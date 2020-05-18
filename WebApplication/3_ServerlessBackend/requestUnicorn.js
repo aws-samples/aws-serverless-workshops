@@ -89,7 +89,7 @@ function recordRide(rideId, username, unicorn) {
     return ddb.put({
         TableName: 'Rides',
         Item: {
-            RideId: rideId,
+            RideID: rideId,
             User: username,
             Unicorn: unicorn,
             UnicornName: unicorn.Name,

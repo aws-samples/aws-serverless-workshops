@@ -32,7 +32,7 @@ Use the Amazon Cognito console to create a new user pool using the default setti
 1. Go to the [Amazon Cognito Console][cognito-console]
 1. Choose **Manage your User Pools**.
 1. Choose **Create a User Pool**
-1. Provide a name for your user pool such as `WildRydes`, then select **Review Defaults**
+1. Provide a name for your user pool such as `%initials%-WildRydes`, then select **Review Defaults**
     ![Create a user pool screenshot](../images/create-a-user-pool.png)
 1. On the review page, click **Create pool**.
 1. Note the **Pool Id** on the Pool details page of your newly created user pool.
@@ -73,7 +73,7 @@ The [/js/config.js][configjs] file contains settings for the user pool ID, app c
         cognito: {
             userPoolId: 'us-west-2_uXboG5pAb', // e.g. us-east-2_uXboG5pAb
             userPoolClientId: '25ddkmj4v6hfsfvruhpfi7n4hv', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
-            region: 'us-west-2' // e.g. us-east-2
+            region: 'us-east-1' // e.g. us-east-2
         },
         api: {
             invokeUrl: '' // e.g. https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod,
@@ -83,7 +83,7 @@ The [/js/config.js][configjs] file contains settings for the user pool ID, app c
 1. Save the modified file making sure the filename is still `config.js`.
 1. Commit the changes to your git repository:
     ```
-    $ git add js/config.js 
+    $ git add js/config.js
     $ git commit -m "configure cognito"
     $ git push
     ...
@@ -114,7 +114,7 @@ The [/js/config.js][configjs] file contains settings for the user pool ID, app c
 
     1. From the AWS console, click Services then select **Cognito** under Security, Identity & Compliance.
     1. Choose **Manage your User Pools**
-    1. Select the `WildRydes` user pool and click **Users and groups** in the left navigation bar.
+    1. Select the `%initials%-WildRydes` user pool and click **Users and groups** in the left navigation bar.
     1. You should see a user corresponding to the email address that you submitted through the registration page. Choose that username to view the user detail page.
     1. Choose **Confirm user** to finalize the account creation process.
 

@@ -4,19 +4,11 @@
 
 In order to complete this workshop, you'll need an AWS account and access to
 create AWS Identity and Access Management (IAM), Amazon Cognito, AWS Lambda,
-Amazon S3, Amazon API Gateway, AWS Amplify Console, Amazon DynamoDB, and AWS 
+Amazon S3, Amazon API Gateway, AWS Amplify Console, Amazon DynamoDB, and AWS
 Cloud9 resources within that account.
 
-The code and instructions in this workshop assume only one participant is using
-a given AWS account at a time. If you attempt sharing an account with another
-participant, you will encounter naming conflicts for certain resources. You can
-work around this by either using a suffix in your resource names or using
-distinct Regions, but the instructions do not provide details on the changes
-required to make this work.
-
-Use a personal account or create a new AWS account for this workshop rather than
-using an organization's account to ensure you have full access to the necessary
-services and to ensure you do not leave behind any resources from the workshop.
+The code and instructions in this workshop enables multiple participants using given AWS account at the same time. To avoid naming conflicts for certain resources, prefixing is required and the instruction will indicate all the places where this is necessary.
+Prefixes might be initials. In this instruction we will use '%initials%' notation to indicate such prefixes.
 
 ### AWS Cloud9 IDE
 
@@ -32,18 +24,25 @@ Take a moment now and setup your Cloud9 development environment.
 
 **:white_check_mark: Step-by-step Instructions**
 
-1. Go to the AWS Management Console, click **Services** then select **Cloud9**
+1. Go to https://myapps.microsoft.com/ in your web browser and authenticate using IHS Markit account.
+
+1. Click *AWS - OfficeoftheCTO Training NonProd* App and pick **AWS-OCTOTraining-Dev** role when prompted.
+
+1. Go to the AWS Management Console,**MAKE SURE YOU ARE IN US East(N. Virginia) us-east-1 REGION!!**. Change the region in upper right corner of AWS Management Console if needed.
+
+1. Click **Services** then select **Cloud9**
    under Developer Tools.
 
 1. Click **Create environment**.
 
-1. Enter `Development` into **Name** and optionally provide a **Description**.
+1. Enter `%initials%-Development` into **Name** and optionally provide a **Description**.
 
 1. Click **Next step**.
 
-1. You may leave **Environment settings** at their defaults of launching a new
+1. Leave the defaults of launching a new
    **t2.micro** EC2 instance which will be paused after **30 minutes** of
    inactivity.
+   For **Network (VPC)** select **vpc-0ce4c2d536ee06c50** and for **Subnet** select **subnet-01f43da36b8bdb239 | Non-default in us-east-1a**.
 
 1. Click **Next step**.
 
@@ -89,7 +88,7 @@ an ID or Amazon Resource Name (ARN), copy and paste that into the scratch pad.
 
 ### Next
 
-:white_check_mark: Proceed to the first module, [Static Web Hosting][static-web-hosting], 
+:white_check_mark: Proceed to the first module, [Static Web Hosting][static-web-hosting],
 wherein you'll deploy a static web site via AWS Amplify Console.
 
 [region-table]: https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/

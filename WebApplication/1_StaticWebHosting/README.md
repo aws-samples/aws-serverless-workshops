@@ -50,19 +50,19 @@ git config --global credential.UseHttpPath true
 Next you need to create the repository and clone it to your Cloud9 environment:
 1. Open the [AWS CodeCommit console][codecommit-console]
 1. Select **Create Repository**
-1. Set the *Repository name** to "wildrydes-site"
+1. Set the *Repository name** to "%initials%-wildrydes-site"
 1. Select **Create**
 1. From the *Clone URL* drop down, select *Clone HTTPS*
 
 Now from your Cloud9 development environment:
 1. From a terminal window run `git clone` and the HTTPS URL of the respository:
     ```
-    ec2-user:~/environment $ git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/wildrydes-site
-    Cloning into 'wildrydes-site'...
+    ec2-user:~/environment $ git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/%initials%-wildrydes-site
+    Cloning into '%initials%-wildrydes-site'...
     warning: You appear to have cloned an empty repository.
-    ec2-user:~/environment $ 
+    ec2-user:~/environment $
     ```
-#### Option 2: Using GitHub.com 
+#### Option 2: Using GitHub.com
 **:white_check_mark: Step-by-step directions**
 
 1. Follow the instructions on [GitHub][github] to [Create a repository][create-repo]. NOTE: You should not create a first commit, just create the repository.
@@ -77,7 +77,7 @@ Once you've used either AWS CodeCommit or GitHub.com to create your git reposito
 From your Cloud9 development environment(or local environment)
 1. Change directory into your repository:
     ```
-    cd wildrydes-site/
+    cd %initials%-wildrydes-site/
     ```
 1. Copy the files from S3:
     ```
@@ -90,9 +90,9 @@ From your Cloud9 development environment(or local environment)
     $ git config --global user.name "<USER NAME>"
     $ git commit -m "initial checkin of website code"
     $ git push
-    
+
     Username for 'https://git-codecommit.us-east-1.amazonaws.com': wildrydes-codecommit-at-xxxxxxxxx
-    Password for 'https://wildrydes-codecommit-at-xxxxxxxxx@git-codecommit.us-east-1.amazonaws.com': 
+    Password for 'https://wildrydes-codecommit-at-xxxxxxxxx@git-codecommit.us-east-1.amazonaws.com':
     Counting objects: 95, done.
     Compressing objects: 100% (94/94), done.
     Writing objects: 100% (95/95), 9.44 MiB | 14.87 MiB/s, done.
@@ -107,16 +107,16 @@ Next you'll use the [AWS Amplify Console][amplify-console] to deploy the website
 **:white_check_mark: Step-by-step directions**
 1. Launch the [Amplify Console console page][amplify-console-console]
 1. Click **Get Started** under Deploy with Amplify Console
-1. Select the *Repository service provider* used today and select **Next**
+1. Select the *Repository service provider* used today and select **Continue**
     1. If you used GitHub, you'll need to authorize AWS Amplify to your GitHub account
 1. From the dropdown select the *Repository* and *Branch* created today
-    
+
     ![Amplify Repository configuration](../images/amplify-console-repository-setup.png)
 1. On the "Configure build settings" page leave all the defaults and select **Next**
 1. On the "Review" page select **Save and deploy**
-    
+
     The process takes a couple of minutes for Amplify Console to create the neccesary resources and to deploy your code.
-    
+
     ![Amplify Deployment](../images/amplify-deploy-status.png)
 
 Once completed, click on the site image to launch your Wild Rydes site.
@@ -143,24 +143,24 @@ The AWS Amplify Console will rebuild and redeploy the app when it detects change
     Save the file
 1. Commit again to your git repository the changes:
     ```
-    $ git add index.html 
+    $ git add index.html
     $ git commit -m "updated title"
     [master dfec2e5] updated title
      1 file changed, 1 insertion(+), 1 deletion(-)
-    
+
     $ git push
     Counting objects: 3, done.
     Compressing objects: 100% (3/3), done.
     Writing objects: 100% (3/3), 315 bytes | 315.00 KiB/s, done.
     Total 3 (delta 2), reused 0 (delta 0)
-    remote: processing 
+    remote: processing
     To https://git-codecommit.us-east-1.amazonaws.com/v1/repos/wildrydes-site
        2e9f540..dfec2e5  master -> master
    ```
-    Amplify Console will begin to build the site again soon after it notices the update to the repository. It will happen pretty quickly! Head back to the [Amplify Console console page][amplify-console-console] to watch the process. 
+    Amplify Console will begin to build the site again soon after it notices the update to the repository. It will happen pretty quickly! Head back to the [Amplify Console console page][amplify-console-console] to watch the process.
 
 1. Once completed, re-open the Wild Rydes site and notice the title change.
-    
+
     ![title updated](../images/title-update.png)
 
 ### :star: Recap
@@ -171,7 +171,7 @@ The AWS Amplify Console will rebuild and redeploy the app when it detects change
 
 ### Next
 
-:white_check_mark: Proceed to the next module, [User Management][user-management], 
+:white_check_mark: Proceed to the next module, [User Management][user-management],
 wherein you'll configure Amazon Cognito User Pools to manage the users for our application.
 
 [setup]: ../0_Setup/

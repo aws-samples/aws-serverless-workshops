@@ -18,12 +18,12 @@ the workshop.
 Each of the following sections provides an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
 
 ### 1. Create a New REST API
-Use the Amazon API Gateway console to create a new API named `WildRydes`.
+Use the Amazon API Gateway console to create a new API named `%initials%-WildRydes`.
 
 **:white_check_mark: Step-by-step directions**
 1. Go to the [Amazon API Gateway Console][api-gw-console]
 1. Choose **Create API**.
-1. Select **REST**, **New API** and enter `WildRydes` for the **API Name**.
+1. Select **REST**, **New API** and enter `%initials%-WildRydes` for the **API Name**.
 1. Select `Edge optimized` from the **Endpoint Type** dropdown.
     ***Note***: Edge optimized are best for public services being accessed from the Internet. Regional endpoints are typically used for APIs that are accessed primarily from within the same AWS Region. Private APIs are for internal services inside of an Amazon VPC.
 1. Choose **Create API**
@@ -44,7 +44,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 1. Enter `WildRydes` for the Authorizer name.
 1. Select **Cognito** for the type.
 1. In the Region drop-down under **Cognito User Pool**, select the Region where you created your Cognito user pool in the User Management module (by default the current region should be selected).
-1. Enter `WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
+1. Enter `%initials%-WildRydes` (or the name you gave your user pool) in the **Cognito User Pool** input.
 1. Enter `Authorization` for the **Token Source**.
 1. Choose **Create**.
 
@@ -67,7 +67,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 Create a new resource called /ride within your API. Then create a POST method for that resource and configure it to use a Lambda proxy integration backed by the RequestUnicorn function you created in the first step of this module.
 
 **:white_check_mark: Step-by-step directions**
-1. In the left nav, click on **Resources** under your WildRydes API.
+1. In the left nav, click on **Resources** under your `%initials%-WildRydes` API.
 1. From the **Actions** dropdown select **Create Resource**.
 1. Enter `ride` as the **Resource Name**.
 1. Ensure the **Resource Path** is set to `ride`.
@@ -83,7 +83,7 @@ Create a new resource called /ride within your API. Then create a POST method fo
 1. Select **Lambda Function** for the integration type.
 1. Check the box for **Use Lambda Proxy integration**.
 1. Select the Region you are using for **Lambda Region**.
-1. Enter the name of the function you created in the previous module, `RequestUnicorn`, for **Lambda Function**.
+1. Enter the name of the function you created in the previous module, `%initials%-RequestUnicorn`, for **Lambda Function**.
 1. Choose **Save**. Please note, if you get an error that you function does not exist, check that the region you selected matches the one you used in the previous module.
 
     ![API method integration screenshot](../images/api-integration-setup.png)
@@ -117,7 +117,7 @@ Update the /js/config.js file in your website deployment to include the invoke U
         cognito: {
             userPoolId: 'us-west-2_uXboG5pAb', // e.g. us-east-2_uXboG5pAb
             userPoolClientId: '25ddkmj4v6hfsfvruhpfi7n4hv', // e.g. 25ddkmj4v6hfsfvruhpfi7n4hv
-            region: 'us-west-2' // e.g. us-east-2
+            region: 'us-east-1' // e.g. us-east-2
         },
         api: {
             invokeUrl: 'https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod' // e.g. https://rc7nyt4tql.execute-api.us-west-2.amazonaws.com/prod,

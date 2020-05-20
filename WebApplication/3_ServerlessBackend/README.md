@@ -16,14 +16,14 @@ Each of the following sections provides an implementation overview and detailed,
 
 ### 1. Create an Amazon DynamoDB Table
 
-Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
+Use the Amazon DynamoDB console to create a new DynamoDB table. Call your table `%initials%-Rides` and give it a partition key called `RideId` with type String. The table name and partition key are case sensitive. Make sure you use the exact IDs provided. Use the defaults for all other settings.
 
 After you've created the table, note the ARN for use in the next step.
 
 **:white_check_mark: Step-by-step directions**
 1. Go to the [Amazon DynamoDB Console][dynamodb-console]
 1. Choose **Create table**.
-1. Enter `Rides` for the **Table name**. This field is case sensitive.
+1. Enter `%initials%-Rides` for the **Table name**. This field is case sensitive.
 1. Enter `RideId` for the **Partition key** and select **String** for the key type. This field is case sensitive.
 1. Check the **Use default settings** box and choose **Create**.
     ![Create table screenshot](../images/ddb-create-table.png)
@@ -49,13 +49,13 @@ Attach the managed policy called `AWSLambdaBasicExecutionRole` to this role to g
 1. Begin typing `AWSLambdaBasicExecutionRole` in the **Filter** text box and check the box next to that role.
 1. Click **Next: Tags**. Add any tags that you wish.
 1. Click **Next: Review**.
-1. Enter `WildRydesLambda` for the **Role name**.
-1. Choose **Create role**. 
+1. Enter `%initials%-WildRydesLambda` for the **Role name**.
+1. Choose **Create role**.
 
 Next you need to add permissions to the role so that it can access your DynamoDB table.
 
 **:white_check_mark: Step-by-step directions*
-1. While in the IAM Console on the roles page type `WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
+1. While in the IAM Console on the roles page type `%initials%-WildRydesLambda` into the filter box on the Roles page and choose the role you just created.
 1. On the Permissions tab, choose the **Add inline policy** link in the lower right corner to create a new inline policy.
     ![Inline policies screenshot](../images/inline-policies.png)
 1. Select **Choose a service**.
@@ -78,23 +78,27 @@ AWS Lambda will run your code in response to events such as an HTTP request. In 
 
 #### High-Level Instructions
 
-Use the AWS Lambda console to create a new Lambda function called `RequestUnicorn` that will process the API requests. Use the provided [requestUnicorn.js](requestUnicorn.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
+Use the AWS Lambda console to create a new Lambda function called `%initials%-RequestUnicorn` that will process the API requests. Use the provided [requestUnicorn.js](requestUnicorn.js) example implementation for your function code. Just copy and paste from that file into the AWS Lambda console's editor.
 
-Make sure to configure your function to use the `WildRydesLambda` IAM role you created in the previous section.
+Make sure to configure your function to use the `%initials%-WildRydesLambda` IAM role you created in the previous section.
 
 **:white_check_mark: Step-by-step directions**
 1. Go to the [AWS Lambda][lambda-console]
 1. Click **Create function**.
 1. Keep the default **Author from scratch** card selected.
-1. Enter `RequestUnicorn` in the **Name** field.
+1. Enter `%initials%-RequestUnicorn` in the **Name** field.
 1. Select **Node.js 10.x** for the **Runtime**.
 2. Expand *Choose or create an execution role* under **Permissions**.
 1. Ensure `Choose an existing role` is selected from the **Role** dropdown.
-1. Select `WildRydesLambda` from the **Existing Role** dropdown.
+1. Select `%initials%-WildRydesLambda` from the **Existing Role** dropdown.
     ![Create Lambda function screenshot](../images/create-lambda-function.png)
 1. Click on **Create function**.
 1. Scroll down to the **Function code** section and replace the existing code in the **index.js** code editor with the contents of [requestUnicorn.js](requestUnicorn.js).
     ![Create Lambda function screenshot](../images/create-lambda-function-code.png)
+1. Fix TableName in line 90 of the function code to contain your %initials%:
+```javascript
+    TableName: '%initials%-Rides',
+```
 1. Click **"Save"** in the upper right corner of the page.
 
 ## Implementation Validation
@@ -130,7 +134,7 @@ For this module you will test the function that you built using the AWS Lambda c
     ```
     ![Configure test event](../images/configure-test-event-2.png)
 1. Click **Create**.
-1. On the main function edit screen click **Test** with `TestRequestEvent` selected in the dropdown.   
+1. On the main function edit screen click **Test** with `TestRequestEvent` selected in the dropdown.
 1. Scroll to the top of the page and expand the **Details** section of the **Execution result** section.
 1. Verify that the execution succeeded and that the function result looks like the following:
     ```JSON

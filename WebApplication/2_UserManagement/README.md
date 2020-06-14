@@ -1,10 +1,10 @@
 # Module 2: User Authentication and Registration with Amazon Cognito User Pools
 
-In this module you'll create an [Amazon Cognito][cognito] user pool to manage your users' accounts. You'll deploy pages that enable customers to register as a new user, verify their email address, and sign into the site.
+In this module, you'll create an [Amazon Cognito][cognito] user pool to manage your users' accounts. You'll deploy pages that enable customers to register as a new user, verify their email address, and sign into the site.
 
 ## Architecture Overview
 
-When users visit your website they will first register a new user account. For the purposes of this workshop we'll only require them to provide an email address and password to register. However, you can configure Amazon Cognito to require additional attributes in your own applications.
+When users visit your website, they will first register a new user account. For the purposes of this workshop, we'll only require them to provide an email address and password to register. However, you can configure Amazon Cognito to require additional attributes in your own applications.
 
 After users submit their registration, Amazon Cognito will send a confirmation email with a verification code to the address they provided. To confirm their account, users will return to your site and enter their email address and the verification code they received. You can also confirm user accounts using the Amazon Cognito console if you want to use fake email addresses for testing.
 
@@ -23,7 +23,7 @@ Each of the following sections provides an implementation overview and detailed,
 
 #### Background
 
-Amazon Cognito provides two different mechanisms for authenticating users. You can use Cognito User Pools to add sign-up and sign-in functionality to your application or use Cognito Identity Pools to authenticate users through social identity providers such as Facebook, Twitter, or Amazon, with SAML identity solutions, or by using your own identity system. For this module you'll use a user pool as the backend for the provided registration and sign-in pages.
+Amazon Cognito provides two different mechanisms for authenticating users. You can use Cognito User Pools to add sign-up and sign-in functionality to your application or use Cognito Identity Pools to authenticate users through social identity providers such as Facebook, Twitter, or Amazon, with SAML identity solutions, or by using your own identity system. For this module, you'll use a user pool as the backend for the provided registration and sign-in pages.
 
 Use the Amazon Cognito console to create a new user pool using the default settings. Once your pool is created, note the Pool Id. You'll use this value in a later section.
 
@@ -39,7 +39,7 @@ Use the Amazon Cognito console to create a new user pool using the default setti
 
 ### 2. Add an App Client to Your User Pool
 
-From the Amazon Cognito console select your user pool and then select the **App clients** section. Add a new app and make sure the Generate client secret option is deselected. Client secrets aren't supported with the JavaScript SDK. If you do create an app with a generated secret, delete it and create a new one with the correct configuration.
+From the Amazon Cognito console, select your user pool and then select the **App clients** section. Add a new app and make sure the Generate client secret option is deselected. Client secrets aren't supported with the JavaScript SDK. If you do create an app with a generated secret, delete it and create a new one with the correct configuration.
 
 **:white_check_mark: Step-by-step directions**
 1. From the Pool Details page for your user pool, select **App clients** from the **General settings** section in the left navigation bar.
@@ -55,7 +55,7 @@ From the Amazon Cognito console select your user pool and then select the **App 
 The [/js/config.js][configjs] file contains settings for the user pool ID, app client ID and Region. Update this file with the settings from the user pool and app you created in the previous steps and commit the file back to your git repository.
 
 **:white_check_mark: Step-by-step directions**
-1. On your Cloud9 development environment open `js/config.js`
+1. On your Cloud9 development environment, open `js/config.js`
 1. Update the `cognito` section with the correct values for the user pool and app you just created.
     You can find the value for `userPoolId` on the Pool details page of the Amazon Cognito console after you select the user pool that you created.
 
@@ -120,7 +120,7 @@ The [/js/config.js][configjs] file contains settings for the user pool ID, app c
 
 1. After confirming the new user using either the `/verify.html` page or the Cognito console, visit `/signin.html` and log in using the email address and password you entered during the registration step.
 
-1. If successful you should be redirected to `/ride.html`. You should see a notification that the API is not configured.
+1. If successful, you should be redirected to `/ride.html`. You should see a notification that the API is not configured.
 
     ![Successful login screenshot](../images/successful-login.png)
 
@@ -128,7 +128,7 @@ The [/js/config.js][configjs] file contains settings for the user pool ID, app c
 
 :key: Amazon Cognito provides two different capabilities for managing users, federated identities and user pools. [Amazon Cognito][cognito] user pools can handle almost every aspect about managing users, their login credentials, handling password resets, multifactor authentication and much more!
 
-:wrench: In this module you've used user pools to create a completely hosted and managed user management system that will allow us to authenticate your users and manage their user information. From there you've updated the website to use the user pool and utlized the AWS SDKs to provide a signin form on the site.
+:wrench: In this module you've used user pools to create a completely hosted and managed user management system that will allow us to authenticate your users and manage their user information. From there, you've updated the website to use the user pool and utlized the AWS SDKs to provide a signin form on the site.
 
 ### Next
 

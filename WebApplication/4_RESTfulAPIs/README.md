@@ -1,6 +1,6 @@
 # Module 4: RESTful APIs with AWS Lambda and Amazon API Gateway
 
-In this module you'll use API Gateway to expose the Lambda function you built in the [previous module][serverless-backend] as a RESTful API. This API will be accessible on the public Internet. It will be secured using the Amazon Cognito user pool you created in the [User Management][user-management] module. Using this configuration you will then turn your statically hosted website into a dynamic web application by adding client-side JavaScript that makes AJAX calls to the exposed APIs.
+In this module, you'll use API Gateway to expose the Lambda function you built in the [previous module][serverless-backend] as a RESTful API. This API will be accessible on the public Internet. It will be secured using the Amazon Cognito user pool you created in the [User Management][user-management] module. Using this configuration, you will then turn your statically hosted website into a dynamic web application by adding client-side JavaScript that makes AJAX calls to the exposed APIs.
 
 ![Dynamic web app architecture](../images/restful-api-architecture.png)
 
@@ -8,7 +8,7 @@ The diagram above shows how the API Gateway component you will build in this mod
 
 The static website you deployed in the first module already has a page configured to interact with the API you'll build in this module. The page at /ride.html has a simple map-based interface for requesting a unicorn ride. After authenticating using the /signin.html page, your users will be able to select their pickup location by clicking a point on the map and then requesting a ride by choosing the "Request Unicorn" button in the upper right corner.
 
-This module will focus on the steps required to build the cloud components of the API, but if you're interested in how the browser code works that calls this API, you can inspect the [ride.js](../1_StaticWebHosting/website/js/ride.js) file of the website. In this case the application uses jQuery's [ajax()](https://api.jquery.com/jQuery.ajax/) method to make the remote request.
+This module will focus on the steps required to build the cloud components of the API, but if you're interested in how the browser code works that calls this API, you can inspect the [ride.js](../1_StaticWebHosting/website/js/ride.js) file of the website. In this case, the application uses jQuery's [ajax()](https://api.jquery.com/jQuery.ajax/) method to make the remote request.
 
 ## Implementation Instructions
 
@@ -64,7 +64,7 @@ In the Amazon API Gateway console, create a new Cognito user pool authorizer for
 1. Click **Test** button and verify that the response code is 200 and that you see the claims for your user displayed.
 
 ### 3. Create a new resource and method
-Create a new resource called /ride within your API. Then create a POST method for that resource and configure it to use a Lambda proxy integration backed by the RequestUnicorn function you created in the first step of this module.
+Create a new resource called /ride within your API. Then, create a POST method for that resource and configure it to use a Lambda proxy integration backed by the RequestUnicorn function you created in the first step of this module.
 
 **:white_check_mark: Step-by-step directions**
 1. In the left nav, click on **Resources** under your WildRydes API.
@@ -109,7 +109,7 @@ From the Amazon API Gateway console, choose Actions, Deploy API. You'll be promp
 Update the /js/config.js file in your website deployment to include the invoke URL of the stage you just created. You should copy the invoke URL directly from the top of the stage editor page on the Amazon API Gateway console and paste it into the \_config.api.invokeUrl key of your sites /js/config.js file. Make sure when you update the config file it still contains the updates you made in the previous module for your Cognito user pool.
 
 **:white_check_mark: Step-by-step directions**
-1. On your Cloud9 development environment open `js/config.js`
+1. On your Cloud9 development environment, open `js/config.js`
 1. Update the **invokeUrl** setting under the **api** key in the config.js file. Set the value to the **Invoke URL** for the deployment stage your created in the previous section.
     An example of a complete `config.js` file is included below. Note, the actual values in your file will be different.
     ```JavaScript
@@ -154,7 +154,7 @@ Update the /js/config.js file in your website deployment to include the invoke U
 
 :key: [Amazon API Gateway][api-gw] is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. You can easily plug in Authorization via [Amazon Cognito][cognito] and backends such as [AWS Lambda][lambda] to create completely serverless APIs.
 
-:wrench: In this module you've used API Gateway to provide a REST API to the Lambda function created in the previous module. From there you've updated the website to use the API endpoint so that you can request rides and the information about the ride is saved in the DynamoDB table created earlier.
+:wrench: In this module, you've used API Gateway to provide a REST API to the Lambda function created in the previous module. From there, you've updated the website to use the API endpoint so that you can request rides and the information about the ride is saved in the DynamoDB table created earlier.
 
 :star: Congratulations, you have completed the Wild Rydes Web Application Workshop! Check out our [other workshops](../../README.md#workshops) covering additional serverless use cases.
 

@@ -2,11 +2,11 @@
 
 *Note! This section is currently part of expansion of this lab. There is currently no Step 7*
 
-In this module you'll use [AWS AppSync][appsync] to build a GraphQL API to find more information about the rides you have taken so far. In a subsequent module you will then modify our web application to add the ride history page which will query this API.
+In this module, you'll use [AWS AppSync][appsync] to build a GraphQL API to find more information about the rides you have taken so far. In a subsequent module, you will then modify our web application to add the ride history page which will query this API.
 
 ## Architecture Overview
 
-In the [Serverless Backend][serverless-backend] module you created a Lambda function that stored data in a DynamoDB bucket. Then in the [RESTful APIs][restful-apis] module you put Amazon API Gatewway infront of the Lambda function so you could connect it to your web application. Every time that you request a ride through that API, the Lambda function stores the data. Now, let's get that data out and present it as ride history. 
+In the [Serverless Backend][serverless-backend] module, you created a Lambda function that stored data in a DynamoDB bucket. Then, in the [RESTful APIs][restful-apis] module, you put Amazon API Gatewway infront of the Lambda function so you could connect it to your web application. Every time that you request a ride through that API, the Lambda function stores the data. Now, let's get that data out and present it as ride history. 
 
 GraphQL provides a robust query language API that works well with web and mobile based applications. AWS AppSync has the ability to put a GraphQL API infront of many different backends, including: AWS DynamoDB, AWS ElasticSearch Service, Amazon RDS Aurora, and AWS Lambda functions. The GraphQL API you will build here will allow you to return all rides, information about rides by their ID, and information about the unicorns that served your ride.
 
@@ -52,7 +52,7 @@ Use the AWS AppSync console to create a new GraphQL API. Call your API `RidesHis
 
 #### Background
 
-AWS AppSync has created a base GraphQL schema that contains basic functionality for our API. We could use it to create and delete items from out database, but we're only interested in retrieving data in this module. Expand on what was created by adding a query to find rides based on the unicorn that serviced them. The DynamoDB table currently has no indexes on any other attributes and so you will need to create a SCAN request filtered by UnicornName.
+AWS AppSync has created a base GraphQL schema that contains basic functionality for our API. We could use it to create and delete items from out database, but we're only interested in retrieving data in this module. Expand on what was created by adding a query to find rides based on the unicorn that serviced them. The DynamoDB table currently has no indexes on any other attributes, so you will need to create a SCAN request filtered by UnicornName.
 
 #### High-Level Instructions
 
@@ -60,7 +60,7 @@ Create a new query `getRidesByUnicornName` that retrieves the ride information b
 
 **:white_check_mark: Step-by-step directions**
 1. While in the [AWS AppSync Console][appsync-console] in your `RidesHistory` API, select **Schema**.
-1. In the Schema editor modify the Query object to add a new query:
+1. In the Schema editor, modify the Query object to add a new query:
     `getRidesByUnicornName(UnicornName: String, limit: Int, nextToken: String): RidesConnection`
     
     Such that the final object contains 3 queries:
@@ -73,7 +73,7 @@ Create a new query `getRidesByUnicornName` that retrieves the ride information b
     ```
 
 1. Click **Save Schema**>
-1. Under *Resolvers* find the *Query* section and select **Attach** next to the new query you just created.
+1. Under *Resolvers*, find the *Query* section and select **Attach** next to the new query you just created.
 
     ![Query Resolvers section](../images/appsync-query-resolvers.png)
 
@@ -121,8 +121,8 @@ Configure the AppSync GraphQL API to use the `WildRydes` user pool as an authori
 
 **:white_check_mark: Step-by-step directions**
 1. While in the [AWS AppSync Console][appsync-console] in your `RidesHistory` API, select **Settings**.
-1. Under *Authorization type* select *Amazon Cognito User Pool*.
-1. Under *User Pool configuration* select the region of your user pool and then select the user pool created earlier. Lastly, select *ALLOW* as the default action.
+1. Under *Authorization type*, select *Amazon Cognito User Pool*.
+1. Under *User Pool configuration*, select the region of your user pool, and then select the user pool created earlier. Lastly, select *ALLOW* as the default action.
 1. At the bottom of the page, select **Save**.
 
     ![Configured Authorization](../images/appsync-api-authorization.png)
@@ -135,7 +135,7 @@ The [AWS AppSync Console][appsync-console] contains a helpful query tool that al
 1. While in the [AWS AppSync Console][appsync-console] in your `RidesHistory` API, select **Queries**.
 1. Select *Login with User Pools**
 1. In the *Login with Cognito User Pools* popup, for `ClientId` enter the `appid` saved earlier.
-1. Now you need to login with the user you created earlier in the [User Management][user-management] module. One thing to note is that in Cognito your username is different than your email. You'll need to head to the Cognito Console to find the user name for your created user:
+1. Now, you need to login with the user you created earlier in the [User Management][user-management] module. One thing to note is that in Cognito your username is different than your email. You'll need to head to the Cognito Console to find the user name for your created user:
     1. Go to the [Amazon Cognito Console][cognito-console]
     1. Select **Manage User Pools**
     1. Select the user pool created earlier **WildRydes**
@@ -175,7 +175,7 @@ The [AWS AppSync Console][appsync-console] contains a helpful query tool that al
     }
     ```
 
-1. Click on the **Play** arrow button in the top of the page and select `getRides` from the new drop down that pops up. On the right you should see the results of the query:
+1. Click on the **Play** arrow button in the top of the page and select `getRides` from the new drop down that pops up. On the right, you should see the results of the query:
     ```
     {
       "data": {
@@ -201,7 +201,7 @@ The [AWS AppSync Console][appsync-console] contains a helpful query tool that al
     }
     ```
 
-1. Execute this query from the **Play** drop down and you should now see all rides that were performed by the named unicorn provided. If you only have a single ride by this unicorn explore testing the query using a differnt UnicornName. Note that if you have very few saved rides, you might need to go into the `/rides.html` interface on the web application and generate more rides.
+1. Execute this query from the **Play** drop down and you should now see all rides that were performed by the named unicorn provided. If you only have a single ride by this unicorn, explore testing the query using a differnt UnicornName. Note that if you have very few saved rides, you might need to go into the `/rides.html` interface on the web application and generate more rides.
     ```
     {
       "data": {
@@ -228,7 +228,7 @@ You've completed the testing of your AWS AppSync based GraphQL API!
 
 :key: [AWS AppSync][appsync] simplifies application development by letting you create a flexible API to securely access, manipulate, and combine data from one or more data sources. AppSync is a managed service that uses GraphQL to make it easy for applications to get exactly the data they need.
 
-:wrench: In this module you've created an AppSync API and connected it to our DynamoDB database created in an earlier module. You then set the authorization mechanism to the same that we are using for our REST API and web application meaning you'll have a unified way across these 3 different aspects of the application.
+:wrench: In this module, you've created an AppSync API and connected it to our DynamoDB database created in an earlier module. You then set the authorization mechanism to the same that we are using for our REST API and web application meaning you'll have a unified way across these 3 different aspects of the application.
 
 ### Next
 

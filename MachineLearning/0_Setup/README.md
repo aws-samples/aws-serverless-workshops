@@ -50,7 +50,7 @@ Let's get our code and start working. Inside the terminal:
 
 1. Run the following command to get our code:
     ```
-    git clone https://github.com/jmcwhirter/aws-serverless-workshops/
+    git clone https://github.com/aws-samples/aws-serverless-workshops/
     ```
 1. Navigate to our workshop:
     ```

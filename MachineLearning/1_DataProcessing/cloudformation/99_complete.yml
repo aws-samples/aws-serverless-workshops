@@ -33,6 +33,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref IngestUnicornRawDataFunction
       Principal: s3.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
       SourceArn: !Sub "arn:aws:s3:::${AWS::StackName}-databucket-${AWS::AccountId}"
   DataProcessingExecutionRole:
     Type: AWS::IAM::Role

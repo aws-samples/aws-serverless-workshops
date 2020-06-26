@@ -22,6 +22,16 @@ This repository contains a collection of workshops and other hands on content th
 
 - [**Decoupled Microservices**](https://async-messaging.workshop.aws/) - This workshop demonstrates the use of asynchronous messaging patterns to build micro-services based architecture. It applies the well known enterprise integration patterns using AWS services like SQS and SNS to implement various use cases for wild rydes business. All the labs are self contained and users can choose to go on their own adventure based on their requirements.
 
+- [**Document Processing**](https://document-processing.serverlessworkshops.io/) - This workshop demonstrates the use of AWS Lambda and Amazon Textract to extract text and data from large scale documents. It shows both asynchronous and synchronous architectural patterns to build an efficient document processing engine.
+
+- [**Go Serverless**](https://golang.serverlessworkshops.io/) - In this workshop, you will learn by using Go and the AWS Serverless Application Model (SAM), how to create a simple web service using AWS Lambda functions. It will also cover testing and debugging your web service locally with SAM monitoring and also troubleshooting your web service with distributed tracing using AWS X-Ray.
+
+- [**Application Catalog**](https://application-catalog.serverlessworkshops.io/) - In this workshop, we will explore some of the ways you can implement a CI/CD pipeline on AWS for Serverless workloads in a standardized way across an entire organization, allowing Software Engineers to develop and test Serverless workloads as they would in a more traditional environment while DevOps teams can focus on building one single pipeline that satisfies multiple environments and can be distributed as a “product” across multiple development teams.
+
+- [**Event Driven Architecture**](https://event-driven-architecture.workshop.aws/) - In this workshop we’ll cover the basics of event-driven design, using examples that involve Amazon EventBridge, Amazon SNS, Amazon SQS, AWS Lambda and more. You will learn how to choose the right AWS service for the job, as well as how to optimize for both cost and performance. Through hands on practice, this workshop will give you the skills bring event-driven design patterns into your own applications.
+
+- [**Innovator Island**](https://github.com/aws-samples/aws-serverless-workshop-innovator-island) - Innovator Island is a popular theme park that’s rolling out a mobile app for thousands of visitors. The app provides wait times, photo opportunities, notification alerts, and language translation for visitors who need it. However, the lead developer has disappeared, and in this workshop, you’re part of a development team that’s assembling the pieces left behind. Learn and practice building a scalable serverless web app with limited development resources.
+
 # Third Party Workshops
 
 The following workshops are created and maintained by third parties and explore a variety of other topics and tools related to serverless development on AWS.

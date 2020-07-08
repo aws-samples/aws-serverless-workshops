@@ -53,7 +53,7 @@ Amazon SageMaker notebooks are backed by Elastic Compute Cloud (EC2). These are 
 1. When redirected to the notebook instance, click **New** (upper right), then select **Terminal** from list.
 1. A new tab will open. When in the terminal, run the following command:
     ```
-    curl https://raw.githubusercontent.com/jmcwhirter/aws-serverless-workshops/master/MachineLearning/2_ModelBuilding/notebooks/linear_learner.ipynb \
+    curl https://raw.githubusercontent.com/aws-samples/aws-serverless-workshops/master/MachineLearning/2_ModelBuilding/notebooks/linear_learner.ipynb \
       -o SageMaker/linear_learner.ipynb && exit
     ```
 1. Exit the terminal tab/window

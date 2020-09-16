@@ -49,6 +49,12 @@ Use the AWS Lambda console to create a new Lambda function called **ListUnicornR
 
 Make sure to configure your function to use the `WildRydesLambda` IAM role you created in module 2 of this workshop.
 
+> `WildRydesLambda` role need to be updated to perform read-only operations in DynamoDB, along with the `PutItem` you had set in module 2.
+
+<details>
+## TODO 
+</details>
+
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 

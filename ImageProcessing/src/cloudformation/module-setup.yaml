@@ -76,7 +76,7 @@ Resources:
     Properties:
       Description: "Use Amazon Rekognition to detect faces"
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       MemorySize: 256
       Timeout: 60
       Policies:
@@ -101,7 +101,7 @@ Resources:
     Properties:
       Description: "mock notification sender"
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       MemorySize: 256
       Timeout: 60
       CodeUri:
@@ -112,7 +112,7 @@ Resources:
     Properties:
       Description: "Use Amazon Rekognition to check if the face is already in the collection"
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       MemorySize: 256
       Timeout: 60
       Policies:
@@ -139,7 +139,7 @@ Resources:
     Properties:
       Description: "Index the photo into Rekognition collection"
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       MemorySize: 256
       Timeout: 60
       Policies:
@@ -167,7 +167,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       MemorySize: 1536
       Timeout: 300
       Policies:
@@ -195,7 +195,7 @@ Resources:
     Properties:
       Description: "Save metadata of the photo to DynamoDB table"
       Handler: index.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       MemorySize: 256
       Timeout: 60
       Environment:

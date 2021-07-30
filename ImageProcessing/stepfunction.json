@@ -1,0 +1,157 @@
+{
+  "Comment": "This is your state machine",
+  "StartAt": "FaceDetection",
+  "States": {
+    "FaceDetection": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceDetectionFunction-XwcEWt8O7Fc6:$LATEST",
+        "Payload.$": "$"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "CheckFaceDuplicate",
+      "ResultPath": "$.detectedFaceDetails",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "PhotoDoesNotMeetRequirementError"
+          ],
+          "Next": "PhotoDoesNotMeetRequirement",
+          "ResultPath": "$.errorInfo"
+        }
+      ]
+    },
+    "CheckFaceDuplicate": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceSearchFunction-OVwPdvxhsXQ2:$LATEST",
+        "Payload.$": "$"
+      },
+      "Next": "ParallelProcessing",
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "PhotoDoesNotMeetRequirementError"
+          ],
+          "Next": "PhotoDoesNotMeetRequirement",
+          "ResultPath": "$.errorInfo"
+        }
+      ]
+    },
+    "PhotoDoesNotMeetRequirement": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "Subject": "Non-compliant photo encountered",
+        "TopicArn": "arn:aws:sns:us-east-1:571724487590:ImageProcessing-NotifyMe-1CHLR00U47FPK"
+      },
+      "End": true
+    },
+    "ParallelProcessing": {
+      "Type": "Parallel",
+      "Next": "PersistMetadata",
+      "Branches": [
+        {
+          "StartAt": "AddFaceToIndex",
+          "States": {
+            "AddFaceToIndex": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-IndexFaceFunction-y7vxWcHTCm5g:$LATEST",
+                "Payload.$": "$"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException"
+                  ],
+                  "IntervalSeconds": 2,
+                  "MaxAttempts": 6,
+                  "BackoffRate": 2
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "Thumbnail",
+          "States": {
+            "Thumbnail": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-ThumbnailFunction-VN0cOHMSuval:$LATEST",
+                "Payload.$": "$"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException"
+                  ],
+                  "IntervalSeconds": 2,
+                  "MaxAttempts": 6,
+                  "BackoffRate": 2
+                }
+              ],
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.parallelResult"
+    },
+    "PersistMetadata": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Parameters": {
+        "TableName": "ImageProcessing-RiderPhotoDDBTable-U3LK8OTEA3X0",
+        "Item": {
+          "Username": {
+            "S.$": "$.userId"
+          },
+          "faceId": {
+            "S.$": "$.parallelResult[0].Payload.FaceId"
+          },
+          "s3bucket": {
+            "S.$": "$.s3Bucket"
+          },
+          "s3key": {
+            "S.$": "$.s3Key"
+          },
+          "thumbnail": {
+            "M": {
+              "s3bucket": {
+                "S.$": "$.parallelResult[1].Payload.thumbnail.s3bucket"
+              },
+              "s3key": {
+                "S.$": "$.parallelResult[1].Payload.thumbnail.s3key"
+              }
+            }
+          }
+        }
+      },
+      "End": true
+    }
+  }
+}

@@ -367,4 +367,51 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Join [ "/", [ "stepfunctions", "ImageProcessingExpressStateMachine"]]
+  CloudTrailS3Bucket: 
+      Type: AWS::S3::Bucket
+  BucketPolicy: 
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      Bucket: 
+        Ref: CloudTrailS3Bucket
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Sid: "AWSCloudTrailAclCheck"
+            Effect: "Allow"
+            Principal: 
+              Service: "cloudtrail.amazonaws.com"
+            Action: "s3:GetBucketAcl"
+            Resource: 
+              !Sub |-
+                arn:aws:s3:::${CloudTrailS3Bucket}
+          - 
+            Sid: "AWSCloudTrailWrite"
+            Effect: "Allow"
+            Principal: 
+              Service: "cloudtrail.amazonaws.com"
+            Action: "s3:PutObject"
+            Resource:
+              !Sub |-
+                arn:aws:s3:::${CloudTrailS3Bucket}/AWSLogs/${AWS::AccountId}/*
+            Condition: 
+              StringEquals:
+                s3:x-amz-acl: "bucket-owner-full-control"  
+  CloudTrail: 
+    DependsOn: 
+      - BucketPolicy
+    Type: AWS::CloudTrail::Trail
+    Properties: 
+      S3BucketName: 
+        Ref: CloudTrailS3Bucket
+      IsLogging: true
+      EventSelectors: 
+        - DataResources:
+            - Type: AWS::S3::Object
+              Values:
+                - Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/ 
+          ReadWriteType: WriteOnly
+          IncludeManagementEvents: No
+      TrailName: ImageProcessing
 Transform: AWS::Serverless-2016-10-31

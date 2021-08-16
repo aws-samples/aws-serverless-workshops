@@ -1,7 +1,16 @@
 {
   "Comment": "This is your state machine",
-  "StartAt": "FaceDetection",
+  "StartAt": "TransformS3event",
   "States": {
+    "TransformS3event": {
+      "Type": "Pass",
+      "Next": "FaceDetection",
+      "Parameters": {
+        "userId.$": "$.detail.userIdentity.principalId",
+        "s3Bucket.$": "$.detail.requestParameters.bucketName",
+        "s3Key.$": "$.detail.requestParameters.key"
+      }
+    },
     "FaceDetection": {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",

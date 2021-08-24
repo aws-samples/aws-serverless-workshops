@@ -1,7 +1,7 @@
 +++
 title = "Console Login"
 chapter = false
-weight = 01
+weight = 1
 +++
 
 ## Logging into AWS Event Engine

@@ -1,7 +1,7 @@
 +++
 title = "Validation Testing"
 chapter = false
-weight = 01
+weight = 1
 +++
 
 1. Test the final state machine (`RiderPhotoProcessing`) with different test images provided

@@ -1,7 +1,7 @@
 +++
 title = "Cleanup"
 chapter = false
-weight = 06
+weight = 6
 pre = "<b>6. </b>"
 +++
 

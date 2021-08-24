@@ -1,7 +1,7 @@
 +++
 title = "Prerequisites"
 chapter = true
-weight = 02
+weight = 2
 pre = "<b>2. </b>"
 +++
 

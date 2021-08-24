@@ -1,7 +1,7 @@
 +++
 title = "Testing & Triggering"
 chapter = false
-weight = 04
+weight = 4
 pre = "<b>4. </b>"
 +++
 

@@ -1,7 +1,7 @@
 +++
 title = "Extra Credit"
 chapter = false
-weight = 05
+weight = 5
 pre = "<b>5. </b>"
 +++
 

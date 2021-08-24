@@ -1,7 +1,7 @@
 +++
 title = "Cloud9 Environment"
 chapter = false
-weight = 02
+weight = 2
 +++
 
 ## Starting AWS Cloud9 IDE

@@ -1,7 +1,7 @@
 +++
 title = "Image Processing Workflow"
 chapter = false
-weight = 02
+weight = 2
 +++
 
 The architecture for this module is composed of several [AWS Lambda][Lambda] functions that leverage the facial detection capabilities of [Amazon Rekognition][Rekognition], resize the uploaded image stored in [Amazon S3][S3], and save the image metadata with the user profile using [Amazon DynamoDB][DynamoDB]. The orchestration of these Lambda functions is managed by an [AWS Step Functions][Step Functions]  state machine.

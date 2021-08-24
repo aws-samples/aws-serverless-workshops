@@ -1,7 +1,7 @@
 +++
 title = "Triggering With S3 Events"
 chapter = false
-weight = 02
+weight = 2
 +++
 
 We are going to use Amazon EventBridge to execute an AWS Step Functions state machine in response to uploading an image to our Amazon S3 bucket. To accomplish this, we will configure the state machine as a target for an Amazon EventBridge rule.
@@ -188,4 +188,23 @@ Now we can test the S3 upload event trigger. First, find a picture that we've no
 	alt="Step 11"
 >}}
 
-➡️ Step 11: In the list of buckets, click the bucket beginning with `wildrydes-step-module-resource-riderphotos3bucket-`. You should see four objects in that bucket corresponding to the images that we pre-populated from the CloudFormation template. From here, you can upload your new photo by dragging and dropping the file from your computer onto this page (or by clicking the **Upload** button). If you dragged and dropped the file onto the browser window, you can simply click the **Upload** button at the bottom of the screen and can skip ahead to Step 13. 
+➡️ Step 12: In the list of buckets, click the bucket beginning with `wildrydes-step-module-resource-riderphotos3bucket-`. You should see four objects in that bucket corresponding to the images that we pre-populated from the CloudFormation template.
+
+{{< figure
+	src="/images/triggering-step12.png"
+	alt="Step 12"
+>}}
+
+Click the **Upload** button. Then drag and drop an image file onto the browser window to add it to the list of files to be uploaded. In this example, you can see a file named `baby.jpg` was added. Then click **Upload**.
+
+{{< figure
+	src="/images/triggering-step12b.png"
+	alt="Step 12b"
+>}}
+
+If your upload was successful, you should see a notification like the following:
+
+{{< figure
+	src="/images/triggering-step12c.png"
+	alt="Step 12c"
+>}}

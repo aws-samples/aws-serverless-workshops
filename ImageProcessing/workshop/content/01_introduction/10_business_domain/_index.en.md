@@ -1,7 +1,7 @@
 +++
 title = "Example Business Context"
 chapter = false
-weight = 01
+weight = 1
 +++
 
 It’s much easier to explore concepts around distributed service coordination and serverless image processing when we have concrete systems to talk about. For this workshop, we’ll discuss a set of services that comprise a very small slice of a simplified ride-sharing app for the imaginary company **Wild Rydes**. The Wild Rydes team wants to add a new feature to the app that requires riders to upload a selfie after signing up to accomplish two things:

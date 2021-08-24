@@ -1,0 +1,20 @@
+<!-- Partial intended to be overwritten to add custom headers, like CSS or any other info
+<style type="text/css">
+    /* Custom css */
+</style>
+-->
+
+<script>
+
+  const shortbread = AWSCShortbread({
+    domain: "image-processing.serverlessworkshops.io",
+    //domain:"localhost"
+  });
+  shortbread.checkForCookieConsent();
+  
+  function showCookie(){
+    shortbread.customizeCookies();
+  }
+  
+  
+  </script>

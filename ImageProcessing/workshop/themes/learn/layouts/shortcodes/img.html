@@ -1,0 +1,4 @@
+{{ $img := $.Page.Resources.GetMatch (.Get 0)}}
+<figure>
+	<img src="{{ $img.RelPermalink }}?classes=shadow&width=60pc" alt="{{(.Get 1)}}" />
+</figure>

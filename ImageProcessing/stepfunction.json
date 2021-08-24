@@ -1,7 +1,30 @@
 {
   "Comment": "This is your state machine",
-  "StartAt": "TransformS3event",
+  "StartAt": "Choice",
   "States": {
+    "Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "And": [
+            {
+              "Variable": "$.s3Key",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.userId",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.s3Bucket",
+              "IsPresent": true
+            }
+          ],
+          "Next": "FaceDetection"
+        }
+      ],
+      "Default": "TransformS3event"
+    },
     "TransformS3event": {
       "Type": "Pass",
       "Next": "FaceDetection",
@@ -15,7 +38,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceDetectionFunction-XwcEWt8O7Fc6:$LATEST",
+        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceDetectionFunction-4OBhA2yrMd7g:$LATEST",
         "Payload.$": "$"
       },
       "Retry": [
@@ -46,7 +69,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceSearchFunction-OVwPdvxhsXQ2:$LATEST",
+        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceSearchFunction-Tt2kgG9KNXgk:$LATEST",
         "Payload.$": "$"
       },
       "Next": "ParallelProcessing",
@@ -67,7 +90,7 @@
       "Parameters": {
         "Message.$": "$",
         "Subject": "Non-compliant photo encountered",
-        "TopicArn": "arn:aws:sns:us-east-1:571724487590:ImageProcessing-NotifyMe-1CHLR00U47FPK"
+        "TopicArn": "arn:aws:sns:us-east-1:571724487590:ImageProcessing-NotifyMe-OJQS9E21DD9Z"
       },
       "End": true
     },
@@ -82,7 +105,7 @@
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
               "Parameters": {
-                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-IndexFaceFunction-y7vxWcHTCm5g:$LATEST",
+                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-IndexFaceFunction-S6Rcmrc2xojC:$LATEST",
                 "Payload.$": "$"
               },
               "Retry": [
@@ -108,7 +131,7 @@
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
               "Parameters": {
-                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-ThumbnailFunction-VN0cOHMSuval:$LATEST",
+                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-ThumbnailFunction-hZ9Lxl4K5e4X:$LATEST",
                 "Payload.$": "$"
               },
               "Retry": [
@@ -134,7 +157,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::dynamodb:putItem",
       "Parameters": {
-        "TableName": "ImageProcessing-RiderPhotoDDBTable-U3LK8OTEA3X0",
+        "TableName": "ImageProcessing-RiderPhotoDDBTable-7LKPCXYLDNEL",
         "Item": {
           "Username": {
             "S.$": "$.userId"

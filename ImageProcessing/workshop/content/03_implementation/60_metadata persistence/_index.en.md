@@ -6,148 +6,187 @@ weight = 36
 
 ### Add metadata persistence step
 
-The last step of our image processing workflow is to persist the metadata of the profile photo with the user's profile.
+The last step of our image processing workflow is to persist the metadata of the profile photo with the user’s profile. We are going to save the image metadata with the user profile using Amazon DynamoDB.
 
-The ARN of the AWS Lambda function that persists the metadata can be found in the in AWS CloudFormation output `PersistMetadataFunctionArn`.
+The name of Amazon DynamoDB table that persists the metadata can be found in the in AWS CloudFormation output `RiderPhotoDDBTable`.
+
+In the end of this section, your state machine should resemble the following: 
 
 {{< figure
-	src="/images/4th-state-machine-graph.png"
+	src="/images/metadata-step0.png"
 	width="60%"
 >}}
 
-1. Edit your `rider-photo-state-machine.json` file to add the final persistence step.
 
-    First, add a new state `PersistMetadata` following the `ParallelProcessing` state. Also make sure:
+➡️ Step 1: Edit your state machine by returning to the Workflow Studio.
 
-    *   Replace the `REPLACE_WITH_PersistMetadataFunctionArn` with the `PersistMetadataFunctionArn ` from the AWS CloudFormation output
 
-	{{< highlight json >}}
-,
-"PersistMetadata": {
-	"Type": "Task",
-	"Resource": "REPLACE_WITH_PersistMetadataFunctionArn",
-	"ResultPath": null,
-	"End": true
-}	{{< /highlight >}}
+{{< figure
+	src="/images/dedupe-step1.png"
+	alt="Step 1"
+>}}
 
-1. Find the line in the `ParallelProcessing` state that marks it as the End state of the state machine.
 
-	{{< highlight json >}}"End": true{{< /highlight >}}
+➡️ Step 2: Drag the Amazon DynamoDB PutItem action from the “States browser” and drop it in between the “Parallel State” and “End” states. When done, you should see that the “Definition view” has changed to allow configuration of the “DynamoDB PutItem” step as shown below.
 
-	and replace it with
 
-	{{< highlight json >}}"Next": "PersistMetadata"{{< /highlight >}}
+{{< figure
+	src="/images/metadata-step1.png"
+	alt="Step 1"
+>}}
 
-	> **Note**: be careful to edit the `"End"` line at the `ParallelProcessing` level, not the individual branch level within the parallel state.
 
-	This tells AWS Step Functions if the `ParallelProcessing` state runs successfully, go on to run the `PersistMetadata` state as the next step in the process.
+➡️ Step 3: Configure the newly created state. Change the state name to "PersistMetadata". Then, in the API Parameters, copy in the following JSON. 
 
-1. At this point, your `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples):
+{{% notice warning %}}
+Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of the RiderPhotoDDBTable value of the output from the CloudFormation stack.
+{{% /notice %}}
 
-	{{< expand "(expand to see)" >}}
 
-	{{< highlight json >}}
+{{< highlight json >}}
+
 {
-	"Comment": "Rider photo processing workflow",
-	"StartAt": "FaceDetection",
-	"States": {
-		"FaceDetection": {
-			"Type": "Task",
-			"Resource": "arn:aws:lambda:us-west-2:012345678912:function:wild-ryde-step-module-FaceDetectionFunction-4AYSKX2EGPV0",
-			"ResultPath": "$.detectedFaceDetails",
-			"Next": "CheckFaceDuplicate",
-			"Catch": [
-				{
-					"ErrorEquals": [
-						"PhotoDoesNotMeetRequirementError"
-					],
-					"ResultPath": "$.errorInfo",
-					"Next": "PhotoDoesNotMeetRequirement"
-				}
-			]
-		},
-		"PhotoDoesNotMeetRequirement": {
-			"Type": "Task",
-			"Resource": "arn:aws:lambda:us-west-2:012345678912:function:wild-ryde-step-module-NotificationPlaceholderFunct-CDRLZC8BRFWP",
-			"End": true
-		},
-		"CheckFaceDuplicate": {
-			"Type": "Task",
-			"Resource": "arn:aws:lambda:us-west-2:012345678912:function:wild-ryde-step-module-FaceSearchFunction-1IT67V4J214DC",
-			"ResultPath": null,
-			"Next": "ParallelProcessing",
-			"Catch": [
-				{
-					"ErrorEquals": [
-						"FaceAlreadyExistsError"
-					],
-					"ResultPath": "$.errorInfo",
-					"Next": "PhotoDoesNotMeetRequirement"
-				}
-			]
-		},
-		"ParallelProcessing": {
-			"Type": "Parallel",
-			"Branches": [
-				{
-					"StartAt": "AddFaceToIndex",
-					"States": {
-						"AddFaceToIndex": {
-							"Type": "Task",
-							"Resource": "arn:aws:lambda:us-west-2:012345678912:function:wild-ryde-step-module-IndexFaceFunction-15658V8WUI67V",
-							"End": true
-						}
-					}
-				},
-				{
-					"StartAt": "Thumbnail",
-					"States": {
-						"Thumbnail": {
-							"Type": "Task",
-							"Resource": "arn:aws:lambda:us-west-2:012345678912:function:wild-ryde-step-module-ThumbnailFunction-A30TCJMIG0U8",
-							"End": true
-						}
-					}
-				}
-			],
-			"ResultPath": "$.parallelResult",
-			"Next": "PersistMetadata"
-		},
-		"PersistMetadata": {
-			"Type": "Task",
-			"Resource": "arn:aws:lambda:us-west-2:012345678912:function:wild-ryde-step-module-PersistMetadataFunction-9PDCT2DT7K70",
-			"ResultPath": null,
-			"End": true
-		}
-	}
-}	{{< /highlight >}}
-	{{< /expand >}}
+  "TableName": "REPLACE_WITH_RiderPhotoDDBTable",
+  "Item": {
+    "Username": {
+      "S.$": "$.userId"
+    },
+    "faceId": {
+      "S.$": "$.parallelResult[0].Payload.FaceId"
+    },
+    "s3bucket": {
+      "S.$": "$.s3Bucket"
+    },
+    "s3key": {
+      "S.$": "$.s3Key"
+    },
+    "thumbnail": {
+      "M": {
+        "s3bucket": {
+          "S.$": "$.parallelResult[1].Payload.thumbnail.s3bucket"
+        },
+        "s3key": {
+          "S.$": "$.parallelResult[1].Payload.thumbnail.s3key"
+        }
+      }
+    }
+  }
+}
+{{< /highlight >}}
 
-1. Go back to the AWS Step Functions Console and click the **Edit state machine** button to update the `RiderPhotoProcessing` state machine.
 
-1. Paste the updated JSON definition and click the refresh button in the preview panel to visualize the changes:
+{{< figure
+	src="/images/metadata-step3.png"
+	alt="Step 1"
+>}}
 
-	{{< figure
-		src="/images/6-update-state-machine-persistence-2.png"
-		alt="Update state machine with persistence step"
-	>}}
 
-1. Click the **Save** button to save the state machine.
 
-1. Click the **Start execution** button to test the new state machine with with test input:
+➡️ Step 4: Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
 
-	{{< highlight json >}}
+{{< figure
+	src="/images/statemachine-step11.png"
+	alt="Step 11"
+>}}
+
+To save the changes you made, you must also click the **Save** button in the top right of the state machine definition page.
+
+
+{{< figure
+	src="/images/statemachine-step11b.png"
+	alt="Step 7"
+>}}
+
+
+{{% notice warning %}}
+Saving changes to the state machine made using the Workflow Studio interface requires **both** applying the changes (to leave the Workflow Studio interface) **and** pressing the **Save** button once you have exited the workflow interface. If you fail to do either of these steps, the changes made to the state machine will not be saved.
+{{% /notice %}}
+
+You may get an alert dialog when saving informing you that your changes may affect the resources the state machine needs to access. Click **Save anyway**.
+
+{{< figure
+	src="/images/statemachine-step11c.png"
+	alt="Step 11c"
+>}}
+
+You should get a confirmation that your state machine was successfully saved and the result should look like the following:
+
+
+{{< figure
+	src="/images/metadata-step3_final_confirmation.png"
+	alt="Step 11d"
+>}}
+
+### Testing our implementation
+
+Now that we have built the persist metadata state, let's test our implementation by executing it with some sample input. Before testing, we need to delete and recreate face collection in Amazon Rekognition. 
+
+From this point on, there are two commands to be run from the Cloud9 IDE that will be useful for testing:
+
+#### Deleting face collection 
+
+		aws rekognition delete-collection \
+			--collection-id rider-photos \
+			--region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
+
+#### Creating face collection
+
+		aws rekognition create-collection \
+			--collection-id rider-photos \
+			--region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
+
+
+➡️ Step 5: Return to the AWS Console where you left off, you can click the **Start execution** button in the top left of the screen.
+
+{{< figure
+	src="/images/statemachine-step12.png"
+	alt="Step 12"
+>}}
+
+This will open a dialog where you can put your input data. For the input data, copy in the following JSON.   
+
+{{< highlight json >}}
 {
-	"userId": "user_a",
-	"s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
-	"s3Key": "1_happy_face.jpg"
+"userId": "user_a",
+"s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
+"s3Key": "1_happy_face.jpg"
 }	{{< /highlight >}}
 
-	If you reference an image that's already indexed when you were testing the previous state machine, the execution would fail the `CheckFaceDuplicate` step like this:
+Paste it into the input field and make sure to substitute the `REPLACE_WITH_YOUR_BUCKET_NAME` with the value of the `RiderPhotoS3Bucket` value of the output from the CloudFormation stack.
 
-	{{< figure
-		src="/images/already-indexed-face-2.png"
-		alt="Already indexed face"
-	>}}
+{{< figure
+	src="/images/statemachine-step12b.png"
+	alt="Step 12b"
+>}}
 
-	You can use the `aws rekognition list-faces` and `aws rekognition delete-faces` commands to clean up the previous indexed faces during testing. Or you can upload a different picture to the `RiderPhotoS3Bucket` and use the s3 key of the new picture to test.
+Once you've replaced the s3 bucket with the `RiderPhotoS3Bucket` value from the output of your CloudFormation stack, press **Start execution**. This will start the execution of your step function and take you to a status page for the execution. If things go well, you should see an execution status of `Succeeded` and the graph inspector should have a green `PersistMetadata` state.
+
+{{< figure
+	src="/images/metadata-step5.png"
+	alt="Step 12c"
+>}}
+
+Now, we are going to validate that user profile metadata stored in the DynamoDB table.
+
+➡️ Step 6: From the AWS Management Console, type "DynamoDB" in the search field at the top of the window and select **DynamoDB** from the list of services.
+
+➡️ Step 7: From the DynamoDB/Tables, find and click on table **wildrydes-step-module-resources-RiderPhotoDDBTable-XXXXX**. Then, click on **veiw Items**.
+
+{{< figure
+	src="/images/metadata-step7a.png"
+	alt="Step 12c"
+>}}
+
+
+{{< figure
+	src="/images/metadata-step7b.png"
+	alt="Step 12c"
+>}}
+
+
+{{< figure
+	src="/images/metadata-step7c.png"
+	alt="Step 12c"
+>}}
+
+:white_check_mark: Congratulations! You have now tested and validated metadata persistence step. 

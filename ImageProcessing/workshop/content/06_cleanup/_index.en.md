@@ -56,7 +56,7 @@ You should receive a success message. Click the **Exit** button that appears in 
 ➡️ Step 6: From the list of CloudFormation stacks, select the `wildrydes-step-module-resources` stack and click the **Delete** button.
 
 {{% notice note %}}
-Our CloudFormation template actually created *2* stacks. One is nested and begins contains `ImageMagick` in the name. Do not delete this stack. It will automatically be deleted.
+Our CloudFormation template actually created *2* stacks. One is nested and contains `ImageMagick` in the name. **Do not** delete this stack. It will automatically be deleted.
 {{% /notice %}}
 
 

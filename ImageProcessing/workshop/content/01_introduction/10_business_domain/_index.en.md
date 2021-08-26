@@ -30,4 +30,4 @@ Orchestration’s main benefit for service coordination is that it places all of
 
 This approach works best when there is a higher level of coordination needed between services, often involving the need for robust retries, specific error handling, and optimized processing logic like conducting some steps in parallel or waiting for some steps to complete before continuing to execute a particular process.
 
-:white_check_mark: With the relevant context in mind, you can proceed to the technical overview of this workflow by clicking the arrow to the right.
+:white_check_mark: With the relevant context in mind, you can proceed to the technical overview of this workflow by clicking the arrow along the right side of this content.

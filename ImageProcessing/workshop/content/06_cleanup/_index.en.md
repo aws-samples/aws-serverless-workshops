@@ -73,3 +73,5 @@ Click **Delete stack** in the confirmation dialog that appears.
 >}}
 
 The status of the `wildrydes-step-module-resources` will change to **DELETE_IN_PROGRESS**. Deleting this CloudFormation stack can take a few minutes. Keep refreshing the page until the stack is gone.
+
+:white_check_mark: Congratulations! Successfully completed this workshop. You've covered a lot of materials. Feel free to review any of the sections again at your leisure.

@@ -2,7 +2,6 @@
 title = "Express Workflows"
 chapter = false
 weight = 43
-pre = "<b>c. </b>"
 +++
 
 ### What is Express Workflows?
@@ -40,10 +39,10 @@ As a review, we will be creating below step function state machine now with Expr
 	alt="initial state machine diagram"
 >}}
 
-1.  Make sure your final `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples): 
+1.  Make sure your final `rider-photo-state-machine.json` file should look like this (the AWS Lambda ARNs are examples):
 
 	{{< expand "(expand to see)" >}}
-	
+
 	{{< highlight json >}}
 {
 	"Comment": "Rider photo processing workflow",
@@ -121,7 +120,7 @@ As a review, we will be creating below step function state machine now with Expr
 }	{{< /highlight >}}
 	{{< /expand >}}
 
-1. From the AWS Management Console, choose **Services** then select **Step Functions**. 
+1. From the AWS Management Console, choose **Services** then select **Step Functions**.
 
 1. You might see the following Get Started page if you have not used AWS Step Functions before. If that's the case, **click on the three horizontal lines in the top-left corner**.
 
@@ -146,7 +145,7 @@ As a review, we will be creating below step function state machine now with Expr
 
 1. Select **Author with Code Snippets** if it's not already selected.
 
-1. Change the default selection from "Standard" to "Express" type. 
+1. Change the default selection from "Standard" to "Express" type.
 
 	{{< figure
 		src="/images/StepFunctions-CreateNewStateMachine-Step4-Express.png"
@@ -238,30 +237,30 @@ As a review, we will be creating below step function state machine now with Expr
 
 1.  Here you specify the input data passed into the AWS Step Functions state machine to process.
 
-	Each execution of a Step Functions state machine has an unique ID. You can either specify one when starting the execution, or have the service generate one for you. In the text field that says "enter your execution id here",  you can specify an execution ID, or leave it blank. 
-   
-	For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` field with your own values. 
-   
-	For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`. 
-	
+	Each execution of a Step Functions state machine has an unique ID. You can either specify one when starting the execution, or have the service generate one for you. In the text field that says "enter your execution id here",  you can specify an execution ID, or leave it blank.
+
+	For the input data, type in the follow JSON. Make sure to substitute the `s3Bucket` field with your own values.
+
+	For `s3Bucket` field, look in the **Outputs** section of the `wildrydes-step-module-resources` stack for `RiderPhotoS3Bucket`.
+
 	The `userId` field is needed because in later processing steps, the userId is used to record which user the profile picture is associated with.
 
 	{{< highlight json >}}
 {
-	"userId": "user_a", 
+	"userId": "user_a",
 	"s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
 	"s3Key": "1_happy_face.jpg"
 }	{{< /highlight >}}
 
 	> this tells the image processing workflow the userId that uploaded the picture and the Amazon S3 bucket and keys the photo is at.  
-	
+
 	{{< figure
 		src="/images/test-execution-1.png"
 		alt="Test new execution"
 	>}}
 
 1.  Once you Start Execution, **Unlike `Standard` Woflows, you would **NOT** see execution results in the visual format as below on the Step Functions Page**. This is to get improved performance with `Express` Workflows. **Instead, you have to go to CloudWatch to check the execution status and logs for `Express` Workflows**.
-	
+
 	{{< figure
 		src="/images/1-standard-workflows-visual-output.png"
 		alt="Test new execution"
@@ -286,7 +285,7 @@ As a review, we will be creating below step function state machine now with Expr
 		aws rekognition list-faces \
 	  	  --collection-id rider-photos \
 	  	  --region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
-	
+
 1. You might find the `delete-faces` command useful when testing:
 
 		aws rekognition delete-faces \

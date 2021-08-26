@@ -93,7 +93,7 @@ Then click **Add conditions**.
 	alt="Step 8b"
 >}}
 
-This will bring up a rule editor to determine which path the state machine should choose. We will configure a simple rule that checks to see if the `userId` value is present. For manually triggered events, this will be true, but for EventBridge events it will be FaceAlreadyExistsError.
+This will bring up a rule editor to determine which path the state machine should choose. We will configure a simple rule that checks to see if the `userId` value is present. For manually triggered events, this will be true, but for EventBridge events it will be false.
 
 {{% notice info %}}
 We could make a very complex rule set that checks for all key-value pairs, but for the sake of simplicity, we'll just create a simple rule checking for one key-value pair. You can explore this rule builder to try and create more complex rules or handle conditions not covered in here outside the context of this workshop.

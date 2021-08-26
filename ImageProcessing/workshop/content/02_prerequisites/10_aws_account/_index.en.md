@@ -5,8 +5,8 @@ weight = 1
 +++
 
 ## Logging into AWS Event Engine
-{{% notice tip %}}
-This section is applicable only to workshops leveraging an AWS account via the AWS Event Engine service. Alternatively, you can use an AWS Account with IAM Administrator privileges. If you already have an AWS account, and have IAM Administrator access, you can log in using those credentials and then [skip ahead]({{< ref "#region-selection" >}} "Go to Cloud9 Setup" ).
+{{% notice info %}}
+This section is applicable only to workshops leveraging an AWS account via the AWS Event Engine service. Alternatively, you can use an AWS Account with IAM Administrator privileges. If you already have an AWS account, and have IAM Administrator access, you can log in using those credentials and then [skip ahead to Region Selection]({{< ref "#region-selection" >}} "Go to Cloud9 Setup" ).
 {{% /notice %}}
 
 
@@ -40,7 +40,7 @@ Once you have logged in to the AWS Console, you should make sure the appropriate
 If using AWS Event Engine, you should use the region provided by the workshop host(s) for the entirety of this workshop as other regions will not be functional or you may encounter unexpected errors.
 {{% /notice %}}
 
-➡️ Step 4: Select **the assigned region** in the top right corner.
+➡️ Step 4: Select the assigned region in the top right corner of the AWS Console.
 
 {{< figure
     src="/images/setup-step3.png"
@@ -48,4 +48,4 @@ If using AWS Event Engine, you should use the region provided by the workshop ho
 >}}
 
 
-:white_check_mark: Now you have logged in to the AWS Console and selected your region, you may proceed to setting up the Cloud9 environment by clicking the arrow to the right.
+:white_check_mark: Now have now logged in to the AWS Console and selected your region. Lets continue by setting up a Cloud9 environment so that we can run some AWS commands from the command line.

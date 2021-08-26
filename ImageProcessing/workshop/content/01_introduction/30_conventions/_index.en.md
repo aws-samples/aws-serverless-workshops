@@ -11,8 +11,8 @@ This workshop is composed of a combination of english-language instructions, cod
 #### Names ####
 Sometimes something needs to be referred to using a conceptual reference, or name. For these names, we will enclose them in double quotes. For example, "Configuration panel". In this example, we may be referring to a section of the screen without an obvious label. We will illustrate or explain these names the first time we use them.
 
-#### Key & Values ####
-Keys and associated values that are specifically referenceable in either code, JSON, our generated output will have the following style: `Key` or `Value`
+#### Key & Values & Input ####
+Keys and associated values that are specifically referenceable in either code, JSON, our generated output will have the following style: `Key` or `Value`. If you're asked to type any input into a field, it will be indicated similarly. For example: Type `NewValue` into the **Name** field (we'll cover bold items below).
 
 #### Steps ####
 Each section of the workshop will ask you to perform actions within the AWS Console or other AWS tools. We will refer to these as "Steps" These steps are easy to pick out and reference as they start with

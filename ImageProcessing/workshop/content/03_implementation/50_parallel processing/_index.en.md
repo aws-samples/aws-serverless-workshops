@@ -155,3 +155,5 @@ The name of the S3 bucket can be found in the in AWS CloudFormation output `Thum
 
 1. What happens when you run an execution with the exactly the same input as a previous execution?
 1. What happens if you run an execution with a different `userId` but the same `s3key` and `s3bucket` parameters?
+
+:white_check_mark: Congratulations! You have now tested and validated using parallel steps within your state machine. 

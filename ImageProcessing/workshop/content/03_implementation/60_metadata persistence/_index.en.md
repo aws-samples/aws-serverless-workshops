@@ -10,7 +10,7 @@ The last step of our image processing workflow is to persist the metadata of the
 
 The name of Amazon DynamoDB table that persists the metadata can be found in the in AWS CloudFormation output `RiderPhotoDDBTable`.
 
-In the end of this section, your state machine should resemble the following: 
+In the end of this section, your state machine should resemble the following:
 
 {{< figure
 	src="/images/metadata-step0.png"
@@ -36,7 +36,7 @@ In the end of this section, your state machine should resemble the following:
 >}}
 
 
-➡️ Step 3: Configure the newly created state. Change the state name to "PersistMetadata". Then, in the API Parameters, copy in the following JSON. 
+➡️ Step 3: Configure the newly created state. Change the state name to "PersistMetadata". Then, in the API Parameters, copy in the following JSON.
 
 {{% notice warning %}}
 Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of the RiderPhotoDDBTable value of the output from the CloudFormation stack.
@@ -119,11 +119,11 @@ You should get a confirmation that your state machine was successfully saved and
 
 ### Testing our implementation
 
-Now that we have built the persist metadata state, let's test our implementation by executing it with some sample input. Before testing, we need to delete and recreate face collection in Amazon Rekognition. 
+Now that we have built the persist metadata state, let's test our implementation by executing it with some sample input. Before testing, we need to delete and recreate face collection in Amazon Rekognition.
 
 From this point on, there are two commands to be run from the Cloud9 IDE that will be useful for testing:
 
-#### Deleting face collection 
+#### Deleting face collection
 
 		aws rekognition delete-collection \
 			--collection-id rider-photos \
@@ -170,6 +170,11 @@ Now, we are going to validate that user profile metadata stored in the DynamoDB 
 
 ➡️ Step 6: From the AWS Management Console, type "DynamoDB" in the search field at the top of the window and select **DynamoDB** from the list of services.
 
+{{< figure
+	src="/images/metadata-step6.png"
+	alt="Step 6"
+>}}
+
 ➡️ Step 7: From the DynamoDB/Tables, find and click on table **wildrydes-step-module-resources-RiderPhotoDDBTable-XXXXX**. Then, click on **veiw Items**.
 
 {{< figure
@@ -189,4 +194,4 @@ Now, we are going to validate that user profile metadata stored in the DynamoDB 
 	alt="Step 12c"
 >}}
 
-:white_check_mark: Congratulations! You have now tested and validated metadata persistence step. 
+:white_check_mark: Congratulations! You have now tested and validated metadata persistence step.

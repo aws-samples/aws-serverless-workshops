@@ -24,6 +24,16 @@ To do some end-to-end validation of our completed workflow, let's begin by remov
 
 ➡️ Step 3: Finally, let's navigate back to our Step Function state machine and test the final state machine (`RiderPhotoProcessing`) with different test images provided
 
+Photo with happy face:
+
+{{< highlight json >}}
+{
+	"userId": "user_a",
+	"s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
+	"s3Key": "1_happy_face.jpg"
+}	{{< /highlight >}}
+
+
 Photo with sunglasses:
 
 {{< highlight json >}}

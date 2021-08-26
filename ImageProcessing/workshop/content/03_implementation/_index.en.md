@@ -5,5 +5,5 @@ weight = 3
 pre = "<b>3. </b>"
 +++
 
-In this section, you will complete the following steps to implement the primary functionality of your image processing workflow.
+In this chapter, you will step through a number of sections to implement the primary functionality of your image processing workflow.
 {{% children showhidden="false" %}}

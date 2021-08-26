@@ -32,7 +32,7 @@ In the end of this section, your state machine should resemble the following:
 
 {{< figure
 	src="/images/metadata-step1.png"
-	alt="Step 1"
+	alt="Step 2"
 >}}
 
 
@@ -77,7 +77,7 @@ Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of th
 
 {{< figure
 	src="/images/metadata-step3.png"
-	alt="Step 1"
+	alt="Step 3"
 >}}
 
 
@@ -86,7 +86,7 @@ Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of th
 
 {{< figure
 	src="/images/statemachine-step11.png"
-	alt="Step 11"
+	alt="Step 4a"
 >}}
 
 To save the changes you made, you must also click the **Save** button in the top right of the state machine definition page.
@@ -94,7 +94,7 @@ To save the changes you made, you must also click the **Save** button in the top
 
 {{< figure
 	src="/images/statemachine-step11b.png"
-	alt="Step 7"
+	alt="Step 4b"
 >}}
 
 
@@ -106,7 +106,7 @@ You may get an alert dialog when saving informing you that your changes may affe
 
 {{< figure
 	src="/images/statemachine-step11c.png"
-	alt="Step 11c"
+	alt="Step 4c"
 >}}
 
 You should get a confirmation that your state machine was successfully saved and the result should look like the following:
@@ -114,7 +114,7 @@ You should get a confirmation that your state machine was successfully saved and
 
 {{< figure
 	src="/images/metadata-step3_final_confirmation.png"
-	alt="Step 11d"
+	alt="Step 4d"
 >}}
 
 ### Testing our implementation
@@ -140,7 +140,7 @@ From this point on, there are two commands to be run from the Cloud9 IDE that wi
 
 {{< figure
 	src="/images/statemachine-step12.png"
-	alt="Step 12"
+	alt="Step 5"
 >}}
 
 This will open a dialog where you can put your input data. For the input data, copy in the following JSON.   
@@ -156,14 +156,14 @@ Paste it into the input field and make sure to substitute the `REPLACE_WITH_YOUR
 
 {{< figure
 	src="/images/statemachine-step12b.png"
-	alt="Step 12b"
+	alt="Step 5b"
 >}}
 
 Once you've replaced the s3 bucket with the `RiderPhotoS3Bucket` value from the output of your CloudFormation stack, press **Start execution**. This will start the execution of your step function and take you to a status page for the execution. If things go well, you should see an execution status of `Succeeded` and the graph inspector should have a green `PersistMetadata` state.
 
 {{< figure
 	src="/images/metadata-step5.png"
-	alt="Step 12c"
+	alt="Step 5c"
 >}}
 
 Now, we are going to validate that user profile metadata stored in the DynamoDB table.
@@ -179,19 +179,19 @@ Now, we are going to validate that user profile metadata stored in the DynamoDB 
 
 {{< figure
 	src="/images/metadata-step7a.png"
-	alt="Step 12c"
+	alt="Step 7a"
 >}}
 
 
 {{< figure
 	src="/images/metadata-step7b.png"
-	alt="Step 12c"
+	alt="Step 7b"
 >}}
 
 
 {{< figure
 	src="/images/metadata-step7c.png"
-	alt="Step 12c"
+	alt="Step 7c"
 >}}
 
 :white_check_mark: Congratulations! You have now tested and validated metadata persistence step.

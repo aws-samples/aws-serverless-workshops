@@ -129,9 +129,9 @@ Click **Save conditions**. When you return back to the Workflow Studio view, set
 
 {{< highlight json >}}
 {
-	"userId": "$.detail.userIdentity.accountId",
-	"s3Bucket": "$.detail.requestParameters.bucketName",
-	"s3Key":  "$.detail.requestParameters.key"
+	"userId.$": "$.detail.userIdentity.accountId",
+	"s3Bucket.$": "$.detail.requestParameters.bucketName",
+	"s3Key.$":  "$.detail.requestParameters.key"
 }	{{< /highlight >}}
 
 {{< figure

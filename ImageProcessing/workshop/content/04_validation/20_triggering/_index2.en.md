@@ -208,3 +208,26 @@ If your upload was successful, you should see a notification like the following:
 	src="/images/triggering-step12c.png"
 	alt="Step 12c"
 >}}
+
+➡️ Step 13: From the AWS Management Console, type "Step Functions" in the search field at the top of the window and select **Step Functions** from the list of services.
+
+{{< figure
+	src="/images/statemachine-step1.png"
+	alt="Step 13"
+>}}
+
+➡️ Step 14: Click the link for your state machine named **RiderPhotoProcessing**.
+
+{{< figure
+	src="/images/triggering-step13.png"
+	alt="Step 14"
+>}}
+
+➡️ Step 15: Check the **Executions** section to see that the a new execution is running (or just finished).
+
+{{< figure
+	src="/images/triggering-step15.png"
+	alt="Step 15"
+>}}
+
+:white_check_mark: Congratulations! You have now triggered your state machine to execute using an S3 event. You can continue to test this functionality (but remember to remove your indexed face from the Rekognition collection after each execution) by repeating the process above. You can also dig deeper to examine the results of the execution. For example, what happens if you upload two pictures?

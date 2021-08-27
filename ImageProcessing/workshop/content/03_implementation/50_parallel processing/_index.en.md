@@ -68,6 +68,17 @@ Note, there are two placeholder states within the Parallel state. You can add mo
 	alt="Step 5"
 >}}
 
+Choose the **Output** tab in the "Configuration panel" and remove all checkboxes that change the output from the step. It should look similar to the following:
+
+{{< figure
+		src="/images/parallel-step5b.png"
+		alt="Step 5b"
+>}}
+
+{{% notice warning %}}
+Make sure that *NONE* of the checkboxes are selected. If any of the check boxes are selected, you will likely receive a failure when executing the state machine.
+{{% /notice %}}
+
 ➡️ Step 6: You can then repeat the above step to add another **Lambda Invoke** action to the remaining placeholder in the **Parallel state**, changing the settings as follows:
 
 1. Change **State name** to `Thumbnail`
@@ -78,6 +89,18 @@ Note, there are two placeholder states within the Parallel state. You can add mo
 	src="/images/parallel-step6.png"
 	alt="Step 6"
 >}}
+
+Choose the **Output** tab in the "Configuration panel" and remove all checkboxes that change the output from the step. It should look similar to the following:
+
+{{< figure
+		src="/images/parallel-step5b.png"
+		alt="Step 5b"
+>}}
+
+{{% notice warning %}}
+Make sure that *NONE* of the checkboxes are selected. If any of the check boxes are selected, you will likely receive a failure when executing the state machine.
+{{% /notice %}}
+
 
 ➡️ Step 7: Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
 
@@ -156,4 +179,4 @@ The name of the S3 bucket can be found in the in AWS CloudFormation output `Thum
 1. What happens when you run an execution with the exactly the same input as a previous execution?
 1. What happens if you run an execution with a different `userId` but the same `s3key` and `s3bucket` parameters?
 
-:white_check_mark: Congratulations! You have now tested and validated using parallel steps within your state machine. 
+:white_check_mark: Congratulations! You have now tested and validated using parallel steps within your state machine.

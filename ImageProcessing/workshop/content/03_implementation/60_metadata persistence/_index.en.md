@@ -52,7 +52,7 @@ Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of th
       "S.$": "$.userId"
     },
     "faceId": {
-      "S.$": "$.parallelResult[0].FaceId"
+      "S.$": "$.parallelResult[0].Payload.FaceId"
     },
     "s3bucket": {
       "S.$": "$.s3Bucket"
@@ -63,10 +63,10 @@ Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of th
     "thumbnail": {
       "M": {
         "s3bucket": {
-          "S.$": "$.parallelResult[1].thumbnail.s3bucket"
+          "S.$": "$.parallelResult[1].Payload.thumbnail.s3bucket"
         },
         "s3key": {
-          "S.$": "$.parallelResult[1].thumbnail.s3key"
+          "S.$": "$.parallelResult[1].Payload.thumbnail.s3key"
         }
       }
     }

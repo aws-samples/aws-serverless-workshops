@@ -61,13 +61,31 @@ Photo with no faces in it:
 	"s3Key": "4_no_face.jpg"
 }	{{< /highlight >}}
 
-➡️ Step 4: Upload some pictures you have to S3, test some executions. If you have more than one picture of the same person, upload them both and run the workflow on each picture (make sure to use different `userId` fields in the test input). Verify the **CheckFaceDuplicate** step will prevent the same face from being indexed more than once.
+➡️ Step 4: Go to the Amazon DynamoDB console and check for entries.
 
-➡️ Step 5: Go to the Amazon DynamoDB console, look for a table with name starting with "wildrydes-step-module-resources-RiderPhotoDDBTable" (you can also find the table name in the CloudFormation stack output). Check out the items of the table.
+From the AWS Management Console, type `DynamoDB` in the search field at the top of the window and select **DynamoDB** from the list of services.
 
 {{< figure
-	src="/images/dynamodb_example-3.png"
+	src="/images/validation-step4.png"
+	alt="Step 4"
 >}}
+
+From the menu on the left side of the screen, click **Tables**, then click the link for the table that begins with `wildrydes-step-module-resourcs-RiderPhotoDDBTable-`.
+
+{{< figure
+	src="/images/validation-step4b.png"
+	alt="Step 4b"
+>}}
+
+From here, you'll be able to see that only the metadata for valid photos have been saved. Note in the image below, only the metatdata for "user_a" exists.
+
+{{< figure
+	src="/images/validation-step4c.png"
+	alt="Step 4c"
+>}}
+
+
+➡️ Step 5: Upload some pictures you have to S3, test some executions. If you have more than one picture of the same person, upload them both and run the workflow on each picture (make sure to use different `userId` fields in the test input). Verify the **CheckFaceDuplicate** step will prevent the same face from being indexed more than once.
 
 ➡️ Step 6: Go to the Amazon S3 console, verify the thumbnail images of the photos you processed are in the thumbnail S3 Bucket.
 

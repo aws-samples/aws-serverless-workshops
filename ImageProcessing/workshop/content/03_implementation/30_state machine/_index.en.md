@@ -125,14 +125,14 @@ Note, If this state machine was executed, the SNS topic state would be bypassed,
 >}}
 
 {{% notice warning %}}
-Make sure that **ONLY** the **Add original input to output using ResultPath** option is chosen. If either of the other two check boxes are selected, you will likely receive a failure when executing the state machine.
+Make sure that *ONLY* the **Add original input to output using ResultPath** option is chosen. If either of the other two check boxes are selected, you will likely receive a failure when executing the state machine.
 {{% /notice %}}
 
 ➡️ Step 10: Add an error handler.
 
 Next, let's configure a message to be sent *only* when the face detection Lambda emits an exception. With the **Face Detection** state selected, click on the **Error handling** tab. Click the **+ Add new catcher** button and configure Catcher #1 to have the following details:
 
-1. Errors: Type `PhotoDoesNotMeetRequirementError` and press **Enter**
+1. Errors: Add two error types to catch. Type `PhotoDoesNotMeetRequirementError` and press **Enter**, Type `InvalidS3ObjectException` and press **Enter**
 1. Fallback state: Select **Photo Does Not Meet Requirement** from the drop-down list
 1. ResultPath: Enter `$.errorInfo`
 

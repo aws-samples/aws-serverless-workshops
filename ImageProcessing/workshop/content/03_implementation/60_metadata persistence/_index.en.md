@@ -27,7 +27,9 @@ In the end of this section, your state machine should resemble the following:
 >}}
 
 
-➡️ Step 2: Drag the Amazon DynamoDB PutItem action from the “States browser” and drop it in between the “Parallel State” and “End” states. When done, you should see that the “Definition view” has changed to allow configuration of the “DynamoDB PutItem” step as shown below.
+➡️ Step 2: Add the DynamoDB native integration step.
+
+Drag the **DynamoDB PutItem** action from the “States browser” and drop it in between the **Parallel State** and **End** states. When done, you should see that the "Configuration paenl" has changed to allow configuration of the **DynamoDB PutItem** step as shown below.
 
 
 {{< figure
@@ -36,7 +38,9 @@ In the end of this section, your state machine should resemble the following:
 >}}
 
 
-➡️ Step 3: Configure the newly created state. Change the state name to "PersistMetadata". Then, in the API Parameters, copy in the following JSON.
+➡️ Step 3: Configure the newly created state.
+
+Change the state name to `PersistMetadata`. Then, in the `API Parameters` section, copy in the following JSON.
 
 {{% notice warning %}}
 Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of the RiderPhotoDDBTable value of the output from the CloudFormation stack.
@@ -82,7 +86,9 @@ Make sure to substitute the REPLACE_WITH_RiderPhotoDDBTable with the value of th
 
 
 
-➡️ Step 4: Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
+➡️ Step 4: Save your changes.
+
+Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
 
 {{< figure
 	src="/images/statemachine-step11.png"
@@ -99,7 +105,7 @@ To save the changes you made, you must also click the **Save** button in the top
 
 
 {{% notice warning %}}
-Saving changes to the state machine made using the Workflow Studio interface requires **both** applying the changes (to leave the Workflow Studio interface) **and** pressing the **Save** button once you have exited the workflow interface. If you fail to do either of these steps, the changes made to the state machine will not be saved.
+Saving changes to the state machine made using the Workflow Studio interface requires *both* applying the changes (to leave the Workflow Studio interface) *and* pressing the **Save** button once you have exited the workflow interface. If you fail to do either of these steps, the changes made to the state machine will not be saved.
 {{% /notice %}}
 
 You may get an alert dialog when saving informing you that your changes may affect the resources the state machine needs to access. Click **Save anyway**.
@@ -168,14 +174,18 @@ Once you've replaced the s3 bucket with the `RiderPhotoS3Bucket` value from the 
 
 Now, we are going to validate that user profile metadata stored in the DynamoDB table.
 
-➡️ Step 6: From the AWS Management Console, type "DynamoDB" in the search field at the top of the window and select **DynamoDB** from the list of services.
+➡️ Step 6: Navigate to the DynamDB dashboard.
+
+From the AWS Management Console, type "DynamoDB" in the search field at the top of the window and select **DynamoDB** from the list of services.
 
 {{< figure
 	src="/images/metadata-step6.png"
 	alt="Step 6"
 >}}
 
-➡️ Step 7: From the DynamoDB/Tables, find and click on table **wildrydes-step-module-resources-RiderPhotoDDBTable-XXXXX**. Then, click on **veiw Items**.
+➡️ Step 7: View the table items.
+
+Click on **Tables**, then find and click on table **wildrydes-step-module-resources-RiderPhotoDDBTable-XXXXX**. Then, click on **veiw Items**.
 
 {{< figure
 	src="/images/metadata-step7a.png"

@@ -31,14 +31,16 @@ If the uploaded photo passes both the `FaceDetection` and `CheckFaceDuplicate` s
 	alt="Step 2"
 >}}
 
-➡️ Step 3: Drag the **Parallel** step from the “States browser” and drop it in between the “Check Face Duplicate” and “End” states (next to the “Photo Does Not Meet Requirement” state). When done, you should see the following:
+➡️ Step 3: Add a "Parallel" step to the workflow.
+
+Drag the **Parallel** step from the “States browser” and drop it in between the **Check Face Duplicate** and **End** states (next to the **Photo Does Not Meet Requirement** state). When done, you should see the following:
 
 {{< figure
 	src="/images/parallel-step3.png"
 	alt="Step 3"
 >}}
 
-Click over to the **Output** tab in the "Definition view"" panel and check the box next to **Add original input to output using ResultPath**. From the dropdown, choose `Combine original input with result` and type `$.parallelResult` as the JSONPath for the output.
+Click over to the **Output** tab in the "Configuration panel" and check the box next to **Add original input to output using ResultPath**. From the drop-down, choose `Combine original input with result` and type `$.parallelResult` as the JSONPath for the output.
 
 {{< figure
 	src="/images/parallel-step3b.png"
@@ -47,17 +49,21 @@ Click over to the **Output** tab in the "Definition view"" panel and check the b
 
 ### Replace the placeholder steps with Lambda Functions
 
-Note, there are two placeholder states within the Parallel state. You can add more than two states by just dragging and dropping more than two states within the Parallel state bounding box, but for the current workshop, two is all we need and the order of the states does not matter. Let's replace these placeholders with functionality to update the face collection index and generate thumbnails.
+Note, there are two placeholder states within the **Parallel** state. You can add more than two states by just dragging and dropping more than two states within the **Parallel** state bounding box, but for the current workshop, two is all we need. Let's replace these placeholders with functionality to update the face collection index and generate thumbnails.
+
+{{% notice warning %}}
+Pay attention to the ordering of the states within the **Parallel** state shown below as later steps expect this order.
+{{% /notice %}}
 
 
-➡️ Step 4: Switch back over to the **Actions** tab in the "States browser" panel and drag and drop a **Lambda Invoke** action to one of the placeholder states within the **Parallel state**.
+➡️ Step 4: Switch back over to the **Actions** tab in the "States browser" panel and drag and drop a **Lambda Invoke** action to the left placeholder state within the **Parallel** state.
 
 {{< figure
 	src="/images/parallel-step4.png"
 	alt="Step 4"
 >}}
 
-➡️ Step 5: In the **Definition view**, change the settings for the new **Lambda Invoke** action as follows:
+➡️ Step 5: In the "Configuration panel", change the settings for the new **Lambda Invoke** action as follows:
 
 1. Change **State name** to `AddFaceToIndex`
 
@@ -79,7 +85,9 @@ Choose the **Output** tab in the "Configuration panel" and remove all checkboxes
 Make sure that *NONE* of the checkboxes are selected. If any of the check boxes are selected, you will likely receive a failure when executing the state machine.
 {{% /notice %}}
 
-➡️ Step 6: You can then repeat the above step to add another **Lambda Invoke** action to the remaining placeholder in the **Parallel state**, changing the settings as follows:
+➡️ Step 6: Repeat the process for the remining placeholder.
+
+You can then repeat the above step to add another **Lambda Invoke** action to the remaining placeholder in the **Parallel** state, changing the settings as follows:
 
 1. Change **State name** to `Thumbnail`
 
@@ -102,7 +110,9 @@ Make sure that *NONE* of the checkboxes are selected. If any of the check boxes 
 {{% /notice %}}
 
 
-➡️ Step 7: Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
+➡️ Step 7: Save the changes.
+
+Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
 
 {{< figure
 	src="/images/statemachine-step11.png"
@@ -118,7 +128,7 @@ To save the changes you made, you must also click the **Save** button in the top
 >}}
 
 {{% notice warning %}}
-Saving changes to the state machine made using the Workflow Studio interface requires **both** applying the changes (to leave the Workflow Studio interface) **and** pressing the **Save** button once you have exited the workflow interface. If you fail to do either of these steps, the changes made to the state machine will not be saved.
+Saving changes to the state machine made using the Workflow Studio interface requires *both* applying the changes (to leave the Workflow Studio interface) *and* pressing the **Save** button once you have exited the workflow interface. If you fail to do either of these steps, the changes made to the state machine will not be saved.
 {{% /notice %}}
 
 You may get an alert dialog when saving informing you that your changes may affect the resources the state machine needs to access. Click **Save anyway**.
@@ -157,7 +167,9 @@ Running this command (with appropriate substitutions) will remove the facial ind
 
 #### Rerun the standard case
 
-➡️ Step 8: Click the **Start execution** button to test the new state machine with the test input you've used before:
+➡️ Step 8: Run a test execution.
+
+Click the **Start execution** button to test the new state machine with the test input you've used before:
 
 {{< highlight json >}}
 {
@@ -174,7 +186,7 @@ The name of the S3 bucket can be found in the in AWS CloudFormation output `Thum
 
 #### Checking for duplicates (Revisited)
 
-➡️ Step 8: Run executions of the state machine to answer the following questions:
+➡️ Step 9: Run executions of the state machine to answer the following questions:
 
 1. What happens when you run an execution with the exactly the same input as a previous execution?
 1. What happens if you run an execution with a different `userId` but the same `s3key` and `s3bucket` parameters?

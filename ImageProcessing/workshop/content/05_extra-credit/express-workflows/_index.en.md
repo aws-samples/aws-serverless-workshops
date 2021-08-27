@@ -9,7 +9,7 @@ Express Workflows are a new type of AWS Step Functions workflow type that cost-e
 
 ### When to choose Express Workflows vs Standard Workflows?
 
-You can choose `Standard` Workflows when you need long-running, durable, and auditable workflows, or `Express` Workflows for high-volume, event processing workloads. Your state machine executions will behave differently, depending on which Type you select. The `Type` you choose cannot be changed after your state machine has been created. However, you can create express workflows from existing standard workflows via console by selecting **Copy to new** option. 
+You can choose `Standard` Workflows when you need long-running, durable, and auditable workflows, or `Express` Workflows for high-volume, event processing workloads. Your state machine executions will behave differently, depending on which Type you select. The `Type` you choose cannot be changed after your state machine has been created. However, you can create express workflows from existing standard workflows via console by selecting **Copy to new** option.
 
 <div class="table">
 
@@ -31,25 +31,35 @@ For detailed information on the differences between Standard and Express Workflo
 
 ### Create an AWS Step Functions state machine of type Express from existing Standard state machine
 
-➡️ Step 1: Sign in to the [Step Functions console] and choose **RiderPhotoProcessing** state machine and then click on **Copy to new**.
+➡️ Step 1: Copy your state machine.
+
+Navigate to the Step Functions dashboard and choose **RiderPhotoProcessing** state machine and then click on **Copy to new**.
 
 {{< figure
 	src="/images/express-workflow-step1.png"
 	alt="Step 1"
 >}}
 
-➡️ Step 2: On the **Choose authoring method** page, choose **Design your workflow visually**. Then, under **Type**, choose **Express**, and then choose **Next**. 
+➡️ Step 2: Choose authoring options.
+
+On the **Choose authoring method** page, choose **Design your workflow visually**. Then, under **Type**, choose **Express**, and then choose **Next**.
 
 {{< figure
 	src="/images/express-workflow-step2.png"
 	alt="Step 2"
 >}}
 
-➡️ Step 3: On **Design workflow** don’t change any states. we are going to leave states as is, then choose **Next**. 
+➡️ Step 3: Design the workflow.
 
-➡️ Step 4: On **Review generated code - optional** choose **Next**.
+On **Design workflow** don’t change any states. we are going to leave states as is, then choose **Next**.
 
-➡️ Step 5: On **Specify state machine settings** under **Permissions**, choose **Choose an existing role** and select Existing roles StateMachineRole.
+➡️ Step 4: Review changes.
+
+On **Review generated code - optional** choose **Next**.
+
+➡️ Step 5: Specify state machine settings.
+
+On **Specify state machine settings** under **Permissions**, choose **Choose an existing role** and select Existing roles StateMachineRole.
 
 ➡️ Step 6: **On Logging**, choose:
 
@@ -63,9 +73,9 @@ For detailed information on the differences between Standard and Express Workflo
 >}}
 
 
-### Testing our implementation 
+### Testing our implementation
 
-You have created a new express state machine from existing standard ImageProcessing state machine. let’s test our implementation by executing it with some sample input. 
+You have created a new express state machine from existing standard ImageProcessing state machine. let’s test our implementation by executing it with some sample input.
 
 Before testing, we need to delete and recreate face collection in Amazon Rekognition.
 
@@ -92,7 +102,7 @@ From this point on, there are two commands to be run from the Cloud9 IDE that wi
 	alt="Step 8a"
 >}}
 
-For the input data, copy in the following JSON. 
+For the input data, copy in the following JSON.
 
 {{% notice warning %}}
 Make sure to substitute the REPLACE_WITH_YOUR_BUCKET_NAME with the value of the RiderPhotoS3Bucket value of the output from the CloudFormation stack.
@@ -104,7 +114,7 @@ Make sure to substitute the REPLACE_WITH_YOUR_BUCKET_NAME with the value of the 
 "userId": "user_a",
 "s3Bucket": "REPLACE_WITH_YOUR_BUCKET_NAME",
 "s3Key": "1_happy_face.jpg"
-}	
+}
 {{< /highlight >}}
 
 {{< figure

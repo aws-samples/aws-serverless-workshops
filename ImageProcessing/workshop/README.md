@@ -5,10 +5,10 @@ This module is now available at
 
 ## Building the website for local testing
 
-Clone the repository and change directories to the workshop folder.
+1. Clone the repository and change directories to the workshop folder.
 
-To serve the website type the following command: `hugo serve`
+1. To serve the website type the following command: `hugo serve`
 
-To serve the website while watching for changes to the files: `hugo serve -D`
+1. To serve the website while watching for changes to the files: `hugo serve -D`
 
 By default, the workshop will be available on http://localhost:1313/

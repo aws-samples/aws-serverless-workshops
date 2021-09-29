@@ -1,0 +1,189 @@
+{
+  "Comment": "This is your state machine",
+  "StartAt": "Choice",
+  "States": {
+    "Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "And": [
+            {
+              "Variable": "$.s3Key",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.userId",
+              "IsPresent": true
+            },
+            {
+              "Variable": "$.s3Bucket",
+              "IsPresent": true
+            }
+          ],
+          "Next": "FaceDetection"
+        }
+      ],
+      "Default": "TransformS3event"
+    },
+    "TransformS3event": {
+      "Type": "Pass",
+      "Next": "FaceDetection",
+      "Parameters": {
+        "userId.$": "$.detail.userIdentity.principalId",
+        "s3Bucket.$": "$.detail.requestParameters.bucketName",
+        "s3Key.$": "$.detail.requestParameters.key"
+      }
+    },
+    "FaceDetection": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceDetectionFunction-4OBhA2yrMd7g:$LATEST",
+        "Payload.$": "$"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "CheckFaceDuplicate",
+      "ResultPath": "$.detectedFaceDetails",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "PhotoDoesNotMeetRequirementError"
+          ],
+          "Next": "PhotoDoesNotMeetRequirement",
+          "ResultPath": "$.errorInfo"
+        }
+      ]
+    },
+    "CheckFaceDuplicate": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-FaceSearchFunction-Tt2kgG9KNXgk:$LATEST",
+        "Payload.$": "$"
+      },
+      "Next": "ParallelProcessing",
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "PhotoDoesNotMeetRequirementError"
+          ],
+          "Next": "PhotoDoesNotMeetRequirement",
+          "ResultPath": "$.errorInfo"
+        }
+      ]
+    },
+    "PhotoDoesNotMeetRequirement": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "Subject": "Non-compliant photo encountered",
+        "TopicArn": "arn:aws:sns:us-east-1:571724487590:ImageProcessing-NotifyMe-OJQS9E21DD9Z"
+      },
+      "End": true
+    },
+    "ParallelProcessing": {
+      "Type": "Parallel",
+      "Next": "PersistMetadata",
+      "Branches": [
+        {
+          "StartAt": "AddFaceToIndex",
+          "States": {
+            "AddFaceToIndex": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-IndexFaceFunction-S6Rcmrc2xojC:$LATEST",
+                "Payload.$": "$"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException"
+                  ],
+                  "IntervalSeconds": 2,
+                  "MaxAttempts": 6,
+                  "BackoffRate": 2
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "Thumbnail",
+          "States": {
+            "Thumbnail": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:us-east-1:571724487590:function:ImageProcessing-ThumbnailFunction-hZ9Lxl4K5e4X:$LATEST",
+                "Payload.$": "$"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException"
+                  ],
+                  "IntervalSeconds": 2,
+                  "MaxAttempts": 6,
+                  "BackoffRate": 2
+                }
+              ],
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.parallelResult"
+    },
+    "PersistMetadata": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Parameters": {
+        "TableName": "ImageProcessing-RiderPhotoDDBTable-7LKPCXYLDNEL",
+        "Item": {
+          "Username": {
+            "S.$": "$.userId"
+          },
+          "faceId": {
+            "S.$": "$.parallelResult[0].Payload.FaceId"
+          },
+          "s3bucket": {
+            "S.$": "$.s3Bucket"
+          },
+          "s3key": {
+            "S.$": "$.s3Key"
+          },
+          "thumbnail": {
+            "M": {
+              "s3bucket": {
+                "S.$": "$.parallelResult[1].Payload.thumbnail.s3bucket"
+              },
+              "s3key": {
+                "S.$": "$.parallelResult[1].Payload.thumbnail.s3key"
+              }
+            }
+          }
+        }
+      },
+      "End": true
+    }
+  }
+}

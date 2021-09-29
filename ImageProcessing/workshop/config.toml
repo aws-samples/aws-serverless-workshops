@@ -1,0 +1,44 @@
+RelativeURLs=true
+CanonifyURLs=true
+languageCode = "en-US"
+defaultContentLanguage = "en"
+
+title = "My AWS Workshop"
+theme = "learn"
+metaDataFormat = "yaml"
+defaultContentLanguageInSubdir= true
+
+uglyurls = true
+sectionPagesMenu = "main"
+pygmentsCodeFences = true
+pygmentsStyle = "monokai"
+
+enableEmoji = true
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[params]
+  description = "Image Processing"
+  author = "Rob Sutter"
+  disableBreadcrumb = false
+  disableNextPrev = false
+  themeVariant = "aws"
+  disableSearch = false
+  disableAssetsBusting = true
+  disableLanguageSwitchingButton = false
+  disableShortcutsTitle = true
+  disableInlineCopyToClipBoard = true
+
+[outputs]
+  home = [ "HTML", "RSS", "JSON"]
+
+[markup.blackfriday]
+  plainIDAnchors = true
+  hrefTargetBlank = true
+
+[Languages]
+[Languages.en]
+  title = "Image Processing"
+  weight = 1
+  languageName = "English"

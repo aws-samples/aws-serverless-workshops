@@ -88,4 +88,4 @@ From here, you'll be able to see that only the metadata for valid photos have be
 
 ➡️ Step 6: Go to the Amazon S3 console, verify the thumbnail images of the photos you processed are in the thumbnail S3 Bucket.
 
-:white_check_mark: Now you have built a multi-step image processing workflow using AWS Step Functions! The workflow can be integrated to your app by fronting it with AWS API Gateway or triggered from an Amazon S3 upload event.  We'll trigger the workflow in response to an S3 upload event in the next section.
+:white_check_mark: You have successfully built a multi-step image processing workflow using AWS Step Functions! Until now, we've been triggering the workflow manually from within the AWS Console. However, workflows can also be triggered in response to events occurring within your AWS environment. In the next section, we will trigger the workflow in response to an S3 object upload event.

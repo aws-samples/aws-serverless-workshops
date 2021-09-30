@@ -24,7 +24,10 @@ Click on the link for the region you have chosen:
 
 Region| Code | Launch
 ------|------|-------
+US East (N. Virginia) | us-east-1 | <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=wildrydes-step-module-resources&templateURL=https://s3.amazonaws.com/serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/sam.yaml" target="_blank"><img src="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png" /></a>
+<!--
 US East (N. Virginia) | us-east-1 | [![Launch Module in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)][Launch us-east-1]
+-->
 <!--
 US East (Ohio)| `us-east-2` | [![Launch Module in us-east-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)][Launch us-east-2]
 US West (Oregon) | `us-west-2` | [![Launch Module in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)][Launch us-west-2]

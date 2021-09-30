@@ -222,6 +222,7 @@ Paste it into the input field and make sure to substitute the `REPLACE_WITH_YOUR
 
 If things go well, you should see an execution status of `Succeeded` and the graph inspector should have a green `Face Detection` state and a dashed line around the `Photo Does Not Meet Requirement` state (since it was not executed due to a valid image submission).
 
+
 {{< figure
 	src="/images/statemachine-step12c.png"
 	alt="Step 12c"

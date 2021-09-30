@@ -84,7 +84,6 @@ From here, you'll be able to see that only the metadata for valid photos have be
 	alt="Step 4c"
 >}}
 
-
 ➡️ Step 5: Upload some pictures you have to S3, test some executions. If you have more than one picture of the same person, upload them both and run the workflow on each picture (make sure to use different `userId` fields in the test input). Verify the **CheckFaceDuplicate** step will prevent the same face from being indexed more than once.
 
 ➡️ Step 6: Go to the Amazon S3 console, verify the thumbnail images of the photos you processed are in the thumbnail S3 Bucket.

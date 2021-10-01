@@ -125,7 +125,14 @@ Click **Save conditions**. When you return back to the Workflow Studio view, set
 	alt="Step 9"
 >}}
 
-➡️ Step 10: On the **Input** tab for the **Pass State**, check the `Transform input with Parameters` option, and paste the following in the text box.
+➡️ Step 10: On the **Configuration** tab for the **Pass State**, Change the **State name** value to `TransformS3event`.
+
+{{< figure
+	src="/images/triggering-step10a.png"
+	alt="Step 10"
+>}}
+
+➡️ Step 11: On the **Input** tab for the **Pass State**, check the `Transform input with Parameters` option, and paste the following in the text box.
 
 {{< highlight json >}}
 {
@@ -136,19 +143,22 @@ Click **Save conditions**. When you return back to the Workflow Studio view, set
 
 {{< figure
 	src="/images/triggering-step10.png"
-	alt="Step 10"
+	alt="Step 11"
 >}}
 
 {{% notice info %}}
 Note that you don't have to modify the values of the JSON above. It will dynamically pick the values out of the EventBridge event and place them in the correct values for the input event expected by the Lambda function. One caveat is that the userId is now tied to the AWS Account Id that is uploading the image. When we test this later, you'll find that you can only trigger the Step Function state machine once this way unless you remove the face index from the Rekognition collection associated with your AWS Account Id after every S3 upload.
 {{% /notice %}}
 
+{{% notice tip%}}
+Before moving on, let's consider what we've done here. With no change to any of the Lambda functions, we've created a way to successfully reuse our workflow in response to different triggering event sources. This simplifies worklflow management by not requiring a different state machine for different event sources and allows testable and transparent changes to accommodate additional triggering events that may arise in the future. Take some time to consider how this functionality might be useful for simple data transformations in general.
+{{% /notice %}}
 
-➡️ Step 11: Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
+➡️ Step 12: Click **Apply and exit** in the top right of the window to apply all changes and return to the state machine definition page.
 
 {{< figure
 	src="/images/statemachine-step11.png"
-	alt="Step 10"
+	alt="Step 12"
 >}}
 
 To save the changes you made, you must also click the **Save** button in the top right of the state machine definition page.
@@ -156,7 +166,7 @@ To save the changes you made, you must also click the **Save** button in the top
 
 {{< figure
 	src="/images/statemachine-step11b.png"
-	alt="Step 10"
+	alt="Step 12"
 >}}
 
 {{% notice warning %}}
@@ -167,67 +177,67 @@ You may get an alert dialog when saving informing you that your changes may affe
 
 {{< figure
 	src="/images/statemachine-step11c.png"
-	alt="Step 10"
+	alt="Step 12"
 >}}
 
 At this point, your saved state machine should look similar to the following:
 
 {{< figure
 	src="/images/triggering-step10b.png"
-	alt="Step 10b"
+	alt="Step 12b"
 >}}
 
 ### Test the trigger
 
 Now we can test the S3 upload event trigger. First, find a picture that we've not previously used (you can use any .png or .jpg, but try to use one with a single person with a clear view of thier face). Then, let's upload it to S3.
 
-➡️ Step 11: From the AWS Management Console, type "S3" in the search field at the top of the window and select **s3** from the list of services.
+➡️ Step 13: From the AWS Management Console, type "S3" in the search field at the top of the window and select **s3** from the list of services.
 
 {{< figure
 	src="/images/triggering-step11.png"
-	alt="Step 11"
+	alt="Step 13"
 >}}
 
-➡️ Step 12: In the list of buckets, click the bucket beginning with `wildrydes-step-module-resource-riderphotos3bucket-`. You should see four objects in that bucket corresponding to the images that we pre-populated from the CloudFormation template.
+➡️ Step 14: In the list of buckets, click the bucket beginning with `wildrydes-step-module-resource-riderphotos3bucket-`. You should see four objects in that bucket corresponding to the images that we pre-populated from the CloudFormation template.
 
 {{< figure
 	src="/images/triggering-step12.png"
-	alt="Step 12"
+	alt="Step 14"
 >}}
 
 Click the **Upload** button. Then drag and drop an image file onto the browser window to add it to the list of files to be uploaded. In this example, you can see a file named `baby.jpg` was added. Then click **Upload**.
 
 {{< figure
 	src="/images/triggering-step12b.png"
-	alt="Step 12b"
+	alt="Step 14b"
 >}}
 
 If your upload was successful, you should see a notification like the following:
 
 {{< figure
 	src="/images/triggering-step12c.png"
-	alt="Step 12c"
+	alt="Step 14c"
 >}}
 
-➡️ Step 13: From the AWS Management Console, type "Step Functions" in the search field at the top of the window and select **Step Functions** from the list of services.
+➡️ Step 15: From the AWS Management Console, type "Step Functions" in the search field at the top of the window and select **Step Functions** from the list of services.
 
 {{< figure
 	src="/images/statemachine-step1.png"
-	alt="Step 13"
+	alt="Step 15"
 >}}
 
-➡️ Step 14: Click the link for your state machine named **RiderPhotoProcessing**.
+➡️ Step 16: Click the link for your state machine named **RiderPhotoProcessing**.
 
 {{< figure
 	src="/images/triggering-step13.png"
-	alt="Step 14"
+	alt="Step 16"
 >}}
 
-➡️ Step 15: Check the **Executions** section to see that the a new execution is running (or just finished).
+➡️ Step 17: Check the **Executions** section to see that the a new execution is running (or just finished).
 
 {{< figure
 	src="/images/triggering-step15.png"
-	alt="Step 15"
+	alt="Step 17"
 >}}
 
 :white_check_mark: Congratulations! You have now triggered your state machine to execute using an S3 event. You can continue to test this functionality (but remember to remove your indexed face from the Rekognition collection after each execution) by repeating the process above. You can also dig deeper to examine the results of the execution. For example, what happens if you upload two pictures?

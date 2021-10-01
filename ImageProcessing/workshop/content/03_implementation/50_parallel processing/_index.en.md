@@ -147,7 +147,7 @@ At this point, your saved state machine should look similar to the following:
 
 ### Testing our changes
 
-Up to this point, the we've not persisted any of the results of our state machine so all valid faces have successfully completed without sending emails, and invalid faces completed by sending an email with the error information (in JSON format). From this point on, there are two commands to be run from the Cloud9 IDE that will be useful for testing:
+Up to this point, we have not saved any of the results of our state machine so all valid faces have successfully completed without sending emails, and invalid faces completed by sending an email with the error information (in JSON format). From this point on, there are two commands to be run from the Cloud9 IDE that will be useful for testing:
 
 #### Listing faces that have been indexed in Rekognition
 		aws rekognition list-faces \
@@ -181,14 +181,14 @@ Click the **Start execution** button to test the new state machine with the test
 When the execution succeeds, you can use the AWS CLI to check the list of faces indexed in your Rekognition collection (replace the `REPLACE_WITH_YOUR_CHOSEN_AWS_REGION` portion with the region string of your chosen region). You can also use the Amazon S3 Console to check the Amazon S3 bucket created by AWS CloudFormation to store the resized thumbnail images. You should find resized thumbnail images in the bucket.
 
 {{% notice note %}}
-The name of the S3 bucket can be found in the in AWS CloudFormation output `ThumbnailS3Bucket`. You can also simply search for it in the S3 Console for `wildrydes-step-module-resources-thumbnails3bucket`
+The name of the S3 bucket can be found in the in AWS CloudFormation output `ThumbnailS3Bucket`. You can also search for it in the S3 Console by looking a bucket beginning with `wildrydes-step-module-resources-thumbnails3bucket-`.
 {{% /notice %}}
 
 #### Checking for duplicates (Revisited)
 
 ➡️ Step 9: Run executions of the state machine to answer the following questions:
 
-1. What happens when you run an execution with the exactly the same input as a previous execution?
+1. What happens when you run an execution with the exact same input as a previous execution?
 1. What happens if you run an execution with a different `userId` but the same `s3key` and `s3bucket` parameters?
 
 :white_check_mark: Congratulations! You have now tested and validated using parallel steps within your state machine.

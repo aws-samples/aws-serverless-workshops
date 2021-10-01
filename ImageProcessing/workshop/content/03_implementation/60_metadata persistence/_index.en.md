@@ -127,7 +127,7 @@ You should get a confirmation that your state machine was successfully saved and
 
 Now that we have built the persist metadata state, let's test our implementation by executing it with some sample input. Before testing, we need to delete and recreate face collection in Amazon Rekognition.
 
-From this point on, there are two commands to be run from the Cloud9 IDE that will be useful for testing:
+From this point on, you should use the following two commands (to be run from the Cloud9 IDE) when testing your state machine:
 
 #### Deleting face collection
 
@@ -140,6 +140,8 @@ From this point on, there are two commands to be run from the Cloud9 IDE that wi
 		aws rekognition create-collection \
 			--collection-id rider-photos \
 			--region REPLACE_WITH_YOUR_CHOSEN_AWS_REGION
+
+These commands simplify resetting your collection so that you can reuse the test images provided with different parameters for testing.
 
 
 ➡️ Step 5: Return to the AWS Console where you left off, you can click the **Start execution** button in the top left of the screen.

@@ -117,7 +117,7 @@ Select the **Face Detection** step, and choose the **Configuration** tab in the 
 	alt="Step 9"
 >}}
 
-Note, If this state machine was executed, the SNS topic state would be bypassed, and never called. Finally, let's add the input of the **Face Detection** Lambda to it's output for use later in this workshop. Choose the **Output** tab in the "Configuration panel" and click the check box next to **Add original input to output using ResultPath**. Choose the option to **Combine original input with result** and use `$.detectedFaceDetails` as the JSONPath value. Be sure to remove the check next to the other two options (**Transform result with ResultSelector** and **Filter output with OutputPath**)
+Note, If this state machine was executed, the SNS topic state would be bypassed, and never called. Finally, let's add the input of the **Face Detection** Lambda function to it's output for use later in this workshop. Choose the **Output** tab in the "Configuration panel" and click the check box next to **Add original input to output using ResultPath**. Choose the option to **Combine original input with result** and use `$.detectedFaceDetails` as the JSONPath value. Be sure to remove the check next to the other two options (**Transform result with ResultSelector** and **Filter output with OutputPath**)
 
 {{< figure
 	src="/images/statemachine-step9b.png"
@@ -213,14 +213,15 @@ This will open a dialog where you can put your input data. For the input data, c
 "s3Key": "1_happy_face.jpg"
 }	{{< /highlight >}}
 
-Paste it into the input field and make sure to substitute the `REPLACE_WITH_YOUR_BUCKET_NAME` with the value of the `RiderPhotoS3Bucket` value of the output from the CloudFormation stack.
+Paste it into the input field and make sure to substitute the `REPLACE_WITH_YOUR_BUCKET_NAME` with the value of the `RiderPhotoS3Bucket` value of the output from the CloudFormation stack. Then press **Start execution** to begin the execution of your step function state machine.
 
 {{< figure
 	src="/images/statemachine-step12b.png"
 	alt="Step 12b"
 >}}
 
-Once you've replaced the s3 bucket with the `RiderPhotoS3Bucket` value from the output of your CloudFormation stack, press **Start execution**. This will start the execution of your step function and take you to a status page for the execution. If things go well, you should see an execution status of `Succeeded` and the graph inspector should have a green `Face Detection` state and a dashed line around the `Photo Does Not Meet Requirement` state (since it was not executed due to a valid image submission).
+If things go well, you should see an execution status of `Succeeded` and the graph inspector should have a green `Face Detection` state and a dashed line around the `Photo Does Not Meet Requirement` state (since it was not executed due to a valid image submission).
+
 
 {{< figure
 	src="/images/statemachine-step12c.png"

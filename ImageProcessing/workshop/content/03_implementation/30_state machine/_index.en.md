@@ -130,7 +130,7 @@ Make sure that *ONLY* the **Add original input to output using ResultPath** opti
 
 ➡️ Step 10: Add an error handler.
 
-Next, let's configure a message to be sent *only* when the face detection Lambda emits an exception. With the **Face Detection** state selected, click on the **Error handling** tab. Click the **+ Add new catcher** button and configure Catcher #1 to have the following details:
+Next, let's configure a message to be sent *only* when the face detection Lambda function emits an exception. With the **Face Detection** state selected, click on the **Error handling** tab. Click the **+ Add new catcher** button and configure Catcher #1 to have the following details:
 
 1. Errors: Add two error types to catch. Type `PhotoDoesNotMeetRequirementError` and press **Enter**, Type `InvalidS3ObjectException` and press **Enter**
 1. Fallback state: Select **Photo Does Not Meet Requirement** from the drop-down list
@@ -189,7 +189,7 @@ Now that we have built the inital state machine, let's test our implementation b
 <td>{{< figure src="/images/1_happy_face.jpg" height="100" title="1_happy_face.jpg">}}</td>
 <td>{{< figure src="/images/2_sunglass_face.jpg" height="100" title="2_sunglass_face.jpg">}}</td>
 <td>{{< figure src="/images/3_multiple_faces.jpg" height="100" title="3_multiple_faces.jpg">}}</td>
-<td>{{< figure src="/images/4_no_face.jpg" height="100" title="4_np_face.jpg">}}</td>
+<td>{{< figure src="/images/4_no_face.jpg" height="100" title="4_no_face.jpg">}}</td>
 </tr>
 </table>
 

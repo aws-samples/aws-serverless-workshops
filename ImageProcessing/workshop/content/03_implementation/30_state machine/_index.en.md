@@ -40,7 +40,7 @@ On the "Step Functions State machines" page You should see a list of available s
 Click the radio button next to the **RiderPhotoProcessing** state machine and click the **Edit** button.
 
 ➡️ Step 3: Learn the basics of "Workflow Studio".
- You should see a visual representation of the boilerplate workflow as shown below. For this workshop, we're going to use the the Workflow Studio to build out our state machine. Click the **Workflow Studio** button in the top-right corner of the state machine diagram.
+ You should see a visual representation of the boilerplate workflow as shown below. For this workshop, we're going to use the Workflow Studio to build out our state machine. Click the **Workflow Studio** button in the top-right corner of the state machine diagram.
 
 {{< figure
 	src="/images/statemachine-step3.png"

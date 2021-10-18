@@ -191,7 +191,7 @@ At this point, your saved state machine should look similar to the following:
 
 Now we can test the S3 upload event trigger. First, find a picture that we've not previously used (you can use any .png or .jpg, but try to use one with a single person with a clear view of thier face). Then, let's upload it to S3.
 
-➡️ Step 13: From the AWS Management Console, type "S3" in the search field at the top of the window and select **s3** from the list of services.
+➡️ Step 13: From the AWS Management Console, type "S3" in the search field at the top of the window and select **S3** from the list of services.
 
 {{< figure
 	src="/images/triggering-step11.png"
@@ -205,7 +205,7 @@ Now we can test the S3 upload event trigger. First, find a picture that we've no
 	alt="Step 14"
 >}}
 
-Click the **Upload** button. Then drag and drop an image file onto the browser window to add it to the list of files to be uploaded. In this example, you can see a file named `baby.jpg` was added. Then click **Upload**.
+Click the **Upload** button. Then drag and drop your own image file from your computer onto the browser window to add it to the list of files to be uploaded. In this example, you can see a file named `baby.jpg` was added. Then click **Upload**.
 
 {{< figure
 	src="/images/triggering-step12b.png"

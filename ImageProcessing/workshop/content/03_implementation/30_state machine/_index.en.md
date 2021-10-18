@@ -82,10 +82,10 @@ In the "Configuration panel", click the **Configuration** tab. First, change the
 >}}
 
 {{% notice warning %}}
-The CloudFormation template will deploy 5 lambda functions. Be sure to select the one beginning with ``wildrydes-step-module-resour-FaceDetectionFunction-``. If you choose a different one, you will experience errors with the rest of this section.
+The CloudFormation template will deploy 5 Lambda functions. Be sure to select the one beginning with ``wildrydes-step-module-resour-FaceDetectionFunction-``. If you choose a different one, you will experience errors with the rest of this section.
 {{% /notice %}}
 
-The purpose of this lambda function is to simply take a user_id, an s3 bucket, and a file name, and determine if there is a face detected in the photo in that file. If there is no face, or there's a face with sunglasses (or some other obstruction), the Lambda function will throw an error. Before we configure what we should do with the output of this function, let's define a way to send the user an email if there's an error.
+The purpose of this Lambda function is to simply take a user_id, an s3 bucket, and a file name, and determine if there is a face detected in the photo in that file. If there is no face, or there's a face with sunglasses (or some other obstruction), the Lambda function will throw an error. Before we configure what we should do with the output of this function, let's define a way to send the user an email if there's an error.
 
 ➡️ Step 7: Add a notification state.
 

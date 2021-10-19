@@ -54,7 +54,7 @@ Parameters:
     MinLength: 1
     Type: String
   TestImagesBucket:
-    Default: wild-rydes-sfn-module-us-west-2
+    Default: wild-rydes-sfn-module-us-east-1
     Description: S3 bucket containing the test images to copy over
     Type: String
   TestImagesPrefix:
@@ -64,7 +64,7 @@ Parameters:
 Resources:
   CopyS3ObjectsFunction:
     Properties:
-      CodeUri: s3://wildrydes-us-east-2/ImageProcessing/7aca4d377648454c2f5fb591608210f6
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/7aca4d377648454c2f5fb591608210f6
       Description: Copies objects from a source S3 bucket to a destination
       Handler: index.handler
       Policies:
@@ -110,7 +110,7 @@ Resources:
     Type: Custom::S3Objects
   FaceDetectionFunction:
     Properties:
-      CodeUri: s3://wildrydes-us-east-2/ImageProcessing/4de6f0c600ed41931c1024f12e9bb87c
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/4de6f0c600ed41931c1024f12e9bb87c
       Description: Use Amazon Rekognition to detect faces
       Handler: index.handler
       MemorySize: 256
@@ -126,12 +126,12 @@ Resources:
           Effect: Allow
           Resource: '*'
           Sid: RekognitionFace
-      Runtime: nodejs8.10
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   FaceSearchFunction:
     Properties:
-      CodeUri: s3://wildrydes-us-east-2/ImageProcessing/a201ba45df29327da10e590cc729705e
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/a201ba45df29327da10e590cc729705e
       Description: Use Amazon Rekognition to check if the face is already in the collection
       Environment:
         Variables:
@@ -152,12 +152,12 @@ Resources:
           Effect: Allow
           Resource: '*'
           Sid: SearchFace
-      Runtime: nodejs8.10
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   IndexFaceFunction:
     Properties:
-      CodeUri: s3://wildrydes-us-east-2/ImageProcessing/54e2d5c18019d24e80d35e6c0f041ace
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/54e2d5c18019d24e80d35e6c0f041ace
       Description: Index the photo into Rekognition collection
       Environment:
         Variables:
@@ -178,21 +178,21 @@ Resources:
           Effect: Allow
           Resource: '*'
           Sid: SearchFace
-      Runtime: nodejs8.10
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   NotificationPlaceholderFunction:
     Properties:
-      CodeUri: s3://wildrydes-us-east-2/ImageProcessing/bcc59b9ee813ae5c97180712fe20acee
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/bcc59b9ee813ae5c97180712fe20acee
       Description: mock notification sender
       Handler: index.handler
       MemorySize: 256
-      Runtime: nodejs8.10
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   PersistMetadataFunction:
     Properties:
-      CodeUri: s3://wildrydes-us-east-2/ImageProcessing/a9d8a20c18d3044bb75c6a7c1a296a0d
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/a9d8a20c18d3044bb75c6a7c1a296a0d
       Description: Save metadata of the photo to DynamoDB table
       Environment:
         Variables:
@@ -208,7 +208,7 @@ Resources:
           Resource:
             Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${RiderPhotoDDBTable}
           Sid: WriteToRiderPhotoDDBTable
-      Runtime: nodejs8.10
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   PopulateTestImages:
@@ -286,7 +286,7 @@ Resources:
     Type: AWS::IAM::Role
   ThumbnailFunction:
     Properties:
-      CodeUri: s3://wildrydes-us-east-2/ImageProcessing/0c47b200381d428f5c4fe549dcdb3676
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/0c47b200381d428f5c4fe549dcdb3676
       Environment:
         Variables:
           MAX_HEIGHT: 300
@@ -309,7 +309,7 @@ Resources:
           Resource:
             Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/*
           Sid: ReadFromS3
-      Runtime: nodejs8.10
+      Runtime: nodejs14.x
       Timeout: 300
     Type: AWS::Serverless::Function
   ThumbnailS3Bucket:

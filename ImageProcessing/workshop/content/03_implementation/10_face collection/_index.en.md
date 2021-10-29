@@ -9,7 +9,7 @@ weight = 31
 In this workshop, we will use Amazon Rekognition as the backing technology for our simple face detection and analysis processes. Specifically, Rekognition will be used to identify if a recognizable face is present in uploaded images, and to store an index of uploaded photos that will be used to check for duplicate faces when new photos are uploaded.
 
 {{% notice info %}}
-Recognition is available only in certain regions. You can view supported regions by referring to: [Rekognition regions](http://docs.aws.amazon.com/general/latest/gr/rande.html#rekognition_region)
+Rekognition is available only in certain regions. You can view supported regions by referring to: [Rekognition regions](http://docs.aws.amazon.com/general/latest/gr/rande.html#rekognition_region)
 {{% /notice %}}
 
 In your Cloud9 terminal command line interface, create an Amazon Rekognition collection called `rider-photos` using the following command:

@@ -157,7 +157,7 @@ Resources:
           Effect: Allow
           Resource: '*'
           Sid: RekognitionFace
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   FaceSearchFunction:
@@ -183,7 +183,7 @@ Resources:
           Effect: Allow
           Resource: '*'
           Sid: SearchFace
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   IndexFaceFunction:
@@ -209,7 +209,7 @@ Resources:
           Effect: Allow
           Resource: '*'
           Sid: SearchFace
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       Timeout: 60
     Type: AWS::Serverless::Function
   PopulateTestImages:
@@ -342,7 +342,7 @@ Resources:
           Resource:
             Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/*
           Sid: ReadFromS3
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       Timeout: 300
       Layers:
         - !GetAtt ImageMagick.Outputs.LayerVersion

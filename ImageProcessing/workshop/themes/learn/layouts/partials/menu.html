@@ -11,6 +11,12 @@
     {{end}}
   </div>
 
+
+  {{ if .Site.Params.hashCode }}
+    <p style="color: white; margin: 0 1rem;">Event hash:<br/> <strong>{{ .Site.Params.hashCode }}</strong></p>
+  </div>
+  {{ end }}
+
     <div class="highlightable">
     <ul class="topics">
 

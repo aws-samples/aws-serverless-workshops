@@ -19,8 +19,8 @@ To complete this workshop, you are provided with an AWS account via the AWS Even
     alt="Step 1"
 >}}
 
-➡️ Step 2: Enter your unique 12-digit hash code and choose **Accept Terms & Login**.
-
+➡️ Step 2: Enter the hash code ({{< param "hashCode" >}}) and click the green login button. **Accept Terms & Login**.
+ 
 {{< figure
     src="/images/setup-step2.png"
     alt="Step 2"

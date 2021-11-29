@@ -21,7 +21,7 @@ enableEmoji = true
 [params]
   description = "Image Processing"
   author = "Ben Smith"
-  hashCode = "XX-123456789010-XX"
+  hashCode = "e35b-1829e6b4f4-80"
   disableBreadcrumb = false
   disableNextPrev = false
   themeVariant = "aws"

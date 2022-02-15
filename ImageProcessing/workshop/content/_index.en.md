@@ -4,6 +4,9 @@ chapter = false
 weight = 1
 +++
 
+
+### Event hash: {{< param "hashCode" >}} ###
+
 ## Welcome
 
 In this hands-on workshop, you’ll learn how to build an image processing workflow using a simple, yet powerful, fully managed service called <a href="https://aws.amazon.com/step-functions/" target="_blank">AWS Step Functions</a>. We will leverage a few additional serverless technologies, including <a href="https://aws.amazon.com/lambda/" target="_blank">AWS Lambda</a>, <a href="https://aws.amazon.com/dynamodb/" target="_blank">Amazon DynamoDB</a>, and <a href="https://aws.amazon.com/sns/" target="_blank">Amazon Simple Notification Service (SNS)</a>. We will leverage an <a href="https://aws.amazon.com/cloudformation/" target="_blank">AWS CloudFormation</a> template to deploy the Step Function template, four Lambda functions, the SNS topic and DynamoDB table. You will configure the workflow to orchestrate them together into a simulated business process that allows uploading a profile picture, checking the photo for uniqueness, generating a thumbnail, and persisting metadata that associates the user with the photo.

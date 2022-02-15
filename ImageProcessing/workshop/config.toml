@@ -20,7 +20,8 @@ enableEmoji = true
 
 [params]
   description = "Image Processing"
-  author = "Rob Sutter"
+  author = "Ben Smith"
+  hashCode = "xxxx-xxxxxxxx-xx"
   disableBreadcrumb = false
   disableNextPrev = false
   themeVariant = "aws"

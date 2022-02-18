@@ -77,7 +77,7 @@ From the menu on the left side of the screen, click **Tables**, then click the l
 	alt="Step 4b"
 >}}
 
-From here, you'll be able to see that only the metadata for valid photos have been saved. Note in the image below, only the metatdata for "user_a" exists.
+From here, you'll be able to see that only the metadata for valid photos have been saved. Note in the image below, only the metadata for "user_a" exists.
 
 {{< figure
 	src="/images/validation-step4c.png"

@@ -176,7 +176,7 @@ Once you've replaced the s3 bucket with the `RiderPhotoS3Bucket` value from the 
 
 Now, we are going to validate that user profile metadata stored in the DynamoDB table.
 
-➡️ Step 6: Navigate to the DynamDB dashboard.
+➡️ Step 6: Navigate to the DynamoDB dashboard.
 
 From the AWS Management Console, type "DynamoDB" in the search field at the top of the window and select **DynamoDB** from the list of services.
 
@@ -187,7 +187,7 @@ From the AWS Management Console, type "DynamoDB" in the search field at the top 
 
 ➡️ Step 7: View the table items.
 
-Click on **Tables**, then find and click on table **wildrydes-step-module-resources-RiderPhotoDDBTable-XXXXX**. Then, click on **veiw Items**.
+Click on **Tables**, then find and click on table **wildrydes-step-module-resources-RiderPhotoDDBTable-XXXXX**. Then, click on **Explore table items**.
 
 {{< figure
 	src="/images/metadata-step7a.png"

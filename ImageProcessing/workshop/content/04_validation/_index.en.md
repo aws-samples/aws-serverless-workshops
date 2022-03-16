@@ -26,7 +26,7 @@ For API events in Amazon S3 to match an Amazon EventBridge rule, you must config
 >}}
 
 
-➡️ Step 3: Enter `ImageProcessing` as the **Name** and choose **Event Pattern** as the "Define pattern" option. Then choose **Custom pattern**.
+➡️ Step 3: Defining the rule details. Enter `ImageProcessing` as the **Name** and choose **Rule with an event pattern** as the "Rule Type" option. Then click **Next**.
 
 {{< figure
 	src="/images/triggering-step3.png"
@@ -48,25 +48,49 @@ For API events in Amazon S3 to match an Amazon EventBridge rule, you must config
   }
 }	{{< /highlight >}}
 
-➡️ Step 5: Paste your event pattern into the "Event pattern" text box on the form and click **Save**.
+➡️ Step 5: Building the event pattern. Return to the AWS Console and then in the "Event source" section, select **Other**.  
 
 {{< figure
 	src="/images/triggering-step5.png"
 	alt="Step 5"
 >}}
 
-➡️ Step 6: Scroll down to the **Select targets** section, and chose **Step Functions state machine** from the dropdown list. Select **RiderPhotoProcessing** for the **State Machine** value and click **Create**. Note, this will automatically create the role needed to invoke the Step Function from this event for you.
+Scroll down to the "Event pattern section and copy/paste your event pattern from your text editor into the "Event pattern" text box on the form and click **Next**.
+
 
 {{< figure
-	src="/images/triggering-step6.png"
-	alt="Step 6"
+	src="/images/triggering-step5b.png"
+	alt="Step 5b"
 >}}
 
-You should see that the ImageProcessing rule was created successfully.
+➡️ Step 6: Selecting event targets and finishing the rule creation process. For the "Target types", select **AWS service**, and chose **Step Functions state machine** from the dropdown list of available targets. Select **RiderPhotoProcessing** for the **State Machine** value and click **Create a new role for this specific resource**. Finally, click **Next**.
+
+{{< figure
+	src="/images/triggering-step6a.png"
+	alt="Step 6a"
+>}}
+
+There is no need to add tags to this resource, so simply click **Next**
 
 {{< figure
 	src="/images/triggering-step6b.png"
 	alt="Step 6b"
+>}}
+
+On the "Review and create" screen, scroll to the bottom of the screen and click the **Create rule** button to finish up the rule creation.
+
+{{< figure
+	src="/images/triggering-step6c.png"
+	alt="Step 6c"
+>}}
+
+
+
+You should see that the ImageProcessing rule was created successfully.
+
+{{< figure
+	src="/images/triggering-step6d.png"
+	alt="Step 6d"
 >}}
 
 ### Adjust our state Machine

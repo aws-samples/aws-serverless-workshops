@@ -1,0 +1,7 @@
+{{ $name := .Get 0 }}
+
+{{ if .Site.Params.hashCode  }}
+  {{ .Site.Params.hashCode }}
+{{ else }}
+  Check with session moderator
+{{ end }}

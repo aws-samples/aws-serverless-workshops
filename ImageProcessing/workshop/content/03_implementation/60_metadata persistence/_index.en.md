@@ -29,7 +29,7 @@ In the end of this section, your state machine should resemble the following:
 
 ➡️ Step 2: Add the DynamoDB native integration step.
 
-Drag the **DynamoDB PutItem** action from the “States browser” and drop it in between the **Parallel State** and **End** states. When done, you should see that the "Configuration paenl" has changed to allow configuration of the **DynamoDB PutItem** step as shown below.
+Drag the **DynamoDB PutItem** action from the “States browser” and drop it in between the **Parallel State** and **End** states. When done, you should see that the "Configuration panel" has changed to allow configuration of the **DynamoDB PutItem** step as shown below.
 
 
 {{< figure

@@ -55,7 +55,7 @@ For API events in Amazon S3 to match an Amazon EventBridge rule, you must config
 	alt="Step 5"
 >}}
 
-Scroll down to the "Event pattern section and copy/paste your event pattern from your text editor into the "Event pattern" text box on the form and click **Next**.
+Skip past the **Sample event** section and scroll down to the **Event pattern** section. Copy/paste your event pattern from your text editor into the "Event pattern" text box on the form and click **Next**.
 
 
 {{< figure

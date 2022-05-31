@@ -259,6 +259,9 @@ Resources:
           - '*'
           ExposedHeaders:
           - ETag
+      NotificationConfiguration:
+        EventBridgeConfiguration:
+          EventBridgeEnabled: True      
     Type: AWS::S3::Bucket
   StateMachineRole:
     Properties:
@@ -398,20 +401,4 @@ Resources:
             Condition:
               StringEquals:
                 s3:x-amz-acl: "bucket-owner-full-control"
-  CloudTrail:
-    DependsOn:
-      - BucketPolicy
-    Type: AWS::CloudTrail::Trail
-    Properties:
-      S3BucketName:
-        Ref: CloudTrailS3Bucket
-      IsLogging: true
-      EventSelectors:
-        - DataResources:
-            - Type: AWS::S3::Object
-              Values:
-                - Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/
-          ReadWriteType: WriteOnly
-          IncludeManagementEvents: No
-      TrailName: ImageProcessing
 Transform: AWS::Serverless-2016-10-31

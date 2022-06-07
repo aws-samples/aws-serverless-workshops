@@ -9,7 +9,7 @@ We are going to use Amazon EventBridge to execute an AWS Step Functions state ma
 
 ### Creating an Amazon EventBridge Rule
 
-For API events in Amazon S3 to match an Amazon EventBridge rule, you must configure an Amazon CloudTrail to receive those events. In order to make setup easier, the CloudFormation stack we launched earlier deployed an Amazon CloudTrail with an Amazon S3 management event for you. We need to start by creating the EventBridge Rule.
+You can now configure S3 Event Notifications to directly deliver to EventBridge. We need to start by creating the EventBridge Rule.
 
 ➡️ Step 1: From the AWS Management Console, type "EventBridge" in the search field at the top of the window and select **Amazon EventBridge** from the list of services.
 
@@ -38,12 +38,10 @@ For API events in Amazon S3 to match an Amazon EventBridge rule, you must config
 {{< highlight json >}}
 {
   "source": ["aws.s3"],
-  "detail-type": ["AWS API Call via CloudTrail"],
+  "detail-type": ["Object Created"],
   "detail": {
-    "eventSource": ["s3.amazonaws.com"],
-    "eventName": ["PutObject"],
-    "requestParameters": {
-      "bucketName": ["Replace-With-RiderPhotoS3Bucket-Name"]
+    "bucket": {
+      "name": ["Replace-With-RiderPhotoS3Bucket-Name"]
     }
   }
 }	{{< /highlight >}}
@@ -161,9 +159,9 @@ Click **Save conditions**. When you return back to the Workflow Studio view, set
 
 {{< highlight json >}}
 {
-	"userId.$": "$.detail.userIdentity.accountId",
-	"s3Bucket.$": "$.detail.requestParameters.bucketName",
-	"s3Key.$":  "$.detail.requestParameters.key"
+  "userId.$": "$.account",
+  "s3Bucket.$": "$.detail.bucket.name",
+  "s3Key.$": "$.detail.object.key"
 }	{{< /highlight >}}
 
 {{< figure

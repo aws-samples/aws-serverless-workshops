@@ -1,0 +1,404 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Resources for Wild Ryde rider photo processing workflow.
+Outputs:
+  RiderPhotoProcessingStateMachineArn:
+    Value:
+      Fn::GetAtt:
+      - RiderPhotoProcessingStateMachine
+      - Arn
+  FaceDetectionFunctionArn:
+    Value:
+      Fn::GetAtt:
+      - FaceDetectionFunction
+      - Arn
+  FaceSearchFunctionArn:
+    Value:
+      Fn::GetAtt:
+      - FaceSearchFunction
+      - Arn
+  IndexFaceFunctionArn:
+    Value:
+      Fn::GetAtt:
+      - IndexFaceFunction
+      - Arn
+  RiderPhotoDDBTable:
+    Value:
+      Ref: RiderPhotoDDBTable
+  RiderPhotoS3Bucket:
+    Value:
+      Ref: RiderPhotoS3Bucket
+  StateMachineRole:
+    Value:
+      Fn::GetAtt:
+      - StateMachineRole
+      - Arn
+  ThumbnailFunctionArn:
+    Value:
+      Fn::GetAtt:
+      - ThumbnailFunction
+      - Arn
+  ThumbnailS3Bucket:
+    Value:
+      Ref: ThumbnailS3Bucket
+  NotifyMeArn:
+    Value: !Ref NotifyMe
+  ExpressStateMachineLogGroup:
+    Value:
+      Ref: ExpressStateMachineLogGroup
+Parameters:
+  RekognitionCollectionID:
+    AllowedPattern: '[a-zA-Z0-9_.-]+'
+    Default: rider-photos
+    Description: ID for the Rekognition collection used to index faces
+    MaxLength: 255
+    MinLength: 1
+    Type: String
+  EmailForNotification:
+    AllowedPattern: "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
+    ConstraintDescription: "Must provide a valid email address"
+    Default: mail@example.com
+    Description: enter your email address for notification
+    Type: String
+  TestImagesBucket:
+    Default: serverless-image-processing-artifacts-yuharc22ktuu
+    Description: S3 bucket containing the test images to copy over
+    Type: String
+  TestImagesPrefix:
+    Default: test-images/
+    Description: Key prefix for test images to copy over
+    Type: String
+Resources:
+  RiderPhotoProcessingStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: RiderPhotoProcessing
+      DefinitionString: |-
+        {
+          "Comment": "RiderPhotoProcessing state machine",
+          "StartAt": "ReplaceWithFaceDetectionFunction",
+          "States": {
+            "ReplaceWithFaceDetectionFunction": {
+              "Type": "Pass",
+              "End": true
+            }
+          }
+        }
+      RoleArn:
+        Fn::GetAtt:
+          - StateMachineRole
+          - Arn
+  ImageMagick:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:145266761615:applications/image-magick-lambda-layer
+        SemanticVersion: 1.0.0
+  CopyS3ObjectsFunction:
+    Properties:
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/7aca4d377648454c2f5fb591608210f6
+      Description: Copies objects from a source S3 bucket to a destination
+      Handler: index.handler
+      Policies:
+        Statement:
+        - Action:
+          - s3:ListBucket
+          - s3:GetObject
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:aws:s3:::${TestImagesBucket}
+          - Fn::Sub: arn:aws:s3:::${TestImagesBucket}/${TestImagesPrefix}*
+          Sid: SourceBucketReadAccess
+        - Action:
+          - s3:ListBucket
+          - s3:ListBucketVersions
+          - s3:GetBucketVersioning
+          - s3:GetObject
+          - s3:GetObjectVersion
+          - s3:PutObject
+          - s3:PutObjectAcl
+          - s3:PutObjectVersionAcl
+          - s3:DeleteObject
+          - s3:DeleteObjectVersion
+          - s3:CopyObject
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}
+          - Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/*
+          - Fn::Sub: arn:aws:s3:::${ThumbnailS3Bucket}
+          - Fn::Sub: arn:aws:s3:::${ThumbnailS3Bucket}/*
+          Sid: DestBucketWriteAccess
+      Runtime: python3.6
+      Timeout: 120
+    Type: AWS::Serverless::Function
+  EmptyThumbnailBucket:
+    Properties:
+      Bucket:
+        Ref: ThumbnailS3Bucket
+      ServiceToken:
+        Fn::GetAtt:
+        - CopyS3ObjectsFunction
+        - Arn
+    Type: Custom::S3Objects
+  FaceDetectionFunction:
+    Properties:
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/4de6f0c600ed41931c1024f12e9bb87c
+      Description: Use Amazon Rekognition to detect faces
+      Handler: index.handler
+      MemorySize: 256
+      Policies:
+        Statement:
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Resource: '*'
+          Sid: ReadFromS3Bucket
+        - Action:
+          - rekognition:DetectFaces
+          Effect: Allow
+          Resource: '*'
+          Sid: RekognitionFace
+      Runtime: nodejs14.x
+      Timeout: 60
+    Type: AWS::Serverless::Function
+  FaceSearchFunction:
+    Properties:
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/a201ba45df29327da10e590cc729705e
+      Description: Use Amazon Rekognition to check if the face is already in the collection
+      Environment:
+        Variables:
+          REKOGNITION_COLLECTION_ID:
+            Ref: RekognitionCollectionID
+      Handler: index.handler
+      MemorySize: 256
+      Policies:
+        Statement:
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Resource:
+            Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/*
+          Sid: ReadFromS3Bucket
+        - Action:
+          - rekognition:SearchFacesByImage
+          Effect: Allow
+          Resource: '*'
+          Sid: SearchFace
+      Runtime: nodejs14.x
+      Timeout: 60
+    Type: AWS::Serverless::Function
+  IndexFaceFunction:
+    Properties:
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/54e2d5c18019d24e80d35e6c0f041ace
+      Description: Index the photo into Rekognition collection
+      Environment:
+        Variables:
+          REKOGNITION_COLLECTION_ID:
+            Ref: RekognitionCollectionID
+      Handler: index.handler
+      MemorySize: 256
+      Policies:
+        Statement:
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Resource:
+            Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/*
+          Sid: ReadFromS3Bucket
+        - Action:
+          - rekognition:IndexFaces
+          Effect: Allow
+          Resource: '*'
+          Sid: SearchFace
+      Runtime: nodejs14.x
+      Timeout: 60
+    Type: AWS::Serverless::Function
+  PopulateTestImages:
+    Properties:
+      Bucket:
+        Ref: RiderPhotoS3Bucket
+      ServiceToken:
+        Fn::GetAtt:
+        - CopyS3ObjectsFunction
+        - Arn
+      SourceBucket:
+        Ref: TestImagesBucket
+      SourcePrefix:
+        Fn::Sub: ${TestImagesPrefix}
+    Type: Custom::S3Objects
+  RiderPhotoDDBTable:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: Username
+        AttributeType: S
+      KeySchema:
+      - AttributeName: Username
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: '3'
+        WriteCapacityUnits: '3'
+    Type: AWS::DynamoDB::Table
+  NotifyMe:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+      - Endpoint:
+          Ref: EmailForNotification
+        Protocol: email
+  RiderPhotoS3Bucket:
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+          - '*'
+          AllowedMethods:
+          - PUT
+          - GET
+          - POST
+          - HEAD
+          AllowedOrigins:
+          - '*'
+          ExposedHeaders:
+          - ETag
+      NotificationConfiguration:
+        EventBridgeConfiguration:
+          EventBridgeEnabled: True      
+    Type: AWS::S3::Bucket
+  StateMachineRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+              Fn::Sub: states.${AWS::Region}.amazonaws.com
+        Version: '2012-10-17'
+      Path: /WildRydes/
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - lambda:InvokeFunction
+            Effect: Allow
+            Resource: '*'
+            Sid: InvokeLambda
+          Version: '2012-10-17'
+        PolicyName: InvokeLambda
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - SNS:Publish
+            Effect: Allow
+            Resource: '*'
+            Sid: PublishToSNS
+          Version: '2012-10-17'
+        PolicyName: PublishToSNS
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - dynamodb:PutItem
+            Effect: Allow
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${RiderPhotoDDBTable}"
+            Sid: PutItem
+          Version: '2012-10-17'
+        PolicyName: PutItem
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - logs:CreateLogDelivery
+            - logs:GetLogDelivery
+            - logs:UpdateLogDelivery
+            - logs:DeleteLogDelivery
+            - logs:ListLogDeliveries
+            - logs:PutResourcePolicy
+            - logs:DescribeResourcePolicies
+            - logs:DescribeLogGroups
+            Effect: Allow
+            Resource: "*"
+            Sid: log
+          Version: '2012-10-17'
+        PolicyName: logging
+    Type: AWS::IAM::Role
+  ThumbnailFunction:
+    Properties:
+      CodeUri: s3://serverless-image-processing-artifacts-yuharc22ktuu/ImageProcessing/0c47b200381d428f5c4fe549dcdb3676
+      Environment:
+        Variables:
+          MAX_HEIGHT: 300
+          MAX_WIDTH: 300
+          THUMBNAIL_BUCKET:
+            Ref: ThumbnailS3Bucket
+      Handler: index.handler
+      MemorySize: 1536
+      Policies:
+        Statement:
+        - Action:
+          - s3:PutObject
+          Effect: Allow
+          Resource:
+            Fn::Sub: arn:aws:s3:::${ThumbnailS3Bucket}/*
+          Sid: WritetoS3ThumbnailBucket
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Resource:
+            Fn::Sub: arn:aws:s3:::${RiderPhotoS3Bucket}/*
+          Sid: ReadFromS3
+      Runtime: nodejs14.x
+      Timeout: 300
+      Layers:
+        - !GetAtt ImageMagick.Outputs.LayerVersion
+    Type: AWS::Serverless::Function
+  ThumbnailS3Bucket:
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+          - '*'
+          AllowedMethods:
+          - PUT
+          - GET
+          - POST
+          - HEAD
+          AllowedOrigins:
+          - '*'
+          ExposedHeaders:
+          - ETag
+    Type: AWS::S3::Bucket
+  ExpressStateMachineLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ "/", [ "stepfunctions", "ImageProcessingExpressStateMachine"]]
+  CloudTrailS3Bucket:
+      Type: AWS::S3::Bucket
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: CloudTrailS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: "AWSCloudTrailAclCheck"
+            Effect: "Allow"
+            Principal:
+              Service: "cloudtrail.amazonaws.com"
+            Action: "s3:GetBucketAcl"
+            Resource:
+              !Sub |-
+                arn:aws:s3:::${CloudTrailS3Bucket}
+          -
+            Sid: "AWSCloudTrailWrite"
+            Effect: "Allow"
+            Principal:
+              Service: "cloudtrail.amazonaws.com"
+            Action: "s3:PutObject"
+            Resource:
+              !Sub |-
+                arn:aws:s3:::${CloudTrailS3Bucket}/AWSLogs/${AWS::AccountId}/*
+            Condition:
+              StringEquals:
+                s3:x-amz-acl: "bucket-owner-full-control"
+Transform: AWS::Serverless-2016-10-31

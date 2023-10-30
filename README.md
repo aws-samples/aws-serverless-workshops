@@ -12,7 +12,7 @@ This repository contains a collection of workshops and other hands on content th
 
 - [**DevOps**](https://cicd.serverlessworkshops.io/) - In this workshop, you will learn how to start a new Serverless application from scratch using the [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model) and how to fully automate builds and deployments by building a continous delivery pipeline using AWS CodeCommit, AWS CodeBuild and AWS CodePipeline. You will also learn how to test a Serverless application locally using the SAM CLI.
 
-- [**Image Processing**](ImageProcessing) - This module shows you how to build a serverless image processing application using workflow orchestration in the backend. You'll learn the basics of using AWS Step Functions to orchestrate multiple AWS Lambda functions while leveraging the deep learning-based facial recognition features of Amazon Rekogntion.
+- [**Image Processing**](ImageProcessing) - This module shows you how to build a serverless image processing application using workflow orchestration in the backend. You'll learn the basics of using AWS Step Functions to orchestrate multiple AWS Lambda functions while leveraging the deep learning-based facial recognition features of Amazon Recognition.
 
 - [**Multi Region**](MultiRegion) - This workshop shows you how to build a serverless ticketing system that is replicated across two regions and provides automatic failover in the event of a disaster. You will learn the basics of deploying AWS Lambda functions, exposing them via API Gateway, and configuring replication using Route53 and DynamoDB streams.
 
